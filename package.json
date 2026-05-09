@@ -1,6 +1,6 @@
 {
   "name": "@astroway/sdk",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0-alpha.2",
   "description": "Official TypeScript SDK for the AstroWay API — natal, synastry, transits, Vedic, Human Design, Tarot, Numerology, AI horoscopes. Type-safe, retry-aware, OpenAPI 3.1 generated.",
   "type": "module",
   "main": "./dist/index.js",
@@ -50,7 +50,7 @@
   "author": "AstroWay <astroway.info@gmail.com>",
   "repository": {
     "type": "git",
-    "url": "https://github.com/astroway/astroway-typescript.git"
+    "url": "git+https://github.com/astroway/astroway-typescript.git"
   },
   "bugs": {
     "url": "https://github.com/astroway/astroway-typescript/issues"
