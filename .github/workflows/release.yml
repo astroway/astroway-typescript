@@ -28,6 +28,17 @@ jobs:
       - uses: actions/attest-build-provenance@v2
         with:
           subject-path: dist/**/*
-      - run: npm publish --provenance --access public
+      - run: |
+          # Detect prerelease (alpha/beta/rc/etc) and use --tag accordingly.
+          # npm refuses prerelease publish without explicit --tag (would land on @latest).
+          VERSION=$(node -p "require('./package.json').version")
+          if echo "$VERSION" | grep -qE -- "-(alpha|beta|rc|next|preview)"; then
+            TAG=$(echo "$VERSION" | sed -E "s/.*-(alpha|beta|rc|next|preview).*/\1/")
+            echo "Publishing $VERSION to npm dist-tag: $TAG"
+            npm publish --provenance --access public --tag "$TAG"
+          else
+            echo "Publishing stable $VERSION to dist-tag: latest"
+            npm publish --provenance --access public
+          fi
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
