@@ -7,6 +7,11 @@ on:
       - 'v*.*.*-*'
   workflow_dispatch:
 
+# Trusted Publishing: npm CLI v11.5+ auto-detects the GitHub OIDC token
+# from this runner when id-token:write is granted. No NPM_TOKEN secret
+# needed. Configure the trusted publisher on npm side first:
+#   npmjs.com -> settings -> trusted publishers -> add
+#   org=astroway, repo=astroway-typescript, workflow=release.yml
 permissions:
   contents: read
   id-token: write
@@ -17,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Node 24
+      - name: Setup Node 24 (npm OIDC requires Node 24)
         uses: actions/setup-node@v4
         with:
           node-version: '24'
@@ -34,11 +39,9 @@ jobs:
           VERSION=$(node -p "require('./package.json').version")
           if echo "$VERSION" | grep -qE -- "-(alpha|beta|rc|next|preview)"; then
             TAG=$(echo "$VERSION" | sed -E "s/.*-(alpha|beta|rc|next|preview).*/\1/")
-            echo "Publishing $VERSION to npm dist-tag: $TAG"
+            echo "Publishing $VERSION via OIDC trusted publishing -> dist-tag: $TAG"
             npm publish --provenance --access public --tag "$TAG"
           else
-            echo "Publishing stable $VERSION to dist-tag: latest"
+            echo "Publishing stable $VERSION via OIDC trusted publishing -> dist-tag: latest"
             npm publish --provenance --access public
           fi
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
