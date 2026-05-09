@@ -1,0 +1,76 @@
+{
+  "name": "@astroway/sdk",
+  "version": "0.1.0-alpha.1",
+  "description": "Official TypeScript SDK for the AstroWay API — natal, synastry, transits, Vedic, Human Design, Tarot, Numerology, AI horoscopes. Type-safe, retry-aware, OpenAPI 3.1 generated.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./errors": {
+      "types": "./dist/errors.d.ts",
+      "import": "./dist/errors.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "sync-spec": "tsx scripts/sync-spec.ts",
+    "generate": "openapi-typescript openapi.json -o src/types.generated.ts",
+    "build": "npm run generate && tsc",
+    "prepublishOnly": "npm run build && npm test",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit"
+  },
+  "keywords": [
+    "astrology",
+    "api",
+    "sdk",
+    "natal-chart",
+    "synastry",
+    "transits",
+    "vedic",
+    "human-design",
+    "tarot",
+    "numerology",
+    "swiss-ephemeris",
+    "openapi",
+    "type-safe"
+  ],
+  "license": "MIT",
+  "author": "AstroWay <astroway.info@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/astroway/astroway-typescript.git"
+  },
+  "bugs": {
+    "url": "https://github.com/astroway/astroway-typescript/issues"
+  },
+  "homepage": "https://api.astroway.info/docs/",
+  "engines": {
+    "node": ">=20"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "dependencies": {
+    "openapi-fetch": "^0.13.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "openapi-typescript": "^7.6.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0",
+    "vitest": "^2.1.0"
+  }
+}
