@@ -214,9 +214,13 @@ Neither carries a session ID, machine fingerprint, or anything personal.
 
 ## Stability
 
+Since **`1.0.0` (2026-05-11)** this package follows strict SemVer:
+
+- **Public exports won't be removed or narrowed in `1.x`.** Doing so requires a `2.0.0` major bump with a deprecation period covering at least one minor.
 - **Tool identifiers stable inside a major version.** Any path that ships under `1.x` won't be renamed or removed without a deprecation note in `CHANGELOG.md` and a one-minor parallel-availability window.
 - **Input shape stable inside a minor version.** Tightening (regex, range, enum) ships in patches; adding a required field requires a minor bump.
-- **API version vs SDK version are independent.** SDK `0.x` follows its own semver; the API itself sits at `/v1/`. Across `v1` → `v2` API any breaking change is announced.
+- **API version vs SDK version are independent.** SDK `1.x` follows its own semver; the API itself sits at `/v1/`. Across `v1` → `v2` API any breaking change is announced.
+- **Node 22+ required** since `1.0.0`. Need Node 20? Stay on `0.1.x` (will receive critical security patches).
 
 ### Migration from `0.1.0-alpha.x` / `0.1.0-beta.x` / `0.1.0-rc.x` to `0.1.0`
 

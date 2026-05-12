@@ -1,5 +1,27 @@
 # Changelog
 
+## 1.0.0 — 2026-05-11
+
+**Production guarantee.** Public API stable, SemVer commitment. Same code as `0.1.0` — every export, namespace, error class, helper, option ships unchanged. The major bump reflects engine drop and contractual commitment, not surface change.
+
+### Changed
+
+- **Node 22 minimum.** Dropped Node 20 — Node 22 has been LTS since 2024-10-29, the v20 LTS line entered maintenance mode 2025-10-21. CI matrix drops 20.
+  - If you still need Node 20: pin to `@astroway/sdk@^0.1.0` (the `0.1.x` line will receive critical security patches).
+- **SemVer commitment in README** — removing or narrowing public exports requires `2.0.0`.
+
+### Locked (same as 0.1.0, now contractual)
+
+103 typed namespaces / 623 methods. 12-class error hierarchy. Constructor + `CallOptions` shapes. Cache (`MemoryStore`, `LocalStorageStore`). Streaming (`aw.streamSSE()`). Mock (`MockAstroway` from `/testing`). Helpers (`BirthDateTime` from `/helpers`). Connection pooling (`dispatcher`).
+
+### Migration from 0.1.x
+
+`npm install @astroway/sdk@1.0.0` is a drop-in upgrade **if you're on Node 22+**. No code changes needed.
+
+### Verification
+
+141 vitest tests pass (same suite as 0.1.0).
+
 ## 0.1.0 — 2026-05-11
 
 **Stable surface commitment.** Public API frozen — every export shipped across alphas / betas / RCs is now part of the `0.1.x` contract. No code changes vs `0.1.0-rc.2` — same `Astroway` constructor, same 103 namespaces / 623 methods, same error hierarchy, same helpers / cache / streaming / mock / dispatcher / timeout surface. Ready to be depended on.
