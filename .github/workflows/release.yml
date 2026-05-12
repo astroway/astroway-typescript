@@ -7,11 +7,6 @@ on:
       - 'v*.*.*-*'
   workflow_dispatch:
 
-# Trusted Publishing: npm CLI v11.5+ auto-detects the GitHub OIDC token
-# from this runner when id-token:write is granted. No NPM_TOKEN secret
-# needed. Configure the trusted publisher on npm side first:
-#   npmjs.com -> settings -> trusted publishers -> add
-#   org=astroway, repo=astroway-typescript, workflow=release.yml
 permissions:
   contents: read
   id-token: write
@@ -22,26 +17,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Node 24 (npm OIDC requires Node 24)
+      - name: Setup Node 24
         uses: actions/setup-node@v4
         with:
           node-version: '24'
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
+      - run: npm run sync-spec
       - run: npm run build
       - run: npm test
       - uses: actions/attest-build-provenance@v2
         with:
           subject-path: dist/**/*
-      - run: |
-          # Detect prerelease (alpha/beta/rc/etc) and use --tag accordingly.
-          # npm refuses prerelease publish without explicit --tag (would land on @latest).
-          VERSION=$(node -p "require('./package.json').version")
-          if echo "$VERSION" | grep -qE -- "-(alpha|beta|rc|next|preview)"; then
-            TAG=$(echo "$VERSION" | sed -E "s/.*-(alpha|beta|rc|next|preview).*/\1/")
-            echo "Publishing $VERSION via OIDC trusted publishing -> dist-tag: $TAG"
-            npm publish --provenance --access public --tag "$TAG"
-          else
-            echo "Publishing stable $VERSION via OIDC trusted publishing -> dist-tag: latest"
-            npm publish --provenance --access public
-          fi
+      - run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
