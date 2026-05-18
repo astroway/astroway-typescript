@@ -106,6 +106,21 @@ export interface AstrowayOptions {
   /** Extra headers added to every request. */
   defaultHeaders?: Record<string, string>;
   /**
+   * Default `Accept-Language` header for every request. Used by AstroWay's
+   * text-returning endpoints (`/v1/horoscope/*`, `/v1/interpret/*`, future
+   * Vedic/Tarot/Numerology prose) to localise responses across all 21 active
+   * languages (uk, en, de, ru, pl, es, pt, fr, it, nl, cs, ro, hu, el, tr, ar,
+   * hi, ja, ko, vi, id). Numeric fields (longitude, sign-id, etc.) are never
+   * translated.
+   *
+   * Per-call override:
+   *   await aw.horoscope.daily({ sign: 'leo' }, { params: { header: { 'Accept-Language': 'de' } } });
+   *
+   * If unset, server falls back to `uk` (source). Unknown codes silently fall
+   * through to `uk` server-side — no SDK-side validation.
+   */
+  lang?: string;
+  /**
    * Idempotency key policy for credit-costing POSTs.
    * - `'auto'` (default): every POST gets a fresh UUIDv4 `Idempotency-Key` header
    *   unless the caller already supplied one.
@@ -166,12 +181,13 @@ export interface Astroway extends AstrowayNamespaces {}
 export class Astroway {
   /** The underlying typed openapi-fetch client. */
   readonly client: AstrowayClient;
-  readonly options: Required<Omit<AstrowayOptions, 'fetch' | 'defaultHeaders' | 'retry' | 'cache' | 'dispatcher'>> & {
+  readonly options: Required<Omit<AstrowayOptions, 'fetch' | 'defaultHeaders' | 'retry' | 'cache' | 'dispatcher' | 'lang'>> & {
     fetch: typeof globalThis.fetch;
     defaultHeaders: Record<string, string>;
     retry: RetryOptions;
     cache: ResolvedCache | null;
     dispatcher: unknown;
+    lang: string | null;
   };
 
   constructor(options: AstrowayOptions) {
@@ -186,7 +202,15 @@ export class Astroway {
     const timeoutMs = options.timeoutMs ?? 30_000;
     const retry = options.retry ?? {};
     const fetchImpl = options.fetch ?? globalThis.fetch;
-    const defaultHeaders = options.defaultHeaders ?? {};
+    const lang = options.lang ?? null;
+    /* Inject Accept-Language into defaultHeaders so it propagates to every
+     * request — openapi-fetch merges these on top of the global client
+     * headers, and per-call params.header still wins. Caller-supplied
+     * defaultHeaders.Accept-Language wins over options.lang. */
+    const defaultHeaders: Record<string, string> = {
+      ...(lang ? { 'Accept-Language': lang } : {}),
+      ...(options.defaultHeaders ?? {}),
+    };
     const idempotency: IdempotencyMode = options.idempotency ?? 'auto';
     const generateKey = resolveKeyGenerator(idempotency);
     const dispatcher = options.dispatcher;
@@ -204,6 +228,7 @@ export class Astroway {
       idempotency,
       cache,
       dispatcher,
+      lang,
     };
 
     const authHeaders: Record<string, string> = authScheme === 'bearer'

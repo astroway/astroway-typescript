@@ -58,6 +58,60 @@ describe('Astroway HTTP behavior (mocked fetch)', () => {
     expect(seen[0]?.get('authorization')).toBeNull();
   });
 
+  it('attaches Accept-Language when lang option set', async () => {
+    const seen: Headers[] = [];
+    const fetcher = makeFetcher(async (input) => {
+      const req = input instanceof Request ? input : new Request(String(input));
+      seen.push(req.headers);
+      return new Response(JSON.stringify({ ok: true, data: {} }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      });
+    });
+    const aw = new Astroway({ apiKey: 'aw_test', lang: 'hi', fetch: fetcher });
+    await aw.client.POST('/horoscope/daily' as any, {
+      body: { sign: 'leo' } as any,
+    });
+    expect(seen[0]?.get('accept-language')).toBe('hi');
+    expect(aw.options.lang).toBe('hi');
+  });
+
+  it('omits Accept-Language when lang option unset', async () => {
+    const seen: Headers[] = [];
+    const fetcher = makeFetcher(async (input) => {
+      const req = input instanceof Request ? input : new Request(String(input));
+      seen.push(req.headers);
+      return new Response(JSON.stringify({ ok: true, data: {} }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      });
+    });
+    const aw = new Astroway({ apiKey: 'aw_test', fetch: fetcher });
+    await aw.client.POST('/horoscope/daily' as any, { body: { sign: 'leo' } as any });
+    expect(seen[0]?.get('accept-language')).toBeNull();
+    expect(aw.options.lang).toBeNull();
+  });
+
+  it('defaultHeaders.Accept-Language wins over lang option', async () => {
+    const seen: Headers[] = [];
+    const fetcher = makeFetcher(async (input) => {
+      const req = input instanceof Request ? input : new Request(String(input));
+      seen.push(req.headers);
+      return new Response(JSON.stringify({ ok: true, data: {} }), {
+        status: 200,
+        headers: { 'content-type': 'application/json' },
+      });
+    });
+    const aw = new Astroway({
+      apiKey: 'aw_test',
+      lang: 'hi',
+      defaultHeaders: { 'Accept-Language': 'de' },
+      fetch: fetcher,
+    });
+    await aw.client.POST('/horoscope/daily' as any, { body: { sign: 'leo' } as any });
+    expect(seen[0]?.get('accept-language')).toBe('de');
+  });
+
   it('attaches Authorization: Bearer when authScheme=bearer', async () => {
     const seen: Headers[] = [];
     const fetcher = makeFetcher(async (input) => {
