@@ -83,6 +83,10 @@ export interface AstrowayNamespaces {
     /** Aspect Timeline (POST /aspect-timeline) */
     compute(body: PostBody<'/aspect-timeline'>, options?: CallOptions): ResultPromise<PostData<'/aspect-timeline'>>;
   };
+  aspects: {
+    /** Aspect Matrix (POST /aspects) */
+    compute(body: PostBody<'/aspects'>, options?: CallOptions): ResultPromise<PostData<'/aspects'>>;
+  };
   bazi: {
     /** Day Master (POST /bazi/day-master) */
     dayMaster(body: PostBody<'/bazi/day-master'>, options?: CallOptions): ResultPromise<PostData<'/bazi/day-master'>>;
@@ -483,6 +487,10 @@ export interface AstrowayNamespaces {
     /** Yearly Horoscope (POST /horoscope/yearly) */
     yearly(body: PostBody<'/horoscope/yearly'>, options?: CallOptions): ResultPromise<PostData<'/horoscope/yearly'>>;
   };
+  houses: {
+    /** House Cusps (POST /houses) */
+    compute(body: PostBody<'/houses'>, options?: CallOptions): ResultPromise<PostData<'/houses'>>;
+  };
   humanDesign: {
     /** HD Compatibility (POST /human-design/compatibility) */
     compatibility(body: PostBody<'/human-design/compatibility'>, options?: CallOptions): ResultPromise<PostData<'/human-design/compatibility'>>;
@@ -620,6 +628,10 @@ export interface AstrowayNamespaces {
   moonAspects: {
     /** Moon Aspects (POST /moon-aspects) */
     compute(body: PostBody<'/moon-aspects'>, options?: CallOptions): ResultPromise<PostData<'/moon-aspects'>>;
+  };
+  moonPhase: {
+    /** Moon Phase (POST /moon-phase) */
+    compute(body: PostBody<'/moon-phase'>, options?: CallOptions): ResultPromise<PostData<'/moon-phase'>>;
   };
   moonVoc: {
     /** Moon Void-of-Course (POST /moon-voc) */
@@ -878,6 +890,8 @@ export interface AstrowayNamespaces {
     career(body: PostBody<'/reports/career'>, options?: CallOptions): ResultPromise<PostData<'/reports/career'>>;
     /** Generate Child Astrology Report (PDF or HTML) (POST /reports/child) */
     child(body: PostBody<'/reports/child'>, options?: CallOptions): ResultPromise<PostData<'/reports/child'>>;
+    /** Generate Report — Unified Dispatcher (V2) (POST /reports/generate) */
+    generate(body: PostBody<'/reports/generate'>, options?: CallOptions): ResultPromise<PostData<'/reports/generate'>>;
     /** Generate Human Design Report (PDF or HTML) (POST /reports/human-design) */
     humanDesign(body: PostBody<'/reports/human-design'>, options?: CallOptions): ResultPromise<PostData<'/reports/human-design'>>;
     /** Generate Lal Kitab Report (PDF or HTML) (POST /reports/lal-kitab) */
@@ -1226,10 +1240,14 @@ export interface AstrowayNamespaces {
     doshasParasharaPitru(body: PostBody<'/vedic/doshas/parashara/pitru'>, options?: CallOptions): ResultPromise<PostData<'/vedic/doshas/parashara/pitru'>>;
     /** Doshas — Shrapit (curse) (POST /vedic/doshas/parashara/shrapit) */
     doshasParasharaShrapit(body: PostBody<'/vedic/doshas/parashara/shrapit'>, options?: CallOptions): ResultPromise<PostData<'/vedic/doshas/parashara/shrapit'>>;
+    /** Jaimini — Argala / Virodhargala scan (POST /vedic/jaimini/argala-analysis) */
+    jaiminiArgalaAnalysis(body: PostBody<'/vedic/jaimini/argala-analysis'>, options?: CallOptions): ResultPromise<PostData<'/vedic/jaimini/argala-analysis'>>;
     /** Jaimini — Aspects (Rasi + Graha drishti) (POST /vedic/jaimini/aspects) */
     jaiminiAspects(body: PostBody<'/vedic/jaimini/aspects'>, options?: CallOptions): ResultPromise<PostData<'/vedic/jaimini/aspects'>>;
     /** Jaimini — Karakamsa (AK in Navamsa) (POST /vedic/jaimini/atmakaraka-navamsa) */
     jaiminiAtmakarakaNavamsa(body: PostBody<'/vedic/jaimini/atmakaraka-navamsa'>, options?: CallOptions): ResultPromise<PostData<'/vedic/jaimini/atmakaraka-navamsa'>>;
+    /** Jaimini — Atmakaraka rotation (timeline) (POST /vedic/jaimini/atmakaraka-rotation) */
+    jaiminiAtmakarakaRotation(body: PostBody<'/vedic/jaimini/atmakaraka-rotation'>, options?: CallOptions): ResultPromise<PostData<'/vedic/jaimini/atmakaraka-rotation'>>;
     /** Jaimini — Chara Karakas (detailed) (POST /vedic/jaimini/chara-karakas) */
     jaiminiCharaKarakas(body: PostBody<'/vedic/jaimini/chara-karakas'>, options?: CallOptions): ResultPromise<PostData<'/vedic/jaimini/chara-karakas'>>;
     /** Jaimini — Running Dasha Summary (POST /vedic/jaimini/dasha-summary) */
@@ -1382,8 +1400,14 @@ export interface AstrowayNamespaces {
     yogasJaiminiDhana(body: PostBody<'/vedic/yogas/jaimini/dhana'>, options?: CallOptions): ResultPromise<PostData<'/vedic/yogas/jaimini/dhana'>>;
     /** Yogas — Jaimini full summary (POST /vedic/yogas/jaimini/full) */
     yogasJaiminiFull(body: PostBody<'/vedic/yogas/jaimini/full'>, options?: CallOptions): ResultPromise<PostData<'/vedic/yogas/jaimini/full'>>;
+    /** Yogas — Karakamsa chart (12-house projection) (POST /vedic/yogas/jaimini/karakamsa) */
+    yogasJaiminiKarakamsa(body: PostBody<'/vedic/yogas/jaimini/karakamsa'>, options?: CallOptions): ResultPromise<PostData<'/vedic/yogas/jaimini/karakamsa'>>;
+    /** Yogas — Jaimini Karaka yoga (all 8 karakas) (POST /vedic/yogas/jaimini/karaka-yoga) */
+    yogasJaiminiKarakaYoga(body: PostBody<'/vedic/yogas/jaimini/karaka-yoga'>, options?: CallOptions): ResultPromise<PostData<'/vedic/yogas/jaimini/karaka-yoga'>>;
     /** Yogas — Jaimini Raja yoga (POST /vedic/yogas/jaimini/raja) */
     yogasJaiminiRaja(body: PostBody<'/vedic/yogas/jaimini/raja'>, options?: CallOptions): ResultPromise<PostData<'/vedic/yogas/jaimini/raja'>>;
+    /** Yogas — Shubha-graha (functional natures) (POST /vedic/yogas/jaimini/shubha-graha) */
+    yogasJaiminiShubhaGraha(body: PostBody<'/vedic/yogas/jaimini/shubha-graha'>, options?: CallOptions): ResultPromise<PostData<'/vedic/yogas/jaimini/shubha-graha'>>;
     /** Yogas — Jaimini Viparita Raja yoga (POST /vedic/yogas/jaimini/viparita) */
     yogasJaiminiViparita(body: PostBody<'/vedic/yogas/jaimini/viparita'>, options?: CallOptions): ResultPromise<PostData<'/vedic/yogas/jaimini/viparita'>>;
     /** Yogas — Adhi (POST /vedic/yogas/parashara/adhi) */
@@ -1544,6 +1568,9 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
     },
     aspectTimeline: {
       compute: (body, options) => call<'/aspect-timeline', PostData<'/aspect-timeline'>>('/aspect-timeline', body, options),
+    },
+    aspects: {
+      compute: (body, options) => call<'/aspects', PostData<'/aspects'>>('/aspects', body, options),
     },
     bazi: {
       dayMaster: (body, options) => call<'/bazi/day-master', PostData<'/bazi/day-master'>>('/bazi/day-master', body, options),
@@ -1781,6 +1808,9 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       weekly: (body, options) => call<'/horoscope/weekly', PostData<'/horoscope/weekly'>>('/horoscope/weekly', body, options),
       yearly: (body, options) => call<'/horoscope/yearly', PostData<'/horoscope/yearly'>>('/horoscope/yearly', body, options),
     },
+    houses: {
+      compute: (body, options) => call<'/houses', PostData<'/houses'>>('/houses', body, options),
+    },
     humanDesign: {
       compatibility: (body, options) => call<'/human-design/compatibility', PostData<'/human-design/compatibility'>>('/human-design/compatibility', body, options),
       compute: (body, options) => call<'/human-design', PostData<'/human-design'>>('/human-design', body, options),
@@ -1865,6 +1895,9 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
     },
     moonAspects: {
       compute: (body, options) => call<'/moon-aspects', PostData<'/moon-aspects'>>('/moon-aspects', body, options),
+    },
+    moonPhase: {
+      compute: (body, options) => call<'/moon-phase', PostData<'/moon-phase'>>('/moon-phase', body, options),
     },
     moonVoc: {
       compute: (body, options) => call<'/moon-voc', PostData<'/moon-voc'>>('/moon-voc', body, options),
@@ -2015,6 +2048,7 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       business: (body, options) => call<'/reports/business', PostData<'/reports/business'>>('/reports/business', body, options),
       career: (body, options) => call<'/reports/career', PostData<'/reports/career'>>('/reports/career', body, options),
       child: (body, options) => call<'/reports/child', PostData<'/reports/child'>>('/reports/child', body, options),
+      generate: (body, options) => call<'/reports/generate', PostData<'/reports/generate'>>('/reports/generate', body, options),
       humanDesign: (body, options) => call<'/reports/human-design', PostData<'/reports/human-design'>>('/reports/human-design', body, options),
       lalKitab: (body, options) => call<'/reports/lal-kitab', PostData<'/reports/lal-kitab'>>('/reports/lal-kitab', body, options),
       love: (body, options) => call<'/reports/love', PostData<'/reports/love'>>('/reports/love', body, options),
@@ -2203,8 +2237,10 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       doshasParasharaMangal: (body, options) => call<'/vedic/doshas/parashara/mangal', PostData<'/vedic/doshas/parashara/mangal'>>('/vedic/doshas/parashara/mangal', body, options),
       doshasParasharaPitru: (body, options) => call<'/vedic/doshas/parashara/pitru', PostData<'/vedic/doshas/parashara/pitru'>>('/vedic/doshas/parashara/pitru', body, options),
       doshasParasharaShrapit: (body, options) => call<'/vedic/doshas/parashara/shrapit', PostData<'/vedic/doshas/parashara/shrapit'>>('/vedic/doshas/parashara/shrapit', body, options),
+      jaiminiArgalaAnalysis: (body, options) => call<'/vedic/jaimini/argala-analysis', PostData<'/vedic/jaimini/argala-analysis'>>('/vedic/jaimini/argala-analysis', body, options),
       jaiminiAspects: (body, options) => call<'/vedic/jaimini/aspects', PostData<'/vedic/jaimini/aspects'>>('/vedic/jaimini/aspects', body, options),
       jaiminiAtmakarakaNavamsa: (body, options) => call<'/vedic/jaimini/atmakaraka-navamsa', PostData<'/vedic/jaimini/atmakaraka-navamsa'>>('/vedic/jaimini/atmakaraka-navamsa', body, options),
+      jaiminiAtmakarakaRotation: (body, options) => call<'/vedic/jaimini/atmakaraka-rotation', PostData<'/vedic/jaimini/atmakaraka-rotation'>>('/vedic/jaimini/atmakaraka-rotation', body, options),
       jaiminiCharaKarakas: (body, options) => call<'/vedic/jaimini/chara-karakas', PostData<'/vedic/jaimini/chara-karakas'>>('/vedic/jaimini/chara-karakas', body, options),
       jaiminiDashaSummary: (body, options) => call<'/vedic/jaimini/dasha-summary', PostData<'/vedic/jaimini/dasha-summary'>>('/vedic/jaimini/dasha-summary', body, options),
       jaiminiDrishtiGraha: (body, options) => call<'/vedic/jaimini/drishti-graha', PostData<'/vedic/jaimini/drishti-graha'>>('/vedic/jaimini/drishti-graha', body, options),
@@ -2281,7 +2317,10 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       yogasJaiminiDaridra: (body, options) => call<'/vedic/yogas/jaimini/daridra', PostData<'/vedic/yogas/jaimini/daridra'>>('/vedic/yogas/jaimini/daridra', body, options),
       yogasJaiminiDhana: (body, options) => call<'/vedic/yogas/jaimini/dhana', PostData<'/vedic/yogas/jaimini/dhana'>>('/vedic/yogas/jaimini/dhana', body, options),
       yogasJaiminiFull: (body, options) => call<'/vedic/yogas/jaimini/full', PostData<'/vedic/yogas/jaimini/full'>>('/vedic/yogas/jaimini/full', body, options),
+      yogasJaiminiKarakamsa: (body, options) => call<'/vedic/yogas/jaimini/karakamsa', PostData<'/vedic/yogas/jaimini/karakamsa'>>('/vedic/yogas/jaimini/karakamsa', body, options),
+      yogasJaiminiKarakaYoga: (body, options) => call<'/vedic/yogas/jaimini/karaka-yoga', PostData<'/vedic/yogas/jaimini/karaka-yoga'>>('/vedic/yogas/jaimini/karaka-yoga', body, options),
       yogasJaiminiRaja: (body, options) => call<'/vedic/yogas/jaimini/raja', PostData<'/vedic/yogas/jaimini/raja'>>('/vedic/yogas/jaimini/raja', body, options),
+      yogasJaiminiShubhaGraha: (body, options) => call<'/vedic/yogas/jaimini/shubha-graha', PostData<'/vedic/yogas/jaimini/shubha-graha'>>('/vedic/yogas/jaimini/shubha-graha', body, options),
       yogasJaiminiViparita: (body, options) => call<'/vedic/yogas/jaimini/viparita', PostData<'/vedic/yogas/jaimini/viparita'>>('/vedic/yogas/jaimini/viparita', body, options),
       yogasParasharaAdhi: (body, options) => call<'/vedic/yogas/parashara/adhi', PostData<'/vedic/yogas/parashara/adhi'>>('/vedic/yogas/parashara/adhi', body, options),
       yogasParasharaDhana: (body, options) => call<'/vedic/yogas/parashara/dhana', PostData<'/vedic/yogas/parashara/dhana'>>('/vedic/yogas/parashara/dhana', body, options),

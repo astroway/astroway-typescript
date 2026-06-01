@@ -2985,6 +2985,66 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/moon-phase": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Moon Phase
+         * @description Current moon phase at a given moment — illumination %, age in days, elongation, waxing/waning, sun + moon zodiac signs. Geocentric Sun-Moon elongation per Meeus Ch.48.
+         */
+        post: operations["moon-phase"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/houses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * House Cusps
+         * @description Standalone house calculation — 12 cusps + ascendant + MC + ARMC + vertex + co-asc + polar-asc. Supports Placidus, Koch, Regiomontanus, Campanus, Topocentric, Whole Sign, Equal, Porphyry, Morinus etc. Auto-fallback warning on |lat|>66.5° quadrant systems.
+         */
+        post: operations["houses"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/aspects": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Aspect Matrix
+         * @description Standalone aspect calculation — full inter-planetary aspect list with type / exactAngle / orb / isApplying. Uses per-pair astro.com orb matrix. Same calcAspects() as /chart but without planet positions / houses / midpoints overhead.
+         */
+        post: operations["aspects"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/planetary-phases": {
         parameters: {
             query?: never;
@@ -6285,6 +6345,46 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/vedic/jaimini/atmakaraka-rotation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Jaimini — Atmakaraka rotation (timeline)
+         * @description Naisargika 1°/year symbolic progression of sidereal longitudes; scans for moments when the rank-1 chara karaka (Atmakaraka) changes. Returns timeline of soul-significator transitions with age-of-event + before/after planets + life-event hints. Default span 84 years; capped at 120.
+         */
+        post: operations["vedic_jaimini_atmakaraka-rotation"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/vedic/jaimini/argala-analysis": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Jaimini — Argala / Virodhargala scan
+         * @description Full Argala (intervention) + Virodhargala (counter-intervention) scan across all 12 houses. Argala from 2/4/11 (primary), 5 (secondary), 8 (special); Virodhargala from 12/10/3 (primary), 9 (secondary), 6 (special). Net influence and dominant-over metric per house.
+         */
+        post: operations["vedic_jaimini_argala-analysis"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/vedic/kp/cusps": {
         parameters: {
             query?: never;
@@ -6825,6 +6925,66 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/vedic/yogas/jaimini/karaka-yoga": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Yogas — Jaimini Karaka yoga (all 8 karakas)
+         * @description Scans every chara karaka (Atmakaraka..Darakaraka) for house-based yogas. Each karaka in kendra/trine/dusthana receives a strength score and manifestation hint (e.g. "Atmakaraka-in-5: creative/spiritual purpose"). Returns 8 yogas with karaka role + house + strength 0-100.
+         */
+        post: operations["vedic_yogas_jaimini_karaka-yoga"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/vedic/yogas/jaimini/karakamsa": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Yogas — Karakamsa chart (12-house projection)
+         * @description Karakamsa = Atmakaraka's sign in D9 Navamsha, treated as lagna for a 12-house projection. Each house carries canonical iṣṭa-devata / moksha / spiritual significations per Sanjay Rath. Yogas surfaced: 5th-house planet = Ishta Devata; 12th-house planet = Moksha Indicator.
+         */
+        post: operations["vedic_yogas_jaimini_karakamsa"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/vedic/yogas/jaimini/shubha-graha": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Yogas — Shubha-graha (functional natures)
+         * @description Functional benefic / malefic identification per Lagna-lord ownership. Returns each of the 7 visible grahas with natural nature + functional nature (yogakaraka / functional-benefic / neutral / functional-malefic / maraka) + houses owned + reasoning per BPHS Adhyaya 34 kendradhipati & maraka rules.
+         */
+        post: operations["vedic_yogas_jaimini_shubha-graha"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/vedic/doshas/lal-kitab/manglik": {
         parameters: {
             query?: never;
@@ -7317,7 +7477,7 @@ export interface paths {
          * Zodiac Signs
          * @description Reference list of the 12 zodiac signs with element, modality, polarity, classical and modern rulers, exaltation, fall, detriment, and body parts.
          */
-        get: operations["reference_signs"];
+        get: operations["reference_signs_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7337,7 +7497,7 @@ export interface paths {
          * Planets
          * @description Reference list of planetary bodies (Sun..Pluto + nodes + Chiron + Lilith) with archetype, rulerships, exaltation/fall/detriment, orbit period, and category.
          */
-        get: operations["reference_planets"];
+        get: operations["reference_planets_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7357,7 +7517,7 @@ export interface paths {
          * Houses
          * @description Reference list of the 12 houses with natural sign, natural ruler, life area, classical and modern significations, axis pairing, and angularity.
          */
-        get: operations["reference_houses"];
+        get: operations["reference_houses_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7377,7 +7537,7 @@ export interface paths {
          * Aspects
          * @description Reference catalogue of major / minor / harmonic aspects with default orbs per orb school (Lilly, Ptolemy, modern), nature, and harmonic family.
          */
-        get: operations["reference_aspects"];
+        get: operations["reference_aspects_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7397,7 +7557,7 @@ export interface paths {
          * Elements
          * @description Reference list of fire / earth / air / water with their qualities, signs, planetary affinity, season, body humour, and Jungian function.
          */
-        get: operations["reference_elements"];
+        get: operations["reference_elements_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7417,7 +7577,7 @@ export interface paths {
          * Modalities
          * @description Reference list of cardinal / fixed / mutable modalities with associated signs, behavioural keyword, best uses, and shadow side.
          */
-        get: operations["reference_modalities"];
+        get: operations["reference_modalities_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7437,7 +7597,7 @@ export interface paths {
          * Polarities
          * @description Reference list of masculine / feminine (yang / yin) polarities with associated signs and energetic descriptions.
          */
-        get: operations["reference_polarities"];
+        get: operations["reference_polarities_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7457,7 +7617,7 @@ export interface paths {
          * Essential Dignities
          * @description Classical (Ptolemy / Lilly) essential dignities table — domicile, exaltation degree, day/night/common triplicity rulers, detriment, and fall — plus Lilly's scoring weights.
          */
-        get: operations["reference_dignities"];
+        get: operations["reference_dignities_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7477,7 +7637,7 @@ export interface paths {
          * Decans
          * @description Reference list of the 36 decans (10° divisions) with Egyptian Chaldean ruler, modern triplicity ruler, classical face ruler, and Liber Hermetis decanic deity name where attested.
          */
-        get: operations["reference_decans"];
+        get: operations["reference_decans_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7497,7 +7657,7 @@ export interface paths {
          * Nakshatras
          * @description Reference list of the 27 Vedic nakshatras with sidereal degree range (Lahiri), symbol, deity, Vimshottari ruler, gana, yoni, varna, guna, and pada starting sign.
          */
-        get: operations["reference_nakshatras"];
+        get: operations["reference_nakshatras_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7517,7 +7677,7 @@ export interface paths {
          * Hellenistic Lots
          * @description Reference catalogue of Hellenistic Lots / Arabic Parts (Fortune, Spirit, Eros, etc.) with day/night formulas, sect-sensitivity flag, and signification.
          */
-        get: operations["reference_lots"];
+        get: operations["reference_lots_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7537,7 +7697,7 @@ export interface paths {
          * Asteroids & Centaurs
          * @description Reference list of the major asteroids and centaurs (Ceres, Pallas, Juno, Vesta, Chiron, Lilith, Eris, Sedna, Pholus) with Swiss Ephemeris ID, archetype, mythology, and orbit period.
          */
-        get: operations["reference_asteroids"];
+        get: operations["reference_asteroids_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7557,7 +7717,7 @@ export interface paths {
          * Zodiac Systems
          * @description Reference list of zodiac systems supported (Tropical, Sidereal Lahiri/Fagan-Bradley/Krishnamurti/Raman, Draconic, Heliocentric) with current ayanamsha offset and primary use cases.
          */
-        get: operations["reference_zodiac-systems"];
+        get: operations["reference_zodiac-systems_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7577,7 +7737,7 @@ export interface paths {
          * Glyphs
          * @description Unicode glyphs and fallback text for all astrological symbols (signs, planets, aspects, points, asteroids).
          */
-        get: operations["reference_glyphs"];
+        get: operations["reference_glyphs_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7597,7 +7757,7 @@ export interface paths {
          * Crystals — Full Directory
          * @description Reference list of crystals with chakra, zodiac, planet, element, hardness, and purpose tags. Returns chakra and purpose taxonomies for filtering.
          */
-        get: operations["esoteric_crystals"];
+        get: operations["esoteric_crystals_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7617,7 +7777,7 @@ export interface paths {
          * Crystals by Zodiac Sign
          * @description Crystals indexed for a given zodiac sign (case-insensitive English name).
          */
-        get: operations["esoteric_crystals_by-zodiac_{sign}"];
+        get: operations["esoteric_crystals_by-zodiac_{sign}_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7637,7 +7797,7 @@ export interface paths {
          * Crystals by Chakra
          * @description Crystals indexed for a given chakra (Root / Sacral / Solar Plexus / Heart / Throat / Third Eye / Crown).
          */
-        get: operations["esoteric_crystals_by-chakra_{chakra}"];
+        get: operations["esoteric_crystals_by-chakra_{chakra}_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7657,7 +7817,7 @@ export interface paths {
          * Crystals by Purpose
          * @description Crystals indexed by intent keyword (love, prosperity, healing, protection, etc.). Substring-matches against purpose tags.
          */
-        get: operations["esoteric_crystals_by-purpose_{purpose}"];
+        get: operations["esoteric_crystals_by-purpose_{purpose}_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7697,7 +7857,7 @@ export interface paths {
          * Angel Numbers — Catalogue
          * @description Full angel number catalogue (singles, masters, repeating, mirror, sequential patterns) with short and full meanings, themes.
          */
-        get: operations["esoteric_angel-numbers"];
+        get: operations["esoteric_angel-numbers_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7717,7 +7877,7 @@ export interface paths {
          * Angel Number Lookup
          * @description Look up the meaning of a specific angel number sequence. Falls back to numerological reduction if not in catalogue.
          */
-        get: operations["esoteric_angel-numbers_{number}"];
+        get: operations["esoteric_angel-numbers_{number}_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7757,7 +7917,7 @@ export interface paths {
          * Angel Numbers for Life Path
          * @description Angel numbers aligned to a given life-path number (1-9, 11, 22, 33). Useful to identify recurring numerical signatures aligned with one's soul path.
          */
-        get: operations["esoteric_angel-numbers_by-life-path_{n}"];
+        get: operations["esoteric_angel-numbers_by-life-path_{n}_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7777,7 +7937,7 @@ export interface paths {
          * Daily Angel Number
          * @description Compute today's personal angel number from date (digit-sum reduced to single digit). Optional `?date=YYYY-MM-DD` query.
          */
-        get: operations["esoteric_angel-numbers_today"];
+        get: operations["esoteric_angel-numbers_today_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7797,7 +7957,7 @@ export interface paths {
          * Dream Symbol Dictionary
          * @description Full dream symbol dictionary with category, element, archetype, common and shadow meanings, and recurring-dream readings.
          */
-        get: operations["esoteric_dreams"];
+        get: operations["esoteric_dreams_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7817,7 +7977,7 @@ export interface paths {
          * Dream Symbol Lookup
          * @description Look up a dream symbol by keyword. Exact match if available, otherwise partial substring matches.
          */
-        get: operations["esoteric_dreams_symbol_{keyword}"];
+        get: operations["esoteric_dreams_symbol_{keyword}_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7857,7 +8017,7 @@ export interface paths {
          * Dream Symbols by Element
          * @description Dream symbols indexed by element (fire / earth / air / water / spirit).
          */
-        get: operations["esoteric_dreams_by-element_{element}"];
+        get: operations["esoteric_dreams_by-element_{element}_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -7877,7 +8037,7 @@ export interface paths {
          * Recurring Dream Themes
          * @description Catalogue of common recurring dream themes (falling, naked in public, losing teeth, being chased) with universal psychological meanings.
          */
-        get: operations["esoteric_dreams_recurring-themes"];
+        get: operations["esoteric_dreams_recurring-themes_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -8897,7 +9057,7 @@ export interface paths {
          * RWS — All Cards
          * @description Full 78-card RWS deck listing with upright/reversed meanings, keywords, astrology, and yes/no affinity.
          */
-        get: operations["tarot_rider-waite_cards"];
+        get: operations["tarot_rider-waite_cards_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -8917,7 +9077,7 @@ export interface paths {
          * RWS — Single Card
          * @description Single RWS card lookup by slug (e.g. "the-fool", "ace-of-cups"). Returns full meaning structure.
          */
-        get: operations["tarot_rider-waite_cards_{slug}"];
+        get: operations["tarot_rider-waite_cards_{slug}_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -8937,7 +9097,7 @@ export interface paths {
          * RWS — 22 Majors
          * @description The 22 Major Arcana cards only.
          */
-        get: operations["tarot_rider-waite_majors"];
+        get: operations["tarot_rider-waite_majors_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -8957,7 +9117,7 @@ export interface paths {
          * RWS — 40 Minors
          * @description The 40 numbered Minor Arcana cards (Ace through 10 of each suit).
          */
-        get: operations["tarot_rider-waite_minors"];
+        get: operations["tarot_rider-waite_minors_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -8977,7 +9137,7 @@ export interface paths {
          * RWS — 16 Court Cards
          * @description The 16 Court cards (Page, Knight, Queen, King × 4 suits).
          */
-        get: operations["tarot_rider-waite_courts"];
+        get: operations["tarot_rider-waite_courts_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -8997,7 +9157,7 @@ export interface paths {
          * RWS — Suit
          * @description All 14 cards of a suit (wands, cups, swords, or pentacles).
          */
-        get: operations["tarot_rider-waite_suits_{suit}"];
+        get: operations["tarot_rider-waite_suits_{suit}_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -9017,7 +9177,7 @@ export interface paths {
          * RWS — Cards of Number
          * @description All Minor Arcana cards of a given number 1-14 (Ace=1..King=14).
          */
-        get: operations["tarot_rider-waite_numbers_{n}"];
+        get: operations["tarot_rider-waite_numbers_{n}_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -9037,7 +9197,7 @@ export interface paths {
          * RWS — Cards by Element
          * @description All Minor cards mapped to fire / water / air / earth element.
          */
-        get: operations["tarot_rider-waite_elements_{element}"];
+        get: operations["tarot_rider-waite_elements_{element}_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -9057,7 +9217,7 @@ export interface paths {
          * RWS — Cards by Keyword
          * @description Substring search across upright and reversed keywords across all 78 cards.
          */
-        get: operations["tarot_rider-waite_keywords_{keyword}"];
+        get: operations["tarot_rider-waite_keywords_{keyword}_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -9077,7 +9237,7 @@ export interface paths {
          * RWS — All Spreads
          * @description List of all 12 RWS spread definitions.
          */
-        get: operations["tarot_rider-waite_spreads"];
+        get: operations["tarot_rider-waite_spreads_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -9097,7 +9257,7 @@ export interface paths {
          * RWS — Single Spread
          * @description Definition of a single spread by slug.
          */
-        get: operations["tarot_rider-waite_spreads_{slug}"];
+        get: operations["tarot_rider-waite_spreads_{slug}_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -9597,7 +9757,7 @@ export interface paths {
          * Marseille — All Cards
          * @description 78-card Marseille deck. Justice = 8, Strength = 11 (pre-Waite swap). Pip minors interpreted by number+suit.
          */
-        get: operations["tarot_marseille_cards"];
+        get: operations["tarot_marseille_cards_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -9617,7 +9777,7 @@ export interface paths {
          * Marseille — Single Card
          * @description Single Marseille card lookup by slug.
          */
-        get: operations["tarot_marseille_cards_{slug}"];
+        get: operations["tarot_marseille_cards_{slug}_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -9637,7 +9797,7 @@ export interface paths {
          * Marseille — 22 Majors
          * @description 22 Major Arcana of Marseille deck.
          */
-        get: operations["tarot_marseille_majors"];
+        get: operations["tarot_marseille_majors_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -9657,7 +9817,7 @@ export interface paths {
          * Marseille — All Spreads
          * @description List of all Marseille spreads (incl. Jodorowsky cross).
          */
-        get: operations["tarot_marseille_spreads"];
+        get: operations["tarot_marseille_spreads_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -9677,7 +9837,7 @@ export interface paths {
          * Marseille — Single Spread
          * @description Definition of a single Marseille spread.
          */
-        get: operations["tarot_marseille_spreads_{slug}"];
+        get: operations["tarot_marseille_spreads_{slug}_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -10017,7 +10177,7 @@ export interface paths {
          * Lenormand — All Cards
          * @description 36-card Lenormand oracle deck.
          */
-        get: operations["tarot_lenormand_cards"];
+        get: operations["tarot_lenormand_cards_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -10037,7 +10197,7 @@ export interface paths {
          * Lenormand — Single Card
          * @description Single Lenormand card lookup by slug.
          */
-        get: operations["tarot_lenormand_cards_{slug}"];
+        get: operations["tarot_lenormand_cards_{slug}_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -10197,7 +10357,7 @@ export interface paths {
          * Lenormand — 36 Houses
          * @description The 36 fixed houses for Grand Tableau interpretation.
          */
-        get: operations["tarot_lenormand_houses"];
+        get: operations["tarot_lenormand_houses_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -10257,7 +10417,7 @@ export interface paths {
          * API Status
          * @description Return extended service status: ephemeris availability, WASM load state, uptime, version. Auth via `?key=YOUR_API_KEY` query param (not `X-Api-Key` header).
          */
-        get: operations["status"];
+        get: operations["status_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -10297,7 +10457,27 @@ export interface paths {
          * API Key Usage
          * @description Get usage statistics for the current API key: today/week/month request counts, rate limit info, and top endpoints by usage.
          */
-        get: operations["keys_usage"];
+        get: operations["keys_usage_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/auth/keys/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * API Key Introspection
+         * @description Return metadata about the calling API key: plan, remaining credits, period end, bound domain, status. Useful for any SDK consumer that wants to surface plan and balance in its own UI.
+         */
+        get: operations["auth_keys_me_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -10630,6 +10810,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/reports/generate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Generate Report — Unified Dispatcher (V2)
+         * @description Single endpoint over the 12 type-specific renderers — pass report_type ("natal" | "transit-yearly" | "synastry" | "business" | "career" | "love" | "money" | "child" | "lal-kitab" | "human-design" | "tarot" | "vedic-kundli") plus the renderer-specific inputs. SDK ergonomics: one method instead of 12. Required fields vary by type — chart for most, chart1+chart2 for synastry, seed for tarot (chart optional).
+         */
+        post: operations["reports_generate"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/reports/ai/natal-narrative": {
         parameters: {
             query?: never;
@@ -10761,7 +10961,7 @@ export interface paths {
          * List Webhook Subscriptions
          * @description List all active webhook subscriptions for the authenticated user.
          */
-        get: operations["webhooks"];
+        get: operations["webhooks_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -11105,7 +11305,7 @@ export interface paths {
          * MCP Tools List
          * @description Auto-generated tool manifest for MCP clients (modelcontextprotocol/2025-03 spec).
          */
-        get: operations["mcp_tools-list"];
+        get: operations["mcp_tools-list_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -12865,7 +13065,7 @@ export interface paths {
          * Daily Horoscope (HTML)
          * @description Iframe-friendly daily horoscope card per zodiac sign.
          */
-        get: operations["embed_daily-horoscope"];
+        get: operations["embed_daily-horoscope_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -12885,7 +13085,7 @@ export interface paths {
          * Natal Wheel (HTML+SVG)
          * @description Iframe natal wheel render.
          */
-        get: operations["embed_wheel"];
+        get: operations["embed_wheel_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -12905,7 +13105,7 @@ export interface paths {
          * Transit Timeline (HTML)
          * @description 7-day Moon ingress timeline.
          */
-        get: operations["embed_transit-timeline"];
+        get: operations["embed_transit-timeline_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -12925,7 +13125,7 @@ export interface paths {
          * HD Bodygraph (HTML)
          * @description Type/strategy/authority/profile + center status.
          */
-        get: operations["embed_bodygraph"];
+        get: operations["embed_bodygraph_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -12945,7 +13145,7 @@ export interface paths {
          * Vedic Kundli (HTML+SVG)
          * @description North-Indian kundli SVG.
          */
-        get: operations["embed_kundli"];
+        get: operations["embed_kundli_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -12965,7 +13165,7 @@ export interface paths {
          * Mini Chart (HTML+SVG)
          * @description Compact natal wheel for sidebars.
          */
-        get: operations["embed_mini-chart"];
+        get: operations["embed_mini-chart_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -12985,7 +13185,7 @@ export interface paths {
          * Planet of Day (HTML)
          * @description Today's planetary day-ruler card.
          */
-        get: operations["embed_planet-of-day"];
+        get: operations["embed_planet-of-day_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -13005,7 +13205,7 @@ export interface paths {
          * Moon Phase (HTML+SVG)
          * @description Current Moon phase widget.
          */
-        get: operations["embed_moon-phase"];
+        get: operations["embed_moon-phase_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -13025,7 +13225,7 @@ export interface paths {
          * Daily Tarot (HTML)
          * @description Deterministic 1-card RWS draw.
          */
-        get: operations["embed_daily-tarot"];
+        get: operations["embed_daily-tarot_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -13045,7 +13245,7 @@ export interface paths {
          * Monthly Forecast (HTML)
          * @description Per-sign 4-week themed forecast.
          */
-        get: operations["embed_monthly-forecast"];
+        get: operations["embed_monthly-forecast_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -13145,7 +13345,7 @@ export interface paths {
          * MCP Agent Pool Status
          * @description 8 personas with specialties.
          */
-        get: operations["mcp_agent-pool-status"];
+        get: operations["mcp_agent-pool-status_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -13685,7 +13885,7 @@ export interface paths {
          * Hexagram Lookup
          * @description Fetch hexagram 1-64 by King Wen number.
          */
-        get: operations["iching_lookup_{number}"];
+        get: operations["iching_lookup_{number}_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -13785,7 +13985,7 @@ export interface paths {
          * Aries — Cardinal Fire
          * @description Pioneering will, raw initiation. Ruler Mars. I AM signature.
          */
-        get: operations["zodiac_aries"];
+        get: operations["zodiac_aries_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -13805,7 +14005,7 @@ export interface paths {
          * Taurus — Fixed Earth
          * @description Embodied stability, sensory wealth. Ruler Venus. I HAVE.
          */
-        get: operations["zodiac_taurus"];
+        get: operations["zodiac_taurus_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -13825,7 +14025,7 @@ export interface paths {
          * Gemini — Mutable Air
          * @description Curious connection, plural perspectives. Ruler Mercury. I THINK.
          */
-        get: operations["zodiac_gemini"];
+        get: operations["zodiac_gemini_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -13845,7 +14045,7 @@ export interface paths {
          * Cancer — Cardinal Water
          * @description Protective nurture, tidal memory. Ruler Moon. I FEEL.
          */
-        get: operations["zodiac_cancer"];
+        get: operations["zodiac_cancer_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -13865,7 +14065,7 @@ export interface paths {
          * Leo — Fixed Fire
          * @description Radiant generosity, theatrical authority. Ruler Sun. I WILL.
          */
-        get: operations["zodiac_leo"];
+        get: operations["zodiac_leo_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -13885,7 +14085,7 @@ export interface paths {
          * Virgo — Mutable Earth
          * @description Discerning service, refined craft. Ruler Mercury. I ANALYZE.
          */
-        get: operations["zodiac_virgo"];
+        get: operations["zodiac_virgo_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -13905,7 +14105,7 @@ export interface paths {
          * Libra — Cardinal Air
          * @description Partnership, aesthetic balance, mediation. Ruler Venus. I BALANCE.
          */
-        get: operations["zodiac_libra"];
+        get: operations["zodiac_libra_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -13925,7 +14125,7 @@ export interface paths {
          * Scorpio — Fixed Water
          * @description Penetrating depth, transformation. Mars + Pluto. I DESIRE.
          */
-        get: operations["zodiac_scorpio"];
+        get: operations["zodiac_scorpio_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -13945,7 +14145,7 @@ export interface paths {
          * Sagittarius — Mutable Fire
          * @description Philosophical quest, frank expansion. Ruler Jupiter. I SEE.
          */
-        get: operations["zodiac_sagittarius"];
+        get: operations["zodiac_sagittarius_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -13965,7 +14165,7 @@ export interface paths {
          * Capricorn — Cardinal Earth
          * @description Disciplined mastery, long-view structure. Ruler Saturn. I USE.
          */
-        get: operations["zodiac_capricorn"];
+        get: operations["zodiac_capricorn_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -13985,7 +14185,7 @@ export interface paths {
          * Aquarius — Fixed Air
          * @description Communal innovation, futurist detachment. Saturn + Uranus. I KNOW.
          */
-        get: operations["zodiac_aquarius"];
+        get: operations["zodiac_aquarius_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -14005,7 +14205,27 @@ export interface paths {
          * Pisces — Mutable Water
          * @description Oceanic compassion, dissolving boundaries. Jupiter + Neptune. I BELIEVE.
          */
-        get: operations["zodiac_pisces"];
+        get: operations["zodiac_pisces_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/version": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Version
+         * @description Returns the current deploy version, build commit, start time, and uptime. Free, no authentication required. SDK clients can call this on boot to diagnose unexpected behaviour — `build_commit` uniquely identifies the deploy.
+         */
+        get: operations["version"];
         put?: never;
         post?: never;
         delete?: never;
@@ -14218,11 +14438,8 @@ export interface components {
         Compatibility: {
             sign1: string;
             sign2: string;
-            /**
-             * @default uk
-             * @enum {string}
-             */
-            language: "uk" | "en";
+            /** @enum {string} */
+            language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
             /** @default false */
             disclaimer_inline: boolean;
         };
@@ -14250,13 +14467,16 @@ export interface components {
         };
         CreateKey: {
             name: string;
-            /**
-             * @default free
-             * @enum {string}
-             */
-            plan: "free" | "indie" | "starter" | "pro" | "business" | "enterprise" | "hd_pack" | "esoteric_pack" | "vedic_pack" | "reports_pack";
             /** @enum {string} */
             mode?: "live" | "test";
+            origin_restriction?: {
+                /**
+                 * @default server-only
+                 * @enum {string}
+                 */
+                type: "server-only" | "public" | "allowlist";
+                allowed_origins?: string[];
+            };
         };
         CyclicIndex: {
             startYear: number | null;
@@ -14453,11 +14673,8 @@ export interface components {
         };
         /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss). Defaults to lat/lon/tz=0 if omitted; pass real values for accurate computation. */
         InterpretElement: components["schemas"]["ChartInput"] & ({
-            /**
-             * @default uk
-             * @enum {string}
-             */
-            language: "uk" | "en";
+            /** @enum {string} */
+            language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
             /** @default false */
             disclaimer_inline: boolean;
         } & {
@@ -14465,11 +14682,8 @@ export interface components {
         });
         /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss). Defaults to lat/lon/tz=0 if omitted; pass real values for accurate computation. */
         InterpretNatal: components["schemas"]["ChartInput"] & ({
-            /**
-             * @default uk
-             * @enum {string}
-             */
-            language: "uk" | "en";
+            /** @enum {string} */
+            language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
             /** @default false */
             disclaimer_inline: boolean;
         } & {
@@ -14478,11 +14692,8 @@ export interface components {
         /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss). Defaults to lat/lon/tz=0 if omitted; pass real values for accurate computation. */
         InterpretPlacement: components["schemas"]["ChartInput"] & ({
             planet: string;
-            /**
-             * @default uk
-             * @enum {string}
-             */
-            language: "uk" | "en";
+            /** @enum {string} */
+            language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
             /** @default false */
             disclaimer_inline: boolean;
         } & {
@@ -14490,11 +14701,8 @@ export interface components {
         });
         /** @description Pair of natal charts for relationship calculations: synastry, composite, davison. */
         InterpretSynastry: components["schemas"]["TwoChart"] & {
-            /**
-             * @default uk
-             * @enum {string}
-             */
-            language: "uk" | "en";
+            /** @enum {string} */
+            language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
             /** @default false */
             disclaimer_inline: boolean;
         };
@@ -14503,11 +14711,8 @@ export interface components {
             transitDate: string;
             transitTime?: string;
             transitTzOffset?: number | null;
-            /**
-             * @default uk
-             * @enum {string}
-             */
-            language: "uk" | "en";
+            /** @enum {string} */
+            language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
             /** @default false */
             disclaimer_inline: boolean;
         } & {
@@ -14615,11 +14820,90 @@ export interface components {
         } & {
             [key: string]: unknown;
         });
+        BrandingObject: {
+            companyName?: string;
+            /** Format: uri */
+            companyUrl?: string;
+            /** Format: email */
+            companyEmail?: string;
+            companyMobile?: string;
+            companyBio?: string;
+            /** Format: uri */
+            logoUrl?: string;
+            /** Format: uri */
+            frontImage?: string;
+            textPrimaryColor?: string;
+            textSecondaryColor?: string;
+            backgroundColor?: string;
+            themeColor?: string;
+            headingColor?: string;
+            footerText?: string;
+            /** @enum {string} */
+            fontPairing?: "serif-sans" | "sans-serif" | "serif-only" | "sans-only" | "system";
+            reportName?: string;
+        };
+        GenerateReport: {
+            /** @enum {string} */
+            report_type: "natal" | "transit-yearly" | "synastry" | "business" | "career" | "love" | "money" | "child" | "lal-kitab" | "human-design" | "tarot" | "vedic-kundli";
+            chart?: components["schemas"]["ChartInput"];
+            chart1?: components["schemas"]["ChartInput"];
+            chart2?: components["schemas"]["ChartInput"];
+            year?: number;
+            spread?: string;
+            seed?: number | null;
+            name?: string;
+            allowReversed?: boolean;
+            /** @enum {string} */
+            language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "hi" | "fr" | "ko" | "it" | "ja" | "id" | "tr" | "nl" | "ro" | "cs" | "vi" | "ar" | "el" | "hu";
+            whitelabel?: boolean | {
+                companyName?: string;
+                /** Format: uri */
+                companyUrl?: string;
+                /** Format: email */
+                companyEmail?: string;
+                companyMobile?: string;
+                companyBio?: string;
+                /** Format: uri */
+                logoUrl?: string;
+                /** Format: uri */
+                frontImage?: string;
+                textPrimaryColor?: string;
+                textSecondaryColor?: string;
+                backgroundColor?: string;
+                themeColor?: string;
+                headingColor?: string;
+                footerText?: string;
+                /** @enum {string} */
+                fontPairing?: "serif-sans" | "sans-serif" | "serif-only" | "sans-only" | "system";
+                reportName?: string;
+            };
+        };
         NatalReport: {
             chart: components["schemas"]["ChartInput"];
             /** @enum {string} */
             language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "hi" | "fr" | "ko" | "it" | "ja" | "id" | "tr" | "nl" | "ro" | "cs" | "vi" | "ar" | "el" | "hu";
-            whitelabel?: boolean;
+            whitelabel?: boolean | {
+                companyName?: string;
+                /** Format: uri */
+                companyUrl?: string;
+                /** Format: email */
+                companyEmail?: string;
+                companyMobile?: string;
+                companyBio?: string;
+                /** Format: uri */
+                logoUrl?: string;
+                /** Format: uri */
+                frontImage?: string;
+                textPrimaryColor?: string;
+                textSecondaryColor?: string;
+                backgroundColor?: string;
+                themeColor?: string;
+                headingColor?: string;
+                footerText?: string;
+                /** @enum {string} */
+                fontPairing?: "serif-sans" | "sans-serif" | "serif-only" | "sans-only" | "system";
+                reportName?: string;
+            };
         };
         Natal: {
             chart: components["schemas"]["ChartInput"];
@@ -14820,11 +15104,8 @@ export interface components {
             /** @enum {string} */
             sign: "aries" | "taurus" | "gemini" | "cancer" | "leo" | "virgo" | "libra" | "scorpio" | "sagittarius" | "capricorn" | "aquarius" | "pisces";
             date?: string;
-            /**
-             * @default uk
-             * @enum {string}
-             */
-            language: "uk" | "en";
+            /** @enum {string} */
+            language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
             /** @default false */
             disclaimer_inline: boolean;
         };
@@ -14910,7 +15191,28 @@ export interface components {
             chart2: components["schemas"]["ChartInput"];
             /** @enum {string} */
             language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "hi" | "fr" | "ko" | "it" | "ja" | "id" | "tr" | "nl" | "ro" | "cs" | "vi" | "ar" | "el" | "hu";
-            whitelabel?: boolean;
+            whitelabel?: boolean | {
+                companyName?: string;
+                /** Format: uri */
+                companyUrl?: string;
+                /** Format: email */
+                companyEmail?: string;
+                companyMobile?: string;
+                companyBio?: string;
+                /** Format: uri */
+                logoUrl?: string;
+                /** Format: uri */
+                frontImage?: string;
+                textPrimaryColor?: string;
+                textSecondaryColor?: string;
+                backgroundColor?: string;
+                themeColor?: string;
+                headingColor?: string;
+                footerText?: string;
+                /** @enum {string} */
+                fontPairing?: "serif-sans" | "sans-serif" | "serif-only" | "sans-only" | "system";
+                reportName?: string;
+            };
         };
         Synastry: {
             chart1: components["schemas"]["ChartInput"];
@@ -14938,7 +15240,28 @@ export interface components {
             allowReversed?: boolean;
             /** @enum {string} */
             language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "hi" | "fr" | "ko" | "it" | "ja" | "id" | "tr" | "nl" | "ro" | "cs" | "vi" | "ar" | "el" | "hu";
-            whitelabel?: boolean;
+            whitelabel?: boolean | {
+                companyName?: string;
+                /** Format: uri */
+                companyUrl?: string;
+                /** Format: email */
+                companyEmail?: string;
+                companyMobile?: string;
+                companyBio?: string;
+                /** Format: uri */
+                logoUrl?: string;
+                /** Format: uri */
+                frontImage?: string;
+                textPrimaryColor?: string;
+                textSecondaryColor?: string;
+                backgroundColor?: string;
+                themeColor?: string;
+                headingColor?: string;
+                footerText?: string;
+                /** @enum {string} */
+                fontPairing?: "serif-sans" | "sans-serif" | "serif-only" | "sans-only" | "system";
+                reportName?: string;
+            };
         };
         ThreeChart: {
             chart1: components["schemas"]["ChartInput"];
@@ -15018,7 +15341,28 @@ export interface components {
             year?: number;
             /** @enum {string} */
             language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "hi" | "fr" | "ko" | "it" | "ja" | "id" | "tr" | "nl" | "ro" | "cs" | "vi" | "ar" | "el" | "hu";
-            whitelabel?: boolean;
+            whitelabel?: boolean | {
+                companyName?: string;
+                /** Format: uri */
+                companyUrl?: string;
+                /** Format: email */
+                companyEmail?: string;
+                companyMobile?: string;
+                companyBio?: string;
+                /** Format: uri */
+                logoUrl?: string;
+                /** Format: uri */
+                frontImage?: string;
+                textPrimaryColor?: string;
+                textSecondaryColor?: string;
+                backgroundColor?: string;
+                themeColor?: string;
+                headingColor?: string;
+                footerText?: string;
+                /** @enum {string} */
+                fontPairing?: "serif-sans" | "sans-serif" | "serif-only" | "sans-only" | "system";
+                reportName?: string;
+            };
         };
         /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss). Defaults to lat/lon/tz=0 if omitted; pass real values for accurate computation. */
         Transits: components["schemas"]["ChartInput"] & ({
@@ -15060,7 +15404,28 @@ export interface components {
             chart: components["schemas"]["ChartInput"];
             /** @enum {string} */
             language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "hi" | "fr" | "ko" | "it" | "ja" | "id" | "tr" | "nl" | "ro" | "cs" | "vi" | "ar" | "el" | "hu";
-            whitelabel?: boolean;
+            whitelabel?: boolean | {
+                companyName?: string;
+                /** Format: uri */
+                companyUrl?: string;
+                /** Format: email */
+                companyEmail?: string;
+                companyMobile?: string;
+                companyBio?: string;
+                /** Format: uri */
+                logoUrl?: string;
+                /** Format: uri */
+                frontImage?: string;
+                textPrimaryColor?: string;
+                textSecondaryColor?: string;
+                backgroundColor?: string;
+                themeColor?: string;
+                headingColor?: string;
+                footerText?: string;
+                /** @enum {string} */
+                fontPairing?: "serif-sans" | "sans-serif" | "serif-only" | "sans-only" | "system";
+                reportName?: string;
+            };
         };
         /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss). Defaults to lat/lon/tz=0 if omitted; pass real values for accurate computation. */
         Vedic: components["schemas"]["ChartInput"] & ({
@@ -28551,6 +28916,328 @@ export interface operations {
                                 planet?: string;
                                 type?: string;
                                 exact?: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    "moon-phase": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "date": "2024-01-25",
+                 *       "time": "12:00:00",
+                 *       "latitude": 0,
+                 *       "longitude": 0,
+                 *       "timezoneOffset": 0
+                 *     }
+                 */
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "phase": 0.999,
+                     *         "phaseName": "Full Moon",
+                     *         "majorPhase": "full_moon",
+                     *         "illuminationPercent": 99.94,
+                     *         "elongationDeg": 177.25,
+                     *         "ageDays": 14.54,
+                     *         "waxing": true,
+                     *         "moonSign": "Leo",
+                     *         "sunSign": "Aquarius",
+                     *         "moonLongitude": 122.24,
+                     *         "sunLongitude": 304.99
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            phase?: number;
+                            phaseName?: string;
+                            majorPhase?: string;
+                            illuminationPercent?: number;
+                            elongationDeg?: number;
+                            ageDays?: number;
+                            waxing?: boolean;
+                            moonSign?: string;
+                            sunSign?: string;
+                            moonLongitude?: number;
+                            sunLongitude?: number;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    houses: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "date": "1926-06-01",
+                 *       "time": "09:30:00",
+                 *       "timezoneOffset": -8,
+                 *       "latitude": 34.0522,
+                 *       "longitude": -118.2437,
+                 *       "houseSystem": "P"
+                 *     }
+                 */
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "houses": {
+                     *           "system": "P",
+                     *           "cusps": [
+                     *             133.07,
+                     *             156.14,
+                     *             183.67,
+                     *             216.01,
+                     *             250.59,
+                     *             283.51,
+                     *             313.07,
+                     *             336.14,
+                     *             3.67,
+                     *             36.01,
+                     *             70.59,
+                     *             103.51
+                     *           ],
+                     *           "ascendant": 133.07,
+                     *           "mc": 36.01,
+                     *           "armc": 33.69,
+                     *           "vertex": 264.52,
+                     *           "equatorialAsc": 121.45
+                     *         }
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            houses?: {
+                                system?: string;
+                                cusps?: number[];
+                                ascendant?: number;
+                                mc?: number;
+                                armc?: number;
+                                vertex?: number;
+                                equatorialAsc?: number;
+                            };
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    aspects: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "date": "1926-06-01",
+                 *       "time": "09:30:00",
+                 *       "timezoneOffset": -8,
+                 *       "latitude": 34.0522,
+                 *       "longitude": -118.2437
+                 *     }
+                 */
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            count?: number;
+                            aspects?: {
+                                planet1?: string;
+                                planet2?: string;
+                                type?: {
+                                    name?: string;
+                                    angle?: number;
+                                    symbol?: string;
+                                    isMajor?: boolean;
+                                };
+                                exactAngle?: number;
+                                orb?: number;
+                                isApplying?: boolean;
                             }[];
                         };
                     };
@@ -43386,6 +44073,196 @@ export interface operations {
             };
         };
     };
+    "vedic_jaimini_atmakaraka-rotation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "date": "1996-12-07",
+                 *       "time": "10:34:00",
+                 *       "timezoneOffset": 5.5,
+                 *       "latitude": 13.0389,
+                 *       "longitude": 80.2619,
+                 *       "years": 84
+                 *     }
+                 */
+                "application/json": components["schemas"]["ChartInput"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            lagna?: Record<string, never>;
+                            birthAtmakaraka?: {
+                                graha?: number;
+                                grahaName?: string;
+                            };
+                            events?: {
+                                ageYears?: number;
+                                fromPlanet?: Record<string, never>;
+                                toPlanet?: Record<string, never>;
+                                triggers?: unknown[];
+                            }[];
+                            yearsScanned?: number;
+                            method?: string;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    "vedic_jaimini_argala-analysis": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
+                 *     }
+                 */
+                "application/json": components["schemas"]["ChartInput"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            lagna?: Record<string, never>;
+                            houses?: {
+                                houseNum?: number;
+                                sign?: number;
+                                argalas?: {
+                                    from?: number;
+                                    strength?: number;
+                                    type?: string;
+                                    planets?: unknown[];
+                                }[];
+                                virodhargalas?: unknown[];
+                                netInfluence?: number;
+                                dominantOver?: number;
+                            }[];
+                            strongestArgala?: Record<string, never>;
+                            weakestArgala?: Record<string, never>;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
     vedic_kp_cusps: {
         parameters: {
             query?: never;
@@ -45770,6 +46647,324 @@ export interface operations {
             };
         };
     };
+    "vedic_yogas_jaimini_karaka-yoga": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
+                 *     }
+                 */
+                "application/json": components["schemas"]["ChartInput"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            lagna?: Record<string, never>;
+                            atmakaraka?: Record<string, never>;
+                            yogas?: {
+                                name?: string;
+                                karaka?: string;
+                                graha?: number;
+                                grahaName?: string;
+                                house?: number;
+                                manifestation?: string;
+                                strength?: number;
+                                kendra?: boolean;
+                                trine?: boolean;
+                                dusthana?: boolean;
+                            }[];
+                            summary?: string;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    vedic_yogas_jaimini_karakamsa: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
+                 *     }
+                 */
+                "application/json": components["schemas"]["ChartInput"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            lagna?: Record<string, never>;
+                            karakamsa?: {
+                                sign?: number;
+                                signName?: string;
+                                planet?: number;
+                                planetName?: string;
+                            };
+                            houses?: {
+                                houseNum?: number;
+                                sign?: number;
+                                planets?: unknown[];
+                                significations?: string[];
+                            }[];
+                            yogas?: {
+                                name?: string;
+                                planet?: string;
+                                house?: number;
+                                meaning?: string;
+                            }[];
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    "vedic_yogas_jaimini_shubha-graha": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
+                 *     }
+                 */
+                "application/json": components["schemas"]["ChartInput"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "lagna": {
+                     *           "sign": 10,
+                     *           "signName": "Aquarius"
+                     *         },
+                     *         "planets": [
+                     *           {
+                     *             "graha": 3,
+                     *             "grahaName": "Venus",
+                     *             "naturalNature": "benefic",
+                     *             "functionalNature": "yogakaraka",
+                     *             "housesOwned": [
+                     *               4,
+                     *               9
+                     *             ],
+                     *             "reasoning": "..."
+                     *           }
+                     *         ],
+                     *         "yogakarakas": [
+                     *           3
+                     *         ],
+                     *         "marakas": [
+                     *           4
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            lagna?: {
+                                sign?: number;
+                                signName?: string;
+                            };
+                            planets?: {
+                                graha?: number;
+                                grahaName?: string;
+                                naturalNature?: string;
+                                functionalNature?: string;
+                                housesOwned?: number[];
+                                reasoning?: string;
+                            }[];
+                            yogakarakas?: number[];
+                            marakas?: number[];
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
     "vedic_doshas_lal-kitab_manglik": {
         parameters: {
             query?: never;
@@ -46979,8 +48174,20 @@ export interface operations {
     };
     horoscope_daily: {
         parameters: {
-            query?: never;
-            header?: never;
+            query?: {
+                /**
+                 * @description Alternative to Accept-Language for clients without header control.
+                 * @example hi
+                 */
+                lang?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            };
+            header?: {
+                /**
+                 * @description Target language for response text fields. RFC 7231 q-weighted. Falls back to ?lang= query param, then body.language, then source uk. Unknown codes silently fall through to uk.
+                 * @example de
+                 */
+                "Accept-Language"?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            };
             path?: never;
             cookie?: never;
         };
@@ -47082,8 +48289,20 @@ export interface operations {
     };
     horoscope_weekly: {
         parameters: {
-            query?: never;
-            header?: never;
+            query?: {
+                /**
+                 * @description Alternative to Accept-Language for clients without header control.
+                 * @example hi
+                 */
+                lang?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            };
+            header?: {
+                /**
+                 * @description Target language for response text fields. RFC 7231 q-weighted. Falls back to ?lang= query param, then body.language, then source uk. Unknown codes silently fall through to uk.
+                 * @example de
+                 */
+                "Accept-Language"?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            };
             path?: never;
             cookie?: never;
         };
@@ -47193,8 +48412,20 @@ export interface operations {
     };
     horoscope_monthly: {
         parameters: {
-            query?: never;
-            header?: never;
+            query?: {
+                /**
+                 * @description Alternative to Accept-Language for clients without header control.
+                 * @example hi
+                 */
+                lang?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            };
+            header?: {
+                /**
+                 * @description Target language for response text fields. RFC 7231 q-weighted. Falls back to ?lang= query param, then body.language, then source uk. Unknown codes silently fall through to uk.
+                 * @example de
+                 */
+                "Accept-Language"?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            };
             path?: never;
             cookie?: never;
         };
@@ -47285,8 +48516,20 @@ export interface operations {
     };
     horoscope_yearly: {
         parameters: {
-            query?: never;
-            header?: never;
+            query?: {
+                /**
+                 * @description Alternative to Accept-Language for clients without header control.
+                 * @example hi
+                 */
+                lang?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            };
+            header?: {
+                /**
+                 * @description Target language for response text fields. RFC 7231 q-weighted. Falls back to ?lang= query param, then body.language, then source uk. Unknown codes silently fall through to uk.
+                 * @example de
+                 */
+                "Accept-Language"?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            };
             path?: never;
             cookie?: never;
         };
@@ -47392,8 +48635,20 @@ export interface operations {
     };
     horoscope_compatibility: {
         parameters: {
-            query?: never;
-            header?: never;
+            query?: {
+                /**
+                 * @description Alternative to Accept-Language for clients without header control.
+                 * @example hi
+                 */
+                lang?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            };
+            header?: {
+                /**
+                 * @description Target language for response text fields. RFC 7231 q-weighted. Falls back to ?lang= query param, then body.language, then source uk. Unknown codes silently fall through to uk.
+                 * @example de
+                 */
+                "Accept-Language"?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            };
             path?: never;
             cookie?: never;
         };
@@ -47503,8 +48758,20 @@ export interface operations {
     };
     interpret_natal: {
         parameters: {
-            query?: never;
-            header?: never;
+            query?: {
+                /**
+                 * @description Alternative to Accept-Language for clients without header control.
+                 * @example hi
+                 */
+                lang?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            };
+            header?: {
+                /**
+                 * @description Target language for response text fields. RFC 7231 q-weighted. Falls back to ?lang= query param, then body.language, then source uk. Unknown codes silently fall through to uk.
+                 * @example de
+                 */
+                "Accept-Language"?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            };
             path?: never;
             cookie?: never;
         };
@@ -47605,8 +48872,20 @@ export interface operations {
     };
     interpret_synastry: {
         parameters: {
-            query?: never;
-            header?: never;
+            query?: {
+                /**
+                 * @description Alternative to Accept-Language for clients without header control.
+                 * @example hi
+                 */
+                lang?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            };
+            header?: {
+                /**
+                 * @description Target language for response text fields. RFC 7231 q-weighted. Falls back to ?lang= query param, then body.language, then source uk. Unknown codes silently fall through to uk.
+                 * @example de
+                 */
+                "Accept-Language"?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            };
             path?: never;
             cookie?: never;
         };
@@ -47709,8 +48988,20 @@ export interface operations {
     };
     interpret_transits: {
         parameters: {
-            query?: never;
-            header?: never;
+            query?: {
+                /**
+                 * @description Alternative to Accept-Language for clients without header control.
+                 * @example hi
+                 */
+                lang?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            };
+            header?: {
+                /**
+                 * @description Target language for response text fields. RFC 7231 q-weighted. Falls back to ?lang= query param, then body.language, then source uk. Unknown codes silently fall through to uk.
+                 * @example de
+                 */
+                "Accept-Language"?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            };
             path?: never;
             cookie?: never;
         };
@@ -47800,8 +49091,20 @@ export interface operations {
     };
     interpret_element: {
         parameters: {
-            query?: never;
-            header?: never;
+            query?: {
+                /**
+                 * @description Alternative to Accept-Language for clients without header control.
+                 * @example hi
+                 */
+                lang?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            };
+            header?: {
+                /**
+                 * @description Target language for response text fields. RFC 7231 q-weighted. Falls back to ?lang= query param, then body.language, then source uk. Unknown codes silently fall through to uk.
+                 * @example de
+                 */
+                "Accept-Language"?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            };
             path?: never;
             cookie?: never;
         };
@@ -47900,8 +49203,20 @@ export interface operations {
     };
     interpret_placement: {
         parameters: {
-            query?: never;
-            header?: never;
+            query?: {
+                /**
+                 * @description Alternative to Accept-Language for clients without header control.
+                 * @example hi
+                 */
+                lang?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            };
+            header?: {
+                /**
+                 * @description Target language for response text fields. RFC 7231 q-weighted. Falls back to ?lang= query param, then body.language, then source uk. Unknown codes silently fall through to uk.
+                 * @example de
+                 */
+                "Accept-Language"?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            };
             path?: never;
             cookie?: never;
         };
@@ -47990,7 +49305,7 @@ export interface operations {
             };
         };
     };
-    reference_signs: {
+    reference_signs_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -48070,7 +49385,7 @@ export interface operations {
             };
         };
     };
-    reference_planets: {
+    reference_planets_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -48148,7 +49463,7 @@ export interface operations {
             };
         };
     };
-    reference_houses: {
+    reference_houses_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -48224,7 +49539,7 @@ export interface operations {
             };
         };
     };
-    reference_aspects: {
+    reference_aspects_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -48305,7 +49620,7 @@ export interface operations {
             };
         };
     };
-    reference_elements: {
+    reference_elements_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -48379,7 +49694,7 @@ export interface operations {
             };
         };
     };
-    reference_modalities: {
+    reference_modalities_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -48452,7 +49767,7 @@ export interface operations {
             };
         };
     };
-    reference_polarities: {
+    reference_polarities_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -48525,7 +49840,7 @@ export interface operations {
             };
         };
     };
-    reference_dignities: {
+    reference_dignities_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -48611,7 +49926,7 @@ export interface operations {
             };
         };
     };
-    reference_decans: {
+    reference_decans_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -48689,7 +50004,7 @@ export interface operations {
             };
         };
     };
-    reference_nakshatras: {
+    reference_nakshatras_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -48766,7 +50081,7 @@ export interface operations {
             };
         };
     };
-    reference_lots: {
+    reference_lots_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -48841,7 +50156,7 @@ export interface operations {
             };
         };
     };
-    reference_asteroids: {
+    reference_asteroids_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -48916,7 +50231,7 @@ export interface operations {
             };
         };
     };
-    "reference_zodiac-systems": {
+    "reference_zodiac-systems_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -48990,7 +50305,7 @@ export interface operations {
             };
         };
     };
-    reference_glyphs: {
+    reference_glyphs_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -49065,7 +50380,7 @@ export interface operations {
             };
         };
     };
-    esoteric_crystals: {
+    esoteric_crystals_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -49141,7 +50456,7 @@ export interface operations {
             };
         };
     };
-    "esoteric_crystals_by-zodiac_{sign}": {
+    "esoteric_crystals_by-zodiac_{sign}_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -49215,7 +50530,7 @@ export interface operations {
             };
         };
     };
-    "esoteric_crystals_by-chakra_{chakra}": {
+    "esoteric_crystals_by-chakra_{chakra}_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -49288,7 +50603,7 @@ export interface operations {
             };
         };
     };
-    "esoteric_crystals_by-purpose_{purpose}": {
+    "esoteric_crystals_by-purpose_{purpose}_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -49449,7 +50764,7 @@ export interface operations {
             };
         };
     };
-    "esoteric_angel-numbers": {
+    "esoteric_angel-numbers_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -49523,7 +50838,7 @@ export interface operations {
             };
         };
     };
-    "esoteric_angel-numbers_{number}": {
+    "esoteric_angel-numbers_{number}_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -49708,7 +51023,7 @@ export interface operations {
             };
         };
     };
-    "esoteric_angel-numbers_by-life-path_{n}": {
+    "esoteric_angel-numbers_by-life-path_{n}_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -49800,7 +51115,7 @@ export interface operations {
             };
         };
     };
-    "esoteric_angel-numbers_today": {
+    "esoteric_angel-numbers_today_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -49886,7 +51201,7 @@ export interface operations {
             };
         };
     };
-    esoteric_dreams: {
+    esoteric_dreams_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -49960,7 +51275,7 @@ export interface operations {
             };
         };
     };
-    "esoteric_dreams_symbol_{keyword}": {
+    "esoteric_dreams_symbol_{keyword}_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -50152,7 +51467,7 @@ export interface operations {
             };
         };
     };
-    "esoteric_dreams_by-element_{element}": {
+    "esoteric_dreams_by-element_{element}_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -50225,7 +51540,7 @@ export interface operations {
             };
         };
     };
-    "esoteric_dreams_recurring-themes": {
+    "esoteric_dreams_recurring-themes_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -56032,7 +57347,7 @@ export interface operations {
             };
         };
     };
-    "tarot_rider-waite_cards": {
+    "tarot_rider-waite_cards_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -56098,7 +57413,7 @@ export interface operations {
             };
         };
     };
-    "tarot_rider-waite_cards_{slug}": {
+    "tarot_rider-waite_cards_{slug}_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -56188,7 +57503,7 @@ export interface operations {
             };
         };
     };
-    "tarot_rider-waite_majors": {
+    "tarot_rider-waite_majors_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -56254,7 +57569,7 @@ export interface operations {
             };
         };
     };
-    "tarot_rider-waite_minors": {
+    "tarot_rider-waite_minors_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -56320,7 +57635,7 @@ export interface operations {
             };
         };
     };
-    "tarot_rider-waite_courts": {
+    "tarot_rider-waite_courts_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -56386,7 +57701,7 @@ export interface operations {
             };
         };
     };
-    "tarot_rider-waite_suits_{suit}": {
+    "tarot_rider-waite_suits_{suit}_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -56452,7 +57767,7 @@ export interface operations {
             };
         };
     };
-    "tarot_rider-waite_numbers_{n}": {
+    "tarot_rider-waite_numbers_{n}_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -56518,7 +57833,7 @@ export interface operations {
             };
         };
     };
-    "tarot_rider-waite_elements_{element}": {
+    "tarot_rider-waite_elements_{element}_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -56584,7 +57899,7 @@ export interface operations {
             };
         };
     };
-    "tarot_rider-waite_keywords_{keyword}": {
+    "tarot_rider-waite_keywords_{keyword}_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -56650,7 +57965,7 @@ export interface operations {
             };
         };
     };
-    "tarot_rider-waite_spreads": {
+    "tarot_rider-waite_spreads_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -56716,7 +58031,7 @@ export interface operations {
             };
         };
     };
-    "tarot_rider-waite_spreads_{slug}": {
+    "tarot_rider-waite_spreads_{slug}_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -58925,7 +60240,7 @@ export interface operations {
             };
         };
     };
-    tarot_marseille_cards: {
+    tarot_marseille_cards_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -58991,7 +60306,7 @@ export interface operations {
             };
         };
     };
-    "tarot_marseille_cards_{slug}": {
+    "tarot_marseille_cards_{slug}_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -59071,7 +60386,7 @@ export interface operations {
             };
         };
     };
-    tarot_marseille_majors: {
+    tarot_marseille_majors_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -59137,7 +60452,7 @@ export interface operations {
             };
         };
     };
-    tarot_marseille_spreads: {
+    tarot_marseille_spreads_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -59203,7 +60518,7 @@ export interface operations {
             };
         };
     };
-    "tarot_marseille_spreads_{slug}": {
+    "tarot_marseille_spreads_{slug}_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -60746,7 +62061,7 @@ export interface operations {
             };
         };
     };
-    tarot_lenormand_cards: {
+    tarot_lenormand_cards_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -60812,7 +62127,7 @@ export interface operations {
             };
         };
     };
-    "tarot_lenormand_cards_{slug}": {
+    "tarot_lenormand_cards_{slug}_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -61562,7 +62877,7 @@ export interface operations {
             };
         };
     };
-    tarot_lenormand_houses: {
+    tarot_lenormand_houses_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -61757,7 +63072,7 @@ export interface operations {
             };
         };
     };
-    status: {
+    status_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -61939,7 +63254,7 @@ export interface operations {
             };
         };
     };
-    keys_usage: {
+    keys_usage_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -61969,6 +63284,100 @@ export interface operations {
                                 endpoint?: string;
                                 total?: number;
                             }[];
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    auth_keys_me_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "key_prefix": "aw_live_a3f...",
+                     *         "plan": "indie",
+                     *         "credits_remaining": 18432,
+                     *         "credits_total_this_period": 50000,
+                     *         "period_end": "2026-06-01T00:00:00.000Z",
+                     *         "status": "active",
+                     *         "domain": "example.com",
+                     *         "domain_bound_at": "2026-05-14T18:22:00.000Z",
+                     *         "created_at": "2026-05-12T08:00:00.000Z",
+                     *         "referrer_source": "wp_plugin"
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            key_prefix?: string;
+                            plan?: string;
+                            credits_remaining?: number;
+                            credits_total_this_period?: number;
+                            period_end?: string;
+                            status?: string;
+                            domain?: string;
+                            domain_bound_at?: string;
+                            created_at?: string;
+                            referrer_source?: string;
                         };
                     };
                 };
@@ -63705,6 +65114,114 @@ export interface operations {
             };
         };
     };
+    reports_generate: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "report_type": "natal",
+                 *       "chart": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
+                 *       },
+                 *       "language": "uk",
+                 *       "whitelabel": {
+                 *         "companyName": "Acme",
+                 *         "themeColor": "#ff5500",
+                 *         "reportName": "My Cosmic Map"
+                 *       }
+                 *     }
+                 */
+                "application/json": components["schemas"]["GenerateReport"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "url": "https://api.astroway.info/reports/abc.pdf",
+                     *         "storage_key": "reports/abc.pdf",
+                     *         "byte_length": 145000,
+                     *         "page_count": 1,
+                     *         "duration_ms": 4100,
+                     *         "expires_at": "2026-05-16T07:00:00Z"
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            url?: string;
+                            storage_key?: string;
+                            byte_length?: number;
+                            page_count?: number;
+                            duration_ms?: number;
+                            expires_at?: string;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
     "reports_ai_natal-narrative": {
         parameters: {
             query?: never;
@@ -64269,7 +65786,7 @@ export interface operations {
             };
         };
     };
-    webhooks: {
+    webhooks_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -65846,7 +67363,7 @@ export interface operations {
             };
         };
     };
-    "mcp_tools-list": {
+    "mcp_tools-list_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -72643,7 +74160,7 @@ export interface operations {
             };
         };
     };
-    "embed_daily-horoscope": {
+    "embed_daily-horoscope_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -72709,7 +74226,7 @@ export interface operations {
             };
         };
     };
-    embed_wheel: {
+    embed_wheel_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -72775,7 +74292,7 @@ export interface operations {
             };
         };
     };
-    "embed_transit-timeline": {
+    "embed_transit-timeline_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -72841,7 +74358,7 @@ export interface operations {
             };
         };
     };
-    embed_bodygraph: {
+    embed_bodygraph_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -72907,7 +74424,7 @@ export interface operations {
             };
         };
     };
-    embed_kundli: {
+    embed_kundli_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -72973,7 +74490,7 @@ export interface operations {
             };
         };
     };
-    "embed_mini-chart": {
+    "embed_mini-chart_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -73039,7 +74556,7 @@ export interface operations {
             };
         };
     };
-    "embed_planet-of-day": {
+    "embed_planet-of-day_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -73105,7 +74622,7 @@ export interface operations {
             };
         };
     };
-    "embed_moon-phase": {
+    "embed_moon-phase_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -73171,7 +74688,7 @@ export interface operations {
             };
         };
     };
-    "embed_daily-tarot": {
+    "embed_daily-tarot_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -73237,7 +74754,7 @@ export interface operations {
             };
         };
     };
-    "embed_monthly-forecast": {
+    "embed_monthly-forecast_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -73607,7 +75124,7 @@ export interface operations {
             };
         };
     };
-    "mcp_agent-pool-status": {
+    "mcp_agent-pool-status_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -75589,7 +77106,7 @@ export interface operations {
             };
         };
     };
-    "iching_lookup_{number}": {
+    "iching_lookup_{number}_get": {
         parameters: {
             query?: never;
             header?: never;
@@ -75966,7 +77483,7 @@ export interface operations {
             };
         };
     };
-    zodiac_aries: {
+    zodiac_aries_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -76037,7 +77554,7 @@ export interface operations {
             };
         };
     };
-    zodiac_taurus: {
+    zodiac_taurus_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -76105,7 +77622,7 @@ export interface operations {
             };
         };
     };
-    zodiac_gemini: {
+    zodiac_gemini_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -76173,7 +77690,7 @@ export interface operations {
             };
         };
     };
-    zodiac_cancer: {
+    zodiac_cancer_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -76241,7 +77758,7 @@ export interface operations {
             };
         };
     };
-    zodiac_leo: {
+    zodiac_leo_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -76309,7 +77826,7 @@ export interface operations {
             };
         };
     };
-    zodiac_virgo: {
+    zodiac_virgo_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -76377,7 +77894,7 @@ export interface operations {
             };
         };
     };
-    zodiac_libra: {
+    zodiac_libra_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -76445,7 +77962,7 @@ export interface operations {
             };
         };
     };
-    zodiac_scorpio: {
+    zodiac_scorpio_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -76513,7 +78030,7 @@ export interface operations {
             };
         };
     };
-    zodiac_sagittarius: {
+    zodiac_sagittarius_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -76581,7 +78098,7 @@ export interface operations {
             };
         };
     };
-    zodiac_capricorn: {
+    zodiac_capricorn_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -76649,7 +78166,7 @@ export interface operations {
             };
         };
     };
-    zodiac_aquarius: {
+    zodiac_aquarius_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -76717,7 +78234,7 @@ export interface operations {
             };
         };
     };
-    zodiac_pisces: {
+    zodiac_pisces_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -76777,6 +78294,38 @@ export interface operations {
                      *       "error": {
                      *         "code": "INVALID_API_KEY",
                      *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    version: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Current deploy metadata */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "version": "2.71.0",
+                     *         "build_commit": "67556a6075",
+                     *         "started_at": "2026-05-27T20:39:04.119Z",
+                     *         "uptime_seconds": 12345,
+                     *         "docs_url": "https://api.astroway.info/docs/api/"
                      *       }
                      *     }
                      */

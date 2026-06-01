@@ -348,6 +348,40 @@ export class Astroway {
   }
 
   /**
+   * Returns the current deploy version, build commit, and uptime.
+   *
+   * Free — no credits, no auth header attached (works with any key). Useful
+   * for SDK self-check on boot: `build_commit` uniquely identifies the
+   * server-side deploy so support tickets can be triaged precisely.
+   */
+  async version(): Promise<{
+    version: string;
+    build_commit: string | null;
+    started_at: string;
+    uptime_seconds: number;
+    docs_url: string;
+  }> {
+    const { data, error } = await this.client.GET('/version' as never);
+    if (error) throw new ApiError(`SDK version() call failed: ${String(error)}`);
+    return (data as { data: never }).data;
+  }
+
+  /**
+   * Liveness probe — `{ status: "ok", version, uptime_seconds, timestamp }`.
+   * Free, no auth. See `/version` for the richer deploy metadata.
+   */
+  async health(): Promise<{
+    status: 'ok';
+    version: string;
+    uptime_seconds: number;
+    timestamp: string;
+  }> {
+    const { data, error } = await this.client.GET('/health' as never);
+    if (error) throw new ApiError(`SDK health() call failed: ${String(error)}`);
+    return (data as { data: never }).data;
+  }
+
+  /**
    * Open a Server-Sent Events stream against an SSE-capable endpoint
    * (`/horoscope/daily`, `/interpret/*`, `/mcp/streaming`, etc.). Returns an
    * async iterable of normalised {@link StreamChunk}s — the user can `for await`
