@@ -99,6 +99,28 @@ const hd = await aw.humanDesign.compute({
 console.log(`${hd.type} — ${hd.strategy} — ${hd.authority}`);
 ```
 
+### White-label PDF report
+
+`/reports/*` endpoints accept an inline `whitelabel` object (the `BrandingObject` schema) to brand the generated PDF with your own name, colours, and footer:
+
+```ts
+const report = await aw.reports.natal({
+  chart: {
+    date: '1990-07-14', time: '14:30:00',
+    timezoneOffset: 3, latitude: 50.45, longitude: 30.52,
+  },
+  whitelabel: {
+    companyName: 'Acme Astrology',
+    reportName: 'Your Natal Blueprint',
+    themeColor: '#5b21b6',
+    footerText: '© Acme Astrology',
+  },
+});
+console.log(report.url); // signed PDF URL
+```
+
+Pass `whitelabel: true` instead of an object to pull branding from your account's stored config (requires a wpUserId-bound key).
+
 ---
 
 ## Error handling

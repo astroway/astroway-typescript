@@ -10830,6 +10830,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/reports/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Recent Report Exports
+         * @description List the calling key's most recently generated PDF reports — type, byte size, page count, language, created/expiry timestamps and a `url`. Re-fetch a report link within its 24h validity window, or surface recent exports in a dashboard. PDFs are purged after 24h, so older items return `expired: true` with a now-dead URL. Free to call. Query `?limit=` (1–50, default 10).
+         */
+        get: operations["reports_history_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/reports/ai/natal-narrative": {
         parameters: {
             query?: never;
@@ -13254,6 +13274,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/embed/transit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Sky Transits (HTML)
+         * @description Current planet positions (sign + degree) for a date.
+         */
+        get: operations["embed_transit_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/embed/numerology": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Numerology (HTML)
+         * @description Life Path / Expression / Soul Urge / Personality card.
+         */
+        get: operations["embed_numerology_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/embed/panchang": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Panchang (HTML)
+         * @description Tithi / nakshatra / yoga / karana / vara + Rahu Kaal for a date.
+         */
+        get: operations["embed_panchang_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/embed/synastry": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Synastry (HTML)
+         * @description Two-subject compatibility score + key cross-aspects.
+         */
+        get: operations["embed_synastry_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/mcp/tool-call-stream": {
         parameters: {
             query?: never;
@@ -14835,7 +14935,9 @@ export interface components {
             textPrimaryColor?: string;
             textSecondaryColor?: string;
             backgroundColor?: string;
+            /** @description Accent colour — used for section heading text and inline emphasis. */
             themeColor?: string;
+            /** @description Colour of the divider rule under each section heading (not the heading text — that is themeColor). */
             headingColor?: string;
             footerText?: string;
             /** @enum {string} */
@@ -14870,7 +14972,9 @@ export interface components {
                 textPrimaryColor?: string;
                 textSecondaryColor?: string;
                 backgroundColor?: string;
+                /** @description Accent colour — used for section heading text and inline emphasis. */
                 themeColor?: string;
+                /** @description Colour of the divider rule under each section heading (not the heading text — that is themeColor). */
                 headingColor?: string;
                 footerText?: string;
                 /** @enum {string} */
@@ -14897,13 +15001,20 @@ export interface components {
                 textPrimaryColor?: string;
                 textSecondaryColor?: string;
                 backgroundColor?: string;
+                /** @description Accent colour — used for section heading text and inline emphasis. */
                 themeColor?: string;
+                /** @description Colour of the divider rule under each section heading (not the heading text — that is themeColor). */
                 headingColor?: string;
                 footerText?: string;
                 /** @enum {string} */
                 fontPairing?: "serif-sans" | "sans-serif" | "serif-only" | "sans-only" | "system";
                 reportName?: string;
             };
+            enrich?: boolean;
+            /** @enum {string} */
+            tone?: "warm" | "professional" | "concise";
+            /** @enum {string} */
+            length?: "short" | "medium" | "long";
         };
         Natal: {
             chart: components["schemas"]["ChartInput"];
@@ -15206,7 +15317,9 @@ export interface components {
                 textPrimaryColor?: string;
                 textSecondaryColor?: string;
                 backgroundColor?: string;
+                /** @description Accent colour — used for section heading text and inline emphasis. */
                 themeColor?: string;
+                /** @description Colour of the divider rule under each section heading (not the heading text — that is themeColor). */
                 headingColor?: string;
                 footerText?: string;
                 /** @enum {string} */
@@ -15255,7 +15368,9 @@ export interface components {
                 textPrimaryColor?: string;
                 textSecondaryColor?: string;
                 backgroundColor?: string;
+                /** @description Accent colour — used for section heading text and inline emphasis. */
                 themeColor?: string;
+                /** @description Colour of the divider rule under each section heading (not the heading text — that is themeColor). */
                 headingColor?: string;
                 footerText?: string;
                 /** @enum {string} */
@@ -15356,7 +15471,9 @@ export interface components {
                 textPrimaryColor?: string;
                 textSecondaryColor?: string;
                 backgroundColor?: string;
+                /** @description Accent colour — used for section heading text and inline emphasis. */
                 themeColor?: string;
+                /** @description Colour of the divider rule under each section heading (not the heading text — that is themeColor). */
                 headingColor?: string;
                 footerText?: string;
                 /** @enum {string} */
@@ -15419,7 +15536,9 @@ export interface components {
                 textPrimaryColor?: string;
                 textSecondaryColor?: string;
                 backgroundColor?: string;
+                /** @description Accent colour — used for section heading text and inline emphasis. */
                 themeColor?: string;
+                /** @description Colour of the divider rule under each section heading (not the heading text — that is themeColor). */
                 headingColor?: string;
                 footerText?: string;
                 /** @enum {string} */
@@ -65222,6 +65341,108 @@ export interface operations {
             };
         };
     };
+    reports_history_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "items": [
+                     *           {
+                     *             "id": 42,
+                     *             "report_type": "natal",
+                     *             "storage_key": "reports/abc-natal.pdf",
+                     *             "url": "https://api.astroway.info/reports/abc-natal.pdf",
+                     *             "byte_length": 124350,
+                     *             "page_count": 1,
+                     *             "language": "uk",
+                     *             "created_at": "2026-06-10T16:00:00Z",
+                     *             "expires_at": "2026-06-11T16:00:00Z",
+                     *             "expired": false
+                     *           }
+                     *         ],
+                     *         "count": 1
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            items?: {
+                                id?: number;
+                                report_type?: string;
+                                storage_key?: string;
+                                url?: string;
+                                byte_length?: number;
+                                page_count?: number;
+                                language?: string;
+                                created_at?: string;
+                                expires_at?: string;
+                                expired?: boolean;
+                            }[];
+                            count?: number;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
     "reports_ai_natal-narrative": {
         parameters: {
             query?: never;
@@ -74755,6 +74976,270 @@ export interface operations {
         };
     };
     "embed_monthly-forecast_get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: Record<string, never>;
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    embed_transit_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: Record<string, never>;
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    embed_numerology_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: Record<string, never>;
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    embed_panchang_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: Record<string, never>;
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    embed_synastry_get: {
         parameters: {
             query?: never;
             header?: never;

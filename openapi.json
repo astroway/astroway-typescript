@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "AstroWay Calculation API",
-    "version": "2.72.0",
+    "version": "2.81.3",
     "description": "Professional astrology calculation API powered by Swiss Ephemeris. Compute natal charts, synastry, progressions, directions, transits, Human Design, and 80+ other calculation types via a simple REST API.",
     "contact": {
       "url": "https://app.astroway.info"
@@ -2396,11 +2396,13 @@
           },
           "themeColor": {
             "type": "string",
-            "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+            "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+            "description": "Accent colour — used for section heading text and inline emphasis."
           },
           "headingColor": {
             "type": "string",
-            "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+            "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+            "description": "Colour of the divider rule under each section heading (not the heading text — that is themeColor)."
           },
           "footerText": {
             "type": "string",
@@ -2550,11 +2552,13 @@
                   },
                   "themeColor": {
                     "type": "string",
-                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+                    "description": "Accent colour — used for section heading text and inline emphasis."
                   },
                   "headingColor": {
                     "type": "string",
-                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+                    "description": "Colour of the divider rule under each section heading (not the heading text — that is themeColor)."
                   },
                   "footerText": {
                     "type": "string",
@@ -2668,11 +2672,13 @@
                   },
                   "themeColor": {
                     "type": "string",
-                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+                    "description": "Accent colour — used for section heading text and inline emphasis."
                   },
                   "headingColor": {
                     "type": "string",
-                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+                    "description": "Colour of the divider rule under each section heading (not the heading text — that is themeColor)."
                   },
                   "footerText": {
                     "type": "string",
@@ -2696,6 +2702,25 @@
                 },
                 "additionalProperties": false
               }
+            ]
+          },
+          "enrich": {
+            "type": "boolean"
+          },
+          "tone": {
+            "type": "string",
+            "enum": [
+              "warm",
+              "professional",
+              "concise"
+            ]
+          },
+          "length": {
+            "type": "string",
+            "enum": [
+              "short",
+              "medium",
+              "long"
             ]
           }
         },
@@ -3931,11 +3956,13 @@
                   },
                   "themeColor": {
                     "type": "string",
-                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+                    "description": "Accent colour — used for section heading text and inline emphasis."
                   },
                   "headingColor": {
                     "type": "string",
-                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+                    "description": "Colour of the divider rule under each section heading (not the heading text — that is themeColor)."
                   },
                   "footerText": {
                     "type": "string",
@@ -4122,11 +4149,13 @@
                   },
                   "themeColor": {
                     "type": "string",
-                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+                    "description": "Accent colour — used for section heading text and inline emphasis."
                   },
                   "headingColor": {
                     "type": "string",
-                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+                    "description": "Colour of the divider rule under each section heading (not the heading text — that is themeColor)."
                   },
                   "footerText": {
                     "type": "string",
@@ -4521,11 +4550,13 @@
                   },
                   "themeColor": {
                     "type": "string",
-                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+                    "description": "Accent colour — used for section heading text and inline emphasis."
                   },
                   "headingColor": {
                     "type": "string",
-                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+                    "description": "Colour of the divider rule under each section heading (not the heading text — that is themeColor)."
                   },
                   "footerText": {
                     "type": "string",
@@ -4756,11 +4787,13 @@
                   },
                   "themeColor": {
                     "type": "string",
-                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+                    "description": "Accent colour — used for section heading text and inline emphasis."
                   },
                   "headingColor": {
                     "type": "string",
-                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$"
+                    "pattern": "^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$",
+                    "description": "Colour of the divider rule under each section heading (not the heading text — that is themeColor)."
                   },
                   "footerText": {
                     "type": "string",
@@ -81402,6 +81435,163 @@
         }
       }
     },
+    "/reports/history": {
+      "get": {
+        "tags": [
+          "Reports"
+        ],
+        "summary": "List Recent Report Exports",
+        "description": "List the calling key's most recently generated PDF reports — type, byte size, page count, language, created/expiry timestamps and a `url`. Re-fetch a report link within its 24h validity window, or surface recent exports in a dashboard. PDFs are purged after 24h, so older items return `expired: true` with a now-dead URL. Free to call. Query `?limit=` (1–50, default 10).",
+        "operationId": "reports_history_get",
+        "x-quality": "green",
+        "x-source": "Read-only log of the caller's generated reports (migration 039 report_exports).",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "label": "cURL",
+            "source": "curl -X GET https://api.astroway.info/v1/reports/history \\\n  -H \"X-Api-Key: aw_live_...\" \\\n  -H \"Content-Type: application/json\""
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Node.js",
+            "source": "const res = await fetch('https://api.astroway.info/v1/reports/history', {\n  method: 'GET',\n  headers: {\n    'X-Api-Key': process.env.ASTROWAY_API_KEY,\n    'Content-Type': 'application/json',\n  },\n});\nconst { ok, data, error } = await res.json();\nif (!ok) throw new Error(error.message);\nconsole.log(data);"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import os, requests\n\nr = requests.get(\n    'https://api.astroway.info/v1/reports/history',\n    headers={'X-Api-Key': os.environ['ASTROWAY_API_KEY'], 'Content-Type': 'application/json'},\n)\nresult = r.json()\nif not result['ok']:\n    raise RuntimeError(result['error']['message'])\nprint(result['data'])"
+          },
+          {
+            "lang": "PHP",
+            "label": "PHP",
+            "source": "<?php\nuse GuzzleHttp\\Client;\n\n$client = new Client(['base_uri' => 'https://api.astroway.info/v1/']);\n$r = $client->get('reports/history', [\n    'headers' => ['X-Api-Key' => getenv('ASTROWAY_API_KEY')],\n]);\n$result = json_decode($r->getBody(), true);\nif (!$result['ok']) throw new \\RuntimeException($result['error']['message']);\nprint_r($result['data']);"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful calculation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "number"
+                              },
+                              "report_type": {
+                                "type": "string"
+                              },
+                              "storage_key": {
+                                "type": "string"
+                              },
+                              "url": {
+                                "type": "string"
+                              },
+                              "byte_length": {
+                                "type": "number"
+                              },
+                              "page_count": {
+                                "type": "number"
+                              },
+                              "language": {
+                                "type": "string"
+                              },
+                              "created_at": {
+                                "type": "string"
+                              },
+                              "expires_at": {
+                                "type": "string"
+                              },
+                              "expired": {
+                                "type": "boolean"
+                              }
+                            }
+                          }
+                        },
+                        "count": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "ok": true,
+                  "data": {
+                    "items": [
+                      {
+                        "id": 42,
+                        "report_type": "natal",
+                        "storage_key": "reports/abc-natal.pdf",
+                        "url": "https://api.astroway.info/reports/abc-natal.pdf",
+                        "byte_length": 124350,
+                        "page_count": 1,
+                        "language": "uk",
+                        "created_at": "2026-06-10T16:00:00Z",
+                        "expires_at": "2026-06-11T16:00:00Z",
+                        "expired": false
+                      }
+                    ],
+                    "count": 1
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "ok": false,
+                  "error": {
+                    "code": "INVALID_INPUT",
+                    "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                    "details": [
+                      {
+                        "path": "date",
+                        "message": "Date must be YYYY-MM-DD"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "example": {
+                  "ok": false,
+                  "error": {
+                    "code": "INVALID_API_KEY",
+                    "message": "Invalid API key"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/reports/ai/natal-narrative": {
       "post": {
         "tags": [
@@ -95257,6 +95447,362 @@
             "lang": "PHP",
             "label": "PHP",
             "source": "<?php\nuse GuzzleHttp\\Client;\n\n$client = new Client(['base_uri' => 'https://api.astroway.info/v1/']);\n$r = $client->get('embed/monthly-forecast', [\n]);\n$result = json_decode($r->getBody(), true);\nif (!$result['ok']) throw new \\RuntimeException($result['error']['message']);\nprint_r($result['data']);"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful calculation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "ok": false,
+                  "error": {
+                    "code": "INVALID_INPUT",
+                    "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                    "details": [
+                      {
+                        "path": "date",
+                        "message": "Date must be YYYY-MM-DD"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "example": {
+                  "ok": false,
+                  "error": {
+                    "code": "INVALID_API_KEY",
+                    "message": "Invalid API key"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/embed/transit": {
+      "get": {
+        "tags": [
+          "Embeddable Widgets"
+        ],
+        "summary": "Sky Transits (HTML)",
+        "description": "Current planet positions (sign + degree) for a date.",
+        "operationId": "embed_transit_get",
+        "x-quality": "green",
+        "x-source": "Reuses /render/* SVG + /human-design + RWS tarot. Iframe-friendly HTML scaffold with X-Frame-Options ALLOWALL + CSP frame-ancestors *. Public IP-rate-limited (30/hr).",
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "label": "cURL",
+            "source": "curl -X GET https://api.astroway.info/v1/embed/transit \\\n  -H \"Content-Type: application/json\""
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Node.js",
+            "source": "const res = await fetch('https://api.astroway.info/v1/embed/transit', {\n  method: 'GET',\n  headers: {\n    'Content-Type': 'application/json',\n  },\n});\nconst { ok, data, error } = await res.json();\nif (!ok) throw new Error(error.message);\nconsole.log(data);"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import os, requests\n\nr = requests.get(\n    'https://api.astroway.info/v1/embed/transit',\n    headers={'Content-Type': 'application/json'},\n)\nresult = r.json()\nif not result['ok']:\n    raise RuntimeError(result['error']['message'])\nprint(result['data'])"
+          },
+          {
+            "lang": "PHP",
+            "label": "PHP",
+            "source": "<?php\nuse GuzzleHttp\\Client;\n\n$client = new Client(['base_uri' => 'https://api.astroway.info/v1/']);\n$r = $client->get('embed/transit', [\n]);\n$result = json_decode($r->getBody(), true);\nif (!$result['ok']) throw new \\RuntimeException($result['error']['message']);\nprint_r($result['data']);"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful calculation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "ok": false,
+                  "error": {
+                    "code": "INVALID_INPUT",
+                    "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                    "details": [
+                      {
+                        "path": "date",
+                        "message": "Date must be YYYY-MM-DD"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "example": {
+                  "ok": false,
+                  "error": {
+                    "code": "INVALID_API_KEY",
+                    "message": "Invalid API key"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/embed/numerology": {
+      "get": {
+        "tags": [
+          "Embeddable Widgets"
+        ],
+        "summary": "Numerology (HTML)",
+        "description": "Life Path / Expression / Soul Urge / Personality card.",
+        "operationId": "embed_numerology_get",
+        "x-quality": "green",
+        "x-source": "Reuses /render/* SVG + /human-design + RWS tarot. Iframe-friendly HTML scaffold with X-Frame-Options ALLOWALL + CSP frame-ancestors *. Public IP-rate-limited (30/hr).",
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "label": "cURL",
+            "source": "curl -X GET https://api.astroway.info/v1/embed/numerology \\\n  -H \"Content-Type: application/json\""
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Node.js",
+            "source": "const res = await fetch('https://api.astroway.info/v1/embed/numerology', {\n  method: 'GET',\n  headers: {\n    'Content-Type': 'application/json',\n  },\n});\nconst { ok, data, error } = await res.json();\nif (!ok) throw new Error(error.message);\nconsole.log(data);"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import os, requests\n\nr = requests.get(\n    'https://api.astroway.info/v1/embed/numerology',\n    headers={'Content-Type': 'application/json'},\n)\nresult = r.json()\nif not result['ok']:\n    raise RuntimeError(result['error']['message'])\nprint(result['data'])"
+          },
+          {
+            "lang": "PHP",
+            "label": "PHP",
+            "source": "<?php\nuse GuzzleHttp\\Client;\n\n$client = new Client(['base_uri' => 'https://api.astroway.info/v1/']);\n$r = $client->get('embed/numerology', [\n]);\n$result = json_decode($r->getBody(), true);\nif (!$result['ok']) throw new \\RuntimeException($result['error']['message']);\nprint_r($result['data']);"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful calculation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "ok": false,
+                  "error": {
+                    "code": "INVALID_INPUT",
+                    "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                    "details": [
+                      {
+                        "path": "date",
+                        "message": "Date must be YYYY-MM-DD"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "example": {
+                  "ok": false,
+                  "error": {
+                    "code": "INVALID_API_KEY",
+                    "message": "Invalid API key"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/embed/panchang": {
+      "get": {
+        "tags": [
+          "Embeddable Widgets"
+        ],
+        "summary": "Panchang (HTML)",
+        "description": "Tithi / nakshatra / yoga / karana / vara + Rahu Kaal for a date.",
+        "operationId": "embed_panchang_get",
+        "x-quality": "green",
+        "x-source": "Reuses /render/* SVG + /human-design + RWS tarot. Iframe-friendly HTML scaffold with X-Frame-Options ALLOWALL + CSP frame-ancestors *. Public IP-rate-limited (30/hr).",
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "label": "cURL",
+            "source": "curl -X GET https://api.astroway.info/v1/embed/panchang \\\n  -H \"Content-Type: application/json\""
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Node.js",
+            "source": "const res = await fetch('https://api.astroway.info/v1/embed/panchang', {\n  method: 'GET',\n  headers: {\n    'Content-Type': 'application/json',\n  },\n});\nconst { ok, data, error } = await res.json();\nif (!ok) throw new Error(error.message);\nconsole.log(data);"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import os, requests\n\nr = requests.get(\n    'https://api.astroway.info/v1/embed/panchang',\n    headers={'Content-Type': 'application/json'},\n)\nresult = r.json()\nif not result['ok']:\n    raise RuntimeError(result['error']['message'])\nprint(result['data'])"
+          },
+          {
+            "lang": "PHP",
+            "label": "PHP",
+            "source": "<?php\nuse GuzzleHttp\\Client;\n\n$client = new Client(['base_uri' => 'https://api.astroway.info/v1/']);\n$r = $client->get('embed/panchang', [\n]);\n$result = json_decode($r->getBody(), true);\nif (!$result['ok']) throw new \\RuntimeException($result['error']['message']);\nprint_r($result['data']);"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful calculation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "ok": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "data": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "ok": false,
+                  "error": {
+                    "code": "INVALID_INPUT",
+                    "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                    "details": [
+                      {
+                        "path": "date",
+                        "message": "Date must be YYYY-MM-DD"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "example": {
+                  "ok": false,
+                  "error": {
+                    "code": "INVALID_API_KEY",
+                    "message": "Invalid API key"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/embed/synastry": {
+      "get": {
+        "tags": [
+          "Embeddable Widgets"
+        ],
+        "summary": "Synastry (HTML)",
+        "description": "Two-subject compatibility score + key cross-aspects.",
+        "operationId": "embed_synastry_get",
+        "x-quality": "green",
+        "x-source": "Reuses /render/* SVG + /human-design + RWS tarot. Iframe-friendly HTML scaffold with X-Frame-Options ALLOWALL + CSP frame-ancestors *. Public IP-rate-limited (30/hr).",
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "label": "cURL",
+            "source": "curl -X GET https://api.astroway.info/v1/embed/synastry \\\n  -H \"Content-Type: application/json\""
+          },
+          {
+            "lang": "JavaScript",
+            "label": "Node.js",
+            "source": "const res = await fetch('https://api.astroway.info/v1/embed/synastry', {\n  method: 'GET',\n  headers: {\n    'Content-Type': 'application/json',\n  },\n});\nconst { ok, data, error } = await res.json();\nif (!ok) throw new Error(error.message);\nconsole.log(data);"
+          },
+          {
+            "lang": "Python",
+            "label": "Python",
+            "source": "import os, requests\n\nr = requests.get(\n    'https://api.astroway.info/v1/embed/synastry',\n    headers={'Content-Type': 'application/json'},\n)\nresult = r.json()\nif not result['ok']:\n    raise RuntimeError(result['error']['message'])\nprint(result['data'])"
+          },
+          {
+            "lang": "PHP",
+            "label": "PHP",
+            "source": "<?php\nuse GuzzleHttp\\Client;\n\n$client = new Client(['base_uri' => 'https://api.astroway.info/v1/']);\n$r = $client->get('embed/synastry', [\n]);\n$result = json_decode($r->getBody(), true);\nif (!$result['ok']) throw new \\RuntimeException($result['error']['message']);\nprint_r($result['data']);"
           }
         ],
         "responses": {
