@@ -36,11 +36,15 @@ export interface CallOptions {
 
 export interface AstrowayNamespaces {
   acg: {
+    /** A*C*G by Life Category (POST /acg/by-category) */
+    byCategory(body: PostBody<'/acg/by-category'>, options?: CallOptions): ResultPromise<PostData<'/acg/by-category'>>;
     /** Astrocartography (A*C*G) (POST /acg) */
     compute(body: PostBody<'/acg'>, options?: CallOptions): ResultPromise<PostData<'/acg'>>;
+    /** A*C*G Line Report (POST /acg/line-report) */
+    lineReport(body: PostBody<'/acg/line-report'>, options?: CallOptions): ResultPromise<PostData<'/acg/line-report'>>;
   };
   acgZones: {
-    /** A*C*G Influence Zones (POST /acg-zones) */
+    /** A*C*G Lines Near a Point (POST /acg-zones) */
     compute(body: PostBody<'/acg-zones'>, options?: CallOptions): ResultPromise<PostData<'/acg-zones'>>;
   };
   ai: {
@@ -212,7 +216,7 @@ export interface AstrowayNamespaces {
     layout(body: PostBody<'/disposition-chains/layout'>, options?: CallOptions): ResultPromise<PostData<'/disposition-chains/layout'>>;
   };
   djamaspa: {
-    /** Djamaspa (DEPRECATED — RED quality, slated for v2.0 sunset) (POST /djamaspa) */
+    /** Djamaspa (DEPRECATED — RED quality, sunset 2027-06-15) (POST /djamaspa) */
     compute(body: PostBody<'/djamaspa'>, options?: CallOptions): ResultPromise<PostData<'/djamaspa'>>;
   };
   draconic: {
@@ -506,7 +510,7 @@ export interface AstrowayNamespaces {
   iching: {
     /** By Question (POST /iching/by-question) */
     byQuestion(body: PostBody<'/iching/by-question'>, options?: CallOptions): ResultPromise<PostData<'/iching/by-question'>>;
-    /** I Ching Hexagram (POST /iching) */
+    /** I Ching Hexagram (DEPRECATED — use /iching/throw-coins) (POST /iching) */
     compute(body: PostBody<'/iching'>, options?: CallOptions): ResultPromise<PostData<'/iching'>>;
     /** Daily I Ching (POST /iching/daily) */
     daily(body: PostBody<'/iching/daily'>, options?: CallOptions): ResultPromise<PostData<'/iching/daily'>>;
@@ -548,6 +552,10 @@ export interface AstrowayNamespaces {
   lunarReturn: {
     /** Lunar Return (POST /lunar-return) */
     compute(body: PostBody<'/lunar-return'>, options?: CallOptions): ResultPromise<PostData<'/lunar-return'>>;
+  };
+  match: {
+    /** Match Score (dating compatibility) (POST /match/score) */
+    score(body: PostBody<'/match/score'>, options?: CallOptions): ResultPromise<PostData<'/match/score'>>;
   };
   mayan: {
     /** Calendar Round (POST /mayan/calendar-round) */
@@ -900,8 +908,12 @@ export interface AstrowayNamespaces {
     love(body: PostBody<'/reports/love'>, options?: CallOptions): ResultPromise<PostData<'/reports/love'>>;
     /** Generate Money Report (PDF or HTML) (POST /reports/money) */
     money(body: PostBody<'/reports/money'>, options?: CallOptions): ResultPromise<PostData<'/reports/money'>>;
+    /** Generate Muhurta Report (PDF or HTML) (POST /reports/muhurta) */
+    muhurta(body: PostBody<'/reports/muhurta'>, options?: CallOptions): ResultPromise<PostData<'/reports/muhurta'>>;
     /** Generate Natal Report (PDF or HTML) (POST /reports/natal) */
     natal(body: PostBody<'/reports/natal'>, options?: CallOptions): ResultPromise<PostData<'/reports/natal'>>;
+    /** Generate Stellaforge Birth-Chart Poster (PDF or HTML) (POST /reports/stellaforge) */
+    stellaforge(body: PostBody<'/reports/stellaforge'>, options?: CallOptions): ResultPromise<PostData<'/reports/stellaforge'>>;
     /** Generate Synastry Report (PDF or HTML) (POST /reports/synastry) */
     synastry(body: PostBody<'/reports/synastry'>, options?: CallOptions): ResultPromise<PostData<'/reports/synastry'>>;
     /** Generate Tarot Reading (PDF or HTML) (POST /reports/tarot) */
@@ -1088,6 +1100,12 @@ export interface AstrowayNamespaces {
   transits: {
     /** Transits (POST /transits) */
     compute(body: PostBody<'/transits'>, options?: CallOptions): ResultPromise<PostData<'/transits'>>;
+  };
+  translate: {
+    /** Translate (astro-aware) (POST /translate/astro) */
+    astro(body: PostBody<'/translate/astro'>, options?: CallOptions): ResultPromise<PostData<'/translate/astro'>>;
+    /** Translate batch (POST /translate/batch) */
+    batch(body: PostBody<'/translate/batch'>, options?: CallOptions): ResultPromise<PostData<'/translate/batch'>>;
   };
   vedic: {
     /** Compatibility — Ashtakoot Guna Milan (8-fold 36-point) (POST /vedic/compatibility/ashtakoot) */
@@ -1536,7 +1554,9 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
   };
   return {
     acg: {
+      byCategory: (body, options) => call<'/acg/by-category', PostData<'/acg/by-category'>>('/acg/by-category', body, options),
       compute: (body, options) => call<'/acg', PostData<'/acg'>>('/acg', body, options),
+      lineReport: (body, options) => call<'/acg/line-report', PostData<'/acg/line-report'>>('/acg/line-report', body, options),
     },
     acgZones: {
       compute: (body, options) => call<'/acg-zones', PostData<'/acg-zones'>>('/acg-zones', body, options),
@@ -1849,6 +1869,9 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
     lunarReturn: {
       compute: (body, options) => call<'/lunar-return', PostData<'/lunar-return'>>('/lunar-return', body, options),
     },
+    match: {
+      score: (body, options) => call<'/match/score', PostData<'/match/score'>>('/match/score', body, options),
+    },
     mayan: {
       calendarRound: (body, options) => call<'/mayan/calendar-round', PostData<'/mayan/calendar-round'>>('/mayan/calendar-round', body, options),
       compatibility: (body, options) => call<'/mayan/compatibility', PostData<'/mayan/compatibility'>>('/mayan/compatibility', body, options),
@@ -2053,7 +2076,9 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       lalKitab: (body, options) => call<'/reports/lal-kitab', PostData<'/reports/lal-kitab'>>('/reports/lal-kitab', body, options),
       love: (body, options) => call<'/reports/love', PostData<'/reports/love'>>('/reports/love', body, options),
       money: (body, options) => call<'/reports/money', PostData<'/reports/money'>>('/reports/money', body, options),
+      muhurta: (body, options) => call<'/reports/muhurta', PostData<'/reports/muhurta'>>('/reports/muhurta', body, options),
       natal: (body, options) => call<'/reports/natal', PostData<'/reports/natal'>>('/reports/natal', body, options),
+      stellaforge: (body, options) => call<'/reports/stellaforge', PostData<'/reports/stellaforge'>>('/reports/stellaforge', body, options),
       synastry: (body, options) => call<'/reports/synastry', PostData<'/reports/synastry'>>('/reports/synastry', body, options),
       tarot: (body, options) => call<'/reports/tarot', PostData<'/reports/tarot'>>('/reports/tarot', body, options),
       transitYearly: (body, options) => call<'/reports/transit-yearly', PostData<'/reports/transit-yearly'>>('/reports/transit-yearly', body, options),
@@ -2160,6 +2185,10 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
     },
     transits: {
       compute: (body, options) => call<'/transits', PostData<'/transits'>>('/transits', body, options),
+    },
+    translate: {
+      astro: (body, options) => call<'/translate/astro', PostData<'/translate/astro'>>('/translate/astro', body, options),
+      batch: (body, options) => call<'/translate/batch', PostData<'/translate/batch'>>('/translate/batch', body, options),
     },
     vedic: {
       compatibilityAshtakoot: (body, options) => call<'/vedic/compatibility/ashtakoot', PostData<'/vedic/compatibility/ashtakoot'>>('/vedic/compatibility/ashtakoot', body, options),

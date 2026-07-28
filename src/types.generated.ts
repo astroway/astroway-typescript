@@ -104,6 +104,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/match/score": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Match Score (dating compatibility)
+         * @description One-call dating-compatibility aggregate over the synastry engine: overall score (0-100) + label + harmony/tension, the attraction score (Venus-Mars / Moon-Venus / 5th-house), the most influential cross-aspects, and green/red flags surfaced from those aspects. Built for dating apps that want a single call instead of synastry + attraction + their own flag logic. Same TwoChart input as /synastry.
+         */
+        post: operations["match_score"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/composite": {
         parameters: {
             query?: never;
@@ -656,7 +676,7 @@ export interface paths {
         /**
          * Vedic Divisional Chart (DEPRECATED — use /vedic/varga/{D}<*>)
          * @deprecated
-         * @description DEPRECATED in v2.0.0 — moved to dedicated per-varga endpoints `/vedic/varga/{D1..D60}` for OpenAPI/SDK ergonomics. Generic endpoint kept for 6-month sunset. Calculate a Vedic divisional (varga) chart using sidereal zodiac. Supported vargas: D1–D60 (e.g. D9 Navamsha).
+         * @description DEPRECATED — moved to dedicated per-varga endpoints `/vedic/varga/{D1..D60}` for OpenAPI/SDK ergonomics. This generic endpoint still works and stays live until its 2027-06-15 sunset (12-month, per the /v1 stability policy), then will be removed — migrate to `/vedic/varga/{D}`. Calculate a Vedic divisional (varga) chart using sidereal zodiac. Supported vargas: D1–D60 (e.g. D9 Navamsha).
          */
         post: operations["vedic-divisional"];
         delete?: never;
@@ -3636,7 +3656,7 @@ export interface paths {
         put?: never;
         /**
          * Parans
-         * @description Calculate fixed star parans — latitude circles where a star and a planet rise, culminate, set, or anti-culminate simultaneously.
+         * @description Crossing points of two A*C*G lines: the places where two planets were simultaneously angular. Returns every planet-to-planet crossing with its coordinates.
          */
         post: operations["parans"];
         delete?: never;
@@ -3796,7 +3816,7 @@ export interface paths {
         put?: never;
         /**
          * Solar A*C*G
-         * @description Calculate solar (heliocentric) astrocartography lines — geographic loci where each planet was on an angle relative to the Sun at birth.
+         * @description Astrocartography for the solar return of a given year: the A*C*G map of the moment the Sun comes back to its natal longitude. Planet names carry an SR suffix.
          */
         post: operations["solar-acg"];
         delete?: never;
@@ -3815,10 +3835,70 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * A*C*G Influence Zones
-         * @description Calculate radius zones around A*C*G lines (default 700-mile orb) where planetary influence is considered active.
+         * A*C*G Lines Near a Point
+         * @description A*C*G lines passing within radiusDeg of one location, with the angular distance to each. The "what runs over this city" lookup.
          */
         post: operations["acg-zones"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/acg/categories": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * A*C*G Life Categories
+         * @description Reference taxonomy: 19 areas of life, each naming the planet-and-angle lines that govern it with a weight and a polarity. Free, cacheable, drives the two endpoints below.
+         */
+        get: operations["acg_categories_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/acg/by-category": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * A*C*G by Life Category
+         * @description A*C*G lines that govern one area of life, ranked by astrological weight and, when a point is supplied, by proximity to it. Returns curated interpretation text per line in 11 languages.
+         */
+        post: operations["acg_by-category"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/acg/line-report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * A*C*G Line Report
+         * @description One line in full: its geometry, every life area it touches with weight and polarity, and the interpretation text for that planet-and-angle pair.
+         */
+        post: operations["acg_line-report"];
         delete?: never;
         options?: never;
         head?: never;
@@ -5139,6 +5219,26 @@ export interface paths {
          * @description Generic favourable-window finder when no specific activity applies (Sankalpa, prayer, fallback). Universal Pushya/Hasta nakshatras + standard shubha tithis. Returns top-N days against universal Panchang criteria.
          */
         post: operations["vedic_muhurat_general-auspicious"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/muhurta/types": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Muhurat — activity catalogue
+         * @description List the 12 supported muhurat activities (key + Sanskrit name + one-line purpose) so a client can discover them without hard-coding. Free metadata read, no calculation.
+         */
+        get: operations["muhurta_types_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -7235,8 +7335,9 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * I Ching Hexagram
-         * @description Return the I Ching hexagram corresponding to each planet's gate in the Human Design wheel.
+         * I Ching Hexagram (DEPRECATED — use /iching/throw-coins)
+         * @deprecated
+         * @description DEPRECATED — legacy un-namespaced random hexagram cast. Superseded by the /iching/* namespace: `/iching/throw-coins` (seeded + reproducible), `/iching/by-question`, `/iching/with-changing-lines`, `/iching/daily`, `/iching/lookup/{n}` — all on the Wilhelm-Baynes hexagram set. Still works until its 2027-06-16 sunset, then removed. Casts a single I Ching hexagram (input ignored).
          */
         post: operations["iching"];
         delete?: never;
@@ -7255,9 +7356,9 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Djamaspa (DEPRECATED — RED quality, slated for v2.0 sunset)
+         * Djamaspa (DEPRECATED — RED quality, sunset 2027-06-15)
          * @deprecated
-         * @description DEPRECATED in v2.0.0 — RED quality (oral Zoroastrian tradition, scattered manuscripts, no canonical reference). Slated for sunset 6 months after v2.0.0 release. Migrate to broader /reference endpoints or remove dependency. Calculate Djamaspa planetary positions for date.
+         * @description DEPRECATED — RED quality (oral Zoroastrian tradition, scattered manuscripts, no canonical reference). Still works until its 2027-06-15 sunset (12-month, per the /v1 stability policy), then will be removed. Migrate to broader /reference endpoints or remove the dependency. Calculate Djamaspa planetary positions for date.
          */
         post: operations["djamaspa"];
         delete?: never;
@@ -10684,6 +10785,46 @@ export interface paths {
          * @description Romantic-relationship natal report. Highlights Venus (attraction style), Mars (desire), Moon (emotional needs), Descendant (partner profile). Disclaimer: not a prophecy.
          */
         post: operations["reports_love"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reports/muhurta": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Generate Muhurta Report (PDF or HTML)
+         * @description Render a standard A4 report of the most auspicious dates for a chosen activity over a search window. Same window-scan engine as /vedic/muhurat/* — scores each day by sunrise Panchang (Tithi/Vara/Nakshatra/Yoga/Karana) per Muhurta Chintamani + B.V.Raman, lists ranked days with per-day Abhijit Muhurat and the scoring factors as the rationale. `activity` is one of the 12 from /muhurta/types. PDF default; ?format=html returns HTML.
+         */
+        post: operations["reports_muhurta"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/reports/stellaforge": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Generate Stellaforge Birth-Chart Poster (PDF or HTML)
+         * @description Render a data-rich, print-ready natal chart poster. A high-detail western wheel (colored element sectors, colored glyphs, degree labels, ASC arrow, MC marker, house cusps) plus the Sun/Moon/Rising trio, a placements table, element/modality balance bars, and the top aspects — fully deterministic, 0 AI. Three styles via `style`: `editorial` (light), `celestial` (dark + gold), `classic` (minimal). White-label via `whitelabel`. i18n via `language`. PDF default; `?format=html` returns HTML. NB `style` is read from the request BODY, not the query string.
+         */
+        post: operations["reports_stellaforge"];
         delete?: never;
         options?: never;
         head?: never;
@@ -14314,6 +14455,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/translate/astro": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Translate (astro-aware)
+         * @description Translate one text into any of 21 languages with astrology-domain glossary pinning. Source defaults to English; pass source_lang to override. Credits: 15 + ceil(chars/40). Max 3000 chars.
+         */
+        post: operations["translate_astro"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/translate/batch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Translate batch
+         * @description Translate up to 25 strings (≤2000 chars each, ≤20000 total) sharing one target language + domain. Credits: 15 + ceil(total_chars/40).
+         */
+        post: operations["translate_batch"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/translate/languages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Supported languages
+         * @description List the 21 supported language codes + names. Free (0 credits).
+         */
+        get: operations["translate_languages_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/translate/glossary/{lang}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Glossary download
+         * @description Download the astrology glossary for a target language. Query: ?source=<lang> (default en), ?domain=<domain> (default generic). Free (0 credits).
+         */
+        get: operations["translate_glossary_{lang}_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/version": {
         parameters: {
             query?: never;
@@ -14326,6 +14547,480 @@ export interface paths {
          * @description Returns the current deploy version, build commit, start time, and uptime. Free, no authentication required. SDK clients can call this on boot to diagnose unexpected behaviour — `build_commit` uniquely identifies the deploy.
          */
         get: operations["version"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/public/horoscope/daily": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Daily Horoscope (public, no key)
+         * @description Sun-sign daily horoscope. No authentication, IP-rate-limited (30/hr). Cached per (sign, date, language); every response carries the `_footer` watermark.
+         */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Zodiac sun sign. */
+                    sign: "aries" | "taurus" | "gemini" | "cancer" | "leo" | "virgo" | "libra" | "scorpio" | "sagittarius" | "capricorn" | "aquarius" | "pisces";
+                    /** @description Calendar date `YYYY-MM-DD` (UTC). Defaults to today. */
+                    date?: string;
+                };
+                header?: {
+                    /** @description BCP-47 language (e.g. `uk`, `en`, `de`) — sets the horoscope text language. `?lang=` also works. */
+                    "Accept-Language"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": true,
+                         *       "data": {
+                         *         "sign": "aries",
+                         *         "date": "2026-06-14",
+                         *         "period": "daily",
+                         *         "horoscope": "## …\n…",
+                         *         "disclaimer": "For entertainment purposes only.",
+                         *         "model": "groq/llama-3.3-70b",
+                         *         "language": "en"
+                         *       },
+                         *       "_footer": "Powered by astroway.api — get your own key at https://api.astroway.info"
+                         *     }
+                         */
+                        "application/json": unknown;
+                    };
+                };
+                /** @description Invalid sign or date */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": false,
+                         *       "error": {
+                         *         "code": "INVALID_SIGN",
+                         *         "message": "sign must be one of the 12 zodiac signs"
+                         *       }
+                         *     }
+                         */
+                        "application/json": unknown;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/public/horoscope/weekly": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Weekly Horoscope (public, no key)
+         * @description Sun-sign weekly horoscope. The cache key anchors to the week's Monday, so any day in the week returns the same reading (and a finite number of generations per week). `_footer` watermark.
+         */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Zodiac sun sign. */
+                    sign: "aries" | "taurus" | "gemini" | "cancer" | "leo" | "virgo" | "libra" | "scorpio" | "sagittarius" | "capricorn" | "aquarius" | "pisces";
+                    /** @description Calendar date `YYYY-MM-DD` (UTC). Defaults to today. */
+                    date?: string;
+                };
+                header?: {
+                    /** @description BCP-47 language (e.g. `uk`, `en`, `de`) — sets the horoscope text language. `?lang=` also works. */
+                    "Accept-Language"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": true,
+                         *       "data": {
+                         *         "sign": "aries",
+                         *         "date": "2026-06-08",
+                         *         "period": "weekly",
+                         *         "horoscope": "## …\n…",
+                         *         "disclaimer": "For entertainment purposes only.",
+                         *         "model": "groq/llama-3.3-70b",
+                         *         "language": "en"
+                         *       },
+                         *       "_footer": "Powered by astroway.api — get your own key at https://api.astroway.info"
+                         *     }
+                         */
+                        "application/json": unknown;
+                    };
+                };
+                /** @description Invalid sign or date */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": false,
+                         *       "error": {
+                         *         "code": "INVALID_SIGN",
+                         *         "message": "sign must be one of the 12 zodiac signs"
+                         *       }
+                         *     }
+                         */
+                        "application/json": unknown;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/public/horoscope/monthly": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Monthly Horoscope (public, no key)
+         * @description Sun-sign monthly horoscope. The cache key anchors to the 1st of the month. `_footer` watermark.
+         */
+        get: {
+            parameters: {
+                query: {
+                    /** @description Zodiac sun sign. */
+                    sign: "aries" | "taurus" | "gemini" | "cancer" | "leo" | "virgo" | "libra" | "scorpio" | "sagittarius" | "capricorn" | "aquarius" | "pisces";
+                    /** @description Calendar date `YYYY-MM-DD` (UTC). Defaults to today. */
+                    date?: string;
+                };
+                header?: {
+                    /** @description BCP-47 language (e.g. `uk`, `en`, `de`) — sets the horoscope text language. `?lang=` also works. */
+                    "Accept-Language"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": true,
+                         *       "data": {
+                         *         "sign": "aries",
+                         *         "date": "2026-06-01",
+                         *         "period": "monthly",
+                         *         "horoscope": "## …\n…",
+                         *         "disclaimer": "For entertainment purposes only.",
+                         *         "model": "groq/llama-3.3-70b",
+                         *         "language": "en"
+                         *       },
+                         *       "_footer": "Powered by astroway.api — get your own key at https://api.astroway.info"
+                         *     }
+                         */
+                        "application/json": unknown;
+                    };
+                };
+                /** @description Invalid sign or date */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": false,
+                         *       "error": {
+                         *         "code": "INVALID_SIGN",
+                         *         "message": "sign must be one of the 12 zodiac signs"
+                         *       }
+                         *     }
+                         */
+                        "application/json": unknown;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/public/tarot/daily": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Tarot Card of the Day (public, no key)
+         * @description Deterministic Rider–Waite–Smith single card, seeded by date — the same date always yields the same card. No AI. `_footer` watermark.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Calendar date `YYYY-MM-DD` (UTC). Defaults to today. */
+                    date?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": true,
+                         *       "data": {
+                         *         "date": "2026-06-14",
+                         *         "spread": "single-card",
+                         *         "seed": 1734220800,
+                         *         "drawn": [
+                         *           {
+                         *             "position": "The card",
+                         *             "card": "The Star",
+                         *             "reversed": false
+                         *           }
+                         *         ]
+                         *       },
+                         *       "_footer": "Powered by astroway.api — get your own key at https://api.astroway.info"
+                         *     }
+                         */
+                        "application/json": unknown;
+                    };
+                };
+                /** @description Invalid sign or date */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": false,
+                         *       "error": {
+                         *         "code": "INVALID_SIGN",
+                         *         "message": "sign must be one of the 12 zodiac signs"
+                         *       }
+                         *     }
+                         */
+                        "application/json": unknown;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/public/moon-phase": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Moon Phase (public, no key)
+         * @description Geocentric moon phase for a date (computed at noon UTC) — deterministic, no AI, no birth data. `_footer` watermark.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Calendar date `YYYY-MM-DD` (UTC). Defaults to today. */
+                    date?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": true,
+                         *       "data": {
+                         *         "date": "2026-06-14",
+                         *         "phase": 0.006,
+                         *         "phaseName": "New Moon",
+                         *         "majorPhase": "new_moon",
+                         *         "illuminationPercent": 0.6,
+                         *         "elongationDeg": 8.9,
+                         *         "ageDays": 0.73,
+                         *         "waxing": true,
+                         *         "moonSign": "Gemini",
+                         *         "sunSign": "Gemini"
+                         *       },
+                         *       "_footer": "Powered by astroway.api — get your own key at https://api.astroway.info"
+                         *     }
+                         */
+                        "application/json": unknown;
+                    };
+                };
+                /** @description Invalid sign or date */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": false,
+                         *       "error": {
+                         *         "code": "INVALID_SIGN",
+                         *         "message": "sign must be one of the 12 zodiac signs"
+                         *       }
+                         *     }
+                         */
+                        "application/json": unknown;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/public/planet-of-day": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Planet of the Day (public, no key)
+         * @description Traditional (Chaldean) planetary ruler of the weekday — Sun=Sunday, Moon=Monday, …, Saturn=Saturday. Deterministic, no AI. `_footer` watermark.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Calendar date `YYYY-MM-DD` (UTC). Defaults to today. */
+                    date?: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": true,
+                         *       "data": {
+                         *         "date": "2026-06-14",
+                         *         "weekday": "Sunday",
+                         *         "planet": "Sun",
+                         *         "glyph": "☉",
+                         *         "themes": [
+                         *           "vitality",
+                         *           "success",
+                         *           "leadership",
+                         *           "self-expression"
+                         *         ]
+                         *       },
+                         *       "_footer": "Powered by astroway.api — get your own key at https://api.astroway.info"
+                         *     }
+                         */
+                        "application/json": unknown;
+                    };
+                };
+                /** @description Invalid sign or date */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": false,
+                         *       "error": {
+                         *         "code": "INVALID_SIGN",
+                         *         "message": "sign must be one of the 12 zodiac signs"
+                         *       }
+                         *     }
+                         */
+                        "application/json": unknown;
+                    };
+                };
+            };
+        };
         put?: never;
         post?: never;
         delete?: never;
@@ -14383,6 +15078,42 @@ export interface components {
         NatalWrapper: {
             natal: components["schemas"]["ChartInput"];
         };
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss). Defaults to lat/lon/tz=0 if omitted; pass real values for accurate computation. */
+        AcgByCategory: components["schemas"]["ChartInput"] & ({
+            /** @enum {string} */
+            category: "adventure" | "career" | "communication" | "creativity" | "health" | "home" | "learning" | "love" | "money" | "power" | "relationship" | "retreat" | "spirituality" | "stability" | "success" | "transformation" | "travel" | "vitality" | "wealth";
+            point?: {
+                lat: number;
+                lng: number;
+            };
+            /** @default 4 */
+            radiusDeg: number;
+            /**
+             * @default all
+             * @enum {string}
+             */
+            polarity: "supportive" | "challenging" | "all";
+            /** @default true */
+            includeText: boolean;
+            /** @default true */
+            includeCoordinates: boolean;
+            /** @enum {string} */
+            language?: "uk" | "en" | "de" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+        } & {
+            [key: string]: unknown;
+        });
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss). Defaults to lat/lon/tz=0 if omitted; pass real values for accurate computation. */
+        AcgLineReport: components["schemas"]["ChartInput"] & ({
+            planet: string;
+            /** @enum {string} */
+            angle: "MC" | "IC" | "ASC" | "DSC";
+            /** @default true */
+            includeCoordinates: boolean;
+            /** @enum {string} */
+            language?: "uk" | "en" | "de" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+        } & {
+            [key: string]: unknown;
+        });
         /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss). Defaults to lat/lon/tz=0 if omitted; pass real values for accurate computation. */
         AcgZones: components["schemas"]["ChartInput"] & ({
             point: {
@@ -14539,7 +15270,7 @@ export interface components {
             sign1: string;
             sign2: string;
             /** @enum {string} */
-            language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            language?: "uk" | "en" | "de" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
             /** @default false */
             disclaimer_inline: boolean;
         };
@@ -14774,7 +15505,7 @@ export interface components {
         /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss). Defaults to lat/lon/tz=0 if omitted; pass real values for accurate computation. */
         InterpretElement: components["schemas"]["ChartInput"] & ({
             /** @enum {string} */
-            language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            language?: "uk" | "en" | "de" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
             /** @default false */
             disclaimer_inline: boolean;
         } & {
@@ -14783,7 +15514,7 @@ export interface components {
         /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss). Defaults to lat/lon/tz=0 if omitted; pass real values for accurate computation. */
         InterpretNatal: components["schemas"]["ChartInput"] & ({
             /** @enum {string} */
-            language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            language?: "uk" | "en" | "de" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
             /** @default false */
             disclaimer_inline: boolean;
         } & {
@@ -14793,7 +15524,7 @@ export interface components {
         InterpretPlacement: components["schemas"]["ChartInput"] & ({
             planet: string;
             /** @enum {string} */
-            language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            language?: "uk" | "en" | "de" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
             /** @default false */
             disclaimer_inline: boolean;
         } & {
@@ -14802,7 +15533,7 @@ export interface components {
         /** @description Pair of natal charts for relationship calculations: synastry, composite, davison. */
         InterpretSynastry: components["schemas"]["TwoChart"] & {
             /** @enum {string} */
-            language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            language?: "uk" | "en" | "de" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
             /** @default false */
             disclaimer_inline: boolean;
         };
@@ -14812,7 +15543,7 @@ export interface components {
             transitTime?: string;
             transitTzOffset?: number | null;
             /** @enum {string} */
-            language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            language?: "uk" | "en" | "de" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
             /** @default false */
             disclaimer_inline: boolean;
         } & {
@@ -15216,7 +15947,7 @@ export interface components {
             sign: "aries" | "taurus" | "gemini" | "cancer" | "leo" | "virgo" | "libra" | "scorpio" | "sagittarius" | "capricorn" | "aquarius" | "pisces";
             date?: string;
             /** @enum {string} */
-            language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+            language?: "uk" | "en" | "de" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
             /** @default false */
             disclaimer_inline: boolean;
         };
@@ -15351,6 +16082,76 @@ export interface components {
             seed?: number | null;
             name?: string;
             allowReversed?: boolean;
+            /** @enum {string} */
+            language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "hi" | "fr" | "ko" | "it" | "ja" | "id" | "tr" | "nl" | "ro" | "cs" | "vi" | "ar" | "el" | "hu";
+            whitelabel?: boolean | {
+                companyName?: string;
+                /** Format: uri */
+                companyUrl?: string;
+                /** Format: email */
+                companyEmail?: string;
+                companyMobile?: string;
+                companyBio?: string;
+                /** Format: uri */
+                logoUrl?: string;
+                /** Format: uri */
+                frontImage?: string;
+                textPrimaryColor?: string;
+                textSecondaryColor?: string;
+                backgroundColor?: string;
+                /** @description Accent colour — used for section heading text and inline emphasis. */
+                themeColor?: string;
+                /** @description Colour of the divider rule under each section heading (not the heading text — that is themeColor). */
+                headingColor?: string;
+                footerText?: string;
+                /** @enum {string} */
+                fontPairing?: "serif-sans" | "sans-serif" | "serif-only" | "sans-only" | "system";
+                reportName?: string;
+            };
+        };
+        MuhurtaReport: {
+            /** @enum {string} */
+            activity: "marriage" | "vehicle-purchase" | "business-start" | "travel" | "naming-ceremony" | "surgery" | "education-start" | "investment" | "property-purchase" | "journey-long" | "name-change" | "general-auspicious";
+            search_window_start: string;
+            search_window_end?: string;
+            latitude: number | null;
+            longitude: number | null;
+            /** @default 0 */
+            timezoneOffset: number | null;
+            ayanamsaId?: number | null;
+            /** @default 10 */
+            topN: number;
+            /** @enum {string} */
+            language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "hi" | "fr" | "ko" | "it" | "ja" | "id" | "tr" | "nl" | "ro" | "cs" | "vi" | "ar" | "el" | "hu";
+            whitelabel?: boolean | {
+                companyName?: string;
+                /** Format: uri */
+                companyUrl?: string;
+                /** Format: email */
+                companyEmail?: string;
+                companyMobile?: string;
+                companyBio?: string;
+                /** Format: uri */
+                logoUrl?: string;
+                /** Format: uri */
+                frontImage?: string;
+                textPrimaryColor?: string;
+                textSecondaryColor?: string;
+                backgroundColor?: string;
+                /** @description Accent colour — used for section heading text and inline emphasis. */
+                themeColor?: string;
+                /** @description Colour of the divider rule under each section heading (not the heading text — that is themeColor). */
+                headingColor?: string;
+                footerText?: string;
+                /** @enum {string} */
+                fontPairing?: "serif-sans" | "sans-serif" | "serif-only" | "sans-only" | "system";
+                reportName?: string;
+            };
+        };
+        StellaforgePoster: {
+            chart: components["schemas"]["ChartInput"];
+            /** @enum {string} */
+            style?: "editorial" | "celestial" | "classic";
             /** @enum {string} */
             language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "hi" | "fr" | "ko" | "it" | "ja" | "id" | "tr" | "nl" | "ro" | "cs" | "vi" | "ar" | "el" | "hu";
             whitelabel?: boolean | {
@@ -15654,28 +16455,44 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            planets?: {
-                                id?: number;
-                                name?: string;
-                                longitude?: number;
-                                latitude?: number;
-                                speed?: number;
-                                house?: number;
-                                sign?: string;
-                                retrograde?: boolean;
-                            }[];
+                            julianDay?: number | null;
+                            siderealTime?: number | null;
+                            planets?: ({
+                                id?: number | null;
+                                name?: string | null;
+                                longitude?: number | null;
+                                latitude?: number | null;
+                                distance?: number | null;
+                                speedLong?: number | null;
+                                speedLat?: number | null;
+                                speedDist?: number | null;
+                                isRetrograde?: boolean | null;
+                                declination?: number | null;
+                                rightAscension?: number | null;
+                            } | null)[] | null;
                             houses?: {
-                                ascendant?: number;
-                                mc?: number;
-                                cusps?: number[];
-                            };
-                            aspects?: {
-                                body1?: number;
-                                body2?: number;
-                                type?: string;
-                                orb?: number;
-                                applying?: boolean;
-                            }[];
+                                system?: string | null;
+                                cusps?: (number | null)[] | null;
+                                ascendant?: number | null;
+                                mc?: number | null;
+                                armc?: number | null;
+                                vertex?: number | null;
+                            } | null;
+                            aspects?: ({
+                                planet1?: string | null;
+                                planet2?: string | null;
+                                planet1Id?: number | null;
+                                planet2Id?: number | null;
+                                type?: {
+                                    name?: string | null;
+                                    angle?: number | null;
+                                    symbol?: string | null;
+                                    isMajor?: boolean | null;
+                                } | null;
+                                exactAngle?: number | null;
+                                orb?: number | null;
+                                isApplying?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -15754,12 +16571,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            planets?: {
-                                id?: number;
-                                longitude?: number;
-                                latitude?: number;
-                                speed?: number;
-                            }[];
+                            planets?: ({
+                                id?: number | null;
+                                longitude?: number | null;
+                                latitude?: number | null;
+                                speed?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -15843,16 +16660,16 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            ephemeris?: {
-                                jd?: number;
-                                date?: string;
-                                positions?: {
-                                    planetId?: number;
-                                    longitude?: number;
-                                    latitude?: number;
-                                    speed?: number;
-                                }[];
-                            }[];
+                            ephemeris?: ({
+                                jd?: number | null;
+                                date?: string | null;
+                                positions?: ({
+                                    planetId?: number | null;
+                                    longitude?: number | null;
+                                    latitude?: number | null;
+                                    speed?: number | null;
+                                } | null)[] | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -15944,11 +16761,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sunrise?: string;
-                            sunset?: string;
-                            dayLength?: number;
-                            dawn?: string;
-                            dusk?: string;
+                            sunrise?: string | null;
+                            sunset?: string | null;
+                            dayLength?: number | null;
+                            dawn?: string | null;
+                            dusk?: string | null;
                         };
                     };
                 };
@@ -16038,15 +16855,161 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            aspects?: {
-                                body1?: number;
-                                body2?: number;
-                                chart1Planet?: string;
-                                chart2Planet?: string;
-                                type?: string;
-                                orb?: number;
-                                applying?: boolean;
-                            }[];
+                            aspects?: ({
+                                body1?: number | null;
+                                body2?: number | null;
+                                chart1Planet?: string | null;
+                                chart2Planet?: string | null;
+                                type?: string | null;
+                                orb?: number | null;
+                                applying?: boolean | null;
+                            } | null)[] | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    match_score: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "chart1": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
+                 *       },
+                 *       "chart2": {
+                 *         "date": "1985-11-03",
+                 *         "time": "08:15:00",
+                 *         "timezoneOffset": 2,
+                 *         "latitude": 48.46,
+                 *         "longitude": 35.04
+                 *       }
+                 *     }
+                 */
+                "application/json": components["schemas"]["TwoChart"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "score": 62,
+                     *         "label": "balanced",
+                     *         "harmony": 14.2,
+                     *         "tension": 8.7,
+                     *         "attraction": {
+                     *           "score": 71
+                     *         },
+                     *         "topAspects": [
+                     *           {
+                     *             "aspect": "Venus trine Moon",
+                     *             "type": "Trine",
+                     *             "angle": 120,
+                     *             "orb": 1.2,
+                     *             "tone": "harmonious"
+                     *           }
+                     *         ],
+                     *         "greenFlags": [
+                     *           {
+                     *             "aspect": "Venus trine Moon",
+                     *             "note": "affection & values"
+                     *           }
+                     *         ],
+                     *         "redFlags": [
+                     *           {
+                     *             "aspect": "Mars square Saturn",
+                     *             "note": "passion & drive"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            score?: number | null;
+                            label?: string | null;
+                            harmony?: number | null;
+                            tension?: number | null;
+                            attraction?: {
+                                score?: number | null;
+                            } | null;
+                            topAspects?: ({
+                                aspect?: string | null;
+                                type?: string | null;
+                                angle?: number | null;
+                                orb?: number | null;
+                                tone?: string | null;
+                            } | null)[] | null;
+                            greenFlags?: ({
+                                aspect?: string | null;
+                                note?: string | null;
+                            } | null)[] | null;
+                            redFlags?: ({
+                                aspect?: string | null;
+                                note?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -16136,17 +17099,17 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            planets?: {
-                                id?: number;
-                                longitude?: number;
-                                sign?: string;
-                                house?: number;
-                            }[];
+                            planets?: ({
+                                id?: number | null;
+                                longitude?: number | null;
+                                sign?: string | null;
+                                house?: number | null;
+                            } | null)[] | null;
                             houses?: {
-                                ascendant?: number;
-                                cusps?: unknown[];
-                            };
-                            aspects?: unknown[];
+                                ascendant?: number | null;
+                                cusps?: unknown[] | null;
+                            } | null;
+                            aspects?: unknown[] | null;
                         };
                     };
                 };
@@ -16236,16 +17199,16 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            date?: string;
-                            time?: string;
-                            latitude?: number;
-                            longitude?: number;
-                            planets?: unknown[];
+                            date?: string | null;
+                            time?: string | null;
+                            latitude?: number | null;
+                            longitude?: number | null;
+                            planets?: unknown[] | null;
                             houses?: {
-                                ascendant?: number;
-                                cusps?: unknown[];
-                            };
-                            aspects?: unknown[];
+                                ascendant?: number | null;
+                                cusps?: unknown[] | null;
+                            } | null;
+                            aspects?: unknown[] | null;
                         };
                     };
                 };
@@ -16335,14 +17298,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            harmonic?: number;
-                            planets?: unknown[];
+                            harmonic?: number | null;
+                            planets?: unknown[] | null;
                             houses?: {
-                                ascendant?: number;
-                                cusps?: unknown[];
-                            };
-                            aspects?: unknown[];
-                            resonance?: number;
+                                ascendant?: number | null;
+                                cusps?: unknown[] | null;
+                            } | null;
+                            aspects?: unknown[] | null;
+                            resonance?: number | null;
                         };
                     };
                 };
@@ -16436,14 +17399,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            pairs?: {
-                                chart1?: string;
-                                chart2?: string;
-                                aspects?: unknown[];
-                            }[];
+                            pairs?: ({
+                                chart1?: string | null;
+                                chart2?: string | null;
+                                aspects?: unknown[] | null;
+                            } | null)[] | null;
                             summary?: {
-                                strongestAspects?: unknown[];
-                            };
+                                strongestAspects?: unknown[] | null;
+                            } | null;
                         };
                     };
                 };
@@ -16533,19 +17496,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            bodies1?: unknown[];
-                            bodies2?: unknown[];
-                            grid?: {
+                            bodies1?: unknown[] | null;
+                            bodies2?: unknown[] | null;
+                            grid?: (({
                                 type?: {
-                                    name?: string;
-                                };
-                                orb?: number;
-                            }[][];
+                                    name?: string | null;
+                                } | null;
+                                orb?: number | null;
+                            } | null)[] | null)[] | null;
                             totals?: {
-                                harmonious?: number;
-                                challenging?: number;
-                                neutral?: number;
-                            };
+                                harmonious?: number | null;
+                                challenging?: number | null;
+                                neutral?: number | null;
+                            } | null;
                         };
                     };
                 };
@@ -16635,15 +17598,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            chart1InChart2?: {
-                                planet?: string;
-                                house?: number;
-                            }[];
-                            chart2InChart1?: unknown[];
+                            chart1InChart2?: ({
+                                planet?: string | null;
+                                house?: number | null;
+                            } | null)[] | null;
+                            chart2InChart1?: unknown[] | null;
                             emphasizedHouses?: {
-                                chart1?: number[];
-                                chart2?: number[];
-                            };
+                                chart1?: (number | null)[] | null;
+                                chart2?: (number | null)[] | null;
+                            } | null;
                         };
                     };
                 };
@@ -16734,21 +17697,21 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             chart1?: {
-                                fire?: number;
-                                earth?: number;
-                                air?: number;
-                                water?: number;
-                                cardinal?: number;
-                                fixed?: number;
-                                mutable?: number;
-                            };
-                            chart2?: Record<string, never>;
-                            combined?: Record<string, never>;
+                                fire?: number | null;
+                                earth?: number | null;
+                                air?: number | null;
+                                water?: number | null;
+                                cardinal?: number | null;
+                                fixed?: number | null;
+                                mutable?: number | null;
+                            } | null;
+                            chart2?: Record<string, never> | null;
+                            combined?: Record<string, never> | null;
                             balance?: {
-                                dominantElement?: string;
-                                dominantModality?: string;
-                                missingElement?: string;
-                            };
+                                dominantElement?: string | null;
+                                dominantModality?: string | null;
+                                missingElement?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -16860,16 +17823,16 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            score?: number;
+                            score?: number | null;
                             components?: {
-                                sunMoon?: number;
-                                marsVenus?: number;
-                                ascDsc?: number;
-                                marsMars?: number;
-                                sunMars?: number;
-                                fifthHouseOverlay?: number;
-                            };
-                            notes?: string[];
+                                sunMoon?: number | null;
+                                marsVenus?: number | null;
+                                ascDsc?: number | null;
+                                marsMars?: number | null;
+                                sunMars?: number | null;
+                                fifthHouseOverlay?: number | null;
+                            } | null;
+                            notes?: (string | null)[] | null;
                         };
                     };
                 };
@@ -16953,14 +17916,69 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            transits?: {
-                                transitPlanet?: string;
-                                natalPlanet?: string;
-                                type?: string;
-                                orb?: number;
-                                applying?: boolean;
-                                exactDate?: string;
-                            }[];
+                            input?: {
+                                name?: string | null;
+                                date?: string | null;
+                                time?: string | null;
+                                timezoneOffset?: number | null;
+                                latitude?: number | null;
+                                longitude?: number | null;
+                                houseSystem?: string | null;
+                            } | null;
+                            julianDay?: number | null;
+                            siderealTime?: number | null;
+                            planets?: ({
+                                id?: number | null;
+                                name?: string | null;
+                                longitude?: number | null;
+                                latitude?: number | null;
+                                distance?: number | null;
+                                speedLong?: number | null;
+                                speedLat?: number | null;
+                                speedDist?: number | null;
+                                isRetrograde?: boolean | null;
+                                declination?: number | null;
+                                rightAscension?: number | null;
+                            } | null)[] | null;
+                            houses?: {
+                                system?: string | null;
+                                cusps?: (number | null)[] | null;
+                                ascendant?: number | null;
+                                mc?: number | null;
+                                armc?: number | null;
+                                vertex?: number | null;
+                            } | null;
+                            aspects?: ({
+                                planet1?: string | null;
+                                planet2?: string | null;
+                                planet1Id?: number | null;
+                                planet2Id?: number | null;
+                                type?: {
+                                    name?: string | null;
+                                    angle?: number | null;
+                                    symbol?: string | null;
+                                    isMajor?: boolean | null;
+                                } | null;
+                                exactAngle?: number | null;
+                                orb?: number | null;
+                                isApplying?: boolean | null;
+                            } | null)[] | null;
+                            parallelAspects?: ({
+                                planet1?: string | null;
+                                planet2?: string | null;
+                                planet1Id?: number | null;
+                                planet2Id?: number | null;
+                                type?: string | null;
+                                exactDiff?: number | null;
+                                orb?: number | null;
+                            } | null)[] | null;
+                            antiscia?: ({
+                                planetId?: number | null;
+                                planetName?: string | null;
+                                antiscion?: number | null;
+                                contraAntiscion?: number | null;
+                            } | null)[] | null;
+                            antisciaAspects?: unknown[] | null;
                         };
                     };
                 };
@@ -17045,13 +18063,25 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            events?: {
-                                date?: string;
-                                transitPlanet?: string;
-                                natalPlanet?: string;
-                                type?: string;
-                                entering?: boolean;
-                            }[];
+                            startDate?: string | null;
+                            endDate?: string | null;
+                            maxOrb?: number | null;
+                            count?: number | null;
+                            events?: ({
+                                jd?: number | null;
+                                date?: string | null;
+                                transitPlanetId?: number | null;
+                                natalPlanetId?: number | null;
+                                aspect?: {
+                                    name?: string | null;
+                                    angle?: number | null;
+                                    symbol?: string | null;
+                                    isMajor?: boolean | null;
+                                } | null;
+                                transitLongitude?: number | null;
+                                natalLongitude?: number | null;
+                                isRetrograde?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -17135,12 +18165,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            events?: {
-                                date?: string;
-                                type?: string;
-                                planet?: string;
-                                longitude?: number;
-                            }[];
+                            events?: ({
+                                date?: string | null;
+                                type?: string | null;
+                                planet?: string | null;
+                                longitude?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -17224,17 +18254,17 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            progressedPlanets?: {
-                                id?: number;
-                                longitude?: number;
-                                sign?: string;
-                                speed?: number;
-                            }[];
+                            progressedPlanets?: ({
+                                id?: number | null;
+                                longitude?: number | null;
+                                sign?: string | null;
+                                speed?: number | null;
+                            } | null)[] | null;
                             progressedAngles?: {
-                                ascendant?: number;
-                                mc?: number;
-                            };
-                            aspects?: unknown[];
+                                ascendant?: number | null;
+                                mc?: number | null;
+                            } | null;
+                            aspects?: unknown[] | null;
                         };
                     };
                 };
@@ -17319,17 +18349,17 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            progressedPlanets?: {
-                                id?: number;
-                                longitude?: number;
-                                sign?: string;
-                                speed?: number;
-                            }[];
+                            progressedPlanets?: ({
+                                id?: number | null;
+                                longitude?: number | null;
+                                sign?: string | null;
+                                speed?: number | null;
+                            } | null)[] | null;
                             progressedAngles?: {
-                                ascendant?: number;
-                                mc?: number;
-                            };
-                            aspects?: unknown[];
+                                ascendant?: number | null;
+                                mc?: number | null;
+                            } | null;
+                            aspects?: unknown[] | null;
                         };
                     };
                 };
@@ -17414,17 +18444,17 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            progressedPlanets?: {
-                                id?: number;
-                                longitude?: number;
-                                sign?: string;
-                                speed?: number;
-                            }[];
+                            progressedPlanets?: ({
+                                id?: number | null;
+                                longitude?: number | null;
+                                sign?: string | null;
+                                speed?: number | null;
+                            } | null)[] | null;
                             progressedAngles?: {
-                                ascendant?: number;
-                                mc?: number;
-                            };
-                            aspects?: unknown[];
+                                ascendant?: number | null;
+                                mc?: number | null;
+                            } | null;
+                            aspects?: unknown[] | null;
                         };
                     };
                 };
@@ -17514,13 +18544,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            directions?: {
-                                directedPlanet?: string;
-                                natalPlanet?: string;
-                                type?: string;
-                                age?: number;
-                                date?: string;
-                            }[];
+                            directions?: ({
+                                directedPlanet?: string | null;
+                                natalPlanet?: string | null;
+                                type?: string | null;
+                                age?: number | null;
+                                date?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -17604,19 +18634,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            arc?: number;
-                            directedPlanets?: {
-                                id?: number;
-                                natalLongitude?: number;
-                                directedLongitude?: number;
-                                sign?: string;
-                            }[];
-                            aspects?: {
-                                directedPlanet?: string;
-                                natalPlanet?: string;
-                                type?: string;
-                                orb?: number;
-                            }[];
+                            arc?: number | null;
+                            directedPlanets?: ({
+                                id?: number | null;
+                                natalLongitude?: number | null;
+                                directedLongitude?: number | null;
+                                sign?: string | null;
+                            } | null)[] | null;
+                            aspects?: ({
+                                directedPlanet?: string | null;
+                                natalPlanet?: string | null;
+                                type?: string | null;
+                                orb?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -17700,17 +18730,17 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            returnDate?: string;
-                            returnTime?: string;
-                            returnJd?: number;
+                            returnDate?: string | null;
+                            returnTime?: string | null;
+                            returnJd?: number | null;
                             chart?: {
-                                planets?: unknown[];
+                                planets?: unknown[] | null;
                                 houses?: {
-                                    ascendant?: number;
-                                    cusps?: unknown[];
-                                };
-                                aspects?: unknown[];
-                            };
+                                    ascendant?: number | null;
+                                    cusps?: unknown[] | null;
+                                } | null;
+                                aspects?: unknown[] | null;
+                            } | null;
                         };
                     };
                 };
@@ -17794,17 +18824,17 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            returnDate?: string;
-                            returnTime?: string;
-                            returnJd?: number;
+                            returnDate?: string | null;
+                            returnTime?: string | null;
+                            returnJd?: number | null;
                             chart?: {
-                                planets?: unknown[];
+                                planets?: unknown[] | null;
                                 houses?: {
-                                    ascendant?: number;
-                                    cusps?: unknown[];
-                                };
-                                aspects?: unknown[];
-                            };
+                                    ascendant?: number | null;
+                                    cusps?: unknown[] | null;
+                                } | null;
+                                aspects?: unknown[] | null;
+                            } | null;
                         };
                     };
                 };
@@ -17889,18 +18919,18 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            returns?: {
-                                returnDate?: string;
-                                returnTime?: string;
-                                returnJd?: number;
+                            returns?: ({
+                                returnDate?: string | null;
+                                returnTime?: string | null;
+                                returnJd?: number | null;
                                 chart?: {
-                                    planets?: unknown[];
+                                    planets?: unknown[] | null;
                                     houses?: {
-                                        ascendant?: number;
-                                        cusps?: unknown[];
-                                    };
-                                };
-                            }[];
+                                        ascendant?: number | null;
+                                        cusps?: unknown[] | null;
+                                    } | null;
+                                } | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -17984,17 +19014,17 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            age?: number;
-                            profectedAscendant?: number;
-                            profectedSign?: string;
-                            activatedHouse?: number;
-                            lordOfYear?: string;
-                            monthlyProfections?: {
-                                month?: number;
-                                house?: number;
-                                sign?: string;
-                                lord?: string;
-                            }[];
+                            age?: number | null;
+                            profectedAscendant?: number | null;
+                            profectedSign?: string | null;
+                            activatedHouse?: number | null;
+                            lordOfYear?: string | null;
+                            monthlyProfections?: ({
+                                month?: number | null;
+                                house?: number | null;
+                                sign?: string | null;
+                                lord?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -18076,16 +19106,16 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            periods?: {
-                                planet?: string;
-                                startDate?: string;
-                                endDate?: string;
-                                subPeriods?: {
-                                    planet?: string;
-                                    startDate?: string;
-                                    endDate?: string;
-                                }[];
-                            }[];
+                            periods?: ({
+                                planet?: string | null;
+                                startDate?: string | null;
+                                endDate?: string | null;
+                                subPeriods?: ({
+                                    planet?: string | null;
+                                    startDate?: string | null;
+                                    endDate?: string | null;
+                                } | null)[] | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -18182,11 +19212,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            candidates?: {
-                                time?: string;
-                                score?: number;
-                                matchedEvents?: number;
-                            }[];
+                            candidates?: ({
+                                time?: string | null;
+                                score?: number | null;
+                                matchedEvents?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -18279,11 +19309,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            syzygyType?: string;
-                            syzygyDate?: string;
-                            moonAtSyzygy?: number;
-                            correctedTime?: string;
-                            correctedAscendant?: number;
+                            syzygyType?: string | null;
+                            syzygyDate?: string | null;
+                            moonAtSyzygy?: number | null;
+                            correctedTime?: string | null;
+                            correctedAscendant?: number | null;
                         };
                     };
                 };
@@ -18365,14 +19395,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            harmonic?: number;
-                            planets?: {
-                                id?: number;
-                                natalLongitude?: number;
-                                harmonicLongitude?: number;
-                                sign?: string;
-                            }[];
-                            aspects?: unknown[];
+                            harmonic?: number | null;
+                            planets?: ({
+                                id?: number | null;
+                                natalLongitude?: number | null;
+                                harmonicLongitude?: number | null;
+                                sign?: string | null;
+                            } | null)[] | null;
+                            aspects?: unknown[] | null;
                         };
                     };
                 };
@@ -18453,14 +19483,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            trueNodeLongitude?: number;
-                            planets?: {
-                                id?: number;
-                                natalLongitude?: number;
-                                draconicLongitude?: number;
-                                sign?: string;
-                            }[];
-                            aspects?: unknown[];
+                            trueNodeLongitude?: number | null;
+                            planets?: ({
+                                id?: number | null;
+                                natalLongitude?: number | null;
+                                draconicLongitude?: number | null;
+                                sign?: string | null;
+                            } | null)[] | null;
+                            aspects?: unknown[] | null;
                         };
                     };
                 };
@@ -18541,15 +19571,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            planets?: {
-                                id?: number;
-                                name?: string;
-                                longitude?: number;
-                                latitude?: number;
-                                speed?: number;
-                                sign?: string;
-                            }[];
-                            aspects?: unknown[];
+                            planets?: ({
+                                id?: number | null;
+                                name?: string | null;
+                                longitude?: number | null;
+                                latitude?: number | null;
+                                speed?: number | null;
+                                sign?: string | null;
+                            } | null)[] | null;
+                            aspects?: unknown[] | null;
                         };
                     };
                 };
@@ -18630,15 +19660,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            planets?: {
-                                id?: number;
-                                name?: string;
-                                azimuth?: number;
-                                altitude?: number;
-                                aboveHorizon?: boolean;
-                                riseAzimuth?: number;
-                                setAzimuth?: number;
-                            }[];
+                            planets?: ({
+                                id?: number | null;
+                                name?: string | null;
+                                azimuth?: number | null;
+                                altitude?: number | null;
+                                aboveHorizon?: boolean | null;
+                                riseAzimuth?: number | null;
+                                setAzimuth?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -18720,18 +19750,16 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            varga?: string;
-                            planets?: {
-                                id?: number;
-                                natalLongitude?: number;
-                                vargaLongitude?: number;
-                                sign?: string;
-                                house?: number;
-                            }[];
-                            houses?: {
-                                ascendant?: number;
-                                cusps?: unknown[];
-                            };
+                            varga?: string | null;
+                            ayanamsa?: number | null;
+                            planets?: ({
+                                id?: number | null;
+                                name?: string | null;
+                                longitude?: number | null;
+                                sign?: number | null;
+                                degreeInSign?: number | null;
+                                isRetrograde?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -18828,9 +19856,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            svg?: string;
-                            format?: string;
-                            byteLength?: number;
+                            svg?: string | null;
+                            format?: string | null;
+                            byteLength?: number | null;
                         };
                     };
                 };
@@ -18921,9 +19949,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            svg?: string;
-                            format?: string;
-                            byteLength?: number;
+                            svg?: string | null;
+                            format?: string | null;
+                            byteLength?: number | null;
                         };
                     };
                 };
@@ -19016,11 +20044,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            svg?: string;
-                            illuminationFraction?: number;
-                            elongationDeg?: number;
-                            waxing?: boolean;
-                            phase?: string;
+                            svg?: string | null;
+                            illuminationFraction?: number | null;
+                            elongationDeg?: number | null;
+                            waxing?: boolean | null;
+                            phase?: string | null;
                         };
                     };
                 };
@@ -19121,9 +20149,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            svg?: string;
-                            format?: string;
-                            byteLength?: number;
+                            svg?: string | null;
+                            format?: string | null;
+                            byteLength?: number | null;
                         };
                     };
                 };
@@ -19227,9 +20255,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            svg?: string;
-                            format?: string;
-                            byteLength?: number;
+                            svg?: string | null;
+                            format?: string | null;
+                            byteLength?: number | null;
                         };
                     };
                 };
@@ -19339,9 +20367,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            svg?: string;
-                            format?: string;
-                            byteLength?: number;
+                            svg?: string | null;
+                            format?: string | null;
+                            byteLength?: number | null;
                         };
                     };
                 };
@@ -19441,9 +20469,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            svg?: string;
-                            format?: string;
-                            byteLength?: number;
+                            svg?: string | null;
+                            format?: string | null;
+                            byteLength?: number | null;
                         };
                     };
                 };
@@ -19536,9 +20564,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            svg?: string;
-                            format?: string;
-                            byteLength?: number;
+                            svg?: string | null;
+                            format?: string | null;
+                            byteLength?: number | null;
                         };
                     };
                 };
@@ -19629,9 +20657,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            svg?: string;
-                            format?: string;
-                            byteLength?: number;
+                            svg?: string | null;
+                            format?: string | null;
+                            byteLength?: number | null;
                         };
                     };
                 };
@@ -19722,9 +20750,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            svg?: string;
-                            format?: string;
-                            byteLength?: number;
+                            svg?: string | null;
+                            format?: string | null;
+                            byteLength?: number | null;
                         };
                     };
                 };
@@ -19815,9 +20843,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            svg?: string;
-                            format?: string;
-                            byteLength?: number;
+                            svg?: string | null;
+                            format?: string | null;
+                            byteLength?: number | null;
                         };
                     };
                 };
@@ -19908,9 +20936,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            svg?: string;
-                            format?: string;
-                            byteLength?: number;
+                            svg?: string | null;
+                            format?: string | null;
+                            byteLength?: number | null;
                         };
                     };
                 };
@@ -20008,9 +21036,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            svg?: string;
-                            format?: string;
-                            byteLength?: number;
+                            svg?: string | null;
+                            format?: string | null;
+                            byteLength?: number | null;
                         };
                     };
                 };
@@ -20105,9 +21133,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            svg?: string;
-                            format?: string;
-                            byteLength?: number;
+                            svg?: string | null;
+                            format?: string | null;
+                            byteLength?: number | null;
                         };
                     };
                 };
@@ -20206,17 +21234,17 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            solarYear?: number;
-                            animal?: string;
-                            glyph?: string;
-                            branch?: string;
-                            stem?: string;
+                            solarYear?: number | null;
+                            animal?: string | null;
+                            glyph?: string | null;
+                            branch?: string | null;
+                            stem?: string | null;
                             element?: {
-                                fixed?: string;
-                                cycling?: string;
-                                yin?: boolean;
-                            };
-                            pillar?: string;
+                                fixed?: string | null;
+                                cycling?: string | null;
+                                yin?: boolean | null;
+                            } | null;
+                            pillar?: string | null;
                         };
                     };
                 };
@@ -20309,11 +21337,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            solarYear?: number;
-                            fixedElement?: string;
-                            cyclingElement?: string;
-                            yin?: boolean;
-                            description?: string;
+                            solarYear?: number | null;
+                            fixedElement?: string | null;
+                            cyclingElement?: string | null;
+                            yin?: boolean | null;
+                            description?: string | null;
                         };
                     };
                 };
@@ -20400,9 +21428,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            innerAnimal?: string;
-                            glyph?: string;
-                            description?: string;
+                            innerAnimal?: string | null;
+                            glyph?: string | null;
+                            description?: string | null;
                         };
                     };
                 };
@@ -20490,9 +21518,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            secretAnimal?: string;
-                            glyph?: string;
-                            description?: string;
+                            secretAnimal?: string | null;
+                            glyph?: string | null;
+                            description?: string | null;
                         };
                     };
                 };
@@ -20575,15 +21603,15 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             person1?: {
-                                solarYear?: number;
-                                animal?: string;
-                            };
-                            person2?: Record<string, never>;
+                                solarYear?: number | null;
+                                animal?: string | null;
+                            } | null;
+                            person2?: Record<string, never> | null;
                             compatibility?: {
-                                score?: number;
-                                category?: string;
-                                notes?: string[];
-                            };
+                                score?: number | null;
+                                category?: string | null;
+                                notes?: (string | null)[] | null;
+                            } | null;
                         };
                     };
                 };
@@ -20673,11 +21701,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            solarYear?: number;
-                            gender?: string;
-                            kuaNumber?: number;
-                            group?: string;
-                            description?: string;
+                            solarYear?: number | null;
+                            gender?: string | null;
+                            kuaNumber?: number | null;
+                            group?: string | null;
+                            description?: string | null;
                         };
                     };
                 };
@@ -20755,15 +21783,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            kuaNumber?: number;
-                            group?: string;
+                            kuaNumber?: number | null;
+                            group?: string | null;
                             lucky?: {
                                 sheng_chi?: {
-                                    direction?: string;
-                                    meaning?: string;
-                                };
-                            };
-                            unlucky?: Record<string, never>;
+                                    direction?: string | null;
+                                    meaning?: string | null;
+                                } | null;
+                            } | null;
+                            unlucky?: Record<string, never> | null;
                         };
                     };
                 };
@@ -20841,13 +21869,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            kuaNumber?: number;
-                            bagua?: {
-                                sector?: string;
-                                lifeArea?: string;
-                                element?: string;
-                                colorTones?: string;
-                            }[];
+                            kuaNumber?: number | null;
+                            bagua?: ({
+                                sector?: string | null;
+                                lifeArea?: string | null;
+                                element?: string | null;
+                                colorTones?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -20940,15 +21968,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            date?: string;
+                            date?: string | null;
                             tzolkin?: {
-                                number?: number;
-                                name?: string;
-                                label?: string;
-                                keyword?: string;
-                                element?: string;
-                                direction?: string;
-                            };
+                                number?: number | null;
+                                name?: string | null;
+                                label?: string | null;
+                                keyword?: string | null;
+                                element?: string | null;
+                                direction?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -21039,11 +22067,11 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             haab?: {
-                                day?: number;
-                                month?: string;
-                                label?: string;
-                                isWayeb?: boolean;
-                            };
+                                day?: number | null;
+                                month?: string | null;
+                                label?: string | null;
+                                isWayeb?: boolean | null;
+                            } | null;
                         };
                     };
                 };
@@ -21137,14 +22165,14 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             longCount?: {
-                                baktun?: number;
-                                katun?: number;
-                                tun?: number;
-                                uinal?: number;
-                                kin?: number;
-                                notation?: string;
-                                daysSinceCreation?: number;
-                            };
+                                baktun?: number | null;
+                                katun?: number | null;
+                                tun?: number | null;
+                                uinal?: number | null;
+                                kin?: number | null;
+                                notation?: string | null;
+                                daysSinceCreation?: number | null;
+                            } | null;
                         };
                     };
                 };
@@ -21221,9 +22249,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            calendarRound?: string;
-                            tzolkin?: Record<string, never>;
-                            haab?: Record<string, never>;
+                            calendarRound?: string | null;
+                            tzolkin?: Record<string, never> | null;
+                            haab?: Record<string, never> | null;
                         };
                     };
                 };
@@ -21312,9 +22340,9 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             lordOfNight?: {
-                                number?: number;
-                                label?: string;
-                            };
+                                number?: number | null;
+                                label?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -21391,11 +22419,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            longCount?: Record<string, never>;
-                            tzolkin?: Record<string, never>;
-                            haab?: Record<string, never>;
-                            calendarRound?: string;
-                            lordOfNight?: Record<string, never>;
+                            longCount?: Record<string, never> | null;
+                            tzolkin?: Record<string, never> | null;
+                            haab?: Record<string, never> | null;
+                            calendarRound?: string | null;
+                            lordOfNight?: Record<string, never> | null;
                         };
                     };
                 };
@@ -21492,10 +22520,10 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             compatibility?: {
-                                score?: number;
-                                category?: string;
-                                notes?: string[];
-                            };
+                                score?: number | null;
+                                category?: string | null;
+                                notes?: (string | null)[] | null;
+                            } | null;
                         };
                     };
                 };
@@ -21591,14 +22619,14 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             dreamspell?: {
-                                kin?: number;
-                                toneNumber?: number;
-                                tone?: string;
-                                sealIndex?: number;
-                                seal?: string;
-                            };
-                            label?: string;
-                            notes?: string[];
+                                kin?: number | null;
+                                toneNumber?: number | null;
+                                tone?: string | null;
+                                sealIndex?: number | null;
+                                seal?: string | null;
+                            } | null;
+                            label?: string | null;
+                            notes?: (string | null)[] | null;
                         };
                     };
                 };
@@ -21679,14 +22707,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sunSign?: string;
-                            element?: string;
+                            sunSign?: string | null;
+                            element?: string | null;
                             bodyRulership?: {
-                                primary?: string;
-                                secondary?: unknown[];
-                                vulnerabilities?: unknown[];
-                            };
-                            disclaimer?: string;
+                                primary?: string | null;
+                                secondary?: unknown[] | null;
+                                vulnerabilities?: unknown[] | null;
+                            } | null;
+                            disclaimer?: string | null;
                         };
                     };
                 };
@@ -21767,15 +22795,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sunSign?: string;
-                            element?: string;
+                            sunSign?: string | null;
+                            element?: string | null;
                             diet?: {
-                                focus?: string;
-                                emphasize?: unknown[];
-                                avoid?: unknown[];
-                                cookingStyle?: string;
-                            };
-                            disclaimer?: string;
+                                focus?: string | null;
+                                emphasize?: unknown[] | null;
+                                avoid?: unknown[] | null;
+                                cookingStyle?: string | null;
+                            } | null;
+                            disclaimer?: string | null;
                         };
                     };
                 };
@@ -21856,13 +22884,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sunSign?: string;
+                            sunSign?: string | null;
                             yoga?: {
-                                focus?: string;
-                                asanas?: unknown[];
-                                pranayama?: string;
-                            };
-                            disclaimer?: string;
+                                focus?: string | null;
+                                asanas?: unknown[] | null;
+                                pranayama?: string | null;
+                            } | null;
+                            disclaimer?: string | null;
                         };
                     };
                 };
@@ -21944,10 +22972,10 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             exercise?: {
-                                intensity?: string;
-                                recommended?: unknown[];
-                                avoid?: unknown[];
-                            };
+                                intensity?: string | null;
+                                recommended?: unknown[] | null;
+                                avoid?: unknown[] | null;
+                            } | null;
                         };
                     };
                 };
@@ -22029,18 +23057,18 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             elementProfile?: {
-                                Fire?: number;
-                                Earth?: number;
-                                Air?: number;
-                                Water?: number;
-                            };
-                            dominantElement?: string;
+                                Fire?: number | null;
+                                Earth?: number | null;
+                                Air?: number | null;
+                                Water?: number | null;
+                            } | null;
+                            dominantElement?: string | null;
                             mentalProfile?: {
-                                strengths?: unknown[];
-                                vulnerabilities?: unknown[];
-                                coping?: unknown[];
-                            };
-                            disclaimer?: string;
+                                strengths?: unknown[] | null;
+                                vulnerabilities?: unknown[] | null;
+                                coping?: unknown[] | null;
+                            } | null;
+                            disclaimer?: string | null;
                         };
                     };
                 };
@@ -22117,10 +23145,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            moonPhaseTips?: {
-                                phase?: string;
-                                tip?: string;
-                            }[];
+                            moonPhaseTips?: ({
+                                phase?: string | null;
+                                tip?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -22201,13 +23229,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sunSign?: string;
-                            traditionalRuler?: string;
+                            sunSign?: string | null;
+                            traditionalRuler?: string | null;
                             herbsForRuler?: {
-                                herbs?: unknown[];
-                                uses?: unknown[];
-                            };
-                            allPlanetHerbs?: Record<string, never>;
+                                herbs?: unknown[] | null;
+                                uses?: unknown[] | null;
+                            } | null;
+                            allPlanetHerbs?: Record<string, never> | null;
                         };
                     };
                 };
@@ -22288,12 +23316,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sunSign?: string;
+                            sunSign?: string | null;
                             crystals?: {
-                                primary?: string;
-                                supportive?: unknown[];
-                                intentions?: unknown[];
-                            };
+                                primary?: string | null;
+                                supportive?: unknown[] | null;
+                                intentions?: unknown[] | null;
+                            } | null;
                         };
                     };
                 };
@@ -22386,12 +23414,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            ageYears?: number;
-                            nearbyMilestones?: {
-                                age?: number;
-                                theme?: string;
-                                system?: string;
-                            }[];
+                            ageYears?: number | null;
+                            nearbyMilestones?: ({
+                                age?: number | null;
+                                theme?: string | null;
+                                system?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -22472,10 +23500,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sunSign?: string;
-                            moonSign?: string;
-                            ascendant?: string;
-                            planets?: unknown[];
+                            sunSign?: string | null;
+                            moonSign?: string | null;
+                            ascendant?: string | null;
+                            planets?: unknown[] | null;
                         };
                     };
                 };
@@ -22556,12 +23584,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sunSign?: string;
+                            sunSign?: string | null;
                             personality?: {
-                                temperament?: string;
-                                quirks?: unknown[];
-                                bestSuited?: string;
-                            };
+                                temperament?: string | null;
+                                quirks?: unknown[] | null;
+                                bestSuited?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -22642,9 +23670,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            temperament?: string;
-                            quirks?: unknown[];
-                            bestSuited?: string;
+                            temperament?: string | null;
+                            quirks?: unknown[] | null;
+                            bestSuited?: string | null;
                         };
                     };
                 };
@@ -22725,8 +23753,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            temperament?: string;
-                            quirks?: unknown[];
+                            temperament?: string | null;
+                            quirks?: unknown[] | null;
                         };
                     };
                 };
@@ -22808,9 +23836,9 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             training?: {
-                                style?: string;
-                                tips?: unknown[];
-                            };
+                                style?: string | null;
+                                tips?: unknown[] | null;
+                            } | null;
                         };
                     };
                 };
@@ -22892,9 +23920,9 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             diet?: {
-                                focus?: string;
-                                tips?: unknown[];
-                            };
+                                focus?: string | null;
+                                tips?: unknown[] | null;
+                            } | null;
                         };
                     };
                 };
@@ -22987,9 +24015,9 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             grooming?: {
-                                focus?: string;
-                                freq?: string;
-                            };
+                                focus?: string | null;
+                                freq?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -23071,10 +24099,10 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             exercise?: {
-                                intensity?: string;
-                                minDailyMinutes?: number;
-                                activities?: unknown[];
-                            };
+                                intensity?: string | null;
+                                minDailyMinutes?: number | null;
+                                activities?: unknown[] | null;
+                            } | null;
                         };
                     };
                 };
@@ -23166,8 +24194,8 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             communication?: {
-                                style?: string;
-                            };
+                                style?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -23249,9 +24277,9 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             play?: {
-                                style?: string;
-                                toys?: unknown[];
-                            };
+                                style?: string | null;
+                                toys?: unknown[] | null;
+                            } | null;
                         };
                     };
                 };
@@ -23332,7 +24360,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            healthTips?: unknown[];
+                            healthTips?: unknown[] | null;
                         };
                     };
                 };
@@ -23414,7 +24442,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            names?: unknown[];
+                            names?: unknown[] | null;
                         };
                     };
                 };
@@ -23505,7 +24533,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            luckyDays?: string[];
+                            luckyDays?: (string | null)[] | null;
                         };
                     };
                 };
@@ -23607,9 +24635,9 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             compatibility?: {
-                                score?: number;
-                                category?: string;
-                            };
+                                score?: number | null;
+                                category?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -23691,11 +24719,11 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             profile?: {
-                                type?: string;
-                                strengths?: unknown[];
-                                weaknesses?: unknown[];
-                                idealIndustry?: unknown[];
-                            };
+                                type?: string | null;
+                                strengths?: unknown[] | null;
+                                weaknesses?: unknown[] | null;
+                                idealIndustry?: unknown[] | null;
+                            } | null;
                         };
                     };
                 };
@@ -23776,8 +24804,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            leadership?: string;
-                            strengths?: unknown[];
+                            leadership?: string | null;
+                            strengths?: unknown[] | null;
                         };
                     };
                 };
@@ -23858,7 +24886,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            industries?: unknown[];
+                            industries?: unknown[] | null;
                         };
                     };
                 };
@@ -23940,9 +24968,9 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             foundingTheme?: {
-                                theme?: string;
-                                bestFor?: unknown[];
-                            };
+                                theme?: string | null;
+                                bestFor?: unknown[] | null;
+                            } | null;
                         };
                     };
                 };
@@ -24024,10 +25052,10 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             suitability?: {
-                                theme?: string;
-                                bestFor?: unknown[];
-                            };
-                            notes?: unknown[];
+                                theme?: string | null;
+                                bestFor?: unknown[] | null;
+                            } | null;
+                            notes?: unknown[] | null;
                         };
                     };
                 };
@@ -24108,7 +25136,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            nameHints?: unknown[];
+                            nameHints?: unknown[] | null;
                         };
                     };
                 };
@@ -24210,9 +25238,9 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             compatibility?: {
-                                score?: number;
-                                category?: string;
-                            };
+                                score?: number | null;
+                                category?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -24293,8 +25321,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            targetArchetype?: string;
-                            targetTraits?: unknown[];
+                            targetArchetype?: string | null;
+                            targetTraits?: unknown[] | null;
                         };
                     };
                 };
@@ -24383,7 +25411,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            style?: string;
+                            style?: string | null;
                         };
                     };
                 };
@@ -24476,9 +25504,9 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             riskProfile?: {
-                                tolerance?: string;
-                                recommendation?: string;
-                            };
+                                tolerance?: string | null;
+                                recommendation?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -24570,7 +25598,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            idealPartnerSigns?: string[];
+                            idealPartnerSigns?: (string | null)[] | null;
                         };
                     };
                 };
@@ -24652,10 +25680,10 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             generalGuidance?: {
-                                theme?: string;
-                                bestFor?: unknown[];
-                            };
-                            note?: string;
+                                theme?: string | null;
+                                bestFor?: unknown[] | null;
+                            } | null;
+                            note?: string | null;
                         };
                     };
                 };
@@ -24750,11 +25778,11 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             archetype?: {
-                                investorType?: string;
-                                bias?: string;
-                                strength?: string;
-                                pitfall?: string;
-                            };
+                                investorType?: string | null;
+                                bias?: string | null;
+                                strength?: string | null;
+                                pitfall?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -24847,9 +25875,9 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             riskTolerance?: {
-                                level?: string;
-                                allocation?: string;
-                            };
+                                level?: string | null;
+                                allocation?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -24938,7 +25966,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            spendingStyle?: string;
+                            spendingStyle?: string | null;
                         };
                     };
                 };
@@ -25019,7 +26047,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            savingsTips?: unknown[];
+                            savingsTips?: unknown[] | null;
                         };
                     };
                 };
@@ -25108,7 +26136,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            careerMoneyStyle?: string;
+                            careerMoneyStyle?: string | null;
                         };
                     };
                 };
@@ -25185,10 +26213,40 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "house2": {
+                     *           "cusp": 192.87,
+                     *           "sign": "Libra",
+                     *           "theme": "Personal earnings, possessions, self-worth"
+                     *         },
+                     *         "house8": {
+                     *           "cusp": 12.87,
+                     *           "sign": "Aries",
+                     *           "theme": "Shared resources, inheritance, debt, transformation"
+                     *         },
+                     *         "disclaimer": "NOT INVESTMENT ADVICE. Financial astrology is entertainment / heuristic only."
+                     *       }
+                     *     }
+                     */
                     "application/json": {
                         /** @example true */
                         ok?: boolean;
-                        data?: Record<string, never>;
+                        data?: {
+                            house2?: {
+                                cusp?: number | null;
+                                sign?: string | null;
+                                theme?: string | null;
+                            } | null;
+                            house8?: {
+                                cusp?: number | null;
+                                sign?: string | null;
+                                theme?: string | null;
+                            } | null;
+                            disclaimer?: string | null;
+                        };
                     };
                 };
             };
@@ -25280,7 +26338,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            luckyNumbers?: number[];
+                            luckyNumbers?: (number | null)[] | null;
                         };
                     };
                 };
@@ -25371,7 +26429,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            luckyDays?: string[];
+                            luckyDays?: (string | null)[] | null;
                         };
                     };
                 };
@@ -25448,7 +26506,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            cautionWindows?: unknown[];
+                            cautionWindows?: unknown[] | null;
                         };
                     };
                 };
@@ -25529,8 +26587,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            archetype?: Record<string, never>;
-                            note?: string;
+                            archetype?: Record<string, never> | null;
+                            note?: string | null;
                         };
                     };
                 };
@@ -25624,14 +26682,14 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             yearPillar?: {
-                                stem?: string;
-                                branch?: string;
-                                pillar?: string;
-                                animal?: string;
-                                stemElement?: string;
-                                branchElement?: string;
-                                yin?: boolean;
-                            };
+                                stem?: string | null;
+                                branch?: string | null;
+                                pillar?: string | null;
+                                animal?: string | null;
+                                stemElement?: string | null;
+                                branchElement?: string | null;
+                                yin?: boolean | null;
+                            } | null;
                         };
                     };
                 };
@@ -25721,10 +26779,10 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             monthPillar?: {
-                                stem?: string;
-                                branch?: string;
-                                pillar?: string;
-                            };
+                                stem?: string | null;
+                                branch?: string | null;
+                                pillar?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -25804,23 +26862,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             yearPillar?: {
-                                pillar?: string;
-                            };
+                                pillar?: string | null;
+                            } | null;
                             monthPillar?: {
-                                pillar?: string;
-                            };
+                                pillar?: string | null;
+                            } | null;
                             dayPillar?: {
-                                pillar?: string;
-                                stem?: string;
-                                branch?: string;
-                                animal?: string;
-                                stemElement?: string;
-                                branchElement?: string;
-                                yin?: boolean;
-                            };
+                                pillar?: string | null;
+                                stem?: string | null;
+                                branch?: string | null;
+                                animal?: string | null;
+                                stemElement?: string | null;
+                                branchElement?: string | null;
+                                yin?: boolean | null;
+                            } | null;
                             hourPillar?: {
-                                pillar?: string;
-                            };
+                                pillar?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -25900,16 +26958,16 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             dayMaster?: {
-                                stem?: string;
-                                element?: string;
-                                yin?: boolean;
-                                polarityName?: string;
-                            };
-                            dayPillar?: Record<string, never>;
+                                stem?: string | null;
+                                element?: string | null;
+                                yin?: boolean | null;
+                                polarityName?: string | null;
+                            } | null;
+                            dayPillar?: Record<string, never> | null;
                             interpretation?: {
-                                summary?: string;
-                                archetype?: string;
-                            };
+                                summary?: string | null;
+                                archetype?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -25987,11 +27045,11 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             elementCounts?: {
-                                Wood?: number;
-                                Fire?: number;
-                            };
-                            dominantElement?: string;
-                            missingElements?: string[];
+                                Wood?: number | null;
+                                Fire?: number | null;
+                            } | null;
+                            dominantElement?: string | null;
+                            missingElements?: (string | null)[] | null;
                         };
                     };
                 };
@@ -26070,25 +27128,25 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             natalDayMaster?: {
-                                element?: string;
-                                yin?: boolean;
-                            };
+                                element?: string | null;
+                                yin?: boolean | null;
+                            } | null;
                             targetPillar?: {
-                                pillar?: string;
-                                animal?: string;
-                            };
+                                pillar?: string | null;
+                                animal?: string | null;
+                            } | null;
                             elementFlow?: {
                                 stem?: {
-                                    element?: string;
-                                    relation?: string;
-                                    flavor?: string;
-                                };
-                                branch?: Record<string, never>;
-                            };
+                                    element?: string | null;
+                                    relation?: string | null;
+                                    flavor?: string | null;
+                                } | null;
+                                branch?: Record<string, never> | null;
+                            } | null;
                             branchInteractions?: {
-                                clashes?: unknown[];
-                                trineSupport?: unknown[];
-                            };
+                                clashes?: unknown[] | null;
+                                trineSupport?: unknown[] | null;
+                            } | null;
                         };
                     };
                 };
@@ -26167,14 +27225,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            natalDayMaster?: Record<string, never>;
+                            natalDayMaster?: Record<string, never> | null;
                             targetPillar?: {
-                                pillar?: string;
-                            };
-                            elementFlow?: Record<string, never>;
+                                pillar?: string | null;
+                            } | null;
+                            elementFlow?: Record<string, never> | null;
                             branchInteractions?: {
-                                clashes?: unknown[];
-                            };
+                                clashes?: unknown[] | null;
+                            } | null;
                         };
                     };
                 };
@@ -26251,12 +27309,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            decade?: {
-                                solarYear?: number;
-                                pillar?: string;
-                                animal?: string;
-                                element?: Record<string, never>;
-                            }[];
+                            decade?: ({
+                                solarYear?: number | null;
+                                pillar?: string | null;
+                                animal?: string | null;
+                                element?: Record<string, never> | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -26335,13 +27393,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            dayPillar?: Record<string, never>;
+                            dayPillar?: Record<string, never> | null;
                             hourPillar?: {
-                                stem?: string;
-                                branch?: string;
-                                pillar?: string;
-                                animal?: string;
-                            };
+                                stem?: string | null;
+                                branch?: string | null;
+                                pillar?: string | null;
+                                animal?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -26418,8 +27476,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            dayMaster?: Record<string, never>;
-                            tenGods?: unknown[];
+                            dayMaster?: Record<string, never> | null;
+                            tenGods?: unknown[] | null;
                         };
                     };
                 };
@@ -26498,8 +27556,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            direction?: string;
-                            luckPillars?: unknown[];
+                            direction?: string | null;
+                            luckPillars?: unknown[] | null;
                         };
                     };
                 };
@@ -26576,14 +27634,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            palaces?: {
-                                key?: string;
-                                english?: string;
-                                pinyin?: string;
-                                chinese?: string;
-                                theme?: string;
-                                rules?: unknown[];
-                            }[];
+                            palaces?: ({
+                                key?: string | null;
+                                english?: string | null;
+                                pinyin?: string | null;
+                                chinese?: string | null;
+                                theme?: string | null;
+                                rules?: unknown[] | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -26660,12 +27718,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            fourteenMainStars?: {
-                                name?: string;
-                                pinyin?: string;
-                                chinese?: string;
-                                theme?: string;
-                            }[];
+                            fourteenMainStars?: ({
+                                name?: string | null;
+                                pinyin?: string | null;
+                                chinese?: string | null;
+                                theme?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -26742,8 +27800,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            yearPillar?: string;
-                            palaces?: unknown[];
+                            yearPillar?: string | null;
+                            palaces?: unknown[] | null;
                         };
                     };
                 };
@@ -26821,8 +27879,8 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             palace?: {
-                                key?: string;
-                            };
+                                key?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -26899,7 +27957,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            palace?: Record<string, never>;
+                            palace?: Record<string, never> | null;
                         };
                     };
                 };
@@ -26976,7 +28034,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            palace?: Record<string, never>;
+                            palace?: Record<string, never> | null;
                         };
                     };
                 };
@@ -27053,7 +28111,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            palace?: Record<string, never>;
+                            palace?: Record<string, never> | null;
                         };
                     };
                 };
@@ -27130,7 +28188,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            palace?: Record<string, never>;
+                            palace?: Record<string, never> | null;
                         };
                     };
                 };
@@ -27207,7 +28265,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            palace?: Record<string, never>;
+                            palace?: Record<string, never> | null;
                         };
                     };
                 };
@@ -27284,7 +28342,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            palace?: Record<string, never>;
+                            palace?: Record<string, never> | null;
                         };
                     };
                 };
@@ -27361,7 +28419,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            palace?: Record<string, never>;
+                            palace?: Record<string, never> | null;
                         };
                     };
                 };
@@ -27438,7 +28496,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            palace?: Record<string, never>;
+                            palace?: Record<string, never> | null;
                         };
                     };
                 };
@@ -27519,13 +28577,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            midpoints?: {
-                                planet1?: string;
-                                planet2?: string;
-                                longitude?: number;
-                                sign?: string;
-                                aspects?: unknown[];
-                            }[];
+                            midpoints?: ({
+                                planet1?: string | null;
+                                planet2?: string | null;
+                                longitude?: number | null;
+                                sign?: string | null;
+                                aspects?: unknown[] | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -27607,17 +28665,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            trees?: {
-                                planet?: string;
-                                midpoints?: {
-                                    pair?: string;
-                                    orb?: number;
-                                }[];
-                            }[];
-                            symmetries?: {
-                                planets?: string[];
-                                type?: string;
-                            }[];
+                            trees?: ({
+                                planet?: number | null;
+                                planetName?: string | null;
+                                midpoints?: ({
+                                    pair?: (number | null)[] | null;
+                                    pairNames?: (string | null)[] | null;
+                                    orb?: number | null;
+                                } | null)[] | null;
+                            } | null)[] | null;
+                            symmetries?: ({
+                                planets?: (string | null)[] | null;
+                                type?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -27698,13 +28758,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            antiscia?: {
-                                planet?: string;
-                                natalLongitude?: number;
-                                antiscionLongitude?: number;
-                                sign?: string;
-                            }[];
-                            aspects?: unknown[];
+                            antiscia?: ({
+                                planet?: string | null;
+                                natalLongitude?: number | null;
+                                antiscionLongitude?: number | null;
+                                sign?: string | null;
+                            } | null)[] | null;
+                            aspects?: unknown[] | null;
                         };
                     };
                 };
@@ -27786,14 +28846,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            parallels?: {
-                                planet1?: string;
-                                planet2?: string;
-                                type?: string;
-                                declination1?: number;
-                                declination2?: number;
-                                orb?: number;
-                            }[];
+                            parallels?: ({
+                                planet1?: string | null;
+                                planet2?: string | null;
+                                type?: string | null;
+                                declination1?: number | null;
+                                declination2?: number | null;
+                                orb?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -27879,12 +28939,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lots?: {
-                                name?: string;
-                                longitude?: number;
-                                sign?: string;
-                                house?: number;
-                            }[];
+                            lots?: ({
+                                name?: string | null;
+                                longitude?: number | null;
+                                sign?: string | null;
+                                house?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -27966,13 +29026,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            conjunctions?: {
-                                planet?: string;
-                                star?: string;
-                                starLongitude?: number;
-                                orb?: number;
-                                nature?: string;
-                            }[];
+                            conjunctions?: ({
+                                planet?: string | null;
+                                star?: string | null;
+                                starLongitude?: number | null;
+                                orb?: number | null;
+                                nature?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -28053,12 +29113,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sectors?: {
-                                planet?: string;
-                                sector?: number;
-                                powerZone?: boolean;
-                                description?: string;
-                            }[];
+                            sectors?: ({
+                                planet?: string | null;
+                                sector?: number | null;
+                                powerZone?: boolean | null;
+                                description?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -28140,14 +29200,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            symbols?: {
-                                planet?: string;
-                                longitude?: number;
-                                degree?: number;
-                                sign?: string;
-                                sabian?: string;
-                                keynote?: string;
-                            }[];
+                            count?: number | null;
+                            symbols?: ({
+                                longitude?: number | null;
+                                sign?: number | null;
+                                degree?: number | null;
+                                symbol?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -28229,13 +29288,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            events?: {
-                                enterDate?: string;
-                                exactDate?: string;
-                                leaveDate?: string;
-                                aspect?: string;
-                                orb?: number;
-                            }[];
+                            events?: ({
+                                enterDate?: string | null;
+                                exactDate?: string | null;
+                                leaveDate?: string | null;
+                                aspect?: string | null;
+                                orb?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -28326,24 +29385,24 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            rows?: number;
+                            rows?: number | null;
                             bars?: {
-                                rows?: {
-                                    planetId?: number;
-                                    bars?: {
-                                        transitPlanetId?: number;
-                                        targetPlanetId?: number;
-                                        nature?: string;
-                                        startJd?: number;
-                                        endJd?: number;
-                                    }[];
-                                    maxLanes?: number;
-                                }[];
+                                rows?: ({
+                                    planetId?: number | null;
+                                    bars?: ({
+                                        transitPlanetId?: number | null;
+                                        targetPlanetId?: number | null;
+                                        nature?: string | null;
+                                        startJd?: number | null;
+                                        endJd?: number | null;
+                                    } | null)[] | null;
+                                    maxLanes?: number | null;
+                                } | null)[] | null;
                                 timeRange?: {
-                                    start?: string;
-                                    end?: string;
-                                };
-                            };
+                                    start?: string | null;
+                                    end?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -28421,14 +29480,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            eclipses?: {
-                                type?: string;
-                                subtype?: string;
-                                date?: string;
-                                jd?: number;
-                                saros?: number;
-                                longitude?: number;
-                            }[];
+                            eclipses?: ({
+                                type?: string | null;
+                                subtype?: string | null;
+                                date?: string | null;
+                                jd?: number | null;
+                                saros?: number | null;
+                                longitude?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -28507,13 +29566,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            ingresses?: {
-                                date?: string;
-                                fromSign?: string;
-                                toSign?: string;
-                                longitude?: number;
-                                retrograde?: boolean;
-                            }[];
+                            ingresses?: ({
+                                date?: string | null;
+                                fromSign?: string | null;
+                                toSign?: string | null;
+                                longitude?: number | null;
+                                retrograde?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -28593,11 +29652,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            conjunctions?: {
-                                date?: string;
-                                longitude?: number;
-                                sign?: string;
-                            }[];
+                            conjunctions?: ({
+                                date?: string | null;
+                                longitude?: number | null;
+                                sign?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -28676,14 +29735,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            periods?: {
-                                retrogradStation?: string;
-                                directStation?: string;
-                                shadowEntry?: string;
-                                shadowExit?: string;
-                                retrogradeLongitude?: number;
-                                directLongitude?: number;
-                            }[];
+                            periods?: ({
+                                retrogradStation?: string | null;
+                                directStation?: string | null;
+                                shadowEntry?: string | null;
+                                shadowExit?: string | null;
+                                retrogradeLongitude?: number | null;
+                                directLongitude?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -28763,15 +29822,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            periods?: {
-                                start?: string;
-                                end?: string;
+                            periods?: ({
+                                start?: string | null;
+                                end?: string | null;
                                 lastAspect?: {
-                                    planet?: string;
-                                    type?: string;
-                                };
-                                nextSign?: string;
-                            }[];
+                                    planet?: string | null;
+                                    type?: string | null;
+                                } | null;
+                                nextSign?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -28851,15 +29910,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sunrise?: string;
-                            sunset?: string;
-                            dayHours?: {
-                                hour?: number;
-                                ruler?: string;
-                                start?: string;
-                                end?: string;
-                            }[];
-                            nightHours?: unknown[];
+                            sunrise?: string | null;
+                            sunset?: string | null;
+                            dayHours?: ({
+                                hour?: number | null;
+                                ruler?: string | null;
+                                start?: string | null;
+                                end?: string | null;
+                            } | null)[] | null;
+                            nightHours?: unknown[] | null;
                         };
                     };
                 };
@@ -28937,18 +29996,18 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            days?: {
-                                date?: string;
-                                moonSign?: string;
-                                moonLongitude?: number;
-                                phase?: string;
-                                voc?: boolean;
-                            }[];
-                            phases?: {
-                                type?: string;
-                                date?: string;
-                                time?: string;
-                            }[];
+                            days?: ({
+                                date?: string | null;
+                                moonSign?: string | null;
+                                moonLongitude?: number | null;
+                                phase?: string | null;
+                                voc?: boolean | null;
+                            } | null)[] | null;
+                            phases?: ({
+                                type?: string | null;
+                                date?: string | null;
+                                time?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -29026,16 +30085,16 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            aspects?: {
-                                date?: string;
+                            aspects?: ({
+                                date?: string | null;
                                 moon?: {
-                                    longitude?: number;
-                                    sign?: string;
-                                };
-                                planet?: string;
-                                type?: string;
-                                exact?: string;
-                            }[];
+                                    longitude?: number | null;
+                                    sign?: string | null;
+                                } | null;
+                                planet?: string | null;
+                                type?: string | null;
+                                exact?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -29134,17 +30193,17 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            phase?: number;
-                            phaseName?: string;
-                            majorPhase?: string;
-                            illuminationPercent?: number;
-                            elongationDeg?: number;
-                            ageDays?: number;
-                            waxing?: boolean;
-                            moonSign?: string;
-                            sunSign?: string;
-                            moonLongitude?: number;
-                            sunLongitude?: number;
+                            phase?: number | null;
+                            phaseName?: string | null;
+                            majorPhase?: string | null;
+                            illuminationPercent?: number | null;
+                            elongationDeg?: number | null;
+                            ageDays?: number | null;
+                            waxing?: boolean | null;
+                            moonSign?: string | null;
+                            sunSign?: string | null;
+                            moonLongitude?: number | null;
+                            sunLongitude?: number | null;
                         };
                     };
                 };
@@ -29256,14 +30315,14 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             houses?: {
-                                system?: string;
-                                cusps?: number[];
-                                ascendant?: number;
-                                mc?: number;
-                                armc?: number;
-                                vertex?: number;
-                                equatorialAsc?: number;
-                            };
+                                system?: string | null;
+                                cusps?: (number | null)[] | null;
+                                ascendant?: number | null;
+                                mc?: number | null;
+                                armc?: number | null;
+                                vertex?: number | null;
+                                equatorialAsc?: number | null;
+                            } | null;
                         };
                     };
                 };
@@ -29344,20 +30403,20 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            count?: number;
-                            aspects?: {
-                                planet1?: string;
-                                planet2?: string;
+                            count?: number | null;
+                            aspects?: ({
+                                planet1?: string | null;
+                                planet2?: string | null;
                                 type?: {
-                                    name?: string;
-                                    angle?: number;
-                                    symbol?: string;
-                                    isMajor?: boolean;
-                                };
-                                exactAngle?: number;
-                                orb?: number;
-                                isApplying?: boolean;
-                            }[];
+                                    name?: string | null;
+                                    angle?: number | null;
+                                    symbol?: string | null;
+                                    isMajor?: boolean | null;
+                                } | null;
+                                exactAngle?: number | null;
+                                orb?: number | null;
+                                isApplying?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -29438,13 +30497,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            phases?: {
-                                planet?: string;
-                                phase?: string;
-                                elongation?: number;
-                                synodic_angle?: number;
-                                oriental?: boolean;
-                            }[];
+                            phases?: ({
+                                planet?: string | null;
+                                phase?: string | null;
+                                elongation?: number | null;
+                                synodic_angle?: number | null;
+                                oriental?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -29522,12 +30581,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            minima?: {
-                                date?: string;
-                                time?: string;
-                                jd?: number;
-                                period?: string;
-                            }[];
+                            minima?: ({
+                                date?: string | null;
+                                time?: string | null;
+                                jd?: number | null;
+                                period?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -29615,10 +30674,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            date?: string;
-                            time?: string;
-                            jd?: number;
-                            hoursUntil?: number;
+                            date?: string | null;
+                            time?: string | null;
+                            jd?: number | null;
+                            hoursUntil?: number | null;
                         };
                     };
                 };
@@ -29696,14 +30755,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            data?: {
-                                date?: string;
-                                index?: number;
-                            }[];
+                            data?: ({
+                                date?: string | null;
+                                index?: number | null;
+                            } | null)[] | null;
                             minimum?: {
-                                date?: string;
-                                value?: number;
-                            };
+                                date?: string | null;
+                                value?: number | null;
+                            } | null;
                         };
                     };
                 };
@@ -29784,17 +30843,17 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            planets?: {
-                                planet?: string;
-                                longitude?: number;
-                                sign?: string;
-                                ruler?: number;
-                                exaltation?: number;
-                                triplicity?: number;
-                                term?: number;
-                                face?: number;
-                                score?: number;
-                            }[];
+                            planets?: ({
+                                planet?: string | null;
+                                longitude?: number | null;
+                                sign?: string | null;
+                                ruler?: number | null;
+                                exaltation?: number | null;
+                                triplicity?: number | null;
+                                term?: number | null;
+                                face?: number | null;
+                                score?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -29875,18 +30934,26 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            almuten?: string;
-                            scores?: {
-                                planet?: string;
-                                score?: number;
-                            }[];
-                            positions?: {
-                                ascendant?: number;
-                                sun?: number;
-                                moon?: number;
-                                partOfFortune?: number;
-                                prenatalSyzygy?: number;
-                            };
+                            almuten?: {
+                                planet?: string | null;
+                                score?: number | null;
+                                scores?: {
+                                    Sun?: number | null;
+                                    Moon?: number | null;
+                                    Mercury?: number | null;
+                                    Venus?: number | null;
+                                    Mars?: number | null;
+                                    Jupiter?: number | null;
+                                    Saturn?: number | null;
+                                } | null;
+                            } | null;
+                            chart?: {
+                                planets?: unknown[] | null;
+                                houses?: {
+                                    ascendant?: number | null;
+                                    cusps?: unknown[] | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -29987,17 +31054,17 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             hyleg?: {
-                                planet?: string;
-                                longitude?: number;
-                                house?: number;
-                                condition?: string;
-                            };
+                                planet?: string | null;
+                                longitude?: number | null;
+                                house?: number | null;
+                                condition?: string | null;
+                            } | null;
                             alcocoden?: {
-                                planet?: string;
-                                minYears?: number;
-                                maxYears?: number;
-                                moreYears?: number;
-                            };
+                                planet?: string | null;
+                                minYears?: number | null;
+                                maxYears?: number | null;
+                                moreYears?: number | null;
+                            } | null;
                         };
                     };
                 };
@@ -30078,14 +31145,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            receptions?: {
-                                planet1?: string;
-                                planet2?: string;
-                                type1?: string;
-                                type2?: string;
-                                mutual?: boolean;
-                                strength?: string;
-                            }[];
+                            receptions?: ({
+                                planet1?: string | null;
+                                planet2?: string | null;
+                                type1?: string | null;
+                                type2?: string | null;
+                                mutual?: boolean | null;
+                                strength?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -30166,13 +31233,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            finalDispositor?: string;
-                            chains?: {
-                                start?: string;
-                                chain?: string[];
-                                terminus?: string;
-                            }[];
-                            mutualReception?: string[][];
+                            finalDispositor?: string | null;
+                            chains?: ({
+                                start?: string | null;
+                                chain?: (string | null)[] | null;
+                                terminus?: string | null;
+                            } | null)[] | null;
+                            mutualReception?: ((string | null)[] | null)[] | null;
                         };
                     };
                 };
@@ -30253,16 +31320,16 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            nodes?: {
-                                planet?: string;
-                                x?: number;
-                                y?: number;
-                                final?: boolean;
-                            }[];
-                            edges?: {
-                                from?: string;
-                                to?: string;
-                            }[];
+                            nodes?: ({
+                                planet?: string | null;
+                                x?: number | null;
+                                y?: number | null;
+                                final?: boolean | null;
+                            } | null)[] | null;
+                            edges?: ({
+                                from?: string | null;
+                                to?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -30343,17 +31410,17 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            planets?: unknown[];
+                            planets?: unknown[] | null;
                             houses?: {
-                                ascendant?: number;
-                                cusps?: unknown[];
-                            };
-                            radical?: boolean;
-                            radicalityNotes?: string[];
+                                ascendant?: number | null;
+                                cusps?: unknown[] | null;
+                            } | null;
+                            radical?: boolean | null;
+                            radicalityNotes?: (string | null)[] | null;
                             significators?: {
-                                querent?: string;
-                                quesited?: string;
-                            };
+                                querent?: string | null;
+                                quesited?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -30454,14 +31521,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            radical?: boolean;
-                            issues?: {
-                                rule?: string;
-                                value?: string;
-                                severity?: string;
-                            }[];
-                            passed?: string[];
-                            recommendation?: string;
+                            radical?: boolean | null;
+                            issues?: ({
+                                rule?: string | null;
+                                value?: string | null;
+                                severity?: string | null;
+                            } | null)[] | null;
+                            passed?: (string | null)[] | null;
+                            recommendation?: string | null;
                         };
                     };
                 };
@@ -30521,11 +31588,10 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "date": "2024-06-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
-                 *       "latitude": 50.45,
-                 *       "longitude": 30.52
+                 *       "dayOfWeek": 6,
+                 *       "sunriseHour": 5.05,
+                 *       "sunsetHour": 21.2,
+                 *       "currentHour": 14.5
                  *     }
                  */
                 "application/json": components["schemas"]["PlanetaryHours"];
@@ -30556,13 +31622,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            hourRuler?: string;
-                            dayRuler?: string;
-                            ascRuler?: string;
-                            match?: boolean;
-                            hourNumber?: number;
-                            hourStart?: string;
-                            hourEnd?: string;
+                            hourRuler?: string | null;
+                            dayRuler?: string | null;
+                            ascRuler?: string | null;
+                            match?: boolean | null;
+                            hourNumber?: number | null;
+                            hourStart?: string | null;
+                            hourEnd?: string | null;
                         };
                     };
                 };
@@ -30643,15 +31709,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            moonSign?: string;
-                            moonLongitude?: number;
-                            moonExitsSign?: number;
-                            aspects?: {
-                                planet?: string;
-                                type?: string;
-                                longitude?: number;
-                                perfectionDate?: string;
-                            }[];
+                            moonSign?: string | null;
+                            moonLongitude?: number | null;
+                            moonExitsSign?: number | null;
+                            aspects?: ({
+                                planet?: string | null;
+                                type?: string | null;
+                                longitude?: number | null;
+                                perfectionDate?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -30749,16 +31815,16 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            voc?: boolean;
+                            voc?: boolean | null;
                             lastAspect?: {
-                                planet?: string;
-                                type?: string;
-                                date?: string;
-                            };
+                                planet?: string | null;
+                                type?: string | null;
+                                date?: string | null;
+                            } | null;
                             nextSignEntry?: {
-                                sign?: string;
-                                date?: string;
-                            };
+                                sign?: string | null;
+                                date?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -30818,11 +31884,7 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "date": "2024-06-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
-                 *       "latitude": 50.45,
-                 *       "longitude": 30.52
+                 *       "moonLongitude": 200.5
                  *     }
                  */
                 "application/json": Record<string, never>;
@@ -30852,12 +31914,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            moonViaCombusta?: boolean;
-                            moonLongitude?: number;
-                            moonSign?: string;
-                            ascViaCombusta?: boolean;
-                            ascLongitude?: number;
-                            warning?: Record<string, never>;
+                            moonViaCombusta?: boolean | null;
+                            moonLongitude?: number | null;
+                            moonSign?: string | null;
+                            ascViaCombusta?: boolean | null;
+                            ascLongitude?: number | null;
+                            warning?: Record<string, never> | null;
                         };
                     };
                 };
@@ -30938,28 +32000,33 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            type?: string;
-                            strategy?: string;
-                            authority?: string;
-                            profile?: string;
-                            definition?: string;
+                            type?: string | null;
+                            strategy?: string | null;
+                            notSelfTheme?: string | null;
+                            authority?: string | null;
+                            profile?: {
+                                profile?: string | null;
+                                personalityLine?: number | null;
+                                designLine?: number | null;
+                                geometry?: string | null;
+                            } | null;
+                            definition?: string | null;
                             cross?: {
-                                name?: string;
-                                gates?: number[];
-                            };
-                            centers?: {
-                                head?: {
-                                    defined?: boolean;
-                                };
-                                sacral?: {
-                                    defined?: boolean;
-                                };
-                            };
-                            channels?: {
-                                id?: string;
-                                defined?: boolean;
-                            }[];
-                            activations?: unknown[];
+                                name?: string | null;
+                                gates?: (number | null)[] | null;
+                            } | null;
+                            centers?: ({
+                                name?: string | null;
+                                defined?: boolean | null;
+                                open?: boolean | null;
+                                gates?: (number | null)[] | null;
+                                activeGates?: unknown[] | null;
+                            } | null)[] | null;
+                            channels?: ({
+                                id?: string | null;
+                                defined?: boolean | null;
+                            } | null)[] | null;
+                            activations?: unknown[] | null;
                         };
                     };
                 };
@@ -31050,22 +32117,25 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             chart1?: {
-                                type?: string;
-                            };
+                                type?: string | null;
+                            } | null;
                             chart2?: {
-                                type?: string;
-                            };
-                            connections?: {
-                                electromagnetic?: {
-                                    channel?: string;
-                                    chart1Gate?: number;
-                                    chart2Gate?: number;
-                                }[];
-                                compromise?: unknown[];
-                                dominance?: unknown[];
-                                companionship?: unknown[];
-                            };
-                            attractionScore?: number;
+                                type?: string | null;
+                            } | null;
+                            connections?: ({
+                                type?: string | null;
+                                gate1?: number | null;
+                                gate2?: number | null;
+                                centerA?: string | null;
+                                centerB?: string | null;
+                                person1Gates?: (number | null)[] | null;
+                                person2Gates?: (number | null)[] | null;
+                            } | null)[] | null;
+                            electromagnetic?: unknown[] | null;
+                            compromise?: unknown[] | null;
+                            dominance?: unknown[] | null;
+                            companionship?: unknown[] | null;
+                            attractionScore?: number | null;
                         };
                     };
                 };
@@ -31147,12 +32217,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            transitActivations?: unknown[];
-                            natalActivations?: unknown[];
+                            transitActivations?: unknown[] | null;
+                            natalActivations?: unknown[] | null;
                             combined?: {
-                                definedCenters?: unknown[];
-                                definedChannels?: unknown[];
-                            };
+                                definedCenters?: unknown[] | null;
+                                definedChannels?: unknown[] | null;
+                            } | null;
                         };
                     };
                 };
@@ -31255,11 +32325,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            name?: string;
-                            type?: string;
-                            gates?: number[];
-                            lines?: number[];
-                            theme?: string;
+                            name?: string | null;
+                            type?: string | null;
+                            gates?: (number | null)[] | null;
+                            lines?: (number | null)[] | null;
+                            theme?: string | null;
                         };
                     };
                 };
@@ -31336,50 +32406,23 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /**
-                     * @example {
-                     *       "ok": true,
-                     *       "data": {
-                     *         "sleepType": "lucid",
-                     *         "activeGates": [
-                     *           34,
-                     *           59,
-                     *           27,
-                     *           50,
-                     *           58,
-                     *           38,
-                     *           28,
-                     *           32
-                     *         ],
-                     *         "lowerCenterGates": {
-                     *           "sacral": [
-                     *             34,
-                     *             27
-                     *           ],
-                     *           "solarPlexus": [
-                     *             59
-                     *           ],
-                     *           "root": [
-                     *             58,
-                     *             38
-                     *           ]
-                     *         },
-                     *         "theme": "Processing emotional wave during sleep"
-                     *       }
-                     *     }
-                     */
                     "application/json": {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sleepType?: string;
-                            activeGates?: number[];
-                            lowerCenterGates?: {
-                                sacral?: number[];
-                                solarPlexus?: number[];
-                                root?: number[];
-                            };
-                            theme?: string;
+                            activeGates?: ({
+                                gate?: number | null;
+                                realm?: string | null;
+                                dreamName_en?: string | null;
+                                dreamName_ru?: string | null;
+                                dreamName_uk?: string | null;
+                                activatedBy?: (string | null)[] | null;
+                            } | null)[] | null;
+                            channels?: unknown[] | null;
+                            centers?: unknown[] | null;
+                            type?: string | null;
+                            activePortals?: unknown[] | null;
+                            weakPoints?: unknown[] | null;
                         };
                     };
                 };
@@ -31456,51 +32499,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    /**
-                     * @example {
-                     *       "ok": true,
-                     *       "data": {
-                     *         "activationSequence": {
-                     *           "lifeWork": 46,
-                     *           "evolution": 29,
-                     *           "radiance": 4,
-                     *           "purpose": 49
-                     *         },
-                     *         "venusSequence": {
-                     *           "attraction": 15,
-                     *           "iq": 25,
-                     *           "eq": 46,
-                     *           "sophiology": 29
-                     *         },
-                     *         "pearlSequence": {
-                     *           "vocation": 46,
-                     *           "culture": 29,
-                     *           "brand": 4
-                     *         }
-                     *       }
-                     *     }
-                     */
                     "application/json": {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            activationSequence?: {
-                                lifeWork?: number;
-                                evolution?: number;
-                                radiance?: number;
-                                purpose?: number;
-                            };
-                            venusSequence?: {
-                                attraction?: number;
-                                iq?: number;
-                                eq?: number;
-                                sophiology?: number;
-                            };
-                            pearlSequence?: {
-                                vocation?: number;
-                                culture?: number;
-                                brand?: number;
-                            };
+                            spheres?: unknown[] | null;
+                            activationSequence?: ({
+                                id?: string | null;
+                                name_en?: string | null;
+                                name_uk?: string | null;
+                                desc_en?: string | null;
+                            } | null)[] | null;
+                            venusSequence?: ({
+                                id?: string | null;
+                                name_en?: string | null;
+                            } | null)[] | null;
+                            pearlSequence?: ({
+                                id?: string | null;
+                                name_en?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -31620,14 +32637,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            size?: number;
-                            definedCenters?: string[];
-                            channels?: {
-                                id?: string;
-                                defined?: boolean;
-                            }[];
-                            pentaAuthority?: string;
-                            role?: string;
+                            size?: number | null;
+                            definedCenters?: (string | null)[] | null;
+                            channels?: ({
+                                id?: string | null;
+                                defined?: boolean | null;
+                            } | null)[] | null;
+                            pentaAuthority?: string | null;
+                            role?: string | null;
                         };
                     };
                 };
@@ -31747,14 +32764,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            count?: number;
-                            definedCenters?: string[];
-                            definedChannels?: {
-                                id?: string;
-                                from?: string;
-                                to?: string;
-                            }[];
-                            openCenters?: string[];
+                            count?: number | null;
+                            definedCenters?: (string | null)[] | null;
+                            definedChannels?: ({
+                                id?: string | null;
+                                from?: string | null;
+                                to?: string | null;
+                            } | null)[] | null;
+                            openCenters?: (string | null)[] | null;
                         };
                     };
                 };
@@ -31856,16 +32873,16 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             stableWindow?: {
-                                start?: string;
-                                end?: string;
-                            };
-                            transitions?: {
-                                at?: string;
-                                change?: string;
-                                from?: string;
-                                to?: string;
-                            }[];
-                            confidence?: number;
+                                start?: string | null;
+                                end?: string | null;
+                            } | null;
+                            transitions?: ({
+                                at?: string | null;
+                                change?: string | null;
+                                from?: string | null;
+                                to?: string | null;
+                            } | null)[] | null;
+                            confidence?: number | null;
                         };
                     };
                 };
@@ -31943,13 +32960,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            count?: number;
-                            years?: {
-                                year?: number;
-                                date?: string;
-                                time?: string;
-                                jd?: number;
-                            }[];
+                            count?: number | null;
+                            years?: ({
+                                year?: number | null;
+                                date?: string | null;
+                                time?: string | null;
+                                jd?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -32043,14 +33060,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            birthJd?: number;
-                            designJd?: number;
+                            birthJd?: number | null;
+                            designJd?: number | null;
                             designDate?: {
-                                year?: number;
-                                month?: number;
-                                day?: number;
-                                hour?: number;
-                            };
+                                year?: number | null;
+                                month?: number | null;
+                                day?: number | null;
+                                hour?: number | null;
+                            } | null;
                         };
                     };
                 };
@@ -32131,25 +33148,25 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            totalActive?: number;
-                            circuits?: {
-                                type?: string;
-                                name?: string;
-                                color?: string;
-                                activeCount?: number;
-                                totalCount?: number;
-                                subCircuits?: {
-                                    type?: string;
-                                    name?: string;
-                                    channels?: {
-                                        gate1?: number;
-                                        gate2?: number;
-                                        active?: boolean;
-                                    }[];
-                                    activeCount?: number;
-                                    totalCount?: number;
-                                }[];
-                            }[];
+                            totalActive?: number | null;
+                            circuits?: ({
+                                type?: string | null;
+                                name?: string | null;
+                                color?: string | null;
+                                activeCount?: number | null;
+                                totalCount?: number | null;
+                                subCircuits?: ({
+                                    type?: string | null;
+                                    name?: string | null;
+                                    channels?: ({
+                                        gate1?: number | null;
+                                        gate2?: number | null;
+                                        active?: boolean | null;
+                                    } | null)[] | null;
+                                    activeCount?: number | null;
+                                    totalCount?: number | null;
+                                } | null)[] | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -32230,14 +33247,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lines?: {
-                                planet?: string;
-                                type?: string;
-                                coordinates?: {
-                                    lat?: number;
-                                    lng?: number;
-                                }[][];
-                            }[];
+                            lines?: ({
+                                planet?: string | null;
+                                planetId?: number | null;
+                                type?: string | null;
+                                coordinates?: ((number | null)[] | null)[] | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -32299,9 +33314,7 @@ export interface operations {
                  * @example {
                  *       "date": "1990-05-15",
                  *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
-                 *       "latitude": 50.45,
-                 *       "longitude": 30.52
+                 *       "timezoneOffset": 3
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -32318,13 +33331,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            parans?: {
-                                star?: string;
-                                planet?: string;
-                                type?: string;
-                                latitude?: number;
-                                orb?: number;
-                            }[];
+                            count?: number | null;
+                            parans?: ({
+                                planet1Id?: number | null;
+                                planet1Name?: string | null;
+                                line1Type?: string | null;
+                                planet2Id?: number | null;
+                                planet2Name?: string | null;
+                                line2Type?: string | null;
+                                location?: {
+                                    lat?: number | null;
+                                    lng?: number | null;
+                                } | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -32404,14 +33423,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            planet?: string;
-                            zenithLongitude?: number;
-                            locations?: {
-                                latitude?: number;
-                                longitude?: number;
-                                country?: string;
-                                city?: string;
-                            }[];
+                            count?: number | null;
+                            points?: ({
+                                planetId?: number | null;
+                                planetName?: string | null;
+                                lat?: number | null;
+                                lng?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -32492,13 +33510,22 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            planets?: {
-                                planet?: string;
-                                azimuth?: number;
-                                altitude?: number;
-                                direction?: string;
-                                compass?: string;
-                            }[];
+                            birthplace?: {
+                                latitude?: number | null;
+                                longitude?: number | null;
+                            } | null;
+                            count?: number | null;
+                            lines?: ({
+                                planetId?: number | null;
+                                planetName?: string | null;
+                                azimuth?: number | null;
+                                altitude?: number | null;
+                                color?: string | null;
+                                points?: ({
+                                    lat?: number | null;
+                                    lng?: number | null;
+                                } | null)[] | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -32558,13 +33585,10 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
-                 *       "targetLat": 48.8566,
-                 *       "targetLng": 2.3522
+                 *       "azimuth": 90,
+                 *       "halfAngle": 4
                  *     }
                  */
                 "application/json": components["schemas"]["InfluenceZone"];
@@ -32582,17 +33606,17 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             location?: {
-                                latitude?: number;
-                                longitude?: number;
-                            };
-                            lines?: {
-                                planet?: string;
-                                azimuth?: number;
+                                latitude?: number | null;
+                                longitude?: number | null;
+                            } | null;
+                            lines?: ({
+                                planet?: string | null;
+                                azimuth?: number | null;
                                 endPoint?: {
-                                    lat?: number;
-                                    lng?: number;
-                                };
-                            }[];
+                                    lat?: number | null;
+                                    lng?: number | null;
+                                } | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -32679,18 +33703,18 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            natalAscendant?: number;
-                            relocatedAscendant?: number;
-                            planets?: {
-                                id?: number;
-                                longitude?: number;
-                                natalHouse?: number;
-                                relocatedHouse?: number;
-                            }[];
+                            natalAscendant?: number | null;
+                            relocatedAscendant?: number | null;
+                            planets?: ({
+                                id?: number | null;
+                                longitude?: number | null;
+                                natalHouse?: number | null;
+                                relocatedHouse?: number | null;
+                            } | null)[] | null;
                             houses?: {
-                                ascendant?: number;
-                                cusps?: unknown[];
-                            };
+                                ascendant?: number | null;
+                                cusps?: unknown[] | null;
+                            } | null;
                         };
                     };
                 };
@@ -32776,20 +33800,20 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lines?: {
-                                planet?: string;
-                                type?: string;
-                                coordinates?: unknown[][];
-                            }[];
-                            crossings?: {
-                                planet1?: string;
-                                type1?: string;
-                                planet2?: string;
-                                type2?: string;
-                                latitude?: number;
-                                longitude?: number;
-                            }[];
-                            mundaneAspects?: unknown[];
+                            lines?: ({
+                                planet?: string | null;
+                                type?: string | null;
+                                coordinates?: (unknown[] | null)[] | null;
+                            } | null)[] | null;
+                            crossings?: ({
+                                planet1?: string | null;
+                                type1?: string | null;
+                                planet2?: string | null;
+                                type2?: string | null;
+                                latitude?: number | null;
+                                longitude?: number | null;
+                            } | null)[] | null;
+                            mundaneAspects?: unknown[] | null;
                         };
                     };
                 };
@@ -32899,17 +33923,17 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            eclipses?: {
-                                type?: string;
-                                date?: string;
-                                longitude?: number;
-                                aspects?: {
-                                    natalPlanet?: string;
-                                    type?: string;
-                                    orb?: number;
-                                }[];
-                                activatedHouse?: number;
-                            }[];
+                            eclipses?: ({
+                                type?: string | null;
+                                date?: string | null;
+                                longitude?: number | null;
+                                aspects?: ({
+                                    natalPlanet?: string | null;
+                                    type?: string | null;
+                                    orb?: number | null;
+                                } | null)[] | null;
+                                activatedHouse?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -32997,9 +34021,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            geodeticAscendant?: number;
-                            geodeticMC?: number;
-                            zodiacalLongitude?: string;
+                            geodeticAscendant?: number | null;
+                            geodeticMC?: number | null;
+                            zodiacalLongitude?: string | null;
                         };
                     };
                 };
@@ -33081,14 +34105,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lines?: {
-                                planet?: string;
-                                type?: string;
-                                coordinates?: {
-                                    lat?: number;
-                                    lng?: number;
-                                }[][];
-                            }[];
+                            year?: number | null;
+                            lines?: ({
+                                planet?: string | null;
+                                planetId?: number | null;
+                                type?: string | null;
+                                coordinates?: ((number | null)[] | null)[] | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -33174,13 +34197,305 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            zones?: {
-                                planet?: string;
-                                type?: string;
-                                centerLng?: number;
-                                orbMiles?: number;
-                                polygons?: unknown[];
-                            }[];
+                            point?: {
+                                lat?: number | null;
+                                lng?: number | null;
+                            } | null;
+                            radiusDeg?: number | null;
+                            nearbyLines?: ({
+                                planet?: string | null;
+                                planetId?: number | null;
+                                type?: string | null;
+                                distanceDeg?: number | null;
+                            } | null)[] | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    acg_categories_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            count?: number | null;
+                            language?: string | null;
+                            categories?: ({
+                                id?: string | null;
+                                name?: string | null;
+                                lineCount?: number | null;
+                                lines?: ({
+                                    planet?: string | null;
+                                    planetId?: number | null;
+                                    angle?: string | null;
+                                    weight?: number | null;
+                                    polarity?: string | null;
+                                } | null)[] | null;
+                            } | null)[] | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    "acg_by-category": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52,
+                 *       "category": "career",
+                 *       "point": {
+                 *         "lat": 51.5074,
+                 *         "lng": -0.1278
+                 *       },
+                 *       "radiusDeg": 8,
+                 *       "language": "en"
+                 *     }
+                 */
+                "application/json": components["schemas"]["AcgByCategory"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            category?: {
+                                id?: string | null;
+                                name?: string | null;
+                            } | null;
+                            language?: string | null;
+                            count?: number | null;
+                            lines?: ({
+                                planet?: string | null;
+                                type?: string | null;
+                                weight?: number | null;
+                                polarity?: string | null;
+                                strength?: number | null;
+                                distanceDeg?: number | null;
+                                interpretation?: {
+                                    title?: string | null;
+                                    text?: string | null;
+                                    lang?: string | null;
+                                } | null;
+                            } | null)[] | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    "acg_line-report": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52,
+                 *       "planet": "Venus",
+                 *       "angle": "DSC",
+                 *       "language": "uk"
+                 *     }
+                 */
+                "application/json": components["schemas"]["AcgLineReport"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            line?: {
+                                planet?: string | null;
+                                planetId?: number | null;
+                                type?: string | null;
+                                pointCount?: number | null;
+                            } | null;
+                            language?: string | null;
+                            categories?: ({
+                                id?: string | null;
+                                name?: string | null;
+                                weight?: number | null;
+                                polarity?: string | null;
+                            } | null)[] | null;
+                            interpretation?: {
+                                title?: string | null;
+                                text?: string | null;
+                                lang?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -33282,12 +34597,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            planet?: string;
-                            phase?: string;
-                            returns?: {
-                                date?: string;
-                                longitude?: number;
-                            }[];
+                            planet?: string | null;
+                            phase?: string | null;
+                            returns?: ({
+                                date?: string | null;
+                                longitude?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -33368,16 +34683,16 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            nakshatras?: {
-                                planet?: string;
-                                longitude?: number;
-                                siderealLongitude?: number;
-                                nakshatra?: string;
-                                pada?: number;
-                                deity?: string;
-                                quality?: string;
-                                ruler?: string;
-                            }[];
+                            nakshatras?: ({
+                                planet?: string | null;
+                                longitude?: number | null;
+                                siderealLongitude?: number | null;
+                                nakshatra?: string | null;
+                                pada?: number | null;
+                                deity?: string | null;
+                                quality?: string | null;
+                                ruler?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -33460,18 +34775,18 @@ export interface operations {
                         data?: {
                             individual?: {
                                 Sun?: {
-                                    Aries?: number;
-                                    Taurus?: number;
-                                };
-                            };
+                                    Aries?: number | null;
+                                    Taurus?: number | null;
+                                } | null;
+                            } | null;
                             sarvashtakavarga?: {
-                                Aries?: number;
-                                Taurus?: number;
-                            };
+                                Aries?: number | null;
+                                Taurus?: number | null;
+                            } | null;
                             totals?: {
-                                Sun?: number;
-                                Moon?: number;
-                            };
+                                Sun?: number | null;
+                                Moon?: number | null;
+                            } | null;
                         };
                     };
                 };
@@ -33552,24 +34867,24 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            varga?: string;
+                            varga?: string | null;
                             name?: {
-                                en?: string;
-                            };
-                            ayanamsa?: number;
+                                en?: string | null;
+                            } | null;
+                            ayanamsa?: number | null;
                             lagna?: {
-                                longitude?: number;
-                                sign?: number;
-                                degreeInSign?: number;
-                            };
-                            planets?: {
-                                id?: number;
-                                name?: string;
-                                longitude?: number;
-                                sign?: number;
-                                degreeInSign?: number;
-                                isRetrograde?: boolean;
-                            }[];
+                                longitude?: number | null;
+                                sign?: number | null;
+                                degreeInSign?: number | null;
+                            } | null;
+                            planets?: ({
+                                id?: number | null;
+                                name?: string | null;
+                                longitude?: number | null;
+                                sign?: number | null;
+                                degreeInSign?: number | null;
+                                isRetrograde?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -33650,9 +34965,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            varga?: string;
-                            ayanamsa?: number;
-                            planets?: unknown[];
+                            varga?: string | null;
+                            ayanamsa?: number | null;
+                            planets?: unknown[] | null;
                         };
                     };
                 };
@@ -33733,8 +35048,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            varga?: string;
-                            planets?: unknown[];
+                            varga?: string | null;
+                            planets?: unknown[] | null;
                         };
                     };
                 };
@@ -33815,8 +35130,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            varga?: string;
-                            planets?: unknown[];
+                            varga?: string | null;
+                            planets?: unknown[] | null;
                         };
                     };
                 };
@@ -33897,8 +35212,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            varga?: string;
-                            planets?: unknown[];
+                            varga?: string | null;
+                            planets?: unknown[] | null;
                         };
                     };
                 };
@@ -33979,8 +35294,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            varga?: string;
-                            planets?: unknown[];
+                            varga?: string | null;
+                            planets?: unknown[] | null;
                         };
                     };
                 };
@@ -34061,8 +35376,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            varga?: string;
-                            planets?: unknown[];
+                            varga?: string | null;
+                            planets?: unknown[] | null;
                         };
                     };
                 };
@@ -34143,8 +35458,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            varga?: string;
-                            planets?: unknown[];
+                            varga?: string | null;
+                            planets?: unknown[] | null;
                         };
                     };
                 };
@@ -34225,8 +35540,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            varga?: string;
-                            planets?: unknown[];
+                            varga?: string | null;
+                            planets?: unknown[] | null;
                         };
                     };
                 };
@@ -34307,8 +35622,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            varga?: string;
-                            planets?: unknown[];
+                            varga?: string | null;
+                            planets?: unknown[] | null;
                         };
                     };
                 };
@@ -34389,8 +35704,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            varga?: string;
-                            planets?: unknown[];
+                            varga?: string | null;
+                            planets?: unknown[] | null;
                         };
                     };
                 };
@@ -34471,8 +35786,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            varga?: string;
-                            planets?: unknown[];
+                            varga?: string | null;
+                            planets?: unknown[] | null;
                         };
                     };
                 };
@@ -34553,8 +35868,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            varga?: string;
-                            planets?: unknown[];
+                            varga?: string | null;
+                            planets?: unknown[] | null;
                         };
                     };
                 };
@@ -34635,8 +35950,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            varga?: string;
-                            planets?: unknown[];
+                            varga?: string | null;
+                            planets?: unknown[] | null;
                         };
                     };
                 };
@@ -34717,8 +36032,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            varga?: string;
-                            planets?: unknown[];
+                            varga?: string | null;
+                            planets?: unknown[] | null;
                         };
                     };
                 };
@@ -34799,8 +36114,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            varga?: string;
-                            planets?: unknown[];
+                            varga?: string | null;
+                            planets?: unknown[] | null;
                         };
                     };
                 };
@@ -34882,36 +36197,36 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             tithi?: {
-                                number?: number;
-                                name?: string;
-                                paksha?: string;
-                            };
+                                number?: number | null;
+                                name?: string | null;
+                                paksha?: string | null;
+                            } | null;
                             vara?: {
-                                name?: string;
-                                ruler?: string;
-                            };
+                                name?: string | null;
+                                ruler?: string | null;
+                            } | null;
                             karana?: {
-                                name?: string;
-                            };
+                                name?: string | null;
+                            } | null;
                             yoga?: {
-                                name?: string;
-                            };
+                                name?: string | null;
+                            } | null;
                             nakshatra?: {
-                                name?: string;
-                                pada?: number;
-                            };
+                                name?: string | null;
+                                pada?: number | null;
+                            } | null;
                             choghadia?: {
-                                daytime?: unknown[];
-                                nighttime?: unknown[];
-                            };
+                                daytime?: unknown[] | null;
+                                nighttime?: unknown[] | null;
+                            } | null;
                             rahuKaal?: {
-                                startTime?: string;
-                                endTime?: string;
-                            };
+                                startTime?: string | null;
+                                endTime?: string | null;
+                            } | null;
                             abhijitMuhurat?: {
-                                startTime?: string;
-                                endTime?: string;
-                            };
+                                startTime?: string | null;
+                                endTime?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -35005,12 +36320,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            number?: number;
-                            name?: string;
-                            paksha?: string;
-                            indexInPaksha?: number;
-                            elongation?: number;
-                            percentComplete?: number;
+                            number?: number | null;
+                            name?: string | null;
+                            paksha?: string | null;
+                            indexInPaksha?: number | null;
+                            elongation?: number | null;
+                            percentComplete?: number | null;
                         };
                     };
                 };
@@ -35101,9 +36416,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            index?: number;
-                            name?: string;
-                            isFixed?: boolean;
+                            index?: number | null;
+                            name?: string | null;
+                            isFixed?: boolean | null;
                         };
                     };
                 };
@@ -35194,9 +36509,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            number?: number;
-                            name?: string;
-                            sumLongitude?: number;
+                            number?: number | null;
+                            name?: string | null;
+                            sumLongitude?: number | null;
                         };
                     };
                 };
@@ -35292,14 +36607,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            moonSiderealLongitude?: number;
+                            moonSiderealLongitude?: number | null;
                             nakshatra?: {
-                                number?: number;
-                                name?: string;
-                                ruler?: string;
-                            };
-                            pada?: number;
-                            percentComplete?: number;
+                                number?: number | null;
+                                name?: string | null;
+                                ruler?: string | null;
+                            } | null;
+                            pada?: number | null;
+                            percentComplete?: number | null;
                         };
                     };
                 };
@@ -35380,17 +36695,17 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sunrise?: string;
-                            sunset?: string;
-                            daytime?: {
-                                index?: number;
-                                name?: string;
-                                quality?: string;
-                                startTime?: string;
-                                endTime?: string;
-                                isDaytime?: boolean;
-                            }[];
-                            nighttime?: unknown[];
+                            sunrise?: string | null;
+                            sunset?: string | null;
+                            daytime?: ({
+                                index?: number | null;
+                                name?: string | null;
+                                quality?: string | null;
+                                startTime?: string | null;
+                                endTime?: string | null;
+                                isDaytime?: boolean | null;
+                            } | null)[] | null;
+                            nighttime?: unknown[] | null;
                         };
                     };
                 };
@@ -35472,18 +36787,18 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             sunTimes?: {
-                                riseHour?: number;
-                                setHour?: number;
-                            };
-                            dayOfWeek?: number;
-                            dayRulerPlanetName?: string;
-                            hours?: {
-                                number?: number;
-                                planetName?: string;
-                                startHour?: number;
-                                endHour?: number;
-                                isDaytime?: boolean;
-                            }[];
+                                riseHour?: number | null;
+                                setHour?: number | null;
+                            } | null;
+                            dayOfWeek?: number | null;
+                            dayRulerPlanetName?: string | null;
+                            hours?: ({
+                                number?: number | null;
+                                planetName?: string | null;
+                                startHour?: number | null;
+                                endHour?: number | null;
+                                isDaytime?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -35565,16 +36880,16 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             rahuKaal?: {
-                                weekdaySlot?: number;
-                                startTime?: string;
-                                endTime?: string;
-                            };
-                            yamaganda?: Record<string, never>;
-                            gulika?: Record<string, never>;
+                                weekdaySlot?: number | null;
+                                startTime?: string | null;
+                                endTime?: string | null;
+                            } | null;
+                            yamaganda?: Record<string, never> | null;
+                            gulika?: Record<string, never> | null;
                             abhijitMuhurat?: {
-                                startTime?: string;
-                                endTime?: string;
-                            };
+                                startTime?: string | null;
+                                endTime?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -35655,18 +36970,18 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            type?: string;
-                            unit?: string;
-                            items?: {
-                                planet?: number;
-                                planetName?: string;
-                                ucchabala?: number;
-                                saptavargaja?: number;
-                                ojhayugmarasyamsa?: number;
-                                kendradi?: number;
-                                drekkana?: number;
-                                total?: number;
-                            }[];
+                            type?: string | null;
+                            unit?: string | null;
+                            items?: ({
+                                planet?: number | null;
+                                planetName?: string | null;
+                                ucchabala?: number | null;
+                                saptavargaja?: number | null;
+                                ojhayugmarasyamsa?: number | null;
+                                kendradi?: number | null;
+                                drekkana?: number | null;
+                                total?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -35747,13 +37062,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            type?: string;
-                            unit?: string;
-                            items?: {
-                                planet?: number;
-                                planetName?: string;
-                                value?: number;
-                            }[];
+                            type?: string | null;
+                            unit?: string | null;
+                            items?: ({
+                                planet?: number | null;
+                                planetName?: string | null;
+                                value?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -35834,18 +37149,18 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            type?: string;
-                            unit?: string;
-                            items?: {
-                                planet?: number;
-                                planetName?: string;
-                                nathonnatha?: number;
-                                paksha?: number;
-                                tribhaga?: number;
-                                abdaMasaVaraHora?: number;
-                                ayana?: number;
-                                total?: number;
-                            }[];
+                            type?: string | null;
+                            unit?: string | null;
+                            items?: ({
+                                planet?: number | null;
+                                planetName?: string | null;
+                                nathonnatha?: number | null;
+                                paksha?: number | null;
+                                tribhaga?: number | null;
+                                abdaMasaVaraHora?: number | null;
+                                ayana?: number | null;
+                                total?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -35926,13 +37241,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            type?: string;
-                            unit?: string;
-                            items?: {
-                                planet?: number;
-                                planetName?: string;
-                                value?: number;
-                            }[];
+                            type?: string | null;
+                            unit?: string | null;
+                            items?: ({
+                                planet?: number | null;
+                                planetName?: string | null;
+                                value?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -36013,13 +37328,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            type?: string;
-                            unit?: string;
-                            items?: {
-                                planet?: number;
-                                planetName?: string;
-                                value?: number;
-                            }[];
+                            type?: string | null;
+                            unit?: string | null;
+                            items?: ({
+                                planet?: number | null;
+                                planetName?: string | null;
+                                value?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -36100,13 +37415,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            type?: string;
-                            unit?: string;
-                            items?: {
-                                planet?: number;
-                                planetName?: string;
-                                value?: number;
-                            }[];
+                            type?: string | null;
+                            unit?: string | null;
+                            items?: ({
+                                planet?: number | null;
+                                planetName?: string | null;
+                                value?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -36187,20 +37502,20 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            type?: string;
-                            unit?: string;
-                            items?: {
-                                planet?: number;
-                                planetName?: string;
-                                sthana?: number;
-                                dig?: number;
-                                kala?: number;
-                                cheshta?: number;
-                                naisargika?: number;
-                                drik?: number;
-                                totalVirupa?: number;
-                                totalRupa?: number;
-                            }[];
+                            type?: string | null;
+                            unit?: string | null;
+                            items?: ({
+                                planet?: number | null;
+                                planetName?: string | null;
+                                sthana?: number | null;
+                                dig?: number | null;
+                                kala?: number | null;
+                                cheshta?: number | null;
+                                naisargika?: number | null;
+                                drik?: number | null;
+                                totalVirupa?: number | null;
+                                totalRupa?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -36281,16 +37596,16 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            yoga?: string;
-                            school?: string;
-                            present?: boolean;
-                            contributingPlanets?: {
-                                graha?: number;
-                                planetName?: string;
-                                sign?: number;
-                                house?: number;
-                            }[];
-                            details?: string[];
+                            yoga?: string | null;
+                            school?: string | null;
+                            present?: boolean | null;
+                            contributingPlanets?: ({
+                                graha?: number | null;
+                                planetName?: string | null;
+                                sign?: number | null;
+                                house?: number | null;
+                            } | null)[] | null;
+                            details?: (string | null)[] | null;
                         };
                     };
                 };
@@ -36371,11 +37686,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            yoga?: string;
-                            school?: string;
-                            present?: boolean;
-                            contributingPlanets?: unknown[];
-                            details?: string[];
+                            yoga?: string | null;
+                            school?: string | null;
+                            present?: boolean | null;
+                            contributingPlanets?: unknown[] | null;
+                            details?: (string | null)[] | null;
                         };
                     };
                 };
@@ -36468,11 +37783,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            yoga?: string;
-                            school?: string;
-                            present?: boolean;
-                            contributingPlanets?: unknown[];
-                            details?: unknown[];
+                            yoga?: string | null;
+                            school?: string | null;
+                            present?: boolean | null;
+                            contributingPlanets?: unknown[] | null;
+                            details?: unknown[] | null;
                         };
                     };
                 };
@@ -36553,15 +37868,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            school?: string;
-                            presentCount?: number;
-                            yogas?: {
-                                yogaName?: string;
-                                graha?: number;
-                                planetName?: string;
-                                present?: boolean;
-                                reason?: string;
-                            }[];
+                            school?: string | null;
+                            presentCount?: number | null;
+                            yogas?: ({
+                                yogaName?: string | null;
+                                graha?: number | null;
+                                planetName?: string | null;
+                                present?: boolean | null;
+                                reason?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -36665,14 +37980,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            yoga?: string;
-                            school?: string;
-                            present?: boolean;
-                            contributingPlanets?: {
-                                graha?: number;
-                                planetName?: string;
-                            }[];
-                            details?: string[];
+                            yoga?: string | null;
+                            school?: string | null;
+                            present?: boolean | null;
+                            contributingPlanets?: ({
+                                graha?: number | null;
+                                planetName?: string | null;
+                            } | null)[] | null;
+                            details?: (string | null)[] | null;
                         };
                     };
                 };
@@ -36767,11 +38082,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            yoga?: string;
-                            school?: string;
-                            present?: boolean;
-                            contributingPlanets?: unknown[];
-                            details?: string[];
+                            yoga?: string | null;
+                            school?: string | null;
+                            present?: boolean | null;
+                            contributingPlanets?: unknown[] | null;
+                            details?: (string | null)[] | null;
                         };
                     };
                 };
@@ -36852,13 +38167,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            school?: string;
-                            raja?: Record<string, never>;
-                            dhana?: Record<string, never>;
-                            dharmaKarmadhipati?: Record<string, never>;
-                            panchaMahapurusha?: Record<string, never>;
-                            gajakesari?: Record<string, never>;
-                            adhi?: Record<string, never>;
+                            school?: string | null;
+                            raja?: Record<string, never> | null;
+                            dhana?: Record<string, never> | null;
+                            dharmaKarmadhipati?: Record<string, never> | null;
+                            panchaMahapurusha?: Record<string, never> | null;
+                            gajakesari?: Record<string, never> | null;
+                            adhi?: Record<string, never> | null;
                         };
                     };
                 };
@@ -36940,13 +38255,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            dosha?: string;
-                            school?: string;
-                            mangalSchool?: string;
-                            present?: boolean;
-                            severity?: string;
-                            affectedHouses?: number[];
-                            details?: string[];
+                            dosha?: string | null;
+                            school?: string | null;
+                            mangalSchool?: string | null;
+                            present?: boolean | null;
+                            severity?: string | null;
+                            affectedHouses?: (number | null)[] | null;
+                            details?: (string | null)[] | null;
                         };
                     };
                 };
@@ -37047,14 +38362,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            dosha?: string;
-                            school?: string;
-                            present?: boolean;
-                            subType?: string;
-                            partial?: boolean;
-                            severity?: string;
-                            affectedHouses?: number[];
-                            details?: string[];
+                            dosha?: string | null;
+                            school?: string | null;
+                            present?: boolean | null;
+                            subType?: string | null;
+                            partial?: boolean | null;
+                            severity?: string | null;
+                            affectedHouses?: (number | null)[] | null;
+                            details?: (string | null)[] | null;
                         };
                     };
                 };
@@ -37135,11 +38450,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            dosha?: string;
-                            school?: string;
-                            present?: boolean;
-                            severity?: string;
-                            details?: string[];
+                            dosha?: string | null;
+                            school?: string | null;
+                            present?: boolean | null;
+                            severity?: string | null;
+                            details?: (string | null)[] | null;
                         };
                     };
                 };
@@ -37235,12 +38550,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            dosha?: string;
-                            school?: string;
-                            present?: boolean;
-                            severity?: string;
-                            affectedHouses?: unknown[];
-                            details?: string[];
+                            dosha?: string | null;
+                            school?: string | null;
+                            present?: boolean | null;
+                            severity?: string | null;
+                            affectedHouses?: unknown[] | null;
+                            details?: (string | null)[] | null;
                         };
                     };
                 };
@@ -37321,9 +38636,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            dosha?: string;
-                            school?: string;
-                            present?: boolean;
+                            dosha?: string | null;
+                            school?: string | null;
+                            present?: boolean | null;
                         };
                     };
                 };
@@ -37404,10 +38719,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            dosha?: string;
-                            school?: string;
-                            present?: boolean;
-                            severity?: string;
+                            dosha?: string | null;
+                            school?: string | null;
+                            present?: boolean | null;
+                            severity?: string | null;
                         };
                     };
                 };
@@ -37488,13 +38803,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            school?: string;
-                            mangal?: Record<string, never>;
-                            kaalSarp?: Record<string, never>;
-                            pitru?: Record<string, never>;
-                            shrapit?: Record<string, never>;
-                            grahan?: Record<string, never>;
-                            guruChandal?: Record<string, never>;
+                            school?: string | null;
+                            mangal?: Record<string, never> | null;
+                            kaalSarp?: Record<string, never> | null;
+                            pitru?: Record<string, never> | null;
+                            shrapit?: Record<string, never> | null;
+                            grahan?: Record<string, never> | null;
+                            guruChandal?: Record<string, never> | null;
                         };
                     };
                 };
@@ -37552,6 +38867,24 @@ export interface operations {
         };
         requestBody: {
             content: {
+                /**
+                 * @example {
+                 *       "chart1": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
+                 *       },
+                 *       "chart2": {
+                 *         "date": "1985-11-03",
+                 *         "time": "08:15:00",
+                 *         "timezoneOffset": 2,
+                 *         "latitude": 48.46,
+                 *         "longitude": 35.04
+                 *       }
+                 *     }
+                 */
                 "application/json": components["schemas"]["TwoChart"];
             };
         };
@@ -37566,23 +38899,23 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            method?: string;
-                            school?: string;
-                            total?: number;
-                            max?: number;
-                            threshold?: string;
+                            method?: string | null;
+                            school?: string | null;
+                            total?: number | null;
+                            max?: number | null;
+                            threshold?: string | null;
                             points?: {
-                                varna?: Record<string, never>;
-                                vashya?: Record<string, never>;
-                                tara?: Record<string, never>;
-                                yoni?: Record<string, never>;
-                                grahaMaitri?: Record<string, never>;
-                                gana?: Record<string, never>;
-                                bhakoot?: Record<string, never>;
-                                nadi?: Record<string, never>;
-                            };
-                            doshas?: unknown[];
-                            recommendation?: string;
+                                varna?: Record<string, never> | null;
+                                vashya?: Record<string, never> | null;
+                                tara?: Record<string, never> | null;
+                                yoni?: Record<string, never> | null;
+                                grahaMaitri?: Record<string, never> | null;
+                                gana?: Record<string, never> | null;
+                                bhakoot?: Record<string, never> | null;
+                                nadi?: Record<string, never> | null;
+                            } | null;
+                            doshas?: unknown[] | null;
+                            recommendation?: string | null;
                         };
                     };
                 };
@@ -37640,6 +38973,24 @@ export interface operations {
         };
         requestBody: {
             content: {
+                /**
+                 * @example {
+                 *       "chart1": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
+                 *       },
+                 *       "chart2": {
+                 *         "date": "1985-11-03",
+                 *         "time": "08:15:00",
+                 *         "timezoneOffset": 2,
+                 *         "latitude": 48.46,
+                 *         "longitude": 35.04
+                 *       }
+                 *     }
+                 */
                 "application/json": components["schemas"]["TwoChart"];
             };
         };
@@ -37654,14 +39005,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            method?: string;
-                            school?: string;
-                            total?: number;
-                            max?: number;
-                            mahendra?: Record<string, never>;
-                            vedha?: Record<string, never>;
-                            dashakootaTotal?: number;
-                            dashakootaMax?: number;
+                            method?: string | null;
+                            school?: string | null;
+                            total?: number | null;
+                            max?: number | null;
+                            mahendra?: Record<string, never> | null;
+                            vedha?: Record<string, never> | null;
+                            dashakootaTotal?: number | null;
+                            dashakootaMax?: number | null;
                         };
                     };
                 };
@@ -37743,10 +39094,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            method?: string;
-                            school?: string;
-                            manglik?: boolean;
-                            severity?: string;
+                            method?: string | null;
+                            school?: string | null;
+                            manglik?: boolean | null;
+                            severity?: string | null;
                         };
                     };
                 };
@@ -37804,6 +39155,24 @@ export interface operations {
         };
         requestBody: {
             content: {
+                /**
+                 * @example {
+                 *       "chart1": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
+                 *       },
+                 *       "chart2": {
+                 *         "date": "1985-11-03",
+                 *         "time": "08:15:00",
+                 *         "timezoneOffset": 2,
+                 *         "latitude": 48.46,
+                 *         "longitude": 35.04
+                 *       }
+                 *     }
+                 */
                 "application/json": components["schemas"]["TwoChart"];
             };
         };
@@ -37818,12 +39187,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            method?: string;
-                            school?: string;
-                            verdict?: string;
-                            explanation?: string;
-                            partner1?: Record<string, never>;
-                            partner2?: Record<string, never>;
+                            method?: string | null;
+                            school?: string | null;
+                            verdict?: string | null;
+                            explanation?: string | null;
+                            partner1?: Record<string, never> | null;
+                            partner2?: Record<string, never> | null;
                         };
                     };
                 };
@@ -37881,6 +39250,24 @@ export interface operations {
         };
         requestBody: {
             content: {
+                /**
+                 * @example {
+                 *       "chart1": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
+                 *       },
+                 *       "chart2": {
+                 *         "date": "1985-11-03",
+                 *         "time": "08:15:00",
+                 *         "timezoneOffset": 2,
+                 *         "latitude": 48.46,
+                 *         "longitude": 35.04
+                 *       }
+                 *     }
+                 */
                 "application/json": components["schemas"]["TwoChart"];
             };
         };
@@ -37895,12 +39282,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            method?: string;
-                            school?: string;
-                            partner1?: Record<string, never>;
-                            partner2?: Record<string, never>;
-                            summary?: string;
-                            disclaimer?: string;
+                            method?: string | null;
+                            school?: string | null;
+                            partner1?: Record<string, never> | null;
+                            partner2?: Record<string, never> | null;
+                            summary?: string | null;
+                            disclaimer?: string | null;
                         };
                     };
                 };
@@ -37958,6 +39345,24 @@ export interface operations {
         };
         requestBody: {
             content: {
+                /**
+                 * @example {
+                 *       "chart1": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
+                 *       },
+                 *       "chart2": {
+                 *         "date": "1985-11-03",
+                 *         "time": "08:15:00",
+                 *         "timezoneOffset": 2,
+                 *         "latitude": 48.46,
+                 *         "longitude": 35.04
+                 *       }
+                 *     }
+                 */
                 "application/json": components["schemas"]["TwoChart"];
             };
         };
@@ -37972,12 +39377,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            method?: string;
-                            school?: string;
-                            ashtakoot?: Record<string, never>;
-                            manglik?: Record<string, never>;
-                            points?: Record<string, never>;
-                            recommendation?: string;
+                            method?: string | null;
+                            school?: string | null;
+                            ashtakoot?: Record<string, never> | null;
+                            manglik?: Record<string, never> | null;
+                            points?: Record<string, never> | null;
+                            recommendation?: string | null;
                         };
                     };
                 };
@@ -38059,35 +39464,35 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            activity?: string;
+                            activity?: string | null;
                             search_window?: {
-                                start?: string;
-                                end?: string;
-                                daysScanned?: number;
-                            };
-                            location?: Record<string, never>;
-                            ayanamsa?: number;
-                            auspiciousWindows?: {
-                                date?: string;
-                                weekdayName?: string;
+                                start?: string | null;
+                                end?: string | null;
+                                daysScanned?: number | null;
+                            } | null;
+                            location?: Record<string, never> | null;
+                            ayanamsa?: number | null;
+                            auspiciousWindows?: ({
+                                date?: string | null;
+                                weekdayName?: string | null;
                                 panchang?: {
-                                    tithi?: number;
-                                    tithiName?: string;
-                                    paksha?: string;
-                                    nakshatra?: number;
-                                    nakshatraName?: string;
-                                    yoga?: number;
-                                    karana?: string;
-                                };
+                                    tithi?: number | null;
+                                    tithiName?: string | null;
+                                    paksha?: string | null;
+                                    nakshatra?: number | null;
+                                    nakshatraName?: string | null;
+                                    yoga?: number | null;
+                                    karana?: string | null;
+                                } | null;
                                 abhijitMuhurat?: {
-                                    startTime?: string;
-                                    endTime?: string;
-                                };
-                                score?: number;
-                                rating?: string;
-                                factors?: unknown[];
-                            }[];
-                            nextAuspiciousWindow?: string;
+                                    startTime?: string | null;
+                                    endTime?: string | null;
+                                } | null;
+                                score?: number | null;
+                                rating?: string | null;
+                                factors?: unknown[] | null;
+                            } | null)[] | null;
+                            nextAuspiciousWindow?: string | null;
                         };
                     };
                 };
@@ -38168,8 +39573,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            activity?: string;
-                            auspiciousWindows?: unknown[];
+                            activity?: string | null;
+                            auspiciousWindows?: unknown[] | null;
                         };
                     };
                 };
@@ -38250,8 +39655,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            activity?: string;
-                            auspiciousWindows?: unknown[];
+                            activity?: string | null;
+                            auspiciousWindows?: unknown[] | null;
                         };
                     };
                 };
@@ -38332,8 +39737,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            activity?: string;
-                            auspiciousWindows?: unknown[];
+                            activity?: string | null;
+                            auspiciousWindows?: unknown[] | null;
                         };
                     };
                 };
@@ -38414,8 +39819,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            activity?: string;
-                            auspiciousWindows?: unknown[];
+                            activity?: string | null;
+                            auspiciousWindows?: unknown[] | null;
                         };
                     };
                 };
@@ -38496,8 +39901,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            activity?: string;
-                            auspiciousWindows?: unknown[];
+                            activity?: string | null;
+                            auspiciousWindows?: unknown[] | null;
                         };
                     };
                 };
@@ -38578,8 +39983,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            activity?: string;
-                            auspiciousWindows?: unknown[];
+                            activity?: string | null;
+                            auspiciousWindows?: unknown[] | null;
                         };
                     };
                 };
@@ -38660,8 +40065,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            activity?: string;
-                            auspiciousWindows?: unknown[];
+                            activity?: string | null;
+                            auspiciousWindows?: unknown[] | null;
                         };
                     };
                 };
@@ -38742,8 +40147,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            activity?: string;
-                            auspiciousWindows?: unknown[];
+                            activity?: string | null;
+                            auspiciousWindows?: unknown[] | null;
                         };
                     };
                 };
@@ -38824,8 +40229,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            activity?: string;
-                            auspiciousWindows?: unknown[];
+                            activity?: string | null;
+                            auspiciousWindows?: unknown[] | null;
                         };
                     };
                 };
@@ -38906,8 +40311,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            activity?: string;
-                            auspiciousWindows?: unknown[];
+                            activity?: string | null;
+                            auspiciousWindows?: unknown[] | null;
                         };
                     };
                 };
@@ -38988,8 +40393,82 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            activity?: string;
-                            auspiciousWindows?: unknown[];
+                            activity?: string | null;
+                            auspiciousWindows?: unknown[] | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    muhurta_types_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            count?: number | null;
+                            activities?: ({
+                                key?: string | null;
+                                title?: string | null;
+                                sanskrit?: string | null;
+                                description?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -39069,7 +40548,30 @@ export interface operations {
                     "application/json": {
                         /** @example true */
                         ok?: boolean;
-                        data?: Record<string, never>;
+                        data?: {
+                            system?: string | null;
+                            level?: string | null;
+                            ayanamsa?: number | null;
+                            moonSiderealLongitude?: number | null;
+                            nakshatra?: {
+                                number?: number | null;
+                                name?: string | null;
+                                pada?: number | null;
+                            } | null;
+                            initial?: {
+                                initialPlanetName?: string | null;
+                                balanceYears?: number | null;
+                                balanceMonths?: number | null;
+                                balanceDays?: number | null;
+                            } | null;
+                            periods?: ({
+                                planet?: number | null;
+                                planetName?: string | null;
+                                startDate?: string | null;
+                                endDate?: string | null;
+                                durationYears?: number | null;
+                            } | null)[] | null;
+                        };
                     };
                 };
             };
@@ -39149,7 +40651,24 @@ export interface operations {
                     "application/json": {
                         /** @example true */
                         ok?: boolean;
-                        data?: Record<string, never>;
+                        data?: {
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: {
+                                planet?: number | null;
+                                planetName?: string | null;
+                                startDate?: string | null;
+                                endDate?: string | null;
+                                durationYears?: number | null;
+                            } | null;
+                            periods?: ({
+                                planet?: number | null;
+                                planetName?: string | null;
+                                startDate?: string | null;
+                                endDate?: string | null;
+                                durationYears?: number | null;
+                            } | null)[] | null;
+                        };
                     };
                 };
             };
@@ -39229,7 +40748,46 @@ export interface operations {
                     "application/json": {
                         /** @example true */
                         ok?: boolean;
-                        data?: Record<string, never>;
+                        data?: {
+                            system?: string | null;
+                            level?: string | null;
+                            ayanamsa?: number | null;
+                            nakshatra?: {
+                                number?: number | null;
+                                name?: string | null;
+                                ruler?: string | null;
+                                pada?: number | null;
+                            } | null;
+                            initial?: {
+                                initialPlanetName?: string | null;
+                                balanceYears?: number | null;
+                                balanceMonths?: number | null;
+                                balanceDays?: number | null;
+                            } | null;
+                            currentMaha?: {
+                                planet?: number | null;
+                                planetName?: string | null;
+                                startDate?: string | null;
+                                endDate?: string | null;
+                                durationYears?: number | null;
+                            } | null;
+                            currentAntar?: {
+                                planet?: number | null;
+                                planetName?: string | null;
+                                startDate?: string | null;
+                                endDate?: string | null;
+                                durationYears?: number | null;
+                            } | null;
+                            periods?: ({
+                                planet?: number | null;
+                                planetName?: string | null;
+                                startJd?: number | null;
+                                endJd?: number | null;
+                                startDate?: string | null;
+                                endDate?: string | null;
+                                durationYears?: number | null;
+                            } | null)[] | null;
+                        };
                     };
                 };
             };
@@ -39309,7 +40867,53 @@ export interface operations {
                     "application/json": {
                         /** @example true */
                         ok?: boolean;
-                        data?: Record<string, never>;
+                        data?: {
+                            system?: string | null;
+                            level?: string | null;
+                            ayanamsa?: number | null;
+                            nakshatra?: {
+                                number?: number | null;
+                                name?: string | null;
+                                ruler?: string | null;
+                                pada?: number | null;
+                            } | null;
+                            initial?: {
+                                initialPlanetName?: string | null;
+                                balanceYears?: number | null;
+                                balanceMonths?: number | null;
+                                balanceDays?: number | null;
+                            } | null;
+                            currentMaha?: {
+                                planet?: number | null;
+                                planetName?: string | null;
+                                startDate?: string | null;
+                                endDate?: string | null;
+                                durationYears?: number | null;
+                            } | null;
+                            currentAntar?: {
+                                planet?: number | null;
+                                planetName?: string | null;
+                                startDate?: string | null;
+                                endDate?: string | null;
+                                durationYears?: number | null;
+                            } | null;
+                            currentPratyantar?: {
+                                planet?: number | null;
+                                planetName?: string | null;
+                                startDate?: string | null;
+                                endDate?: string | null;
+                                durationYears?: number | null;
+                            } | null;
+                            periods?: ({
+                                planet?: number | null;
+                                planetName?: string | null;
+                                startJd?: number | null;
+                                endJd?: number | null;
+                                startDate?: string | null;
+                                endDate?: string | null;
+                                durationYears?: number | null;
+                            } | null)[] | null;
+                        };
                     };
                 };
             };
@@ -39389,7 +40993,60 @@ export interface operations {
                     "application/json": {
                         /** @example true */
                         ok?: boolean;
-                        data?: Record<string, never>;
+                        data?: {
+                            system?: string | null;
+                            level?: string | null;
+                            ayanamsa?: number | null;
+                            nakshatra?: {
+                                number?: number | null;
+                                name?: string | null;
+                                ruler?: string | null;
+                                pada?: number | null;
+                            } | null;
+                            initial?: {
+                                initialPlanetName?: string | null;
+                                balanceYears?: number | null;
+                                balanceMonths?: number | null;
+                                balanceDays?: number | null;
+                            } | null;
+                            currentMaha?: {
+                                planet?: number | null;
+                                planetName?: string | null;
+                                startDate?: string | null;
+                                endDate?: string | null;
+                                durationYears?: number | null;
+                            } | null;
+                            currentAntar?: {
+                                planet?: number | null;
+                                planetName?: string | null;
+                                startDate?: string | null;
+                                endDate?: string | null;
+                                durationYears?: number | null;
+                            } | null;
+                            currentPratyantar?: {
+                                planet?: number | null;
+                                planetName?: string | null;
+                                startDate?: string | null;
+                                endDate?: string | null;
+                                durationYears?: number | null;
+                            } | null;
+                            currentSookshma?: {
+                                planet?: number | null;
+                                planetName?: string | null;
+                                startDate?: string | null;
+                                endDate?: string | null;
+                                durationYears?: number | null;
+                            } | null;
+                            periods?: ({
+                                planet?: number | null;
+                                planetName?: string | null;
+                                startJd?: number | null;
+                                endJd?: number | null;
+                                startDate?: string | null;
+                                endDate?: string | null;
+                                durationYears?: number | null;
+                            } | null)[] | null;
+                        };
                     };
                 };
             };
@@ -39468,7 +41125,27 @@ export interface operations {
                     "application/json": {
                         /** @example true */
                         ok?: boolean;
-                        data?: Record<string, never>;
+                        data?: {
+                            system?: string | null;
+                            level?: string | null;
+                            ayanamsa?: number | null;
+                            nakshatra?: {
+                                number?: number | null;
+                                name?: string | null;
+                                pada?: number | null;
+                            } | null;
+                            initial?: {
+                                initialPlanetName?: string | null;
+                                initialYoginiName?: string | null;
+                                balanceYears?: number | null;
+                            } | null;
+                            periods?: ({
+                                planet?: number | null;
+                                planetName?: string | null;
+                                startDate?: string | null;
+                                durationYears?: number | null;
+                            } | null)[] | null;
+                        };
                     };
                 };
             };
@@ -39549,10 +41226,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -39634,11 +41311,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -39720,12 +41397,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            currentPratyantar?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            currentPratyantar?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -39807,13 +41484,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            currentPratyantar?: Record<string, never>;
-                            currentSookshma?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            currentPratyantar?: Record<string, never> | null;
+                            currentSookshma?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -39893,7 +41570,36 @@ export interface operations {
                     "application/json": {
                         /** @example true */
                         ok?: boolean;
-                        data?: Record<string, never>;
+                        data?: {
+                            system?: string | null;
+                            level?: string | null;
+                            ayanamsa?: number | null;
+                            nakshatra?: {
+                                number?: number | null;
+                                name?: string | null;
+                                pada?: number | null;
+                            } | null;
+                            initial?: {
+                                initialPlanetName?: string | null;
+                                balanceYears?: number | null;
+                                balanceMonths?: number | null;
+                                blockStartNakshatra?: number | null;
+                                blockNakshatraCount?: number | null;
+                                tradition?: string | null;
+                                applicability?: {
+                                    paksha?: string | null;
+                                    isDay?: boolean | null;
+                                    recommendedForChart?: boolean | null;
+                                    bphsRule?: string | null;
+                                    note?: string | null;
+                                } | null;
+                            } | null;
+                            periods?: ({
+                                planet?: number | null;
+                                planetName?: string | null;
+                                durationYears?: number | null;
+                            } | null)[] | null;
+                        };
                     };
                 };
             };
@@ -39974,10 +41680,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -40059,11 +41765,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -40145,12 +41851,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            currentPratyantar?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            currentPratyantar?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -40232,13 +41938,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            currentPratyantar?: Record<string, never>;
-                            currentSookshma?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            currentPratyantar?: Record<string, never> | null;
+                            currentSookshma?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -40318,7 +42024,34 @@ export interface operations {
                     "application/json": {
                         /** @example true */
                         ok?: boolean;
-                        data?: Record<string, never>;
+                        data?: {
+                            system?: string | null;
+                            level?: string | null;
+                            ayanamsa?: number | null;
+                            nakshatra?: {
+                                number?: number | null;
+                                name?: string | null;
+                                pada?: number | null;
+                            } | null;
+                            initial?: {
+                                initialSignName?: string | null;
+                                direction?: string | null;
+                                chakraGroup?: string | null;
+                                effectivePada?: number | null;
+                                paramayu?: number | null;
+                                balanceYears?: number | null;
+                                balanceMonths?: number | null;
+                                chakraSequence?: ({
+                                    signName?: string | null;
+                                    years?: number | null;
+                                } | null)[] | null;
+                            } | null;
+                            periods?: ({
+                                signName?: string | null;
+                                signLordName?: string | null;
+                                durationYears?: number | null;
+                            } | null)[] | null;
+                        };
                     };
                 };
             };
@@ -40399,10 +42132,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -40484,11 +42217,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -40570,12 +42303,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            currentPratyantar?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            currentPratyantar?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -40657,13 +42390,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            currentPratyantar?: Record<string, never>;
-                            currentSookshma?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            currentPratyantar?: Record<string, never> | null;
+                            currentSookshma?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -40743,7 +42476,26 @@ export interface operations {
                     "application/json": {
                         /** @example true */
                         ok?: boolean;
-                        data?: Record<string, never>;
+                        data?: {
+                            system?: string | null;
+                            variant?: string | null;
+                            level?: string | null;
+                            ayanamsa?: number | null;
+                            lagna?: {
+                                sign?: number | null;
+                                signName?: string | null;
+                                direction?: string | null;
+                            } | null;
+                            periods?: ({
+                                signIndex?: number | null;
+                                signName?: string | null;
+                                lordId?: number | null;
+                                lordName?: string | null;
+                                durationYears?: number | null;
+                                startDate?: string | null;
+                                endDate?: string | null;
+                            } | null)[] | null;
+                        };
                     };
                 };
             };
@@ -40824,11 +42576,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            variant?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            variant?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -40910,12 +42662,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            variant?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            variant?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -40997,13 +42749,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            variant?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            currentPratyantar?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            variant?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            currentPratyantar?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -41085,14 +42837,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            variant?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            currentPratyantar?: Record<string, never>;
-                            currentSookshma?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            variant?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            currentPratyantar?: Record<string, never> | null;
+                            currentSookshma?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -41173,12 +42925,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            ayanamsa?: number;
-                            nakshatra?: Record<string, never>;
-                            initial?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            ayanamsa?: number | null;
+                            nakshatra?: Record<string, never> | null;
+                            initial?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -41260,10 +43012,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -41345,11 +43097,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -41431,12 +43183,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            currentPratyantar?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            currentPratyantar?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -41518,13 +43270,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            currentPratyantar?: Record<string, never>;
-                            currentSookshma?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            currentPratyantar?: Record<string, never> | null;
+                            currentSookshma?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -41605,17 +43357,17 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            nakshatra?: Record<string, never>;
+                            system?: string | null;
+                            level?: string | null;
+                            nakshatra?: Record<string, never> | null;
                             initial?: {
-                                initialPlanet?: string;
-                                fullPeriodYears?: number;
-                                balanceYears?: number;
-                                seedNakshatra?: string;
-                                applicabilityNote?: string;
-                            };
-                            periods?: unknown[];
+                                initialPlanet?: string | null;
+                                fullPeriodYears?: number | null;
+                                balanceYears?: number | null;
+                                seedNakshatra?: string | null;
+                                applicabilityNote?: string | null;
+                            } | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -41697,10 +43449,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -41782,11 +43534,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -41868,12 +43620,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            currentPratyantar?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            currentPratyantar?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -41955,13 +43707,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            currentPratyantar?: Record<string, never>;
-                            currentSookshma?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            currentPratyantar?: Record<string, never> | null;
+                            currentSookshma?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -42042,17 +43794,17 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            nakshatra?: Record<string, never>;
+                            system?: string | null;
+                            level?: string | null;
+                            nakshatra?: Record<string, never> | null;
                             initial?: {
-                                initialPlanet?: string;
-                                fullPeriodYears?: number;
-                                balanceYears?: number;
-                                seedNakshatra?: string;
-                                applicabilityNote?: string;
-                            };
-                            periods?: unknown[];
+                                initialPlanet?: string | null;
+                                fullPeriodYears?: number | null;
+                                balanceYears?: number | null;
+                                seedNakshatra?: string | null;
+                                applicabilityNote?: string | null;
+                            } | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -42134,10 +43886,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -42219,11 +43971,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -42305,12 +44057,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            currentPratyantar?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            currentPratyantar?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -42392,13 +44144,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            currentPratyantar?: Record<string, never>;
-                            currentSookshma?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            currentPratyantar?: Record<string, never> | null;
+                            currentSookshma?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -42479,16 +44231,16 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            lagna?: Record<string, never>;
+                            system?: string | null;
+                            level?: string | null;
+                            lagna?: Record<string, never> | null;
                             seed?: {
-                                brahma?: number;
-                                brahmaName?: string;
-                                sign?: number;
-                                signName?: string;
-                            };
-                            periods?: unknown[];
+                                brahma?: number | null;
+                                brahmaName?: string | null;
+                                sign?: number | null;
+                                signName?: string | null;
+                            } | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -42570,10 +44322,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -42655,11 +44407,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -42741,12 +44493,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            currentPratyantar?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            currentPratyantar?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -42828,13 +44580,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            currentPratyantar?: Record<string, never>;
-                            currentSookshma?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            currentPratyantar?: Record<string, never> | null;
+                            currentSookshma?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -42917,17 +44669,17 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            lagna?: Record<string, never>;
+                            system?: string | null;
+                            level?: string | null;
+                            lagna?: Record<string, never> | null;
                             seed?: {
-                                houseIndex?: number;
-                                baseSign?: number;
-                                sign?: number;
-                                signName?: string;
-                                antardasaSeedOption?: number;
-                            };
-                            periods?: unknown[];
+                                houseIndex?: number | null;
+                                baseSign?: number | null;
+                                sign?: number | null;
+                                signName?: string | null;
+                                antardasaSeedOption?: number | null;
+                            } | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -43010,10 +44762,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -43095,11 +44847,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -43181,12 +44933,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            currentPratyantar?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            currentPratyantar?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -43268,13 +45020,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            level?: string;
-                            currentMaha?: Record<string, never>;
-                            currentAntar?: Record<string, never>;
-                            currentPratyantar?: Record<string, never>;
-                            currentSookshma?: Record<string, never>;
-                            periods?: unknown[];
+                            system?: string | null;
+                            level?: string | null;
+                            currentMaha?: Record<string, never> | null;
+                            currentAntar?: Record<string, never> | null;
+                            currentPratyantar?: Record<string, never> | null;
+                            currentSookshma?: Record<string, never> | null;
+                            periods?: unknown[] | null;
                         };
                     };
                 };
@@ -43355,15 +45107,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            chara?: {
-                                rank?: number;
-                                role?: string;
-                                graha?: number;
-                                grahaName?: string;
-                                longitudeInSign?: number;
-                            }[];
-                            naisargika?: unknown[];
+                            lagna?: Record<string, never> | null;
+                            chara?: ({
+                                rank?: number | null;
+                                role?: string | null;
+                                graha?: number | null;
+                                grahaName?: string | null;
+                                longitudeInSign?: number | null;
+                            } | null)[] | null;
+                            naisargika?: unknown[] | null;
                         };
                     };
                 };
@@ -43444,10 +45196,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            atmakaraka?: Record<string, never>;
-                            darakaraka?: Record<string, never>;
-                            ranking?: unknown[];
+                            lagna?: Record<string, never> | null;
+                            atmakaraka?: Record<string, never> | null;
+                            darakaraka?: Record<string, never> | null;
+                            ranking?: unknown[] | null;
                         };
                     };
                 };
@@ -43528,15 +45280,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            bhavaArudhas?: {
-                                label?: string;
-                                sign?: number;
-                                signName?: string;
-                            }[];
-                            suryaArudhas?: unknown[];
-                            chandraArudhas?: unknown[];
-                            grahaArudhas?: unknown[];
+                            lagna?: Record<string, never> | null;
+                            bhavaArudhas?: ({
+                                label?: string | null;
+                                sign?: number | null;
+                                signName?: string | null;
+                            } | null)[] | null;
+                            suryaArudhas?: unknown[] | null;
+                            chandraArudhas?: unknown[] | null;
+                            grahaArudhas?: unknown[] | null;
                         };
                     };
                 };
@@ -43617,13 +45369,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
+                            lagna?: Record<string, never> | null;
                             upapada?: {
-                                label?: string;
-                                sign?: number;
-                                signName?: string;
-                            };
-                            meaning?: string;
+                                label?: string | null;
+                                sign?: number | null;
+                                signName?: string | null;
+                            } | null;
+                            meaning?: string | null;
                         };
                     };
                 };
@@ -43704,9 +45456,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            rasiDrishti?: unknown[];
-                            grahaDrishti?: unknown[];
+                            lagna?: Record<string, never> | null;
+                            rasiDrishti?: unknown[] | null;
+                            grahaDrishti?: unknown[] | null;
                         };
                     };
                 };
@@ -43787,14 +45539,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            rasiDrishti?: {
-                                sign?: number;
-                                signName?: string;
-                                modality?: string;
-                                aspectingRasis?: unknown[];
-                            }[];
-                            method?: string;
+                            lagna?: Record<string, never> | null;
+                            rasiDrishti?: ({
+                                sign?: number | null;
+                                signName?: string | null;
+                                modality?: string | null;
+                                aspectingRasis?: unknown[] | null;
+                            } | null)[] | null;
+                            method?: string | null;
                         };
                     };
                 };
@@ -43875,14 +45627,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            grahaDrishti?: {
-                                graha?: number;
-                                grahaName?: string;
-                                sign?: number;
-                                aspectingRasis?: unknown[];
-                            }[];
-                            method?: string;
+                            lagna?: Record<string, never> | null;
+                            grahaDrishti?: ({
+                                graha?: number | null;
+                                grahaName?: string | null;
+                                sign?: number | null;
+                                aspectingRasis?: unknown[] | null;
+                            } | null)[] | null;
+                            method?: string | null;
                         };
                     };
                 };
@@ -43963,12 +45715,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            ak?: number;
-                            akName?: string;
-                            d9Sign?: number;
-                            d9SignName?: string;
-                            meaning?: string;
+                            lagna?: Record<string, never> | null;
+                            ak?: number | null;
+                            akName?: string | null;
+                            d9Sign?: number | null;
+                            d9SignName?: string | null;
+                            meaning?: string | null;
                         };
                     };
                 };
@@ -44050,12 +45802,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
+                            lagna?: Record<string, never> | null;
                             summary?: {
-                                chara?: Record<string, never>;
-                                sthira?: Record<string, never>;
-                                shoola?: Record<string, never>;
-                            };
+                                chara?: Record<string, never> | null;
+                                sthira?: Record<string, never> | null;
+                                shoola?: Record<string, never> | null;
+                            } | null;
                         };
                     };
                 };
@@ -44136,14 +45888,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            atmakaraka?: Record<string, never>;
-                            darakaraka?: Record<string, never>;
-                            yogas?: {
-                                name?: string;
-                                present?: boolean;
-                                description?: string;
-                            }[];
+                            lagna?: Record<string, never> | null;
+                            atmakaraka?: Record<string, never> | null;
+                            darakaraka?: Record<string, never> | null;
+                            yogas?: ({
+                                name?: string | null;
+                                present?: boolean | null;
+                                description?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -44225,19 +45977,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
+                            lagna?: Record<string, never> | null;
                             birthAtmakaraka?: {
-                                graha?: number;
-                                grahaName?: string;
-                            };
-                            events?: {
-                                ageYears?: number;
-                                fromPlanet?: Record<string, never>;
-                                toPlanet?: Record<string, never>;
-                                triggers?: unknown[];
-                            }[];
-                            yearsScanned?: number;
-                            method?: string;
+                                graha?: number | null;
+                                grahaName?: string | null;
+                            } | null;
+                            events?: ({
+                                ageYears?: number | null;
+                                fromPlanet?: Record<string, never> | null;
+                                toPlanet?: Record<string, never> | null;
+                                triggers?: unknown[] | null;
+                            } | null)[] | null;
+                            yearsScanned?: number | null;
+                            method?: string | null;
                         };
                     };
                 };
@@ -44318,22 +46070,22 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            houses?: {
-                                houseNum?: number;
-                                sign?: number;
-                                argalas?: {
-                                    from?: number;
-                                    strength?: number;
-                                    type?: string;
-                                    planets?: unknown[];
-                                }[];
-                                virodhargalas?: unknown[];
-                                netInfluence?: number;
-                                dominantOver?: number;
-                            }[];
-                            strongestArgala?: Record<string, never>;
-                            weakestArgala?: Record<string, never>;
+                            lagna?: Record<string, never> | null;
+                            houses?: ({
+                                houseNum?: number | null;
+                                sign?: number | null;
+                                argalas?: ({
+                                    from?: number | null;
+                                    strength?: number | null;
+                                    type?: string | null;
+                                    planets?: unknown[] | null;
+                                } | null)[] | null;
+                                virodhargalas?: unknown[] | null;
+                                netInfluence?: number | null;
+                                dominantOver?: number | null;
+                            } | null)[] | null;
+                            strongestArgala?: Record<string, never> | null;
+                            weakestArgala?: Record<string, never> | null;
                         };
                     };
                 };
@@ -44414,18 +46166,18 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            cusps?: {
-                                house?: number;
-                                longitude?: number;
-                                sign?: number;
-                                signName?: string;
-                                signLord?: number;
-                                starName?: string;
-                                starLord?: number;
-                                subName?: string;
-                                subSubName?: string;
-                            }[];
+                            lagna?: Record<string, never> | null;
+                            cusps?: ({
+                                house?: number | null;
+                                longitude?: number | null;
+                                sign?: number | null;
+                                signName?: string | null;
+                                signLord?: number | null;
+                                starName?: string | null;
+                                starLord?: number | null;
+                                subName?: string | null;
+                                subSubName?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -44506,15 +46258,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            cusps?: unknown[];
-                            planets?: {
-                                graha?: number;
-                                grahaName?: string;
-                                signName?: string;
-                                starName?: string;
-                                subName?: string;
-                            }[];
+                            lagna?: Record<string, never> | null;
+                            cusps?: unknown[] | null;
+                            planets?: ({
+                                graha?: number | null;
+                                grahaName?: string | null;
+                                signName?: string | null;
+                                starName?: string | null;
+                                subName?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -44595,14 +46347,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            dayLord?: Record<string, never>;
-                            horaLord?: Record<string, never>;
-                            ascendant?: Record<string, never>;
-                            moon?: Record<string, never>;
-                            rulingPlanets?: {
-                                graha?: number;
-                                name?: string;
-                            }[];
+                            dayLord?: Record<string, never> | null;
+                            horaLord?: Record<string, never> | null;
+                            ascendant?: Record<string, never> | null;
+                            moon?: Record<string, never> | null;
+                            rulingPlanets?: ({
+                                graha?: number | null;
+                                name?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -44684,14 +46436,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            horaryNumber?: number;
-                            ascSidereal?: number;
+                            horaryNumber?: number | null;
+                            ascSidereal?: number | null;
                             ascendant?: {
-                                signName?: string;
-                                starName?: string;
-                                subName?: string;
-                            };
-                            method?: string;
+                                signName?: string | null;
+                                starName?: string | null;
+                                subName?: string | null;
+                            } | null;
+                            method?: string | null;
                         };
                     };
                 };
@@ -44772,15 +46524,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            significators?: {
-                                graha?: number;
-                                occupies?: number;
-                                primary?: number;
-                                secondary?: number;
-                                tertiary?: number;
-                                chain?: Record<string, never>;
-                            }[];
+                            lagna?: Record<string, never> | null;
+                            significators?: ({
+                                graha?: number | null;
+                                occupies?: number | null;
+                                primary?: number | null;
+                                secondary?: number | null;
+                                tertiary?: number | null;
+                                chain?: Record<string, never> | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -44861,15 +46613,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            planets?: {
-                                graha?: number;
-                                grahaName?: string;
-                                house?: number;
-                                signName?: string;
-                                starName?: string;
-                                subName?: string;
-                            }[];
+                            lagna?: Record<string, never> | null;
+                            planets?: ({
+                                graha?: number | null;
+                                grahaName?: string | null;
+                                house?: number | null;
+                                signName?: string | null;
+                                starName?: string | null;
+                                subName?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -44947,12 +46699,12 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             chain?: {
-                                longitude?: number;
-                                signName?: string;
-                                starName?: string;
-                                subName?: string;
-                                subSubName?: string;
-                            };
+                                longitude?: number | null;
+                                signName?: string | null;
+                                starName?: string | null;
+                                subName?: string | null;
+                                subSubName?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -45033,13 +46785,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            chain?: Record<string, never>;
+                            lagna?: Record<string, never> | null;
+                            chain?: Record<string, never> | null;
                             ascSubLord?: {
-                                graha?: number;
-                                name?: string;
-                            };
-                            meaning?: string;
+                                graha?: number | null;
+                                name?: string | null;
+                            } | null;
+                            meaning?: string | null;
                         };
                     };
                 };
@@ -45120,12 +46872,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            isDayBirth?: boolean;
-                            fortunaLongitude?: number;
-                            house?: number;
-                            chain?: Record<string, never>;
-                            formula?: string;
+                            lagna?: Record<string, never> | null;
+                            isDayBirth?: boolean | null;
+                            fortunaLongitude?: number | null;
+                            house?: number | null;
+                            chain?: Record<string, never> | null;
+                            formula?: string | null;
                         };
                     };
                 };
@@ -45204,14 +46956,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            jd?: number;
-                            ayanamsa?: number;
-                            planets?: {
-                                graha?: number;
-                                name?: string;
-                                longitude?: number;
-                                chain?: Record<string, never>;
-                            }[];
+                            jd?: number | null;
+                            ayanamsa?: number | null;
+                            planets?: ({
+                                graha?: number | null;
+                                name?: string | null;
+                                longitude?: number | null;
+                                chain?: Record<string, never> | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -45292,16 +47044,16 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            teva?: {
-                                graha?: number;
-                                grahaName?: string;
-                                house?: number;
-                                state?: string;
-                                inPakkaGhar?: boolean;
-                            }[];
-                            pakkaGhars?: unknown[];
-                            disclaimer?: string;
+                            lagna?: Record<string, never> | null;
+                            teva?: ({
+                                graha?: number | null;
+                                grahaName?: string | null;
+                                house?: number | null;
+                                state?: string | null;
+                                inPakkaGhar?: boolean | null;
+                            } | null)[] | null;
+                            pakkaGhars?: unknown[] | null;
+                            disclaimer?: string | null;
                         };
                     };
                 };
@@ -45382,16 +47134,16 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            grid?: {
-                                house?: number;
-                                houseName?: string;
-                                planets?: {
-                                    graha?: number;
-                                    name?: string;
-                                    state?: string;
-                                }[];
-                            }[];
+                            lagna?: Record<string, never> | null;
+                            grid?: ({
+                                house?: number | null;
+                                houseName?: string | null;
+                                planets?: ({
+                                    graha?: number | null;
+                                    name?: string | null;
+                                    state?: string | null;
+                                } | null)[] | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -45472,12 +47224,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
+                            lagna?: Record<string, never> | null;
                             kismat?: {
-                                score?: number;
-                                factors?: unknown[];
-                            };
-                            interpretation?: string;
+                                score?: number | null;
+                                factors?: unknown[] | null;
+                            } | null;
+                            interpretation?: string | null;
                         };
                     };
                 };
@@ -45558,17 +47310,17 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            dasha?: {
-                                house?: number;
-                                houseName?: string;
-                                ruler?: number;
-                                rulerName?: string;
-                                ageStart?: number;
-                                ageEnd?: number;
-                            }[];
-                            cycleYears?: number;
-                            method?: string;
+                            lagna?: Record<string, never> | null;
+                            dasha?: ({
+                                house?: number | null;
+                                houseName?: string | null;
+                                ruler?: number | null;
+                                rulerName?: string | null;
+                                ageStart?: number | null;
+                                ageEnd?: number | null;
+                            } | null)[] | null;
+                            cycleYears?: number | null;
+                            method?: string | null;
                         };
                     };
                 };
@@ -45650,13 +47402,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
+                            lagna?: Record<string, never> | null;
                             varshphal?: {
-                                yearNumber?: number;
-                                approxJd?: number;
-                                ageYears?: number;
-                            };
-                            runningDashaHouse?: Record<string, never>;
+                                yearNumber?: number | null;
+                                approxJd?: number | null;
+                                ageYears?: number | null;
+                            } | null;
+                            runningDashaHouse?: Record<string, never> | null;
                         };
                     };
                 };
@@ -45737,15 +47489,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            rins?: {
-                                name?: string;
-                                hindiName?: string;
-                                present?: boolean;
-                                triggers?: unknown[];
-                                remedy?: string;
-                            }[];
-                            activeCount?: number;
+                            lagna?: Record<string, never> | null;
+                            rins?: ({
+                                name?: string | null;
+                                hindiName?: string | null;
+                                present?: boolean | null;
+                                triggers?: unknown[] | null;
+                                remedy?: string | null;
+                            } | null)[] | null;
+                            activeCount?: number | null;
                         };
                     };
                 };
@@ -45828,7 +47580,7 @@ export interface operations {
                      *       "data": {
                      *         "remedies": [
                      *           {
-                     *             "graha": 0,
+                     *             "graha": "0",
                      *             "grahaName": "Sun",
                      *             "remedy": {
                      *               "remedy": "Respect father; offer water at sunrise...",
@@ -45845,16 +47597,16 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            remedies?: {
-                                graha?: number;
-                                grahaName?: string;
+                            remedies?: ({
+                                graha?: string | null;
+                                grahaName?: string | null;
                                 remedy?: {
-                                    remedy?: string;
-                                    day?: string;
-                                    donation?: string;
-                                    mantra?: string;
-                                };
-                            }[];
+                                    remedy?: string | null;
+                                    day?: string | null;
+                                    donation?: string | null;
+                                    mantra?: string | null;
+                                } | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -45944,11 +47696,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            planet?: number;
-                            house?: number;
-                            effect?: string;
-                            pakkaGhar?: boolean;
-                            disclaimer?: string;
+                            planet?: number | null;
+                            house?: number | null;
+                            effect?: string | null;
+                            pakkaGhar?: boolean | null;
+                            disclaimer?: string | null;
                         };
                     };
                 };
@@ -46029,12 +47781,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            blindHouses?: {
-                                house?: number;
-                                houseName?: string;
-                            }[];
-                            meaning?: string;
+                            lagna?: Record<string, never> | null;
+                            blindHouses?: ({
+                                house?: number | null;
+                                houseName?: string | null;
+                            } | null)[] | null;
+                            meaning?: string | null;
                         };
                     };
                 };
@@ -46115,14 +47867,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            sleepingHouses?: {
-                                house?: number;
-                                houseName?: string;
-                                planet?: number;
-                                planetName?: string;
-                            }[];
-                            meaning?: string;
+                            lagna?: Record<string, never> | null;
+                            sleepingHouses?: ({
+                                house?: number | null;
+                                houseName?: string | null;
+                                planet?: number | null;
+                                planetName?: string | null;
+                            } | null)[] | null;
+                            meaning?: string | null;
                         };
                     };
                 };
@@ -46203,12 +47955,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
+                            lagna?: Record<string, never> | null;
                             sukh?: {
-                                score?: number;
-                                factors?: unknown[];
-                            };
-                            interpretation?: string;
+                                score?: number | null;
+                                factors?: unknown[] | null;
+                            } | null;
+                            interpretation?: string | null;
                         };
                     };
                 };
@@ -46289,14 +48041,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            lifeGraph?: {
-                                age?: number;
-                                house?: number;
-                                ruler?: number;
-                                rulerName?: string;
-                                rulerState?: string;
-                            }[];
+                            lagna?: Record<string, never> | null;
+                            lifeGraph?: ({
+                                age?: number | null;
+                                house?: number | null;
+                                ruler?: number | null;
+                                rulerName?: string | null;
+                                rulerState?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -46377,12 +48129,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            yoga?: string;
-                            school?: string;
-                            present?: boolean;
-                            atmakaraka?: Record<string, never>;
-                            amatyakaraka?: Record<string, never>;
-                            details?: string;
+                            yoga?: string | null;
+                            school?: string | null;
+                            present?: boolean | null;
+                            atmakaraka?: Record<string, never> | null;
+                            amatyakaraka?: Record<string, never> | null;
+                            details?: string | null;
                         };
                     };
                 };
@@ -46463,9 +48215,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            yoga?: string;
-                            school?: string;
-                            present?: boolean;
+                            yoga?: string | null;
+                            school?: string | null;
+                            present?: boolean | null;
                         };
                     };
                 };
@@ -46546,9 +48298,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            yoga?: string;
-                            school?: string;
-                            present?: boolean;
+                            yoga?: string | null;
+                            school?: string | null;
+                            present?: boolean | null;
                         };
                     };
                 };
@@ -46629,9 +48381,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            yoga?: string;
-                            school?: string;
-                            present?: boolean;
+                            yoga?: string | null;
+                            school?: string | null;
+                            present?: boolean | null;
                         };
                     };
                 };
@@ -46712,12 +48464,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            school?: string;
-                            atmakaraka?: Record<string, never>;
-                            raja?: Record<string, never>;
-                            dhana?: Record<string, never>;
-                            daridra?: Record<string, never>;
-                            viparita?: Record<string, never>;
+                            school?: string | null;
+                            atmakaraka?: Record<string, never> | null;
+                            raja?: Record<string, never> | null;
+                            dhana?: Record<string, never> | null;
+                            daridra?: Record<string, never> | null;
+                            viparita?: Record<string, never> | null;
                         };
                     };
                 };
@@ -46798,21 +48550,21 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
-                            atmakaraka?: Record<string, never>;
-                            yogas?: {
-                                name?: string;
-                                karaka?: string;
-                                graha?: number;
-                                grahaName?: string;
-                                house?: number;
-                                manifestation?: string;
-                                strength?: number;
-                                kendra?: boolean;
-                                trine?: boolean;
-                                dusthana?: boolean;
-                            }[];
-                            summary?: string;
+                            lagna?: Record<string, never> | null;
+                            atmakaraka?: Record<string, never> | null;
+                            yogas?: ({
+                                name?: string | null;
+                                karaka?: string | null;
+                                graha?: number | null;
+                                grahaName?: string | null;
+                                house?: number | null;
+                                manifestation?: string | null;
+                                strength?: number | null;
+                                kendra?: boolean | null;
+                                trine?: boolean | null;
+                                dusthana?: boolean | null;
+                            } | null)[] | null;
+                            summary?: string | null;
                         };
                     };
                 };
@@ -46893,25 +48645,25 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lagna?: Record<string, never>;
+                            lagna?: Record<string, never> | null;
                             karakamsa?: {
-                                sign?: number;
-                                signName?: string;
-                                planet?: number;
-                                planetName?: string;
-                            };
-                            houses?: {
-                                houseNum?: number;
-                                sign?: number;
-                                planets?: unknown[];
-                                significations?: string[];
-                            }[];
-                            yogas?: {
-                                name?: string;
-                                planet?: string;
-                                house?: number;
-                                meaning?: string;
-                            }[];
+                                sign?: number | null;
+                                signName?: string | null;
+                                planet?: number | null;
+                                planetName?: string | null;
+                            } | null;
+                            houses?: ({
+                                houseNum?: number | null;
+                                sign?: number | null;
+                                planets?: unknown[] | null;
+                                significations?: (string | null)[] | null;
+                            } | null)[] | null;
+                            yogas?: ({
+                                name?: string | null;
+                                planet?: string | null;
+                                house?: number | null;
+                                meaning?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -47023,19 +48775,19 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             lagna?: {
-                                sign?: number;
-                                signName?: string;
-                            };
-                            planets?: {
-                                graha?: number;
-                                grahaName?: string;
-                                naturalNature?: string;
-                                functionalNature?: string;
-                                housesOwned?: number[];
-                                reasoning?: string;
-                            }[];
-                            yogakarakas?: number[];
-                            marakas?: number[];
+                                sign?: number | null;
+                                signName?: string | null;
+                            } | null;
+                            planets?: ({
+                                graha?: number | null;
+                                grahaName?: string | null;
+                                naturalNature?: string | null;
+                                functionalNature?: string | null;
+                                housesOwned?: (number | null)[] | null;
+                                reasoning?: string | null;
+                            } | null)[] | null;
+                            yogakarakas?: (number | null)[] | null;
+                            marakas?: (number | null)[] | null;
                         };
                     };
                 };
@@ -47116,11 +48868,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            dosha?: string;
-                            present?: boolean;
-                            mars?: Record<string, never>;
-                            cancellation?: string;
-                            remedy?: string;
+                            dosha?: string | null;
+                            present?: boolean | null;
+                            mars?: Record<string, never> | null;
+                            cancellation?: string | null;
+                            remedy?: string | null;
                         };
                     };
                 };
@@ -47211,9 +48963,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            dosha?: string;
-                            present?: boolean;
-                            remedy?: string;
+                            dosha?: string | null;
+                            present?: boolean | null;
+                            remedy?: string | null;
                         };
                     };
                 };
@@ -47294,10 +49046,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            dosha?: string;
-                            present?: boolean;
-                            triggers?: unknown[];
-                            remedy?: string;
+                            dosha?: string | null;
+                            present?: boolean | null;
+                            triggers?: unknown[] | null;
+                            remedy?: string | null;
                         };
                     };
                 };
@@ -47389,10 +49141,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            dosha?: string;
-                            present?: boolean;
-                            details?: string;
-                            remedy?: string;
+                            dosha?: string | null;
+                            present?: boolean | null;
+                            details?: string | null;
+                            remedy?: string | null;
                         };
                     };
                 };
@@ -47473,9 +49225,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            dosha?: string;
-                            rins?: unknown[];
-                            activeCount?: number;
+                            dosha?: string | null;
+                            rins?: unknown[] | null;
+                            activeCount?: number | null;
                         };
                     };
                 };
@@ -47556,11 +49308,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            school?: string;
-                            manglik?: Record<string, never>;
-                            kalsarpa?: Record<string, never>;
-                            rins?: unknown[];
-                            kismat?: Record<string, never>;
+                            school?: string | null;
+                            manglik?: Record<string, never> | null;
+                            kalsarpa?: Record<string, never> | null;
+                            rins?: unknown[] | null;
+                            kismat?: Record<string, never> | null;
                         };
                     };
                 };
@@ -47641,9 +49393,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            dosha?: string;
-                            present?: boolean;
-                            kpSubLord?: Record<string, never>;
+                            dosha?: string | null;
+                            present?: boolean | null;
+                            kpSubLord?: Record<string, never> | null;
                         };
                     };
                 };
@@ -47724,9 +49476,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            dosha?: string;
-                            present?: boolean;
-                            kpRahuChain?: Record<string, never>;
+                            dosha?: string | null;
+                            present?: boolean | null;
+                            kpRahuChain?: Record<string, never> | null;
                         };
                     };
                 };
@@ -47807,9 +49559,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            dosha?: string;
-                            present?: boolean;
-                            kpSunChain?: Record<string, never>;
+                            dosha?: string | null;
+                            present?: boolean | null;
+                            kpSunChain?: Record<string, never> | null;
                         };
                     };
                 };
@@ -47891,12 +49643,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            dosha?: string;
-                            present?: boolean;
-                            phase?: string;
-                            moonSign?: number;
-                            transitSaturnSign?: number;
-                            kpSaturnChain?: Record<string, never>;
+                            dosha?: string | null;
+                            present?: boolean | null;
+                            phase?: string | null;
+                            moonSign?: number | null;
+                            transitSaturnSign?: number | null;
+                            kpSaturnChain?: Record<string, never> | null;
                         };
                     };
                 };
@@ -47977,10 +49729,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            dosha?: string;
-                            present?: boolean;
-                            moonSign?: number;
-                            kpMoonChain?: Record<string, never>;
+                            dosha?: string | null;
+                            present?: boolean | null;
+                            moonSign?: number | null;
+                            kpMoonChain?: Record<string, never> | null;
                         };
                     };
                 };
@@ -48061,10 +49813,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            school?: string;
-                            manglik?: Record<string, never>;
-                            kalasarpa?: Record<string, never>;
-                            kemadruma?: Record<string, never>;
+                            school?: string | null;
+                            manglik?: Record<string, never> | null;
+                            kalasarpa?: Record<string, never> | null;
+                            kemadruma?: Record<string, never> | null;
                         };
                     };
                 };
@@ -48120,20 +49872,7 @@ export interface operations {
             path?: never;
             cookie?: never;
         };
-        requestBody: {
-            content: {
-                /**
-                 * @example {
-                 *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
-                 *       "latitude": 50.45,
-                 *       "longitude": 30.52
-                 *     }
-                 */
-                "application/json": Record<string, never>;
-            };
-        };
+        requestBody?: never;
         responses: {
             /** @description Successful calculation */
             200: {
@@ -48145,15 +49884,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            planets?: {
-                                planet?: string;
-                                gate?: number;
-                                hexagram?: number;
-                                name?: string;
-                                judgment?: string;
-                                line?: number;
-                                lineText?: string;
-                            }[];
+                            number?: number | null;
+                            name?: string | null;
+                            lines?: ({
+                                value?: number | null;
+                                isChanging?: boolean | null;
+                            } | null)[] | null;
+                            upper?: string | null;
+                            lower?: string | null;
                         };
                     };
                 };
@@ -48234,15 +49972,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            planets?: {
-                                planet?: string;
-                                longitude?: number;
-                                djamaspaSign?: string;
-                                quality?: string;
-                                strength?: number;
-                            }[];
-                            dayQuality?: string;
-                            recommendation?: string;
+                            planets?: ({
+                                planet?: string | null;
+                                longitude?: number | null;
+                                djamaspaSign?: string | null;
+                                quality?: string | null;
+                                strength?: number | null;
+                            } | null)[] | null;
+                            dayQuality?: string | null;
+                            recommendation?: string | null;
                         };
                     };
                 };
@@ -48350,14 +50088,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            date?: string;
-                            language?: string;
-                            title?: string;
-                            body?: string;
-                            transitFacts?: {
-                                type?: string;
-                                exactTime?: string;
-                            }[];
+                            date?: string | null;
+                            language?: string | null;
+                            title?: string | null;
+                            body?: string | null;
+                            transitFacts?: ({
+                                type?: string | null;
+                                exactTime?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -48429,14 +50167,7 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "natal": {
-                 *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
-                 *         "latitude": 50.45,
-                 *         "longitude": 30.52
-                 *       },
-                 *       "weekStart": "2026-05-04",
+                 *       "sign": "aries",
                  *       "language": "uk"
                  *     }
                  */
@@ -48472,15 +50203,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            weekStart?: string;
-                            weekEnd?: string;
-                            language?: string;
-                            title?: string;
-                            body?: string;
-                            keyTransits?: {
-                                date?: string;
-                                type?: string;
-                            }[];
+                            weekStart?: string | null;
+                            weekEnd?: string | null;
+                            language?: string | null;
+                            title?: string | null;
+                            body?: string | null;
+                            keyTransits?: ({
+                                date?: string | null;
+                                type?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -48552,14 +50283,7 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "natal": {
-                 *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
-                 *         "latitude": 50.45,
-                 *         "longitude": 30.52
-                 *       },
-                 *       "month": "2026-05",
+                 *       "sign": "aries",
                  *       "language": "uk"
                  *     }
                  */
@@ -48577,14 +50301,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            month?: string;
-                            language?: string;
-                            title?: string;
-                            body?: string;
-                            moonPhases?: {
-                                date?: string;
-                                phase?: string;
-                            }[];
+                            month?: string | null;
+                            language?: string | null;
+                            title?: string | null;
+                            body?: string | null;
+                            moonPhases?: ({
+                                date?: string | null;
+                                phase?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -48656,14 +50380,7 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "natal": {
-                 *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
-                 *         "latitude": 50.45,
-                 *         "longitude": 30.52
-                 *       },
-                 *       "year": 2026,
+                 *       "sign": "aries",
                  *       "language": "uk"
                  *     }
                  */
@@ -48696,14 +50413,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            year?: number;
-                            language?: string;
-                            title?: string;
-                            body?: string;
-                            profectionLord?: string;
+                            year?: number | null;
+                            language?: string | null;
+                            title?: string | null;
+                            body?: string | null;
+                            profectionLord?: string | null;
                             solarReturn?: {
-                                date?: string;
-                            };
+                                date?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -48775,20 +50492,8 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "chart1": {
-                 *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
-                 *         "latitude": 50.45,
-                 *         "longitude": 30.52
-                 *       },
-                 *       "chart2": {
-                 *         "date": "1985-11-03",
-                 *         "time": "08:15:00",
-                 *         "timezoneOffset": 2,
-                 *         "latitude": 48.46,
-                 *         "longitude": 35.04
-                 *       }
+                 *       "sign1": "aries",
+                 *       "sign2": "leo"
                  *     }
                  */
                 "application/json": components["schemas"]["Compatibility"];
@@ -48822,11 +50527,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            score?: number;
-                            language?: string;
-                            summary?: string;
-                            strengths?: string[];
-                            challenges?: string[];
+                            score?: number | null;
+                            language?: string | null;
+                            summary?: string | null;
+                            strengths?: (string | null)[] | null;
+                            challenges?: (string | null)[] | null;
                         };
                     };
                 };
@@ -48934,13 +50639,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            language?: string;
-                            summary?: string;
+                            language?: string | null;
+                            summary?: string | null;
                             sections?: {
-                                personality?: string;
-                                career?: string;
-                                relationships?: string;
-                            };
+                                personality?: string | null;
+                                career?: string | null;
+                                relationships?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -49053,10 +50758,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            language?: string;
-                            summary?: string;
-                            dynamics?: string;
-                            outlook?: string;
+                            language?: string | null;
+                            summary?: string | null;
+                            dynamics?: string | null;
+                            outlook?: string | null;
                         };
                     };
                 };
@@ -49128,15 +50833,13 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "natal": {
-                 *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
-                 *         "latitude": 50.45,
-                 *         "longitude": 30.52
-                 *       },
-                 *       "windowStart": "2026-05-04",
-                 *       "windowEnd": "2026-08-04",
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52,
+                 *       "transitDate": "2026-06-15",
+                 *       "transitTime": "12:00:00",
                  *       "language": "uk"
                  *     }
                  */
@@ -49150,16 +50853,25 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "interpretation": "## Астрологічна інтерпретація\nТранзитне Сонце в кон'юнкції з Натальним Місяцем — підвищена емоційна чутливість...",
+                     *         "disclaimer": "AI-generated interpretation for guidance only.",
+                     *         "model": "gemini-2.5-flash",
+                     *         "language": "uk"
+                     *       }
+                     *     }
+                     */
                     "application/json": {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            language?: string;
-                            transits?: {
-                                type?: string;
-                                exactDate?: string;
-                                interpretation?: string;
-                            }[];
+                            interpretation?: string | null;
+                            disclaimer?: string | null;
+                            model?: string | null;
+                            language?: string | null;
                         };
                     };
                 };
@@ -49231,17 +50943,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "natal": {
-                 *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
-                 *         "latitude": 50.45,
-                 *         "longitude": 30.52
-                 *       },
-                 *       "element": {
-                 *         "type": "planet",
-                 *         "id": "Saturn"
-                 *       },
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52,
                  *       "language": "uk"
                  *     }
                  */
@@ -49269,9 +50975,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            language?: string;
-                            element?: string;
-                            interpretation?: string;
+                            language?: string | null;
+                            element?: string | null;
+                            interpretation?: string | null;
                         };
                     };
                 };
@@ -49343,9 +51049,12 @@ export interface operations {
             content: {
                 /**
                  * @example {
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52,
                  *       "planet": "Venus",
-                 *       "sign": "Scorpio",
-                 *       "house": 7,
                  *       "language": "uk"
                  *     }
                  */
@@ -49373,9 +51082,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            language?: string;
-                            placement?: string;
-                            interpretation?: string;
+                            language?: string | null;
+                            placement?: string | null;
+                            interpretation?: string | null;
                         };
                     };
                 };
@@ -49443,19 +51152,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            items?: {
-                                id?: number;
-                                name?: string;
-                                glyph?: string;
-                                element?: string;
-                                modality?: string;
-                                polarity?: string;
-                                ruler?: string;
-                                exaltation?: string;
-                                fall?: string;
-                                detriment?: string;
-                            }[];
-                            count?: number;
+                            items?: ({
+                                id?: number | null;
+                                name?: string | null;
+                                glyph?: string | null;
+                                element?: string | null;
+                                modality?: string | null;
+                                polarity?: string | null;
+                                ruler?: string | null;
+                                exaltation?: string | null;
+                                fall?: string | null;
+                                detriment?: string | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -49523,17 +51232,17 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            items?: {
-                                id?: number;
-                                name?: string;
-                                glyph?: string;
-                                archetype?: string;
-                                rules?: number[];
-                                exaltation?: number;
-                                fall?: number;
-                                type?: string;
-                            }[];
-                            count?: number;
+                            items?: ({
+                                id?: number | null;
+                                name?: string | null;
+                                glyph?: string | null;
+                                archetype?: string | null;
+                                rules?: (number | null)[] | null;
+                                exaltation?: number | null;
+                                fall?: number | null;
+                                type?: string | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -49601,15 +51310,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            items?: {
-                                number?: number;
-                                name?: string;
-                                naturalSign?: string;
-                                naturalRuler?: string;
-                                type?: string;
-                                lifeArea?: string;
-                            }[];
-                            count?: number;
+                            items?: ({
+                                number?: number | null;
+                                name?: string | null;
+                                naturalSign?: string | null;
+                                naturalRuler?: string | null;
+                                type?: string | null;
+                                lifeArea?: string | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -49677,20 +51386,20 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            items?: {
-                                name?: string;
-                                glyph?: string;
-                                angle?: number;
-                                family?: string;
-                                nature?: string;
-                                harmonic?: number;
+                            items?: ({
+                                name?: string | null;
+                                glyph?: string | null;
+                                angle?: number | null;
+                                family?: string | null;
+                                nature?: string | null;
+                                harmonic?: number | null;
                                 defaultOrbs?: {
-                                    lilly?: number;
-                                    ptolemy?: number;
-                                    modern?: number;
-                                };
-                            }[];
-                            count?: number;
+                                    lilly?: number | null;
+                                    ptolemy?: number | null;
+                                    modern?: number | null;
+                                } | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -49758,13 +51467,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            items?: {
-                                name?: string;
-                                qualities?: string[];
-                                signs?: string[];
-                                jungianFunction?: string;
-                            }[];
-                            count?: number;
+                            items?: ({
+                                name?: string | null;
+                                qualities?: (string | null)[] | null;
+                                signs?: (string | null)[] | null;
+                                jungianFunction?: string | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -49832,12 +51541,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            items?: {
-                                name?: string;
-                                signs?: string[];
-                                keyword?: string;
-                            }[];
-                            count?: number;
+                            items?: ({
+                                name?: string | null;
+                                signs?: (string | null)[] | null;
+                                keyword?: string | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -49905,12 +51614,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            items?: {
-                                name?: string;
-                                alternateNames?: string[];
-                                signs?: string[];
-                            }[];
-                            count?: number;
+                            items?: ({
+                                name?: string | null;
+                                alternateNames?: (string | null)[] | null;
+                                signs?: (string | null)[] | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -49978,25 +51687,25 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            items?: {
-                                sign?: string;
-                                domicile?: string;
-                                exaltation?: string;
-                                exaltationDegree?: number;
-                                detriment?: string;
-                                fall?: string;
-                                fallDegree?: number;
-                            }[];
+                            items?: ({
+                                sign?: string | null;
+                                domicile?: string | null;
+                                exaltation?: string | null;
+                                exaltationDegree?: number | null;
+                                detriment?: string | null;
+                                fall?: string | null;
+                                fallDegree?: number | null;
+                            } | null)[] | null;
                             scores?: {
-                                domicile?: number;
-                                exaltation?: number;
-                                triplicity?: number;
-                                term?: number;
-                                face?: number;
-                                detriment?: number;
-                                fall?: number;
-                            };
-                            count?: number;
+                                domicile?: number | null;
+                                exaltation?: number | null;
+                                triplicity?: number | null;
+                                term?: number | null;
+                                face?: number | null;
+                                detriment?: number | null;
+                                fall?: number | null;
+                            } | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -50064,17 +51773,17 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            items?: {
-                                number?: number;
-                                sign?: string;
-                                decanInSign?: number;
-                                startDegree?: number;
-                                endDegree?: number;
-                                egyptianRuler?: string;
-                                modernRuler?: string;
-                                faceRuler?: string;
-                            }[];
-                            count?: number;
+                            items?: ({
+                                number?: number | null;
+                                sign?: string | null;
+                                decanInSign?: number | null;
+                                startDegree?: number | null;
+                                endDegree?: number | null;
+                                egyptianRuler?: string | null;
+                                modernRuler?: string | null;
+                                faceRuler?: string | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -50142,16 +51851,16 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            items?: {
-                                number?: number;
-                                name?: string;
-                                startDegree?: number;
-                                endDegree?: number;
-                                deity?: string;
-                                ruler?: string;
-                                gana?: string;
-                            }[];
-                            count?: number;
+                            items?: ({
+                                number?: number | null;
+                                name?: string | null;
+                                startDegree?: number | null;
+                                endDegree?: number | null;
+                                deity?: string | null;
+                                ruler?: string | null;
+                                gana?: string | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -50219,14 +51928,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            items?: {
-                                name?: string;
-                                alternateName?: string;
-                                formulaDay?: string;
-                                formulaNight?: string;
-                                sectSensitive?: boolean;
-                            }[];
-                            count?: number;
+                            items?: ({
+                                name?: string | null;
+                                alternateName?: string | null;
+                                formulaDay?: string | null;
+                                formulaNight?: string | null;
+                                sectSensitive?: boolean | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -50294,14 +52003,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            items?: {
-                                name?: string;
-                                swissEphemerisId?: number;
-                                archetype?: string;
-                                mythology?: string;
-                                orbitYears?: number;
-                            }[];
-                            count?: number;
+                            items?: ({
+                                name?: string | null;
+                                swissEphemerisId?: number | null;
+                                archetype?: string | null;
+                                mythology?: string | null;
+                                orbitYears?: number | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -50369,13 +52078,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            items?: {
-                                name?: string;
-                                type?: string;
-                                primaryUseCase?: string;
-                                schools?: string[];
-                            }[];
-                            count?: number;
+                            items?: ({
+                                name?: string | null;
+                                type?: string | null;
+                                primaryUseCase?: string | null;
+                                schools?: (string | null)[] | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -50443,14 +52152,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            items?: {
-                                symbol?: string;
-                                category?: string;
-                                unicode?: string;
-                                glyph?: string;
-                                fallbackText?: string;
-                            }[];
-                            count?: number;
+                            items?: ({
+                                symbol?: string | null;
+                                category?: string | null;
+                                unicode?: string | null;
+                                glyph?: string | null;
+                                fallbackText?: string | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -50518,15 +52227,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            items?: {
-                                name?: string;
-                                color?: string;
-                                chakra?: string[];
-                                zodiacSigns?: string[];
-                                purposes?: string[];
-                            }[];
-                            count?: number;
-                            chakras?: string[];
+                            items?: ({
+                                name?: string | null;
+                                color?: string | null;
+                                chakra?: (string | null)[] | null;
+                                zodiacSigns?: (string | null)[] | null;
+                                purposes?: (string | null)[] | null;
+                            } | null)[] | null;
+                            count?: number | null;
+                            chakras?: (string | null)[] | null;
                         };
                     };
                 };
@@ -50594,13 +52303,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sign?: string;
-                            items?: {
-                                name?: string;
-                                color?: string;
-                                purposes?: string[];
-                            }[];
-                            count?: number;
+                            sign?: string | null;
+                            items?: ({
+                                name?: string | null;
+                                color?: string | null;
+                                purposes?: (string | null)[] | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -50668,12 +52377,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            chakra?: string;
-                            items?: {
-                                name?: string;
-                                purposes?: string[];
-                            }[];
-                            count?: number;
+                            chakra?: string | null;
+                            items?: ({
+                                name?: string | null;
+                                purposes?: (string | null)[] | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -50741,12 +52450,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            purpose?: string;
-                            items?: {
-                                name?: string;
-                                purposes?: string[];
-                            }[];
-                            count?: number;
+                            purpose?: string | null;
+                            items?: ({
+                                name?: string | null;
+                                purposes?: (string | null)[] | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -50826,15 +52535,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            recommendations?: {
-                                name?: string;
-                                matchScore?: number;
-                            }[];
-                            count?: number;
+                            recommendations?: ({
+                                name?: string | null;
+                                matchScore?: number | null;
+                            } | null)[] | null;
+                            count?: number | null;
                             criteria?: {
-                                signs?: string[];
-                                intent?: string;
-                            };
+                                signs?: (string | null)[] | null;
+                                intent?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -50902,13 +52611,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            items?: {
-                                number?: string;
-                                pattern?: string;
-                                shortMeaning?: string;
-                                themes?: string[];
-                            }[];
-                            count?: number;
+                            items?: ({
+                                number?: string | null;
+                                pattern?: string | null;
+                                shortMeaning?: string | null;
+                                themes?: (string | null)[] | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -50991,11 +52700,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            matched?: string;
-                            number?: string;
-                            pattern?: string;
-                            shortMeaning?: string;
-                            themes?: string[];
+                            matched?: string | null;
+                            number?: string | null;
+                            pattern?: string | null;
+                            shortMeaning?: string | null;
+                            themes?: (string | null)[] | null;
                         };
                     };
                 };
@@ -51087,13 +52796,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sequence?: string;
-                            pattern?: string;
-                            reducedTo?: number;
+                            sequence?: string | null;
+                            pattern?: string | null;
+                            reducedTo?: number | null;
                             exactMatch?: {
-                                shortMeaning?: string;
-                            };
-                            context?: string;
+                                shortMeaning?: string | null;
+                            } | null;
+                            context?: string | null;
                         };
                     };
                 };
@@ -51180,12 +52889,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lifePath?: number;
-                            items?: {
-                                number?: string;
-                                shortMeaning?: string;
-                            }[];
-                            count?: number;
+                            lifePath?: number | null;
+                            items?: ({
+                                number?: string | null;
+                                shortMeaning?: string | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -51266,12 +52975,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            date?: string;
-                            dailySum?: number;
-                            reducedTo?: number;
+                            date?: string | null;
+                            dailySum?: number | null;
+                            reducedTo?: number | null;
                             meaning?: {
-                                shortMeaning?: string;
-                            };
+                                shortMeaning?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -51339,13 +53048,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            items?: {
-                                keyword?: string;
-                                category?: string;
-                                archetype?: string;
-                                commonMeaning?: string;
-                            }[];
-                            count?: number;
+                            items?: ({
+                                keyword?: string | null;
+                                category?: string | null;
+                                archetype?: string | null;
+                                commonMeaning?: string | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -51425,11 +53134,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            matched?: string;
-                            keyword?: string;
-                            category?: string;
-                            archetype?: string;
-                            commonMeaning?: string;
+                            matched?: string | null;
+                            keyword?: string | null;
+                            category?: string | null;
+                            archetype?: string | null;
+                            commonMeaning?: string | null;
                         };
                     };
                 };
@@ -51531,13 +53240,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            text?: string;
-                            symbolsFound?: number;
-                            symbols?: {
-                                keyword?: string;
-                                meaning?: string;
-                            }[];
-                            suggestion?: string;
+                            text?: string | null;
+                            symbolsFound?: number | null;
+                            symbols?: ({
+                                keyword?: string | null;
+                                meaning?: string | null;
+                            } | null)[] | null;
+                            suggestion?: string | null;
                         };
                     };
                 };
@@ -51605,12 +53314,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            element?: string;
-                            items?: {
-                                keyword?: string;
-                                archetype?: string;
-                            }[];
-                            count?: number;
+                            element?: string | null;
+                            items?: ({
+                                keyword?: string | null;
+                                archetype?: string | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -51678,11 +53387,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            items?: {
-                                theme?: string;
-                                meaning?: string;
-                            }[];
-                            count?: number;
+                            items?: ({
+                                theme?: string | null;
+                                meaning?: string | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -51783,19 +53492,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             lifepath?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -51896,19 +53605,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             expression?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -52009,19 +53718,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             soulurge?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -52122,19 +53831,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             personality?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -52235,19 +53944,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             birthday?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -52348,19 +54057,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             maturity?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -52461,19 +54170,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             balance?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -52576,24 +54285,24 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
+                            system?: string | null;
                             challenges?: {
                                 first?: {
-                                    reduced?: number;
+                                    reduced?: number | null;
                                     meaning?: {
-                                        archetype?: string;
-                                    };
-                                };
+                                        archetype?: string | null;
+                                    } | null;
+                                } | null;
                                 second?: {
-                                    reduced?: number;
-                                };
+                                    reduced?: number | null;
+                                } | null;
                                 third?: {
-                                    reduced?: number;
-                                };
+                                    reduced?: number | null;
+                                } | null;
                                 fourth?: {
-                                    reduced?: number;
-                                };
-                            };
+                                    reduced?: number | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -52697,25 +54406,25 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
+                            system?: string | null;
                             pinnacles?: {
                                 first?: {
-                                    reduced?: number;
-                                    endsAtAge?: number;
-                                };
+                                    reduced?: number | null;
+                                    endsAtAge?: number | null;
+                                } | null;
                                 second?: {
-                                    reduced?: number;
-                                    endsAtAge?: number;
-                                };
+                                    reduced?: number | null;
+                                    endsAtAge?: number | null;
+                                } | null;
                                 third?: {
-                                    reduced?: number;
-                                    endsAtAge?: number;
-                                };
+                                    reduced?: number | null;
+                                    endsAtAge?: number | null;
+                                } | null;
                                 fourth?: {
-                                    reduced?: number;
-                                    endsAtAge?: number;
-                                };
-                            };
+                                    reduced?: number | null;
+                                    endsAtAge?: number | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -52817,19 +54526,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             personalYear?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -52930,19 +54639,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             lifepath?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -53043,19 +54752,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             expression?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -53156,19 +54865,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             soulurge?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -53269,19 +54978,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             personality?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -53382,19 +55091,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             birthday?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -53495,19 +55204,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             maturity?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -53608,19 +55317,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             balance?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -53723,24 +55432,24 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
+                            system?: string | null;
                             challenges?: {
                                 first?: {
-                                    reduced?: number;
+                                    reduced?: number | null;
                                     meaning?: {
-                                        archetype?: string;
-                                    };
-                                };
+                                        archetype?: string | null;
+                                    } | null;
+                                } | null;
                                 second?: {
-                                    reduced?: number;
-                                };
+                                    reduced?: number | null;
+                                } | null;
                                 third?: {
-                                    reduced?: number;
-                                };
+                                    reduced?: number | null;
+                                } | null;
                                 fourth?: {
-                                    reduced?: number;
-                                };
-                            };
+                                    reduced?: number | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -53844,25 +55553,25 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
+                            system?: string | null;
                             pinnacles?: {
                                 first?: {
-                                    reduced?: number;
-                                    endsAtAge?: number;
-                                };
+                                    reduced?: number | null;
+                                    endsAtAge?: number | null;
+                                } | null;
                                 second?: {
-                                    reduced?: number;
-                                    endsAtAge?: number;
-                                };
+                                    reduced?: number | null;
+                                    endsAtAge?: number | null;
+                                } | null;
                                 third?: {
-                                    reduced?: number;
-                                    endsAtAge?: number;
-                                };
+                                    reduced?: number | null;
+                                    endsAtAge?: number | null;
+                                } | null;
                                 fourth?: {
-                                    reduced?: number;
-                                    endsAtAge?: number;
-                                };
-                            };
+                                    reduced?: number | null;
+                                    endsAtAge?: number | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -53964,19 +55673,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             personalYear?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -54077,19 +55786,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             lifepath?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -54190,19 +55899,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             expression?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -54303,19 +56012,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             soulurge?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -54416,19 +56125,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             personality?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -54529,19 +56238,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             birthday?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -54642,19 +56351,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             maturity?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -54755,19 +56464,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             balance?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -54870,24 +56579,24 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
+                            system?: string | null;
                             challenges?: {
                                 first?: {
-                                    reduced?: number;
+                                    reduced?: number | null;
                                     meaning?: {
-                                        archetype?: string;
-                                    };
-                                };
+                                        archetype?: string | null;
+                                    } | null;
+                                } | null;
                                 second?: {
-                                    reduced?: number;
-                                };
+                                    reduced?: number | null;
+                                } | null;
                                 third?: {
-                                    reduced?: number;
-                                };
+                                    reduced?: number | null;
+                                } | null;
                                 fourth?: {
-                                    reduced?: number;
-                                };
-                            };
+                                    reduced?: number | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -54991,25 +56700,25 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
+                            system?: string | null;
                             pinnacles?: {
                                 first?: {
-                                    reduced?: number;
-                                    endsAtAge?: number;
-                                };
+                                    reduced?: number | null;
+                                    endsAtAge?: number | null;
+                                } | null;
                                 second?: {
-                                    reduced?: number;
-                                    endsAtAge?: number;
-                                };
+                                    reduced?: number | null;
+                                    endsAtAge?: number | null;
+                                } | null;
                                 third?: {
-                                    reduced?: number;
-                                    endsAtAge?: number;
-                                };
+                                    reduced?: number | null;
+                                    endsAtAge?: number | null;
+                                } | null;
                                 fourth?: {
-                                    reduced?: number;
-                                    endsAtAge?: number;
-                                };
-                            };
+                                    reduced?: number | null;
+                                    endsAtAge?: number | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -55111,19 +56820,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             personalYear?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -55224,19 +56933,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             lifepath?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -55337,19 +57046,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             expression?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -55450,19 +57159,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             soulurge?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -55563,19 +57272,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             personality?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -55676,19 +57385,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             birthday?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -55789,19 +57498,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             maturity?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -55902,19 +57611,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             balance?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -56017,24 +57726,24 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
+                            system?: string | null;
                             challenges?: {
                                 first?: {
-                                    reduced?: number;
+                                    reduced?: number | null;
                                     meaning?: {
-                                        archetype?: string;
-                                    };
-                                };
+                                        archetype?: string | null;
+                                    } | null;
+                                } | null;
                                 second?: {
-                                    reduced?: number;
-                                };
+                                    reduced?: number | null;
+                                } | null;
                                 third?: {
-                                    reduced?: number;
-                                };
+                                    reduced?: number | null;
+                                } | null;
                                 fourth?: {
-                                    reduced?: number;
-                                };
-                            };
+                                    reduced?: number | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -56138,25 +57847,25 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
+                            system?: string | null;
                             pinnacles?: {
                                 first?: {
-                                    reduced?: number;
-                                    endsAtAge?: number;
-                                };
+                                    reduced?: number | null;
+                                    endsAtAge?: number | null;
+                                } | null;
                                 second?: {
-                                    reduced?: number;
-                                    endsAtAge?: number;
-                                };
+                                    reduced?: number | null;
+                                    endsAtAge?: number | null;
+                                } | null;
                                 third?: {
-                                    reduced?: number;
-                                    endsAtAge?: number;
-                                };
+                                    reduced?: number | null;
+                                    endsAtAge?: number | null;
+                                } | null;
                                 fourth?: {
-                                    reduced?: number;
-                                    endsAtAge?: number;
-                                };
-                            };
+                                    reduced?: number | null;
+                                    endsAtAge?: number | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -56258,19 +57967,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             personalYear?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -56371,19 +58080,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             lifepath?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -56484,19 +58193,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             expression?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -56597,19 +58306,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             soulurge?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -56710,19 +58419,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             personality?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -56823,19 +58532,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             birthday?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -56936,19 +58645,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             maturity?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -57049,19 +58758,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             balance?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -57164,24 +58873,24 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
+                            system?: string | null;
                             challenges?: {
                                 first?: {
-                                    reduced?: number;
+                                    reduced?: number | null;
                                     meaning?: {
-                                        archetype?: string;
-                                    };
-                                };
+                                        archetype?: string | null;
+                                    } | null;
+                                } | null;
                                 second?: {
-                                    reduced?: number;
-                                };
+                                    reduced?: number | null;
+                                } | null;
                                 third?: {
-                                    reduced?: number;
-                                };
+                                    reduced?: number | null;
+                                } | null;
                                 fourth?: {
-                                    reduced?: number;
-                                };
-                            };
+                                    reduced?: number | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -57285,25 +58994,25 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
+                            system?: string | null;
                             pinnacles?: {
                                 first?: {
-                                    reduced?: number;
-                                    endsAtAge?: number;
-                                };
+                                    reduced?: number | null;
+                                    endsAtAge?: number | null;
+                                } | null;
                                 second?: {
-                                    reduced?: number;
-                                    endsAtAge?: number;
-                                };
+                                    reduced?: number | null;
+                                    endsAtAge?: number | null;
+                                } | null;
                                 third?: {
-                                    reduced?: number;
-                                    endsAtAge?: number;
-                                };
+                                    reduced?: number | null;
+                                    endsAtAge?: number | null;
+                                } | null;
                                 fourth?: {
-                                    reduced?: number;
-                                    endsAtAge?: number;
-                                };
-                            };
+                                    reduced?: number | null;
+                                    endsAtAge?: number | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -57405,19 +59114,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            system?: string;
-                            name?: string;
-                            date?: string;
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
                             personalYear?: {
-                                raw?: number;
-                                reduced?: number;
-                                isMaster?: boolean;
-                                steps?: number[];
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
                                 meaning?: {
-                                    archetype?: string;
-                                    shortRead?: string;
-                                };
-                            };
+                                    archetype?: string | null;
+                                    shortRead?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -57567,13 +59276,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            slug?: string;
-                            name?: string;
-                            category?: string;
+                            slug?: string | null;
+                            name?: string | null;
+                            category?: string | null;
                             upright?: {
-                                keywords?: string[];
-                                meaning?: string;
-                            };
+                                keywords?: (string | null)[] | null;
+                                meaning?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -58169,10 +59878,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            slug?: string;
-                            name?: string;
-                            cardCount?: number;
-                            positions?: unknown[];
+                            slug?: string | null;
+                            name?: string | null;
+                            cardCount?: number | null;
+                            positions?: unknown[] | null;
                         };
                     };
                 };
@@ -58252,23 +59961,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -58348,23 +60057,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -58444,23 +60153,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -58540,23 +60249,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -58636,23 +60345,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -58732,23 +60441,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -58827,10 +60536,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            spread?: Record<string, never>;
-                            drawn?: unknown[];
-                            verdict?: string;
-                            reason?: string;
+                            spread?: Record<string, never> | null;
+                            drawn?: unknown[] | null;
+                            verdict?: string | null;
+                            reason?: string | null;
                         };
                     };
                 };
@@ -58910,23 +60619,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -59006,23 +60715,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -59102,23 +60811,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -59198,23 +60907,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -59294,23 +61003,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -59388,23 +61097,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -59495,13 +61204,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            date?: string;
+                            date?: string | null;
                             primary?: {
-                                name?: string;
-                            };
+                                name?: string | null;
+                            } | null;
                             secondary?: {
-                                name?: string;
-                            };
+                                name?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -59591,11 +61300,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            date?: string;
-                            year?: number;
+                            date?: string | null;
+                            year?: number | null;
                             card?: {
-                                name?: string;
-                            };
+                                name?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -59672,8 +61381,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            soulCard?: Record<string, never>;
-                            personalityCard?: Record<string, never>;
+                            soulCard?: Record<string, never> | null;
+                            personalityCard?: Record<string, never> | null;
                         };
                     };
                 };
@@ -59750,8 +61459,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            personalityCard?: Record<string, never>;
-                            shadowCard?: Record<string, never>;
+                            personalityCard?: Record<string, never> | null;
+                            shadowCard?: Record<string, never> | null;
                         };
                     };
                 };
@@ -59828,7 +61537,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            meditationPair?: Record<string, never>[];
+                            meditationPair?: (Record<string, never> | null)[] | null;
                         };
                     };
                 };
@@ -59909,8 +61618,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            cards?: unknown[];
-                            narrativeStub?: string;
+                            cards?: unknown[] | null;
+                            narrativeStub?: string | null;
                         };
                     };
                 };
@@ -59989,8 +61698,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            type?: string;
-                            drawn?: unknown[];
+                            type?: string | null;
+                            drawn?: unknown[] | null;
                         };
                     };
                 };
@@ -60069,8 +61778,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            type?: string;
-                            drawn?: unknown[];
+                            type?: string | null;
+                            drawn?: unknown[] | null;
                         };
                     };
                 };
@@ -60149,8 +61858,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            type?: string;
-                            drawn?: unknown[];
+                            type?: string | null;
+                            drawn?: unknown[] | null;
                         };
                     };
                 };
@@ -60229,8 +61938,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            type?: string;
-                            drawn?: unknown[];
+                            type?: string | null;
+                            drawn?: unknown[] | null;
                         };
                     };
                 };
@@ -60309,8 +62018,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            type?: string;
-                            drawn?: unknown[];
+                            type?: string | null;
+                            drawn?: unknown[] | null;
                         };
                     };
                 };
@@ -60454,9 +62163,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            slug?: string;
-                            name?: string;
-                            category?: string;
+                            slug?: string | null;
+                            name?: string | null;
+                            category?: string | null;
                         };
                     };
                 };
@@ -60665,8 +62374,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            slug?: string;
-                            cardCount?: number;
+                            slug?: string | null;
+                            cardCount?: number | null;
                         };
                     };
                 };
@@ -60746,23 +62455,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -60842,23 +62551,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -60938,23 +62647,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -61034,23 +62743,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -61130,23 +62839,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -61226,23 +62935,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -61330,8 +63039,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            verdict?: string;
-                            reason?: string;
+                            verdict?: string | null;
+                            reason?: string | null;
                         };
                     };
                 };
@@ -61411,23 +63120,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -61507,23 +63216,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -61603,23 +63312,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -61697,23 +63406,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -61801,8 +63510,8 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             primary?: {
-                                name?: string;
-                            };
+                                name?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -61891,8 +63600,8 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             card?: {
-                                name?: string;
-                            };
+                                name?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -61953,8 +63662,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "cards": [
-                 *         "the-fool",
-                 *         "the-magician"
+                 *         "le-mat-the-fool-marseille",
+                 *         "le-bateleur-the-juggler-marseille"
                  *       ],
                  *       "question": "Career change?"
                  *     }
@@ -61973,7 +63682,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            cards?: unknown[];
+                            cards?: unknown[] | null;
                         };
                     };
                 };
@@ -62052,7 +63761,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            drawn?: unknown[];
+                            drawn?: unknown[] | null;
                         };
                     };
                 };
@@ -62131,7 +63840,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            drawn?: unknown[];
+                            drawn?: unknown[] | null;
                         };
                     };
                 };
@@ -62275,9 +63984,9 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            slug?: string;
-                            name?: string;
-                            number?: number;
+                            slug?: string | null;
+                            name?: string | null;
+                            number?: number | null;
                         };
                     };
                 };
@@ -62357,23 +64066,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -62453,23 +64162,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -62549,23 +64258,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -62645,23 +64354,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -62741,23 +64450,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -62837,23 +64546,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -62931,23 +64640,23 @@ export interface operations {
                         ok?: boolean;
                         data?: {
                             spread?: {
-                                slug?: string;
-                                name?: string;
-                                cardCount?: number;
-                            };
-                            seed?: number;
-                            drawn?: {
+                                slug?: string | null;
+                                name?: string | null;
+                                cardCount?: number | null;
+                            } | null;
+                            seed?: number | null;
+                            drawn?: ({
                                 position?: {
-                                    name?: string;
-                                };
+                                    name?: string | null;
+                                } | null;
                                 card?: {
-                                    name?: string;
+                                    name?: string | null;
                                     upright?: {
-                                        keywords?: string[];
-                                    };
-                                };
-                                reversed?: boolean;
-                            }[];
+                                        keywords?: (string | null)[] | null;
+                                    } | null;
+                                } | null;
+                                reversed?: boolean | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -63090,30 +64799,30 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            method?: string;
-                            date?: string;
+                            method?: string | null;
+                            date?: string | null;
                             centre?: {
-                                number?: number;
+                                number?: number | null;
                                 arcanum?: {
-                                    name?: string;
-                                    archetype?: string;
-                                    taskOfSoul?: string;
-                                };
-                            };
+                                    name?: string | null;
+                                    archetype?: string | null;
+                                    taskOfSoul?: string | null;
+                                } | null;
+                            } | null;
                             bodyA?: {
-                                number?: number;
-                                arcanum?: Record<string, never>;
-                            };
-                            bodyB?: Record<string, never>;
-                            bodyC?: Record<string, never>;
-                            bodyD?: Record<string, never>;
-                            soulSky?: Record<string, never>;
-                            soulEarth?: Record<string, never>;
-                            soulMoney?: Record<string, never>;
-                            soulRelations?: Record<string, never>;
-                            karma?: Record<string, never>;
-                            task?: Record<string, never>;
-                            resource?: Record<string, never>;
+                                number?: number | null;
+                                arcanum?: Record<string, never> | null;
+                            } | null;
+                            bodyB?: Record<string, never> | null;
+                            bodyC?: Record<string, never> | null;
+                            bodyD?: Record<string, never> | null;
+                            soulSky?: Record<string, never> | null;
+                            soulEarth?: Record<string, never> | null;
+                            soulMoney?: Record<string, never> | null;
+                            soulRelations?: Record<string, never> | null;
+                            karma?: Record<string, never> | null;
+                            task?: Record<string, never> | null;
+                            resource?: Record<string, never> | null;
                         };
                     };
                 };
@@ -63227,12 +64936,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            status?: string;
-                            version?: string;
-                            uptime?: number;
-                            ephemerisLoaded?: boolean;
-                            wasmReady?: boolean;
-                            epheFiles?: string[];
+                            status?: string | null;
+                            version?: string | null;
+                            uptime?: number | null;
+                            ephemerisLoaded?: boolean | null;
+                            wasmReady?: boolean | null;
+                            epheFiles?: (string | null)[] | null;
                         };
                     };
                 };
@@ -63321,10 +65030,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            apiKey?: string;
-                            name?: string;
-                            plan?: string;
-                            rateLimit?: number;
+                            apiKey?: string | null;
+                            name?: string | null;
+                            plan?: string | null;
+                            rateLimit?: number | null;
                         };
                     };
                 };
@@ -63392,17 +65101,17 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            plan?: string;
-                            rateLimit?: number;
+                            plan?: string | null;
+                            rateLimit?: number | null;
                             usage?: {
-                                today?: number;
-                                week?: number;
-                                month?: number;
-                            };
-                            topEndpoints?: {
-                                endpoint?: string;
-                                total?: number;
-                            }[];
+                                today?: number | null;
+                                week?: number | null;
+                                month?: number | null;
+                            } | null;
+                            topEndpoints?: ({
+                                endpoint?: string | null;
+                                total?: number | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -63487,16 +65196,16 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            key_prefix?: string;
-                            plan?: string;
-                            credits_remaining?: number;
-                            credits_total_this_period?: number;
-                            period_end?: string;
-                            status?: string;
-                            domain?: string;
-                            domain_bound_at?: string;
-                            created_at?: string;
-                            referrer_source?: string;
+                            key_prefix?: string | null;
+                            plan?: string | null;
+                            credits_remaining?: number | null;
+                            credits_total_this_period?: number | null;
+                            period_end?: string | null;
+                            status?: string | null;
+                            domain?: string | null;
+                            domain_bound_at?: string | null;
+                            created_at?: string | null;
+                            referrer_source?: string | null;
                         };
                     };
                 };
@@ -63580,15 +65289,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            primary_color?: string;
-                            secondary_color?: string;
-                            font_family?: string;
-                            footer_text?: Record<string, never>;
-                            custom_domain?: Record<string, never>;
-                            domain_verified?: boolean;
-                            domain_last_checked_at?: Record<string, never>;
-                            logo_storage_key?: Record<string, never>;
-                            updated_at?: string;
+                            primary_color?: string | null;
+                            secondary_color?: string | null;
+                            font_family?: string | null;
+                            footer_text?: Record<string, never> | null;
+                            custom_domain?: Record<string, never> | null;
+                            domain_verified?: boolean | null;
+                            domain_last_checked_at?: Record<string, never> | null;
+                            logo_storage_key?: Record<string, never> | null;
+                            updated_at?: string | null;
                         };
                     };
                 };
@@ -63672,15 +65381,15 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            primary_color?: string;
-                            secondary_color?: string;
-                            font_family?: string;
-                            footer_text?: string;
-                            custom_domain?: string;
-                            domain_verified?: boolean;
-                            domain_last_checked_at?: Record<string, never>;
-                            logo_storage_key?: Record<string, never>;
-                            updated_at?: string;
+                            primary_color?: string | null;
+                            secondary_color?: string | null;
+                            font_family?: string | null;
+                            footer_text?: string | null;
+                            custom_domain?: string | null;
+                            domain_verified?: boolean | null;
+                            domain_last_checked_at?: Record<string, never> | null;
+                            logo_storage_key?: Record<string, never> | null;
+                            updated_at?: string | null;
                         };
                     };
                 };
@@ -63761,10 +65470,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            domain?: string;
-                            resolved?: string[];
-                            verified?: boolean;
-                            expectedTarget?: string;
+                            domain?: string | null;
+                            resolved?: (string | null)[] | null;
+                            verified?: boolean | null;
+                            expectedTarget?: string | null;
                         };
                     };
                 };
@@ -63852,10 +65561,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            logo_storage_key?: string;
-                            logo_url?: string;
-                            byte_length?: number;
-                            mime_type?: string;
+                            logo_storage_key?: string | null;
+                            logo_url?: string | null;
+                            byte_length?: number | null;
+                            mime_type?: string | null;
                         };
                     };
                 };
@@ -63946,13 +65655,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            url?: string;
-                            storage_key?: string;
-                            byte_length?: number;
-                            page_count?: number;
-                            duration_ms?: number;
-                            expires_at?: string;
-                            preview?: boolean;
+                            url?: string | null;
+                            storage_key?: string | null;
+                            byte_length?: number | null;
+                            page_count?: number | null;
+                            duration_ms?: number | null;
+                            expires_at?: string | null;
+                            preview?: boolean | null;
                         };
                     };
                 };
@@ -64050,12 +65759,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            url?: string;
-                            storage_key?: string;
-                            byte_length?: number;
-                            page_count?: number;
-                            duration_ms?: number;
-                            expires_at?: string;
+                            url?: string | null;
+                            storage_key?: string | null;
+                            byte_length?: number | null;
+                            page_count?: number | null;
+                            duration_ms?: number | null;
+                            expires_at?: string | null;
                         };
                     };
                 };
@@ -64154,12 +65863,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            url?: string;
-                            storage_key?: string;
-                            byte_length?: number;
-                            page_count?: number;
-                            duration_ms?: number;
-                            expires_at?: string;
+                            url?: string | null;
+                            storage_key?: string | null;
+                            byte_length?: number | null;
+                            page_count?: number | null;
+                            duration_ms?: number | null;
+                            expires_at?: string | null;
                         };
                     };
                 };
@@ -64263,12 +65972,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            url?: string;
-                            storage_key?: string;
-                            byte_length?: number;
-                            page_count?: number;
-                            duration_ms?: number;
-                            expires_at?: string;
+                            url?: string | null;
+                            storage_key?: string | null;
+                            byte_length?: number | null;
+                            page_count?: number | null;
+                            duration_ms?: number | null;
+                            expires_at?: string | null;
                         };
                     };
                 };
@@ -64365,12 +66074,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            url?: string;
-                            storage_key?: string;
-                            byte_length?: number;
-                            page_count?: number;
-                            duration_ms?: number;
-                            expires_at?: string;
+                            url?: string | null;
+                            storage_key?: string | null;
+                            byte_length?: number | null;
+                            page_count?: number | null;
+                            duration_ms?: number | null;
+                            expires_at?: string | null;
                         };
                     };
                 };
@@ -64468,12 +66177,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            url?: string;
-                            storage_key?: string;
-                            byte_length?: number;
-                            page_count?: number;
-                            duration_ms?: number;
-                            expires_at?: string;
+                            url?: string | null;
+                            storage_key?: string | null;
+                            byte_length?: number | null;
+                            page_count?: number | null;
+                            duration_ms?: number | null;
+                            expires_at?: string | null;
                         };
                     };
                 };
@@ -64570,12 +66279,216 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            url?: string;
-                            storage_key?: string;
-                            byte_length?: number;
-                            page_count?: number;
-                            duration_ms?: number;
-                            expires_at?: string;
+                            url?: string | null;
+                            storage_key?: string | null;
+                            byte_length?: number | null;
+                            page_count?: number | null;
+                            duration_ms?: number | null;
+                            expires_at?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    reports_muhurta: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "activity": "marriage",
+                 *       "search_window_start": "2026-05-15",
+                 *       "search_window_end": "2026-06-15",
+                 *       "latitude": 28.61,
+                 *       "longitude": 77.21,
+                 *       "timezoneOffset": 5.5,
+                 *       "topN": 10,
+                 *       "language": "en"
+                 *     }
+                 */
+                "application/json": components["schemas"]["MuhurtaReport"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "url": "https://api.astroway.info/reports/abc-muhurta.pdf",
+                     *         "storage_key": "reports/abc-muhurta.pdf",
+                     *         "byte_length": 90000,
+                     *         "page_count": 2,
+                     *         "duration_ms": 5200,
+                     *         "expires_at": "2026-06-23T07:00:00Z"
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            url?: string | null;
+                            storage_key?: string | null;
+                            byte_length?: number | null;
+                            page_count?: number | null;
+                            duration_ms?: number | null;
+                            expires_at?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    reports_stellaforge: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "chart": {
+                 *         "name": "Ada Lovelace",
+                 *         "date": "1815-12-10",
+                 *         "time": "18:00:00",
+                 *         "city": "London"
+                 *       },
+                 *       "style": "celestial",
+                 *       "language": "en"
+                 *     }
+                 */
+                "application/json": components["schemas"]["StellaforgePoster"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "url": "https://api.astroway.info/reports/abc-stellaforge.pdf",
+                     *         "storage_key": "reports/abc-stellaforge.pdf",
+                     *         "byte_length": 120000,
+                     *         "page_count": 1,
+                     *         "duration_ms": 3200,
+                     *         "expires_at": "2026-06-26T07:00:00Z"
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            url?: string | null;
+                            storage_key?: string | null;
+                            byte_length?: number | null;
+                            page_count?: number | null;
+                            duration_ms?: number | null;
+                            expires_at?: string | null;
                         };
                     };
                 };
@@ -64669,12 +66582,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            url?: string;
-                            storage_key?: string;
-                            byte_length?: number;
-                            page_count?: number;
-                            duration_ms?: number;
-                            expires_at?: string;
+                            url?: string | null;
+                            storage_key?: string | null;
+                            byte_length?: number | null;
+                            page_count?: number | null;
+                            duration_ms?: number | null;
+                            expires_at?: string | null;
                         };
                     };
                 };
@@ -64771,12 +66684,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            url?: string;
-                            storage_key?: string;
-                            byte_length?: number;
-                            page_count?: number;
-                            duration_ms?: number;
-                            expires_at?: string;
+                            url?: string | null;
+                            storage_key?: string | null;
+                            byte_length?: number | null;
+                            page_count?: number | null;
+                            duration_ms?: number | null;
+                            expires_at?: string | null;
                         };
                     };
                 };
@@ -64873,12 +66786,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            url?: string;
-                            storage_key?: string;
-                            byte_length?: number;
-                            page_count?: number;
-                            duration_ms?: number;
-                            expires_at?: string;
+                            url?: string | null;
+                            storage_key?: string | null;
+                            byte_length?: number | null;
+                            page_count?: number | null;
+                            duration_ms?: number | null;
+                            expires_at?: string | null;
                         };
                     };
                 };
@@ -64975,12 +66888,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            url?: string;
-                            storage_key?: string;
-                            byte_length?: number;
-                            page_count?: number;
-                            duration_ms?: number;
-                            expires_at?: string;
+                            url?: string | null;
+                            storage_key?: string | null;
+                            byte_length?: number | null;
+                            page_count?: number | null;
+                            duration_ms?: number | null;
+                            expires_at?: string | null;
                         };
                     };
                 };
@@ -65077,12 +66990,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            url?: string;
-                            storage_key?: string;
-                            byte_length?: number;
-                            page_count?: number;
-                            duration_ms?: number;
-                            expires_at?: string;
+                            url?: string | null;
+                            storage_key?: string | null;
+                            byte_length?: number | null;
+                            page_count?: number | null;
+                            duration_ms?: number | null;
+                            expires_at?: string | null;
                         };
                     };
                 };
@@ -65179,12 +67092,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            url?: string;
-                            storage_key?: string;
-                            byte_length?: number;
-                            page_count?: number;
-                            duration_ms?: number;
-                            expires_at?: string;
+                            url?: string | null;
+                            storage_key?: string | null;
+                            byte_length?: number | null;
+                            page_count?: number | null;
+                            duration_ms?: number | null;
+                            expires_at?: string | null;
                         };
                     };
                 };
@@ -65287,12 +67200,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            url?: string;
-                            storage_key?: string;
-                            byte_length?: number;
-                            page_count?: number;
-                            duration_ms?: number;
-                            expires_at?: string;
+                            url?: string | null;
+                            storage_key?: string | null;
+                            byte_length?: number | null;
+                            page_count?: number | null;
+                            duration_ms?: number | null;
+                            expires_at?: string | null;
                         };
                     };
                 };
@@ -65382,19 +67295,19 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            items?: {
-                                id?: number;
-                                report_type?: string;
-                                storage_key?: string;
-                                url?: string;
-                                byte_length?: number;
-                                page_count?: number;
-                                language?: string;
-                                created_at?: string;
-                                expires_at?: string;
-                                expired?: boolean;
-                            }[];
-                            count?: number;
+                            items?: ({
+                                id?: number | null;
+                                report_type?: string | null;
+                                storage_key?: string | null;
+                                url?: string | null;
+                                byte_length?: number | null;
+                                page_count?: number | null;
+                                language?: string | null;
+                                created_at?: string | null;
+                                expires_at?: string | null;
+                                expired?: boolean | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };
@@ -65452,6 +67365,20 @@ export interface operations {
         };
         requestBody: {
             content: {
+                /**
+                 * @example {
+                 *       "chart": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
+                 *       },
+                 *       "language": "uk",
+                 *       "tone": "warm",
+                 *       "length": "medium"
+                 *     }
+                 */
                 "application/json": components["schemas"]["Natal"];
             };
         };
@@ -65484,17 +67411,17 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            narrative?: string;
-                            disclaimer?: string;
-                            model?: string;
-                            language?: string;
-                            tone?: string;
-                            length?: string;
+                            narrative?: string | null;
+                            disclaimer?: string | null;
+                            model?: string | null;
+                            language?: string | null;
+                            tone?: string | null;
+                            length?: string | null;
                             tokens?: {
-                                input?: number;
-                                output?: number;
-                            };
-                            duration_ms?: number;
+                                input?: number | null;
+                                output?: number | null;
+                            } | null;
+                            duration_ms?: number | null;
                         };
                     };
                 };
@@ -65552,6 +67479,21 @@ export interface operations {
         };
         requestBody: {
             content: {
+                /**
+                 * @example {
+                 *       "chart": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
+                 *       },
+                 *       "transitDate": "2026-06-15",
+                 *       "transitTime": "12:00",
+                 *       "language": "en",
+                 *       "length": "medium"
+                 *     }
+                 */
                 "application/json": components["schemas"]["Transit"];
             };
         };
@@ -65580,13 +67522,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            narrative?: string;
-                            disclaimer?: string;
-                            model?: string;
+                            narrative?: string | null;
+                            disclaimer?: string | null;
+                            model?: string | null;
                             tokens?: {
-                                input?: number;
-                                output?: number;
-                            };
+                                input?: number | null;
+                                output?: number | null;
+                            } | null;
                         };
                     };
                 };
@@ -65644,6 +67586,25 @@ export interface operations {
         };
         requestBody: {
             content: {
+                /**
+                 * @example {
+                 *       "chart1": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
+                 *       },
+                 *       "chart2": {
+                 *         "date": "1985-11-03",
+                 *         "time": "08:15:00",
+                 *         "timezoneOffset": 2,
+                 *         "latitude": 48.46,
+                 *         "longitude": 35.04
+                 *       },
+                 *       "language": "uk"
+                 *     }
+                 */
                 "application/json": components["schemas"]["Synastry"];
             };
         };
@@ -65672,13 +67633,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            narrative?: string;
-                            disclaimer?: string;
-                            model?: string;
+                            narrative?: string | null;
+                            disclaimer?: string | null;
+                            model?: string | null;
                             tokens?: {
-                                input?: number;
-                                output?: number;
-                            };
+                                input?: number | null;
+                                output?: number | null;
+                            } | null;
                         };
                     };
                 };
@@ -65736,6 +67697,20 @@ export interface operations {
         };
         requestBody: {
             content: {
+                /**
+                 * @example {
+                 *       "chart": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
+                 *       },
+                 *       "year": 2027,
+                 *       "language": "uk",
+                 *       "length": "long"
+                 *     }
+                 */
                 "application/json": components["schemas"]["YearAhead"];
             };
         };
@@ -65764,13 +67739,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            narrative?: string;
-                            disclaimer?: string;
-                            model?: string;
+                            narrative?: string | null;
+                            disclaimer?: string | null;
+                            model?: string | null;
                             tokens?: {
-                                input?: number;
-                                output?: number;
-                            };
+                                input?: number | null;
+                                output?: number | null;
+                            } | null;
                         };
                     };
                 };
@@ -65828,6 +67803,21 @@ export interface operations {
         };
         requestBody: {
             content: {
+                /**
+                 * @example {
+                 *       "chart": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
+                 *       },
+                 *       "year": 2026,
+                 *       "month": 6,
+                 *       "language": "en",
+                 *       "length": "medium"
+                 *     }
+                 */
                 "application/json": components["schemas"]["Monthly"];
             };
         };
@@ -65856,13 +67846,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            narrative?: string;
-                            disclaimer?: string;
-                            model?: string;
+                            narrative?: string | null;
+                            disclaimer?: string | null;
+                            model?: string | null;
                             tokens?: {
-                                input?: number;
-                                output?: number;
-                            };
+                                input?: number | null;
+                                output?: number | null;
+                            } | null;
                         };
                     };
                 };
@@ -65953,12 +67943,12 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            id?: number;
-                            event?: string;
-                            url?: string;
-                            signing_secret?: string;
-                            active?: boolean;
-                            created_at?: string;
+                            id?: number | null;
+                            event?: string | null;
+                            url?: string | null;
+                            signing_secret?: string | null;
+                            active?: boolean | null;
+                            created_at?: string | null;
                         };
                     };
                 };
@@ -66045,16 +68035,16 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            subscriptions?: {
-                                id?: number;
-                                event?: string;
-                                url?: string;
-                                active?: boolean;
-                                failure_count?: number;
-                                last_delivery_at?: Record<string, never>;
-                                last_status_code?: Record<string, never>;
-                                created_at?: string;
-                            }[];
+                            subscriptions?: ({
+                                id?: number | null;
+                                event?: string | null;
+                                url?: string | null;
+                                active?: boolean | null;
+                                failure_count?: number | null;
+                                last_delivery_at?: Record<string, never> | null;
+                                last_status_code?: Record<string, never> | null;
+                                created_at?: string | null;
+                            } | null)[] | null;
                         };
                     };
                 };
@@ -66137,14 +68127,14 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            id?: number;
-                            event?: string;
-                            url?: string;
-                            active?: boolean;
-                            failure_count?: number;
-                            last_delivery_at?: string;
-                            last_status_code?: number;
-                            created_at?: string;
+                            id?: number | null;
+                            event?: string | null;
+                            url?: string | null;
+                            active?: boolean | null;
+                            failure_count?: number | null;
+                            last_delivery_at?: string | null;
+                            last_status_code?: number | null;
+                            created_at?: string | null;
                         };
                     };
                 };
@@ -66221,8 +68211,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            id?: number;
-                            deleted?: boolean;
+                            id?: number | null;
+                            deleted?: boolean | null;
                         };
                     };
                 };
@@ -66301,10 +68291,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            id?: number;
-                            delivered?: boolean;
-                            status_code?: number;
-                            duration_ms?: number;
+                            id?: number | null;
+                            delivered?: boolean | null;
+                            status_code?: number | null;
+                            duration_ms?: number | null;
                         };
                     };
                 };
@@ -66393,11 +68383,11 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            id?: number;
-                            event?: string;
-                            url?: string;
-                            signing_secret?: string;
-                            active?: boolean;
+                            id?: number | null;
+                            event?: string | null;
+                            url?: string | null;
+                            signing_secret?: string | null;
+                            active?: boolean | null;
                         };
                     };
                 };
@@ -66483,8 +68473,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            id?: number;
-                            event?: string;
+                            id?: number | null;
+                            event?: string | null;
                         };
                     };
                 };
@@ -66570,8 +68560,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            id?: number;
-                            event?: string;
+                            id?: number | null;
+                            event?: string | null;
                         };
                     };
                 };
@@ -66657,8 +68647,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            id?: number;
-                            event?: string;
+                            id?: number | null;
+                            event?: string | null;
                         };
                     };
                 };
@@ -66744,8 +68734,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            id?: number;
-                            event?: string;
+                            id?: number | null;
+                            event?: string | null;
                         };
                     };
                 };
@@ -66831,8 +68821,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            id?: number;
-                            event?: string;
+                            id?: number | null;
+                            event?: string | null;
                         };
                     };
                 };
@@ -66918,8 +68908,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            id?: number;
-                            event?: string;
+                            id?: number | null;
+                            event?: string | null;
                         };
                     };
                 };
@@ -67005,8 +68995,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            id?: number;
-                            event?: string;
+                            id?: number | null;
+                            event?: string | null;
                         };
                     };
                 };
@@ -67092,8 +69082,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            id?: number;
-                            event?: string;
+                            id?: number | null;
+                            event?: string | null;
                         };
                     };
                 };
@@ -67179,8 +69169,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            id?: number;
-                            event?: string;
+                            id?: number | null;
+                            event?: string | null;
                         };
                     };
                 };
@@ -67242,7 +69232,11 @@ export interface operations {
                  * @example {
                  *       "message": "What does my Saturn placement mean?",
                  *       "chart": {
-                 *         "...": "..."
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
                  *       },
                  *       "language": "en"
                  *     }
@@ -67270,8 +69264,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            reply?: string;
-                            model?: string;
+                            reply?: string | null;
+                            model?: string | null;
                         };
                     };
                 };
@@ -67333,7 +69327,7 @@ export interface operations {
                  * @example {
                  *       "planet1": "Saturn",
                  *       "planet2": "Moon",
-                 *       "aspect": "square"
+                 *       "aspectType": "Square"
                  *     }
                  */
                 "application/json": components["schemas"]["ExplainAspect"];
@@ -67358,7 +69352,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            explanation?: string;
+                            explanation?: string | null;
                         };
                     };
                 };
@@ -67418,9 +69412,17 @@ export interface operations {
             content: {
                 /**
                  * @example {
+                 *       "chart": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
+                 *       },
+                 *       "transitDate": "2026-06-15",
                  *       "transitPlanet": "Saturn",
                  *       "natalPlanet": "Sun",
-                 *       "aspect": "conjunction"
+                 *       "aspectType": "Conjunction"
                  *     }
                  */
                 "application/json": components["schemas"]["ExplainTransit"];
@@ -67445,7 +69447,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            explanation?: string;
+                            explanation?: string | null;
                         };
                     };
                 };
@@ -67505,12 +69507,21 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "chartA": {
-                 *         "...": "..."
+                 *       "chart1": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
                  *       },
-                 *       "chartB": {
-                 *         "...": "..."
-                 *       }
+                 *       "chart2": {
+                 *         "date": "1985-11-03",
+                 *         "time": "08:15:00",
+                 *         "timezoneOffset": 2,
+                 *         "latitude": 48.46,
+                 *         "longitude": 35.04
+                 *       },
+                 *       "question": "How compatible are we long-term?"
                  *     }
                  */
                 "application/json": components["schemas"]["ComparisonCoach"];
@@ -67535,7 +69546,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            coaching?: string;
+                            coaching?: string | null;
                         };
                     };
                 };
@@ -67603,7 +69614,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            tools?: unknown[];
+                            tools?: unknown[] | null;
                         };
                     };
                 };
@@ -67663,9 +69674,13 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "message": "...",
+                 *       "message": "What does my Saturn placement mean?",
                  *       "chart": {
-                 *         "...": "..."
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
                  *       }
                  *     }
                  */
@@ -67739,6 +69754,26 @@ export interface operations {
         };
         requestBody: {
             content: {
+                /**
+                 * @example {
+                 *       "charts": [
+                 *         {
+                 *           "date": "1990-05-15",
+                 *           "time": "14:30:00",
+                 *           "timezoneOffset": 3,
+                 *           "latitude": 50.45,
+                 *           "longitude": 30.52
+                 *         },
+                 *         {
+                 *           "date": "1990-05-15",
+                 *           "time": "14:30:00",
+                 *           "timezoneOffset": 3,
+                 *           "latitude": 50.45,
+                 *           "longitude": 30.52
+                 *         }
+                 *       ]
+                 *     }
+                 */
                 "application/json": components["schemas"]["MultiChart"];
             };
         };
@@ -67753,7 +69788,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            summaries?: unknown[];
+                            summaries?: unknown[] | null;
                         };
                     };
                 };
@@ -67811,6 +69846,26 @@ export interface operations {
         };
         requestBody: {
             content: {
+                /**
+                 * @example {
+                 *       "members": [
+                 *         {
+                 *           "date": "1990-05-15",
+                 *           "time": "14:30:00",
+                 *           "timezoneOffset": 3,
+                 *           "latitude": 50.45,
+                 *           "longitude": 30.52
+                 *         },
+                 *         {
+                 *           "date": "1990-05-15",
+                 *           "time": "14:30:00",
+                 *           "timezoneOffset": 3,
+                 *           "latitude": 50.45,
+                 *           "longitude": 30.52
+                 *         }
+                 *       ]
+                 *     }
+                 */
                 "application/json": components["schemas"]["Family"];
             };
         };
@@ -67825,7 +69880,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            cycles?: unknown[];
+                            cycles?: unknown[] | null;
                         };
                     };
                 };
@@ -67883,6 +69938,24 @@ export interface operations {
         };
         requestBody: {
             content: {
+                /**
+                 * @example {
+                 *       "parent": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
+                 *       },
+                 *       "child": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
+                 *       }
+                 *     }
+                 */
                 "application/json": components["schemas"]["ParentChild"];
             };
         };
@@ -67897,7 +69970,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            analysis?: unknown[];
+                            analysis?: unknown[] | null;
                         };
                     };
                 };
@@ -67955,6 +70028,31 @@ export interface operations {
         };
         requestBody: {
             content: {
+                /**
+                 * @example {
+                 *       "grandparent": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
+                 *       },
+                 *       "parent": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
+                 *       },
+                 *       "child": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
+                 *       }
+                 *     }
+                 */
                 "application/json": components["schemas"]["Genogram"];
             };
         };
@@ -67969,7 +70067,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            genogram?: Record<string, never>;
+                            genogram?: Record<string, never> | null;
                         };
                     };
                 };
@@ -68027,6 +70125,24 @@ export interface operations {
         };
         requestBody: {
             content: {
+                /**
+                 * @example {
+                 *       "sibling1": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
+                 *       },
+                 *       "sibling2": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
+                 *       }
+                 *     }
+                 */
                 "application/json": components["schemas"]["Siblings"];
             };
         };
@@ -68041,7 +70157,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            dynamics?: unknown[];
+                            dynamics?: unknown[] | null;
                         };
                     };
                 };
@@ -68099,6 +70215,26 @@ export interface operations {
         };
         requestBody: {
             content: {
+                /**
+                 * @example {
+                 *       "members": [
+                 *         {
+                 *           "date": "1990-05-15",
+                 *           "time": "14:30:00",
+                 *           "timezoneOffset": 3,
+                 *           "latitude": 50.45,
+                 *           "longitude": 30.52
+                 *         },
+                 *         {
+                 *           "date": "1990-05-15",
+                 *           "time": "14:30:00",
+                 *           "timezoneOffset": 3,
+                 *           "latitude": 50.45,
+                 *           "longitude": 30.52
+                 *         }
+                 *       ]
+                 *     }
+                 */
                 "application/json": components["schemas"]["Family"];
             };
         };
@@ -68113,7 +70249,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            patterns?: unknown[];
+                            patterns?: unknown[] | null;
                         };
                     };
                 };
@@ -68173,7 +70309,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["Zr"];
@@ -68190,8 +70330,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            L1?: unknown[];
-                            currentPeriod?: Record<string, never>;
+                            L1?: unknown[] | null;
+                            currentPeriod?: Record<string, never> | null;
                         };
                     };
                 };
@@ -68251,7 +70391,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["Zr"];
@@ -68268,7 +70412,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            L1?: unknown[];
+                            L1?: unknown[] | null;
                         };
                     };
                 };
@@ -68328,7 +70472,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["Zr"];
@@ -68345,7 +70493,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            events?: unknown[];
+                            events?: unknown[] | null;
                         };
                     };
                 };
@@ -68405,7 +70553,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["Zr"];
@@ -68422,7 +70574,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            peaks?: unknown[];
+                            peaks?: unknown[] | null;
                         };
                     };
                 };
@@ -68482,7 +70634,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -68499,7 +70655,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lots?: unknown[];
+                            lots?: unknown[] | null;
                         };
                     };
                 };
@@ -68559,8 +70715,12 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "...",
-                 *       "age": 35
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52,
+                 *       "targetAge": 35
                  *     }
                  */
                 "application/json": components["schemas"]["Profections"];
@@ -68577,7 +70737,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            profection?: Record<string, never>;
+                            profection?: Record<string, never> | null;
                         };
                     };
                 };
@@ -68637,8 +70797,12 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "...",
-                 *       "date": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52,
+                 *       "targetAge": 35
                  *     }
                  */
                 "application/json": components["schemas"]["Profections"];
@@ -68655,7 +70819,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            stack?: Record<string, never>;
+                            stack?: Record<string, never> | null;
                         };
                     };
                 };
@@ -68715,7 +70879,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -68732,7 +70900,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            joys?: unknown[];
+                            joys?: unknown[] | null;
                         };
                     };
                 };
@@ -68792,7 +70960,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -68809,7 +70981,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            triplicities?: unknown[];
+                            triplicities?: unknown[] | null;
                         };
                     };
                 };
@@ -68869,7 +71041,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -68886,7 +71062,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            conditions?: unknown[];
+                            conditions?: unknown[] | null;
                         };
                     };
                 };
@@ -68946,7 +71122,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -68963,7 +71143,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lots?: unknown[];
+                            lots?: unknown[] | null;
                         };
                     };
                 };
@@ -69023,7 +71203,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["Decennials"];
@@ -69040,7 +71224,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            decennials?: unknown[];
+                            decennials?: unknown[] | null;
                         };
                     };
                 };
@@ -69100,7 +71284,12 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52,
+                 *       "targetAge": 35
                  *     }
                  */
                 "application/json": components["schemas"]["Perfections"];
@@ -69117,7 +71306,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            perfections?: unknown[];
+                            perfections?: unknown[] | null;
                         };
                     };
                 };
@@ -69177,7 +71366,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -69202,7 +71395,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            score?: number;
+                            score?: number | null;
                         };
                     };
                 };
@@ -69262,7 +71455,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -69279,7 +71476,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            criticals?: unknown[];
+                            criticals?: unknown[] | null;
                         };
                     };
                 };
@@ -69339,7 +71536,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -69356,7 +71557,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            trines?: unknown[];
+                            trines?: unknown[] | null;
                         };
                     };
                 };
@@ -69416,7 +71617,12 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52,
+                 *       "targetDate": "2026-06-15"
                  *     }
                  */
                 "application/json": components["schemas"]["QuarterLord"];
@@ -69441,7 +71647,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lord?: string;
+                            lord?: string | null;
                         };
                     };
                 };
@@ -69501,7 +71707,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -69518,7 +71728,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            decans?: unknown[];
+                            decans?: unknown[] | null;
                         };
                     };
                 };
@@ -69578,7 +71788,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -69595,7 +71809,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            bounds?: unknown[];
+                            bounds?: unknown[] | null;
                         };
                     };
                 };
@@ -69655,7 +71869,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -69672,7 +71890,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            hyleg?: Record<string, never>;
+                            hyleg?: Record<string, never> | null;
                         };
                     };
                 };
@@ -69732,7 +71950,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -69749,7 +71971,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            axis?: Record<string, never>;
+                            axis?: Record<string, never> | null;
                         };
                     };
                 };
@@ -69809,7 +72031,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -69826,7 +72052,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            eros?: Record<string, never>;
+                            eros?: Record<string, never> | null;
                         };
                     };
                 };
@@ -69886,7 +72112,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -69903,7 +72133,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            temples?: unknown[];
+                            temples?: unknown[] | null;
                         };
                     };
                 };
@@ -69963,7 +72193,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -69980,7 +72214,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            dodecatemoria?: unknown[];
+                            dodecatemoria?: unknown[] | null;
                         };
                     };
                 };
@@ -70040,7 +72274,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -70057,7 +72295,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            duodecima?: unknown[];
+                            duodecima?: unknown[] | null;
                         };
                     };
                 };
@@ -70117,7 +72355,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -70134,7 +72376,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            antiscia?: unknown[];
+                            antiscia?: unknown[] | null;
                         };
                     };
                 };
@@ -70194,7 +72436,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -70211,7 +72457,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            contraAntiscia?: unknown[];
+                            contraAntiscia?: unknown[] | null;
                         };
                     };
                 };
@@ -70271,7 +72517,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -70288,7 +72538,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            decans?: unknown[];
+                            decans?: unknown[] | null;
                         };
                     };
                 };
@@ -70348,7 +72598,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -70365,7 +72619,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            quality?: Record<string, never>;
+                            quality?: Record<string, never> | null;
                         };
                     };
                 };
@@ -70425,7 +72679,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -70442,7 +72700,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sphaera?: unknown[];
+                            sphaera?: unknown[] | null;
                         };
                     };
                 };
@@ -70502,7 +72760,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -70519,7 +72781,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            elements?: unknown[];
+                            elements?: unknown[] | null;
                         };
                     };
                 };
@@ -70579,7 +72841,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -70596,7 +72862,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            analysis?: Record<string, never>;
+                            analysis?: Record<string, never> | null;
                         };
                     };
                 };
@@ -70656,7 +72922,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -70673,7 +72943,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            levels?: unknown[];
+                            levels?: unknown[] | null;
                         };
                     };
                 };
@@ -70733,7 +73003,12 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52,
+                 *       "targetAge": 35
                  *     }
                  */
                 "application/json": components["schemas"]["LordOfPrediction"];
@@ -70758,7 +73033,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            lord?: string;
+                            lord?: string | null;
                         };
                     };
                 };
@@ -70818,7 +73093,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -70835,7 +73114,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            phases?: unknown[];
+                            phases?: unknown[] | null;
                         };
                     };
                 };
@@ -70895,7 +73174,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -70912,8 +73195,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            morningStars?: unknown[];
-                            eveningStars?: unknown[];
+                            morningStars?: unknown[] | null;
+                            eveningStars?: unknown[] | null;
                         };
                     };
                 };
@@ -70973,7 +73256,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -70998,7 +73285,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sect?: string;
+                            sect?: string | null;
                         };
                     };
                 };
@@ -71058,7 +73345,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -71075,7 +73366,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            houses?: unknown[];
+                            houses?: unknown[] | null;
                         };
                     };
                 };
@@ -71135,7 +73426,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -71152,7 +73447,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            typology?: unknown[];
+                            typology?: unknown[] | null;
                         };
                     };
                 };
@@ -71212,7 +73507,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -71229,7 +73528,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            moirai?: unknown[];
+                            moirai?: unknown[] | null;
                         };
                     };
                 };
@@ -71289,7 +73588,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -71306,7 +73609,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            archetypes?: unknown[];
+                            archetypes?: unknown[] | null;
                         };
                     };
                 };
@@ -71366,7 +73669,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -71383,7 +73690,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            imagos?: Record<string, never>;
+                            imagos?: Record<string, never> | null;
                         };
                     };
                 };
@@ -71443,7 +73750,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -71460,7 +73771,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            shadow?: Record<string, never>;
+                            shadow?: Record<string, never> | null;
                         };
                     };
                 };
@@ -71520,7 +73831,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -71537,7 +73852,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            myth?: Record<string, never>;
+                            myth?: Record<string, never> | null;
                         };
                     };
                 };
@@ -71597,7 +73912,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -71614,7 +73933,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            path?: unknown[];
+                            path?: unknown[] | null;
                         };
                     };
                 };
@@ -71674,7 +73993,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -71691,7 +74014,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            elements?: Record<string, never>;
+                            elements?: Record<string, never> | null;
                         };
                     };
                 };
@@ -71751,7 +74074,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -71768,7 +74095,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            integration?: unknown[];
+                            integration?: unknown[] | null;
                         };
                     };
                 };
@@ -71828,7 +74155,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -71845,7 +74176,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            cycle?: unknown[];
+                            cycle?: unknown[] | null;
                         };
                     };
                 };
@@ -71905,7 +74236,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -71922,7 +74257,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            trauma?: unknown[];
+                            trauma?: unknown[] | null;
                         };
                     };
                 };
@@ -71982,7 +74317,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -71999,7 +74338,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            map?: unknown[];
+                            map?: unknown[] | null;
                         };
                     };
                 };
@@ -72059,7 +74398,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -72084,7 +74427,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            phase?: string;
+                            phase?: string | null;
                         };
                     };
                 };
@@ -72144,7 +74487,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -72161,7 +74508,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            degrees?: unknown[];
+                            degrees?: unknown[] | null;
                         };
                     };
                 };
@@ -72221,7 +74568,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -72238,7 +74589,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            cycles?: unknown[];
+                            cycles?: unknown[] | null;
                         };
                     };
                 };
@@ -72298,7 +74649,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -72323,7 +74678,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            keynote?: string;
+                            keynote?: string | null;
                         };
                     };
                 };
@@ -72383,7 +74738,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -72400,7 +74759,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            events?: unknown[];
+                            events?: unknown[] | null;
                         };
                     };
                 };
@@ -72460,7 +74819,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -72477,7 +74840,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            condition?: Record<string, never>;
+                            condition?: Record<string, never> | null;
                         };
                     };
                 };
@@ -72537,7 +74900,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -72554,7 +74921,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            skipped?: unknown[];
+                            skipped?: unknown[] | null;
                         };
                     };
                 };
@@ -72614,7 +74981,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -72631,7 +75002,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            axis?: Record<string, never>;
+                            axis?: Record<string, never> | null;
                         };
                     };
                 };
@@ -72691,7 +75062,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -72716,7 +75091,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            type?: string;
+                            type?: string | null;
                         };
                     };
                 };
@@ -72776,7 +75151,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -72793,7 +75172,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            yesterday?: Record<string, never>;
+                            yesterday?: Record<string, never> | null;
                         };
                     };
                 };
@@ -72853,7 +75232,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "...",
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52,
                  *       "withTnp": true
                  *     }
                  */
@@ -72871,7 +75254,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            points?: unknown[];
+                            points?: unknown[] | null;
                         };
                     };
                 };
@@ -72931,7 +75314,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "...",
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52,
                  *       "orb": 1.5
                  *     }
                  */
@@ -72949,7 +75336,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            pictures?: unknown[];
+                            pictures?: unknown[] | null;
                         };
                     };
                 };
@@ -73009,7 +75396,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartWithTnp"];
@@ -73026,7 +75417,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            personalPoints?: unknown[];
+                            personalPoints?: unknown[] | null;
                         };
                     };
                 };
@@ -73086,7 +75477,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartWithTnp"];
@@ -73103,7 +75498,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            aspects?: unknown[];
+                            aspects?: unknown[] | null;
                         };
                     };
                 };
@@ -73163,8 +75558,12 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "...",
-                 *       "targetDate": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52,
+                 *       "targetDate": "2026-06-15"
                  *     }
                  */
                 "application/json": components["schemas"]["NatalTargetTnp"];
@@ -73181,7 +75580,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            hits?: unknown[];
+                            hits?: unknown[] | null;
                         };
                     };
                 };
@@ -73241,7 +75640,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -73258,7 +75661,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            tnps?: unknown[];
+                            tnps?: unknown[] | null;
                         };
                     };
                 };
@@ -73318,7 +75721,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartWithTnp"];
@@ -73335,8 +75742,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            points?: unknown[];
-                            topPictures?: unknown[];
+                            points?: unknown[] | null;
+                            topPictures?: unknown[] | null;
                         };
                     };
                 };
@@ -73396,7 +75803,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartWithTnp"];
@@ -73413,7 +75824,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            pictures?: unknown[];
+                            pictures?: unknown[] | null;
                         };
                     };
                 };
@@ -73473,7 +75884,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartWithTnp"];
@@ -73490,7 +75905,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            branches?: unknown[];
+                            branches?: unknown[] | null;
                         };
                     };
                 };
@@ -73550,7 +75965,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "..."
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52
                  *     }
                  */
                 "application/json": components["schemas"]["ChartWithTnp"];
@@ -73567,7 +75986,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            tree?: Record<string, never>;
+                            tree?: Record<string, never> | null;
                         };
                     };
                 };
@@ -73640,8 +76059,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            planets?: unknown[];
-                            tickSeconds?: number;
+                            planets?: unknown[] | null;
+                            tickSeconds?: number | null;
                         };
                     };
                 };
@@ -73701,7 +76120,11 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "...chart": "...",
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 3,
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52,
                  *       "hours": 24
                  *     }
                  */
@@ -73719,7 +76142,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            alerts?: unknown[];
+                            alerts?: unknown[] | null;
                         };
                     };
                 };
@@ -73792,7 +76215,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            eclipses?: unknown[];
+                            eclipses?: unknown[] | null;
                         };
                     };
                 };
@@ -73865,7 +76288,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            planets?: unknown[];
+                            planets?: unknown[] | null;
                         };
                     };
                 };
@@ -73938,7 +76361,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            status?: Record<string, never>;
+                            status?: Record<string, never> | null;
                         };
                     };
                 };
@@ -74020,8 +76443,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            phase?: string;
-                            illuminationPct?: number;
+                            phase?: string | null;
+                            illuminationPct?: number | null;
                         };
                     };
                 };
@@ -74098,7 +76521,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            ingresses?: unknown[];
+                            ingresses?: unknown[] | null;
                         };
                     };
                 };
@@ -74171,8 +76594,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            nextSolar?: Record<string, never>;
-                            nextLunar?: Record<string, never>;
+                            nextSolar?: Record<string, never> | null;
+                            nextLunar?: Record<string, never> | null;
                         };
                     };
                 };
@@ -74251,8 +76674,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            current?: Record<string, never>;
-                            next24Hours?: unknown[];
+                            current?: Record<string, never> | null;
+                            next24Hours?: unknown[] | null;
                         };
                     };
                 };
@@ -74331,8 +76754,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            today?: Record<string, never>;
-                            tomorrow?: Record<string, never>;
+                            today?: Record<string, never> | null;
+                            tomorrow?: Record<string, never> | null;
                         };
                     };
                 };
@@ -75314,6 +77737,18 @@ export interface operations {
         };
         requestBody: {
             content: {
+                /**
+                 * @example {
+                 *       "tool": "chart",
+                 *       "args": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
+                 *       }
+                 *     }
+                 */
                 "application/json": components["schemas"]["ToolCall"];
             };
         };
@@ -75386,7 +77821,7 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "question": "...",
+                 *       "question": "What does my Saturn placement mean for my career?",
                  *       "agents": [
                  *         "classical",
                  *         "modern"
@@ -75407,8 +77842,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            individual?: unknown[];
-                            synthesis?: string;
+                            individual?: unknown[] | null;
+                            synthesis?: string | null;
                         };
                     };
                 };
@@ -75468,9 +77903,9 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "topic": "...",
-                 *       "agentA": "...",
-                 *       "agentB": "...",
+                 *       "topic": "Is the Saturn return a crisis or a rite of passage?",
+                 *       "agentA": "classical",
+                 *       "agentB": "modern",
                  *       "rounds": 2
                  *     }
                  */
@@ -75488,7 +77923,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            transcript?: unknown[];
+                            transcript?: unknown[] | null;
                         };
                     };
                 };
@@ -75546,6 +77981,18 @@ export interface operations {
         };
         requestBody: {
             content: {
+                /**
+                 * @example {
+                 *       "query": "saturn return meaning",
+                 *       "chart": {
+                 *         "date": "1990-05-15",
+                 *         "time": "14:30:00",
+                 *         "timezoneOffset": 3,
+                 *         "latitude": 50.45,
+                 *         "longitude": 30.52
+                 *       }
+                 *     }
+                 */
                 "application/json": components["schemas"]["Rag"];
             };
         };
@@ -75560,7 +78007,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            results?: unknown[];
+                            results?: unknown[] | null;
                         };
                     };
                 };
@@ -75628,7 +78075,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            personas?: unknown[];
+                            personas?: unknown[] | null;
                         };
                     };
                 };
@@ -75701,7 +78148,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            figure?: Record<string, never>;
+                            figure?: Record<string, never> | null;
                         };
                     };
                 };
@@ -75774,7 +78221,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            figure?: Record<string, never>;
+                            figure?: Record<string, never> | null;
                         };
                     };
                 };
@@ -75847,7 +78294,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            figure?: Record<string, never>;
+                            figure?: Record<string, never> | null;
                         };
                     };
                 };
@@ -75920,7 +78367,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            figure?: Record<string, never>;
+                            figure?: Record<string, never> | null;
                         };
                     };
                 };
@@ -75993,7 +78440,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            figure?: Record<string, never>;
+                            figure?: Record<string, never> | null;
                         };
                     };
                 };
@@ -76066,7 +78513,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            figure?: Record<string, never>;
+                            figure?: Record<string, never> | null;
                         };
                     };
                 };
@@ -76139,7 +78586,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            figure?: Record<string, never>;
+                            figure?: Record<string, never> | null;
                         };
                     };
                 };
@@ -76212,7 +78659,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            figure?: Record<string, never>;
+                            figure?: Record<string, never> | null;
                         };
                     };
                 };
@@ -76285,7 +78732,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            figure?: Record<string, never>;
+                            figure?: Record<string, never> | null;
                         };
                     };
                 };
@@ -76358,7 +78805,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            figure?: Record<string, never>;
+                            figure?: Record<string, never> | null;
                         };
                     };
                 };
@@ -76431,7 +78878,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            figure?: Record<string, never>;
+                            figure?: Record<string, never> | null;
                         };
                     };
                 };
@@ -76504,7 +78951,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            figure?: Record<string, never>;
+                            figure?: Record<string, never> | null;
                         };
                     };
                 };
@@ -76577,7 +79024,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            figure?: Record<string, never>;
+                            figure?: Record<string, never> | null;
                         };
                     };
                 };
@@ -76650,7 +79097,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            figure?: Record<string, never>;
+                            figure?: Record<string, never> | null;
                         };
                     };
                 };
@@ -76723,7 +79170,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            figure?: Record<string, never>;
+                            figure?: Record<string, never> | null;
                         };
                     };
                 };
@@ -76796,7 +79243,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            figure?: Record<string, never>;
+                            figure?: Record<string, never> | null;
                         };
                     };
                 };
@@ -76873,7 +79320,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            runes?: unknown[];
+                            runes?: unknown[] | null;
                         };
                     };
                 };
@@ -76950,7 +79397,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            runes?: unknown[];
+                            runes?: unknown[] | null;
                         };
                     };
                 };
@@ -77027,7 +79474,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            runes?: unknown[];
+                            runes?: unknown[] | null;
                         };
                     };
                 };
@@ -77104,7 +79551,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            affinityRune?: Record<string, never>;
+                            affinityRune?: Record<string, never> | null;
                         };
                     };
                 };
@@ -77177,7 +79624,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            runes?: unknown[];
+                            runes?: unknown[] | null;
                         };
                     };
                 };
@@ -77250,7 +79697,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            line?: Record<string, never>;
+                            line?: Record<string, never> | null;
                         };
                     };
                 };
@@ -77323,7 +79770,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            line?: Record<string, never>;
+                            line?: Record<string, never> | null;
                         };
                     };
                 };
@@ -77396,7 +79843,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            line?: Record<string, never>;
+                            line?: Record<string, never> | null;
                         };
                     };
                 };
@@ -77469,7 +79916,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            line?: Record<string, never>;
+                            line?: Record<string, never> | null;
                         };
                     };
                 };
@@ -77542,7 +79989,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            line?: Record<string, never>;
+                            line?: Record<string, never> | null;
                         };
                     };
                 };
@@ -77610,7 +80057,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            hexagram?: Record<string, never>;
+                            hexagram?: Record<string, never> | null;
                         };
                     };
                 };
@@ -77687,7 +80134,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            hexagram?: Record<string, never>;
+                            hexagram?: Record<string, never> | null;
                         };
                     };
                 };
@@ -77764,7 +80211,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            hexagram?: Record<string, never>;
+                            hexagram?: Record<string, never> | null;
                         };
                     };
                 };
@@ -77841,8 +80288,8 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            primary?: Record<string, never>;
-                            transformedHexagram?: Record<string, never>;
+                            primary?: Record<string, never> | null;
+                            transformedHexagram?: Record<string, never> | null;
                         };
                     };
                 };
@@ -77919,7 +80366,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            hexagram?: Record<string, never>;
+                            hexagram?: Record<string, never> | null;
                         };
                     };
                 };
@@ -77987,10 +80434,10 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sign?: Record<string, never>;
-                            description?: string;
-                            decans?: unknown[];
-                            cohort?: Record<string, never>;
+                            sign?: Record<string, never> | null;
+                            description?: string | null;
+                            decans?: unknown[] | null;
+                            cohort?: Record<string, never> | null;
                         };
                     };
                 };
@@ -78058,7 +80505,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sign?: Record<string, never>;
+                            sign?: Record<string, never> | null;
                         };
                     };
                 };
@@ -78126,7 +80573,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sign?: Record<string, never>;
+                            sign?: Record<string, never> | null;
                         };
                     };
                 };
@@ -78194,7 +80641,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sign?: Record<string, never>;
+                            sign?: Record<string, never> | null;
                         };
                     };
                 };
@@ -78262,7 +80709,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sign?: Record<string, never>;
+                            sign?: Record<string, never> | null;
                         };
                     };
                 };
@@ -78330,7 +80777,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sign?: Record<string, never>;
+                            sign?: Record<string, never> | null;
                         };
                     };
                 };
@@ -78398,7 +80845,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sign?: Record<string, never>;
+                            sign?: Record<string, never> | null;
                         };
                     };
                 };
@@ -78466,7 +80913,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sign?: Record<string, never>;
+                            sign?: Record<string, never> | null;
                         };
                     };
                 };
@@ -78534,7 +80981,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sign?: Record<string, never>;
+                            sign?: Record<string, never> | null;
                         };
                     };
                 };
@@ -78602,7 +81049,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sign?: Record<string, never>;
+                            sign?: Record<string, never> | null;
                         };
                     };
                 };
@@ -78670,7 +81117,7 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sign?: Record<string, never>;
+                            sign?: Record<string, never> | null;
                         };
                     };
                 };
@@ -78738,7 +81185,345 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
-                            sign?: Record<string, never>;
+                            sign?: Record<string, never> | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    translate_astro: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "text": "Mercury is retrograde in Gemini.",
+                 *       "target_lang": "de",
+                 *       "domain": "western"
+                 *     }
+                 */
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "translated": "Merkur ist rückläufig in den Zwillingen.",
+                     *         "source_lang": "en",
+                     *         "target_lang": "de",
+                     *         "domain": "western",
+                     *         "provider": "gemini",
+                     *         "chars": 32,
+                     *         "credits": 16
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            translated?: string | null;
+                            source_lang?: string | null;
+                            target_lang?: string | null;
+                            domain?: string | null;
+                            provider?: string | null;
+                            chars?: number | null;
+                            credits?: number | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    translate_batch: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "items": [
+                 *         "Mercury retrograde",
+                 *         "Full Moon in Leo"
+                 *       ],
+                 *       "target_lang": "ru",
+                 *       "domain": "western"
+                 *     }
+                 */
+                "application/json": Record<string, never>;
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            items?: ({
+                                translated?: string | null;
+                                provider?: string | null;
+                            } | null)[] | null;
+                            source_lang?: string | null;
+                            target_lang?: string | null;
+                            domain?: string | null;
+                            count?: number | null;
+                            chars?: number | null;
+                            credits?: number | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    translate_languages_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            languages?: ({
+                                code?: string | null;
+                                name?: string | null;
+                            } | null)[] | null;
+                            count?: number | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    "translate_glossary_{lang}_get": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            source_lang?: string | null;
+                            target_lang?: string | null;
+                            domain?: string | null;
+                            entries?: ({
+                                source_term?: string | null;
+                                target_term?: string | null;
+                                notes?: Record<string, never> | null;
+                            } | null)[] | null;
+                            count?: number | null;
                         };
                     };
                 };

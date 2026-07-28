@@ -171,9 +171,9 @@ export function createAstroway(options: AstrowayOptions): AstrowayClient {
  * `client` and unwrap the `{ ok, data, error }` envelope, returning `data`
  * directly. Errors throw classified subclasses of `ApiError`.
  *
- * The raw `client` (`aw.client.POST(...)`) and `aw.request(...)` remain
- * available as escape hatches when you need the full envelope or want to call
- * an endpoint not yet covered by namespaces.
+ * The raw `client` (`aw.client.POST(...)`, `aw.client.GET(...)`) remains
+ * available as an escape hatch when you need the full envelope or want to call
+ * an endpoint not yet covered by namespaces (GET operations are not namespaced).
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- declaration merging adds namespace properties
 export interface Astroway extends AstrowayNamespaces {}
