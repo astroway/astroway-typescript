@@ -76,19 +76,42 @@ const spec = JSON.parse(readFileSync(SPEC, 'utf8'));
 const byNs = new Map();
 
 for (const [path, methods] of Object.entries(spec.paths)) {
-  const post = methods?.post;
-  if (!post || !post.operationId) continue;
+  // GET lookups get namespace methods too. Filtering on `post` alone left the
+  // spec's GET-only paths — the zodiac, tarot and esoteric dictionaries,
+  // /acg/categories, /muhurta/types — reachable only through `aw.client.GET`.
+  const op = methods?.post ?? methods?.get;
+  const httpMethod = methods?.post ? 'post' : 'get';
+  if (!op || !op.operationId) continue;
+  /* Only endpoints that answer with the JSON envelope get a typed method. The
+     /embed/* widgets serve an HTML document; a namespace method promising
+     parsed data for them would be a lie. api-calc declares text/html for those
+     since 2026-08-04, so this filter needs no per-path list. */
+  if (!op.responses?.['200']?.content?.['application/json']) continue;
+  /* Belt and braces while the frozen snapshot predates that api-calc fix: the
+     2026-07-26 spec still claims application/json for the widgets. Drop this
+     line once openapi.json has been resynced past 2026-08-04. */
+  if (path.startsWith('/embed/')) continue;
+  /* /public/* is a keyless mirror of endpoints the SDK already exposes with a
+     key. Two methods for one calculation is confusing, and the keyed one is
+     what an SDK user wants. */
+  if (path.startsWith('/public/')) continue;
+  /* System endpoints are already hand-written on the Astroway class as
+     `aw.health()` and `aw.version()`. Generating them produced a `health`
+     namespace whose `compute` clashed with the class method, which is how
+     tsc caught it: "Interface 'Astroway' incorrectly extends". */
+  if ((op.tags ?? []).includes('System')) continue;
   // Path-template endpoints (`/webhooks/{id}/test`) need `params.path.id` at runtime —
   // out of scope for the simple namespace shape. Stay on the `client` escape hatch.
   if (path.includes('{')) continue;
-  const names = deriveNames(post.operationId);
+  const names = deriveNames(op.operationId);
   if (!names) continue;
   if (!byNs.has(names.ns)) byNs.set(names.ns, []);
   byNs.get(names.ns).push({
     method: names.method,
     path,
-    summary: post.summary,
-    description: post.description,
+    httpMethod,
+    summary: op.summary,
+    description: op.description,
   });
 }
 
@@ -130,6 +153,11 @@ lines.push('type PostData<P extends keyof paths> =');
 lines.push("  paths[P] extends { post: { responses: { 200: { content: { 'application/json': infer T } } } } }");
 lines.push("    ? (T extends { data?: infer D } ? D : T) : unknown;");
 lines.push('');
+lines.push('/** Same, for a GET lookup. These take no body and no query parameters. */');
+lines.push('type GetData<P extends keyof paths> =');
+lines.push("  paths[P] extends { get: { responses: { 200: { content: { 'application/json': infer T } } } } }");
+lines.push("    ? (T extends { data?: infer D } ? D : T) : unknown;");
+lines.push('');
 lines.push('/** Per-call options passed through to openapi-fetch. */');
 lines.push('export interface CallOptions {');
 lines.push('  /** Extra headers merged into the request. */');
@@ -155,9 +183,14 @@ for (const ns of sortedNs) {
   const items = byNs.get(ns);
   lines.push(`  ${ns}: {`);
   for (const item of items) {
-    const tagDoc = item.summary ? `${item.summary}` : `POST ${item.path}`;
-    lines.push(`    /** ${escapeComment(tagDoc)} (POST ${item.path}) */`);
-    lines.push(`    ${item.method}(body: PostBody<'${item.path}'>, options?: CallOptions): ResultPromise<PostData<'${item.path}'>>;`);
+    const verb = item.httpMethod.toUpperCase();
+    const tagDoc = item.summary ? `${item.summary}` : `${verb} ${item.path}`;
+    lines.push(`    /** ${escapeComment(tagDoc)} (${verb} ${item.path}) */`);
+    if (item.httpMethod === 'get') {
+      lines.push(`    ${item.method}(options?: CallOptions): ResultPromise<GetData<'${item.path}'>>;`);
+    } else {
+      lines.push(`    ${item.method}(body: PostBody<'${item.path}'>, options?: CallOptions): ResultPromise<PostData<'${item.path}'>>;`);
+    }
   }
   lines.push('  };');
 }
@@ -184,12 +217,33 @@ lines.push("      const data = (envelope && typeof envelope === 'object' && 'dat
 lines.push("      return { data: data as T, response: res.response };");
 lines.push("    });");
 lines.push('  };');
+lines.push("  /* GET lookups take no body. Same envelope unwrap and the same options, minus");
+lines.push("     Idempotency-Key, which has no meaning on a read. */");
+lines.push('  const callGet = <P extends keyof paths, T>(path: P, options?: CallOptions): ResultPromise<T> => {');
+lines.push("    return new ResultPromise<T>(async () => {");
+lines.push("      const init: Record<string, unknown> = {};");
+lines.push("      const headers: Record<string, string> = { ...(options?.headers ?? {}) };");
+lines.push("      if (options?.timeoutMs !== undefined && options.timeoutMs > 0) {");
+lines.push("        headers['x-astroway-timeout-ms'] = String(options.timeoutMs);");
+lines.push("      }");
+lines.push("      if (Object.keys(headers).length > 0) init.headers = headers;");
+lines.push("      if (options?.signal) init.signal = options.signal;");
+lines.push("      const res = await (client.GET as (p: P, init: Record<string, unknown>) => Promise<{ data?: unknown; error?: unknown; response: Response }>)(path, init);");
+lines.push("      const envelope = res.data as { ok?: boolean; data?: unknown } | undefined;");
+lines.push("      const data = (envelope && typeof envelope === 'object' && 'data' in envelope) ? envelope.data : res.data;");
+lines.push("      return { data: data as T, response: res.response };");
+lines.push("    });");
+lines.push('  };');
 lines.push('  return {');
 for (const ns of sortedNs) {
   const items = byNs.get(ns);
   lines.push(`    ${ns}: {`);
   for (const item of items) {
-    lines.push(`      ${item.method}: (body, options) => call<'${item.path}', PostData<'${item.path}'>>('${item.path}', body, options),`);
+    if (item.httpMethod === 'get') {
+      lines.push(`      ${item.method}: (options) => callGet<'${item.path}', GetData<'${item.path}'>>('${item.path}', options),`);
+    } else {
+      lines.push(`      ${item.method}: (body, options) => call<'${item.path}', PostData<'${item.path}'>>('${item.path}', body, options),`);
+    }
   }
   lines.push('    },');
 }

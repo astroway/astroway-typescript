@@ -14,6 +14,11 @@ type PostData<P extends keyof paths> =
   paths[P] extends { post: { responses: { 200: { content: { 'application/json': infer T } } } } }
     ? (T extends { data?: infer D } ? D : T) : unknown;
 
+/** Same, for a GET lookup. These take no body and no query parameters. */
+type GetData<P extends keyof paths> =
+  paths[P] extends { get: { responses: { 200: { content: { 'application/json': infer T } } } } }
+    ? (T extends { data?: infer D } ? D : T) : unknown;
+
 /** Per-call options passed through to openapi-fetch. */
 export interface CallOptions {
   /** Extra headers merged into the request. */
@@ -38,6 +43,8 @@ export interface AstrowayNamespaces {
   acg: {
     /** A*C*G by Life Category (POST /acg/by-category) */
     byCategory(body: PostBody<'/acg/by-category'>, options?: CallOptions): ResultPromise<PostData<'/acg/by-category'>>;
+    /** A*C*G Life Categories (GET /acg/categories) */
+    categoriesGet(options?: CallOptions): ResultPromise<GetData<'/acg/categories'>>;
     /** Astrocartography (A*C*G) (POST /acg) */
     compute(body: PostBody<'/acg'>, options?: CallOptions): ResultPromise<PostData<'/acg'>>;
     /** A*C*G Line Report (POST /acg/line-report) */
@@ -238,10 +245,20 @@ export interface AstrowayNamespaces {
   esoteric: {
     /** Decode Angel Number (POST /esoteric/angel-numbers/decode) */
     angelNumbersDecode(body: PostBody<'/esoteric/angel-numbers/decode'>, options?: CallOptions): ResultPromise<PostData<'/esoteric/angel-numbers/decode'>>;
+    /** Angel Numbers — Catalogue (GET /esoteric/angel-numbers) */
+    angelNumbersGet(options?: CallOptions): ResultPromise<GetData<'/esoteric/angel-numbers'>>;
+    /** Daily Angel Number (GET /esoteric/angel-numbers/today) */
+    angelNumbersTodayGet(options?: CallOptions): ResultPromise<GetData<'/esoteric/angel-numbers/today'>>;
+    /** Crystals — Full Directory (GET /esoteric/crystals) */
+    crystalsGet(options?: CallOptions): ResultPromise<GetData<'/esoteric/crystals'>>;
     /** Crystal Recommendations (POST /esoteric/crystals/recommend) */
     crystalsRecommend(body: PostBody<'/esoteric/crystals/recommend'>, options?: CallOptions): ResultPromise<PostData<'/esoteric/crystals/recommend'>>;
     /** Decode Dream Text (POST /esoteric/dreams/decode) */
     dreamsDecode(body: PostBody<'/esoteric/dreams/decode'>, options?: CallOptions): ResultPromise<PostData<'/esoteric/dreams/decode'>>;
+    /** Dream Symbol Dictionary (GET /esoteric/dreams) */
+    dreamsGet(options?: CallOptions): ResultPromise<GetData<'/esoteric/dreams'>>;
+    /** Recurring Dream Themes (GET /esoteric/dreams/recurring-themes) */
+    dreamsRecurringThemesGet(options?: CallOptions): ResultPromise<GetData<'/esoteric/dreams/recurring-themes'>>;
   };
   essentialDignities: {
     /** Essential Dignities (POST /essential-dignities) */
@@ -535,10 +552,6 @@ export interface AstrowayNamespaces {
     /** Transits Interpretation (POST /interpret/transits) */
     transits(body: PostBody<'/interpret/transits'>, options?: CallOptions): ResultPromise<PostData<'/interpret/transits'>>;
   };
-  keys: {
-    /** Create API Key (POST /keys) */
-    compute(body: PostBody<'/keys'>, options?: CallOptions): ResultPromise<PostData<'/keys'>>;
-  };
   localSpace: {
     /** Local Space Chart (POST /local-space) */
     compute(body: PostBody<'/local-space'>, options?: CallOptions): ResultPromise<PostData<'/local-space'>>;
@@ -578,6 +591,8 @@ export interface AstrowayNamespaces {
   mcp: {
     /** MCP Agent Debate (POST /mcp/agent-debate) */
     agentDebate(body: PostBody<'/mcp/agent-debate'>, options?: CallOptions): ResultPromise<PostData<'/mcp/agent-debate'>>;
+    /** MCP Agent Pool Status (GET /mcp/agent-pool-status) */
+    agentPoolStatusGet(options?: CallOptions): ResultPromise<GetData<'/mcp/agent-pool-status'>>;
     /** MCP Multi-Agent Coordinate (POST /mcp/multi-agent-coordinate) */
     multiAgentCoordinate(body: PostBody<'/mcp/multi-agent-coordinate'>, options?: CallOptions): ResultPromise<PostData<'/mcp/multi-agent-coordinate'>>;
     /** MCP Multi-Chart Context (POST /mcp/multi-chart-context) */
@@ -588,6 +603,8 @@ export interface AstrowayNamespaces {
     streaming(body: PostBody<'/mcp/streaming'>, options?: CallOptions): ResultPromise<PostData<'/mcp/streaming'>>;
     /** MCP Tool-Call Stream (POST /mcp/tool-call-stream) */
     toolCallStream(body: PostBody<'/mcp/tool-call-stream'>, options?: CallOptions): ResultPromise<PostData<'/mcp/tool-call-stream'>>;
+    /** MCP Tools List (GET /mcp/tools-list) */
+    toolsListGet(options?: CallOptions): ResultPromise<GetData<'/mcp/tools-list'>>;
   };
   midpointTrees: {
     /** Midpoint Trees (Uranian) (POST /midpoint-trees) */
@@ -644,6 +661,10 @@ export interface AstrowayNamespaces {
   moonVoc: {
     /** Moon Void-of-Course (POST /moon-voc) */
     compute(body: PostBody<'/moon-voc'>, options?: CallOptions): ResultPromise<PostData<'/moon-voc'>>;
+  };
+  muhurta: {
+    /** Muhurat — activity catalogue (GET /muhurta/types) */
+    typesGet(options?: CallOptions): ResultPromise<GetData<'/muhurta/types'>>;
   };
   nakshatras: {
     /** Nakshatras (POST /nakshatras) */
@@ -847,6 +868,36 @@ export interface AstrowayNamespaces {
     /** Trutine of Hermes (POST /rectification/trutine) */
     trutine(body: PostBody<'/rectification/trutine'>, options?: CallOptions): ResultPromise<PostData<'/rectification/trutine'>>;
   };
+  reference: {
+    /** Aspects (GET /reference/aspects) */
+    aspectsGet(options?: CallOptions): ResultPromise<GetData<'/reference/aspects'>>;
+    /** Asteroids & Centaurs (GET /reference/asteroids) */
+    asteroidsGet(options?: CallOptions): ResultPromise<GetData<'/reference/asteroids'>>;
+    /** Decans (GET /reference/decans) */
+    decansGet(options?: CallOptions): ResultPromise<GetData<'/reference/decans'>>;
+    /** Essential Dignities (GET /reference/dignities) */
+    dignitiesGet(options?: CallOptions): ResultPromise<GetData<'/reference/dignities'>>;
+    /** Elements (GET /reference/elements) */
+    elementsGet(options?: CallOptions): ResultPromise<GetData<'/reference/elements'>>;
+    /** Glyphs (GET /reference/glyphs) */
+    glyphsGet(options?: CallOptions): ResultPromise<GetData<'/reference/glyphs'>>;
+    /** Houses (GET /reference/houses) */
+    housesGet(options?: CallOptions): ResultPromise<GetData<'/reference/houses'>>;
+    /** Hellenistic Lots (GET /reference/lots) */
+    lotsGet(options?: CallOptions): ResultPromise<GetData<'/reference/lots'>>;
+    /** Modalities (GET /reference/modalities) */
+    modalitiesGet(options?: CallOptions): ResultPromise<GetData<'/reference/modalities'>>;
+    /** Nakshatras (GET /reference/nakshatras) */
+    nakshatrasGet(options?: CallOptions): ResultPromise<GetData<'/reference/nakshatras'>>;
+    /** Planets (GET /reference/planets) */
+    planetsGet(options?: CallOptions): ResultPromise<GetData<'/reference/planets'>>;
+    /** Polarities (GET /reference/polarities) */
+    polaritiesGet(options?: CallOptions): ResultPromise<GetData<'/reference/polarities'>>;
+    /** Zodiac Signs (GET /reference/signs) */
+    signsGet(options?: CallOptions): ResultPromise<GetData<'/reference/signs'>>;
+    /** Zodiac Systems (GET /reference/zodiac-systems) */
+    zodiacSystemsGet(options?: CallOptions): ResultPromise<GetData<'/reference/zodiac-systems'>>;
+  };
   relocation: {
     /** Relocation Chart (POST /relocation) */
     compute(body: PostBody<'/relocation'>, options?: CallOptions): ResultPromise<PostData<'/relocation'>>;
@@ -900,6 +951,8 @@ export interface AstrowayNamespaces {
     child(body: PostBody<'/reports/child'>, options?: CallOptions): ResultPromise<PostData<'/reports/child'>>;
     /** Generate Report — Unified Dispatcher (V2) (POST /reports/generate) */
     generate(body: PostBody<'/reports/generate'>, options?: CallOptions): ResultPromise<PostData<'/reports/generate'>>;
+    /** List Recent Report Exports (GET /reports/history) */
+    historyGet(options?: CallOptions): ResultPromise<GetData<'/reports/history'>>;
     /** Generate Human Design Report (PDF or HTML) (POST /reports/human-design) */
     humanDesign(body: PostBody<'/reports/human-design'>, options?: CallOptions): ResultPromise<PostData<'/reports/human-design'>>;
     /** Generate Lal Kitab Report (PDF or HTML) (POST /reports/lal-kitab) */
@@ -994,6 +1047,8 @@ export interface AstrowayNamespaces {
     houseOverlay(body: PostBody<'/synastry/house-overlay'>, options?: CallOptions): ResultPromise<PostData<'/synastry/house-overlay'>>;
   };
   tarot: {
+    /** Lenormand — All Cards (GET /tarot/lenormand/cards) */
+    lenormandCardsGet(options?: CallOptions): ResultPromise<GetData<'/tarot/lenormand/cards'>>;
     /** Lenormand — Daily Cards (POST /tarot/lenormand/daily) */
     lenormandDaily(body: PostBody<'/tarot/lenormand/daily'>, options?: CallOptions): ResultPromise<PostData<'/tarot/lenormand/daily'>>;
     /** Lenormand — 9-Card Square (POST /tarot/lenormand/draw/9-card-square) */
@@ -1008,8 +1063,12 @@ export interface AstrowayNamespaces {
     lenormandDrawRelationship(body: PostBody<'/tarot/lenormand/draw/relationship'>, options?: CallOptions): ResultPromise<PostData<'/tarot/lenormand/draw/relationship'>>;
     /** Lenormand — Three-Card (POST /tarot/lenormand/draw/three-card) */
     lenormandDrawThreeCard(body: PostBody<'/tarot/lenormand/draw/three-card'>, options?: CallOptions): ResultPromise<PostData<'/tarot/lenormand/draw/three-card'>>;
+    /** Lenormand — 36 Houses (GET /tarot/lenormand/houses) */
+    lenormandHousesGet(options?: CallOptions): ResultPromise<GetData<'/tarot/lenormand/houses'>>;
     /** Marseille — Birth Card (POST /tarot/marseille/birth-card) */
     marseilleBirthCard(body: PostBody<'/tarot/marseille/birth-card'>, options?: CallOptions): ResultPromise<PostData<'/tarot/marseille/birth-card'>>;
+    /** Marseille — All Cards (GET /tarot/marseille/cards) */
+    marseilleCardsGet(options?: CallOptions): ResultPromise<GetData<'/tarot/marseille/cards'>>;
     /** Marseille — Clarifier (POST /tarot/marseille/clarify) */
     marseilleClarify(body: PostBody<'/tarot/marseille/clarify'>, options?: CallOptions): ResultPromise<PostData<'/tarot/marseille/clarify'>>;
     /** Marseille — Daily Card (POST /tarot/marseille/daily) */
@@ -1036,6 +1095,10 @@ export interface AstrowayNamespaces {
     marseilleDrawThreeCard(body: PostBody<'/tarot/marseille/draw/three-card'>, options?: CallOptions): ResultPromise<PostData<'/tarot/marseille/draw/three-card'>>;
     /** Marseille — Interpret (POST /tarot/marseille/interpret) */
     marseilleInterpret(body: PostBody<'/tarot/marseille/interpret'>, options?: CallOptions): ResultPromise<PostData<'/tarot/marseille/interpret'>>;
+    /** Marseille — 22 Majors (GET /tarot/marseille/majors) */
+    marseilleMajorsGet(options?: CallOptions): ResultPromise<GetData<'/tarot/marseille/majors'>>;
+    /** Marseille — All Spreads (GET /tarot/marseille/spreads) */
+    marseilleSpreadsGet(options?: CallOptions): ResultPromise<GetData<'/tarot/marseille/spreads'>>;
     /** Marseille — Timing (POST /tarot/marseille/timing) */
     marseilleTiming(body: PostBody<'/tarot/marseille/timing'>, options?: CallOptions): ResultPromise<PostData<'/tarot/marseille/timing'>>;
     /** Marseille — Year Card (POST /tarot/marseille/year-card) */
@@ -1044,8 +1107,12 @@ export interface AstrowayNamespaces {
     riderWaiteAdvice(body: PostBody<'/tarot/rider-waite/advice'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/advice'>>;
     /** RWS — Birth Card (POST /tarot/rider-waite/birth-card) */
     riderWaiteBirthCard(body: PostBody<'/tarot/rider-waite/birth-card'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/birth-card'>>;
+    /** RWS — All Cards (GET /tarot/rider-waite/cards) */
+    riderWaiteCardsGet(options?: CallOptions): ResultPromise<GetData<'/tarot/rider-waite/cards'>>;
     /** RWS — Clarifier Card (POST /tarot/rider-waite/clarify) */
     riderWaiteClarify(body: PostBody<'/tarot/rider-waite/clarify'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/clarify'>>;
+    /** RWS — 16 Court Cards (GET /tarot/rider-waite/courts) */
+    riderWaiteCourtsGet(options?: CallOptions): ResultPromise<GetData<'/tarot/rider-waite/courts'>>;
     /** RWS — Court Card Cross-Sum (POST /tarot/rider-waite/cross-sum) */
     riderWaiteCrossSum(body: PostBody<'/tarot/rider-waite/cross-sum'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/cross-sum'>>;
     /** RWS — Daily Card (POST /tarot/rider-waite/daily) */
@@ -1076,6 +1143,10 @@ export interface AstrowayNamespaces {
     riderWaiteDrawYearAhead(body: PostBody<'/tarot/rider-waite/draw/year-ahead'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/draw/year-ahead'>>;
     /** RWS — Interpret a Hand (POST /tarot/rider-waite/interpret) */
     riderWaiteInterpret(body: PostBody<'/tarot/rider-waite/interpret'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/interpret'>>;
+    /** RWS — 22 Majors (GET /tarot/rider-waite/majors) */
+    riderWaiteMajorsGet(options?: CallOptions): ResultPromise<GetData<'/tarot/rider-waite/majors'>>;
+    /** RWS — 40 Minors (GET /tarot/rider-waite/minors) */
+    riderWaiteMinorsGet(options?: CallOptions): ResultPromise<GetData<'/tarot/rider-waite/minors'>>;
     /** RWS — Missing Info Card (POST /tarot/rider-waite/missing-info) */
     riderWaiteMissingInfo(body: PostBody<'/tarot/rider-waite/missing-info'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/missing-info'>>;
     /** RWS — Outcome Card (POST /tarot/rider-waite/outcome) */
@@ -1084,6 +1155,8 @@ export interface AstrowayNamespaces {
     riderWaiteShadowCard(body: PostBody<'/tarot/rider-waite/shadow-card'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/shadow-card'>>;
     /** RWS — Soul + Personality (POST /tarot/rider-waite/soul-personality-card) */
     riderWaiteSoulPersonalityCard(body: PostBody<'/tarot/rider-waite/soul-personality-card'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/soul-personality-card'>>;
+    /** RWS — All Spreads (GET /tarot/rider-waite/spreads) */
+    riderWaiteSpreadsGet(options?: CallOptions): ResultPromise<GetData<'/tarot/rider-waite/spreads'>>;
     /** RWS — Timing Card (POST /tarot/rider-waite/timing) */
     riderWaiteTiming(body: PostBody<'/tarot/rider-waite/timing'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/timing'>>;
     /** RWS — Year Card (POST /tarot/rider-waite/year-card) */
@@ -1106,6 +1179,8 @@ export interface AstrowayNamespaces {
     astro(body: PostBody<'/translate/astro'>, options?: CallOptions): ResultPromise<PostData<'/translate/astro'>>;
     /** Translate batch (POST /translate/batch) */
     batch(body: PostBody<'/translate/batch'>, options?: CallOptions): ResultPromise<PostData<'/translate/batch'>>;
+    /** Supported languages (GET /translate/languages) */
+    languagesGet(options?: CallOptions): ResultPromise<GetData<'/translate/languages'>>;
   };
   vedic: {
     /** Compatibility — Ashtakoot Guna Milan (8-fold 36-point) (POST /vedic/compatibility/ashtakoot) */
@@ -1452,6 +1527,8 @@ export interface AstrowayNamespaces {
     dashaChange(body: PostBody<'/webhooks/dasha-change'>, options?: CallOptions): ResultPromise<PostData<'/webhooks/dasha-change'>>;
     /** Register Eclipse-Alert Webhook (POST /webhooks/eclipse-alert) */
     eclipseAlert(body: PostBody<'/webhooks/eclipse-alert'>, options?: CallOptions): ResultPromise<PostData<'/webhooks/eclipse-alert'>>;
+    /** List Webhook Subscriptions (GET /webhooks) */
+    get(options?: CallOptions): ResultPromise<GetData<'/webhooks'>>;
     /** Register Mahadasha-End Webhook (POST /webhooks/mahadasha-end) */
     mahadashaEnd(body: PostBody<'/webhooks/mahadasha-end'>, options?: CallOptions): ResultPromise<PostData<'/webhooks/mahadasha-end'>>;
     /** Register Planetary-Hour-Tick Webhook (POST /webhooks/planetary-hour-tick) */
@@ -1492,6 +1569,8 @@ export interface AstrowayNamespaces {
     yoga(body: PostBody<'/wellness/yoga'>, options?: CallOptions): ResultPromise<PostData<'/wellness/yoga'>>;
   };
   whitelabel: {
+    /** Get White-label Config (GET /whitelabel/config) */
+    configGet(options?: CallOptions): ResultPromise<GetData<'/whitelabel/config'>>;
     /** Verify Custom Domain DNS (POST /whitelabel/domain/verify) */
     domainVerify(body: PostBody<'/whitelabel/domain/verify'>, options?: CallOptions): ResultPromise<PostData<'/whitelabel/domain/verify'>>;
     /** Upload White-label Logo (POST /whitelabel/logo) */
@@ -1529,6 +1608,32 @@ export interface AstrowayNamespaces {
     /** 12 Palaces (POST /ziwei/twelve-palaces) */
     twelvePalaces(body: PostBody<'/ziwei/twelve-palaces'>, options?: CallOptions): ResultPromise<PostData<'/ziwei/twelve-palaces'>>;
   };
+  zodiac: {
+    /** Aquarius — Fixed Air (GET /zodiac/aquarius) */
+    aquariusGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/aquarius'>>;
+    /** Aries — Cardinal Fire (GET /zodiac/aries) */
+    ariesGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/aries'>>;
+    /** Cancer — Cardinal Water (GET /zodiac/cancer) */
+    cancerGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/cancer'>>;
+    /** Capricorn — Cardinal Earth (GET /zodiac/capricorn) */
+    capricornGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/capricorn'>>;
+    /** Gemini — Mutable Air (GET /zodiac/gemini) */
+    geminiGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/gemini'>>;
+    /** Leo — Fixed Fire (GET /zodiac/leo) */
+    leoGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/leo'>>;
+    /** Libra — Cardinal Air (GET /zodiac/libra) */
+    libraGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/libra'>>;
+    /** Pisces — Mutable Water (GET /zodiac/pisces) */
+    piscesGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/pisces'>>;
+    /** Sagittarius — Mutable Fire (GET /zodiac/sagittarius) */
+    sagittariusGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/sagittarius'>>;
+    /** Scorpio — Fixed Water (GET /zodiac/scorpio) */
+    scorpioGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/scorpio'>>;
+    /** Taurus — Fixed Earth (GET /zodiac/taurus) */
+    taurusGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/taurus'>>;
+    /** Virgo — Mutable Earth (GET /zodiac/virgo) */
+    virgoGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/virgo'>>;
+  };
 }
 
 export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
@@ -1552,9 +1657,27 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       return { data: data as T, response: res.response };
     });
   };
+  /* GET lookups take no body. Same envelope unwrap and the same options, minus
+     Idempotency-Key, which has no meaning on a read. */
+  const callGet = <P extends keyof paths, T>(path: P, options?: CallOptions): ResultPromise<T> => {
+    return new ResultPromise<T>(async () => {
+      const init: Record<string, unknown> = {};
+      const headers: Record<string, string> = { ...(options?.headers ?? {}) };
+      if (options?.timeoutMs !== undefined && options.timeoutMs > 0) {
+        headers['x-astroway-timeout-ms'] = String(options.timeoutMs);
+      }
+      if (Object.keys(headers).length > 0) init.headers = headers;
+      if (options?.signal) init.signal = options.signal;
+      const res = await (client.GET as (p: P, init: Record<string, unknown>) => Promise<{ data?: unknown; error?: unknown; response: Response }>)(path, init);
+      const envelope = res.data as { ok?: boolean; data?: unknown } | undefined;
+      const data = (envelope && typeof envelope === 'object' && 'data' in envelope) ? envelope.data : res.data;
+      return { data: data as T, response: res.response };
+    });
+  };
   return {
     acg: {
       byCategory: (body, options) => call<'/acg/by-category', PostData<'/acg/by-category'>>('/acg/by-category', body, options),
+      categoriesGet: (options) => callGet<'/acg/categories', GetData<'/acg/categories'>>('/acg/categories', options),
       compute: (body, options) => call<'/acg', PostData<'/acg'>>('/acg', body, options),
       lineReport: (body, options) => call<'/acg/line-report', PostData<'/acg/line-report'>>('/acg/line-report', body, options),
     },
@@ -1683,8 +1806,13 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
     },
     esoteric: {
       angelNumbersDecode: (body, options) => call<'/esoteric/angel-numbers/decode', PostData<'/esoteric/angel-numbers/decode'>>('/esoteric/angel-numbers/decode', body, options),
+      angelNumbersGet: (options) => callGet<'/esoteric/angel-numbers', GetData<'/esoteric/angel-numbers'>>('/esoteric/angel-numbers', options),
+      angelNumbersTodayGet: (options) => callGet<'/esoteric/angel-numbers/today', GetData<'/esoteric/angel-numbers/today'>>('/esoteric/angel-numbers/today', options),
+      crystalsGet: (options) => callGet<'/esoteric/crystals', GetData<'/esoteric/crystals'>>('/esoteric/crystals', options),
       crystalsRecommend: (body, options) => call<'/esoteric/crystals/recommend', PostData<'/esoteric/crystals/recommend'>>('/esoteric/crystals/recommend', body, options),
       dreamsDecode: (body, options) => call<'/esoteric/dreams/decode', PostData<'/esoteric/dreams/decode'>>('/esoteric/dreams/decode', body, options),
+      dreamsGet: (options) => callGet<'/esoteric/dreams', GetData<'/esoteric/dreams'>>('/esoteric/dreams', options),
+      dreamsRecurringThemesGet: (options) => callGet<'/esoteric/dreams/recurring-themes', GetData<'/esoteric/dreams/recurring-themes'>>('/esoteric/dreams/recurring-themes', options),
     },
     essentialDignities: {
       compute: (body, options) => call<'/essential-dignities', PostData<'/essential-dignities'>>('/essential-dignities', body, options),
@@ -1856,9 +1984,6 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       synastry: (body, options) => call<'/interpret/synastry', PostData<'/interpret/synastry'>>('/interpret/synastry', body, options),
       transits: (body, options) => call<'/interpret/transits', PostData<'/interpret/transits'>>('/interpret/transits', body, options),
     },
-    keys: {
-      compute: (body, options) => call<'/keys', PostData<'/keys'>>('/keys', body, options),
-    },
     localSpace: {
       compute: (body, options) => call<'/local-space', PostData<'/local-space'>>('/local-space', body, options),
       influenceZone: (body, options) => call<'/local-space/influence-zone', PostData<'/local-space/influence-zone'>>('/local-space/influence-zone', body, options),
@@ -1884,11 +2009,13 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
     },
     mcp: {
       agentDebate: (body, options) => call<'/mcp/agent-debate', PostData<'/mcp/agent-debate'>>('/mcp/agent-debate', body, options),
+      agentPoolStatusGet: (options) => callGet<'/mcp/agent-pool-status', GetData<'/mcp/agent-pool-status'>>('/mcp/agent-pool-status', options),
       multiAgentCoordinate: (body, options) => call<'/mcp/multi-agent-coordinate', PostData<'/mcp/multi-agent-coordinate'>>('/mcp/multi-agent-coordinate', body, options),
       multiChartContext: (body, options) => call<'/mcp/multi-chart-context', PostData<'/mcp/multi-chart-context'>>('/mcp/multi-chart-context', body, options),
       ragSearch: (body, options) => call<'/mcp/rag-search', PostData<'/mcp/rag-search'>>('/mcp/rag-search', body, options),
       streaming: (body, options) => call<'/mcp/streaming', PostData<'/mcp/streaming'>>('/mcp/streaming', body, options),
       toolCallStream: (body, options) => call<'/mcp/tool-call-stream', PostData<'/mcp/tool-call-stream'>>('/mcp/tool-call-stream', body, options),
+      toolsListGet: (options) => callGet<'/mcp/tools-list', GetData<'/mcp/tools-list'>>('/mcp/tools-list', options),
     },
     midpointTrees: {
       compute: (body, options) => call<'/midpoint-trees', PostData<'/midpoint-trees'>>('/midpoint-trees', body, options),
@@ -1924,6 +2051,9 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
     },
     moonVoc: {
       compute: (body, options) => call<'/moon-voc', PostData<'/moon-voc'>>('/moon-voc', body, options),
+    },
+    muhurta: {
+      typesGet: (options) => callGet<'/muhurta/types', GetData<'/muhurta/types'>>('/muhurta/types', options),
     },
     nakshatras: {
       compute: (body, options) => call<'/nakshatras', PostData<'/nakshatras'>>('/nakshatras', body, options),
@@ -2043,6 +2173,22 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       compute: (body, options) => call<'/rectification', PostData<'/rectification'>>('/rectification', body, options),
       trutine: (body, options) => call<'/rectification/trutine', PostData<'/rectification/trutine'>>('/rectification/trutine', body, options),
     },
+    reference: {
+      aspectsGet: (options) => callGet<'/reference/aspects', GetData<'/reference/aspects'>>('/reference/aspects', options),
+      asteroidsGet: (options) => callGet<'/reference/asteroids', GetData<'/reference/asteroids'>>('/reference/asteroids', options),
+      decansGet: (options) => callGet<'/reference/decans', GetData<'/reference/decans'>>('/reference/decans', options),
+      dignitiesGet: (options) => callGet<'/reference/dignities', GetData<'/reference/dignities'>>('/reference/dignities', options),
+      elementsGet: (options) => callGet<'/reference/elements', GetData<'/reference/elements'>>('/reference/elements', options),
+      glyphsGet: (options) => callGet<'/reference/glyphs', GetData<'/reference/glyphs'>>('/reference/glyphs', options),
+      housesGet: (options) => callGet<'/reference/houses', GetData<'/reference/houses'>>('/reference/houses', options),
+      lotsGet: (options) => callGet<'/reference/lots', GetData<'/reference/lots'>>('/reference/lots', options),
+      modalitiesGet: (options) => callGet<'/reference/modalities', GetData<'/reference/modalities'>>('/reference/modalities', options),
+      nakshatrasGet: (options) => callGet<'/reference/nakshatras', GetData<'/reference/nakshatras'>>('/reference/nakshatras', options),
+      planetsGet: (options) => callGet<'/reference/planets', GetData<'/reference/planets'>>('/reference/planets', options),
+      polaritiesGet: (options) => callGet<'/reference/polarities', GetData<'/reference/polarities'>>('/reference/polarities', options),
+      signsGet: (options) => callGet<'/reference/signs', GetData<'/reference/signs'>>('/reference/signs', options),
+      zodiacSystemsGet: (options) => callGet<'/reference/zodiac-systems', GetData<'/reference/zodiac-systems'>>('/reference/zodiac-systems', options),
+    },
     relocation: {
       compute: (body, options) => call<'/relocation', PostData<'/relocation'>>('/relocation', body, options),
     },
@@ -2072,6 +2218,7 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       career: (body, options) => call<'/reports/career', PostData<'/reports/career'>>('/reports/career', body, options),
       child: (body, options) => call<'/reports/child', PostData<'/reports/child'>>('/reports/child', body, options),
       generate: (body, options) => call<'/reports/generate', PostData<'/reports/generate'>>('/reports/generate', body, options),
+      historyGet: (options) => callGet<'/reports/history', GetData<'/reports/history'>>('/reports/history', options),
       humanDesign: (body, options) => call<'/reports/human-design', PostData<'/reports/human-design'>>('/reports/human-design', body, options),
       lalKitab: (body, options) => call<'/reports/lal-kitab', PostData<'/reports/lal-kitab'>>('/reports/lal-kitab', body, options),
       love: (body, options) => call<'/reports/love', PostData<'/reports/love'>>('/reports/love', body, options),
@@ -2129,6 +2276,7 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       houseOverlay: (body, options) => call<'/synastry/house-overlay', PostData<'/synastry/house-overlay'>>('/synastry/house-overlay', body, options),
     },
     tarot: {
+      lenormandCardsGet: (options) => callGet<'/tarot/lenormand/cards', GetData<'/tarot/lenormand/cards'>>('/tarot/lenormand/cards', options),
       lenormandDaily: (body, options) => call<'/tarot/lenormand/daily', PostData<'/tarot/lenormand/daily'>>('/tarot/lenormand/daily', body, options),
       lenormandDraw9CardSquare: (body, options) => call<'/tarot/lenormand/draw/9-card-square', PostData<'/tarot/lenormand/draw/9-card-square'>>('/tarot/lenormand/draw/9-card-square', body, options),
       lenormandDrawCelticCrossLenormand: (body, options) => call<'/tarot/lenormand/draw/celtic-cross-lenormand', PostData<'/tarot/lenormand/draw/celtic-cross-lenormand'>>('/tarot/lenormand/draw/celtic-cross-lenormand', body, options),
@@ -2136,7 +2284,9 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       lenormandDrawLineOfFive: (body, options) => call<'/tarot/lenormand/draw/line-of-five', PostData<'/tarot/lenormand/draw/line-of-five'>>('/tarot/lenormand/draw/line-of-five', body, options),
       lenormandDrawRelationship: (body, options) => call<'/tarot/lenormand/draw/relationship', PostData<'/tarot/lenormand/draw/relationship'>>('/tarot/lenormand/draw/relationship', body, options),
       lenormandDrawThreeCard: (body, options) => call<'/tarot/lenormand/draw/three-card', PostData<'/tarot/lenormand/draw/three-card'>>('/tarot/lenormand/draw/three-card', body, options),
+      lenormandHousesGet: (options) => callGet<'/tarot/lenormand/houses', GetData<'/tarot/lenormand/houses'>>('/tarot/lenormand/houses', options),
       marseilleBirthCard: (body, options) => call<'/tarot/marseille/birth-card', PostData<'/tarot/marseille/birth-card'>>('/tarot/marseille/birth-card', body, options),
+      marseilleCardsGet: (options) => callGet<'/tarot/marseille/cards', GetData<'/tarot/marseille/cards'>>('/tarot/marseille/cards', options),
       marseilleClarify: (body, options) => call<'/tarot/marseille/clarify', PostData<'/tarot/marseille/clarify'>>('/tarot/marseille/clarify', body, options),
       marseilleDaily: (body, options) => call<'/tarot/marseille/daily', PostData<'/tarot/marseille/daily'>>('/tarot/marseille/daily', body, options),
       marseilleDrawCareer: (body, options) => call<'/tarot/marseille/draw/career', PostData<'/tarot/marseille/draw/career'>>('/tarot/marseille/draw/career', body, options),
@@ -2150,11 +2300,15 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       marseilleDrawSpiritual: (body, options) => call<'/tarot/marseille/draw/spiritual', PostData<'/tarot/marseille/draw/spiritual'>>('/tarot/marseille/draw/spiritual', body, options),
       marseilleDrawThreeCard: (body, options) => call<'/tarot/marseille/draw/three-card', PostData<'/tarot/marseille/draw/three-card'>>('/tarot/marseille/draw/three-card', body, options),
       marseilleInterpret: (body, options) => call<'/tarot/marseille/interpret', PostData<'/tarot/marseille/interpret'>>('/tarot/marseille/interpret', body, options),
+      marseilleMajorsGet: (options) => callGet<'/tarot/marseille/majors', GetData<'/tarot/marseille/majors'>>('/tarot/marseille/majors', options),
+      marseilleSpreadsGet: (options) => callGet<'/tarot/marseille/spreads', GetData<'/tarot/marseille/spreads'>>('/tarot/marseille/spreads', options),
       marseilleTiming: (body, options) => call<'/tarot/marseille/timing', PostData<'/tarot/marseille/timing'>>('/tarot/marseille/timing', body, options),
       marseilleYearCard: (body, options) => call<'/tarot/marseille/year-card', PostData<'/tarot/marseille/year-card'>>('/tarot/marseille/year-card', body, options),
       riderWaiteAdvice: (body, options) => call<'/tarot/rider-waite/advice', PostData<'/tarot/rider-waite/advice'>>('/tarot/rider-waite/advice', body, options),
       riderWaiteBirthCard: (body, options) => call<'/tarot/rider-waite/birth-card', PostData<'/tarot/rider-waite/birth-card'>>('/tarot/rider-waite/birth-card', body, options),
+      riderWaiteCardsGet: (options) => callGet<'/tarot/rider-waite/cards', GetData<'/tarot/rider-waite/cards'>>('/tarot/rider-waite/cards', options),
       riderWaiteClarify: (body, options) => call<'/tarot/rider-waite/clarify', PostData<'/tarot/rider-waite/clarify'>>('/tarot/rider-waite/clarify', body, options),
+      riderWaiteCourtsGet: (options) => callGet<'/tarot/rider-waite/courts', GetData<'/tarot/rider-waite/courts'>>('/tarot/rider-waite/courts', options),
       riderWaiteCrossSum: (body, options) => call<'/tarot/rider-waite/cross-sum', PostData<'/tarot/rider-waite/cross-sum'>>('/tarot/rider-waite/cross-sum', body, options),
       riderWaiteDaily: (body, options) => call<'/tarot/rider-waite/daily', PostData<'/tarot/rider-waite/daily'>>('/tarot/rider-waite/daily', body, options),
       riderWaiteDrawCareer: (body, options) => call<'/tarot/rider-waite/draw/career', PostData<'/tarot/rider-waite/draw/career'>>('/tarot/rider-waite/draw/career', body, options),
@@ -2170,10 +2324,13 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       riderWaiteDrawThreeCard: (body, options) => call<'/tarot/rider-waite/draw/three-card', PostData<'/tarot/rider-waite/draw/three-card'>>('/tarot/rider-waite/draw/three-card', body, options),
       riderWaiteDrawYearAhead: (body, options) => call<'/tarot/rider-waite/draw/year-ahead', PostData<'/tarot/rider-waite/draw/year-ahead'>>('/tarot/rider-waite/draw/year-ahead', body, options),
       riderWaiteInterpret: (body, options) => call<'/tarot/rider-waite/interpret', PostData<'/tarot/rider-waite/interpret'>>('/tarot/rider-waite/interpret', body, options),
+      riderWaiteMajorsGet: (options) => callGet<'/tarot/rider-waite/majors', GetData<'/tarot/rider-waite/majors'>>('/tarot/rider-waite/majors', options),
+      riderWaiteMinorsGet: (options) => callGet<'/tarot/rider-waite/minors', GetData<'/tarot/rider-waite/minors'>>('/tarot/rider-waite/minors', options),
       riderWaiteMissingInfo: (body, options) => call<'/tarot/rider-waite/missing-info', PostData<'/tarot/rider-waite/missing-info'>>('/tarot/rider-waite/missing-info', body, options),
       riderWaiteOutcome: (body, options) => call<'/tarot/rider-waite/outcome', PostData<'/tarot/rider-waite/outcome'>>('/tarot/rider-waite/outcome', body, options),
       riderWaiteShadowCard: (body, options) => call<'/tarot/rider-waite/shadow-card', PostData<'/tarot/rider-waite/shadow-card'>>('/tarot/rider-waite/shadow-card', body, options),
       riderWaiteSoulPersonalityCard: (body, options) => call<'/tarot/rider-waite/soul-personality-card', PostData<'/tarot/rider-waite/soul-personality-card'>>('/tarot/rider-waite/soul-personality-card', body, options),
+      riderWaiteSpreadsGet: (options) => callGet<'/tarot/rider-waite/spreads', GetData<'/tarot/rider-waite/spreads'>>('/tarot/rider-waite/spreads', options),
       riderWaiteTiming: (body, options) => call<'/tarot/rider-waite/timing', PostData<'/tarot/rider-waite/timing'>>('/tarot/rider-waite/timing', body, options),
       riderWaiteYearCard: (body, options) => call<'/tarot/rider-waite/year-card', PostData<'/tarot/rider-waite/year-card'>>('/tarot/rider-waite/year-card', body, options),
     },
@@ -2189,6 +2346,7 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
     translate: {
       astro: (body, options) => call<'/translate/astro', PostData<'/translate/astro'>>('/translate/astro', body, options),
       batch: (body, options) => call<'/translate/batch', PostData<'/translate/batch'>>('/translate/batch', body, options),
+      languagesGet: (options) => callGet<'/translate/languages', GetData<'/translate/languages'>>('/translate/languages', options),
     },
     vedic: {
       compatibilityAshtakoot: (body, options) => call<'/vedic/compatibility/ashtakoot', PostData<'/vedic/compatibility/ashtakoot'>>('/vedic/compatibility/ashtakoot', body, options),
@@ -2365,6 +2523,7 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
     webhooks: {
       dashaChange: (body, options) => call<'/webhooks/dasha-change', PostData<'/webhooks/dasha-change'>>('/webhooks/dasha-change', body, options),
       eclipseAlert: (body, options) => call<'/webhooks/eclipse-alert', PostData<'/webhooks/eclipse-alert'>>('/webhooks/eclipse-alert', body, options),
+      get: (options) => callGet<'/webhooks', GetData<'/webhooks'>>('/webhooks', options),
       mahadashaEnd: (body, options) => call<'/webhooks/mahadasha-end', PostData<'/webhooks/mahadasha-end'>>('/webhooks/mahadasha-end', body, options),
       planetaryHourTick: (body, options) => call<'/webhooks/planetary-hour-tick', PostData<'/webhooks/planetary-hour-tick'>>('/webhooks/planetary-hour-tick', body, options),
       retrogradeEnd: (body, options) => call<'/webhooks/retrograde-end', PostData<'/webhooks/retrograde-end'>>('/webhooks/retrograde-end', body, options),
@@ -2387,6 +2546,7 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       yoga: (body, options) => call<'/wellness/yoga', PostData<'/wellness/yoga'>>('/wellness/yoga', body, options),
     },
     whitelabel: {
+      configGet: (options) => callGet<'/whitelabel/config', GetData<'/whitelabel/config'>>('/whitelabel/config', options),
       domainVerify: (body, options) => call<'/whitelabel/domain/verify', PostData<'/whitelabel/domain/verify'>>('/whitelabel/domain/verify', body, options),
       logo: (body, options) => call<'/whitelabel/logo', PostData<'/whitelabel/logo'>>('/whitelabel/logo', body, options),
       preview: (body, options) => call<'/whitelabel/preview', PostData<'/whitelabel/preview'>>('/whitelabel/preview', body, options),
@@ -2407,6 +2567,20 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       palaceTravel: (body, options) => call<'/ziwei/palace-travel', PostData<'/ziwei/palace-travel'>>('/ziwei/palace-travel', body, options),
       palaceWealth: (body, options) => call<'/ziwei/palace-wealth', PostData<'/ziwei/palace-wealth'>>('/ziwei/palace-wealth', body, options),
       twelvePalaces: (body, options) => call<'/ziwei/twelve-palaces', PostData<'/ziwei/twelve-palaces'>>('/ziwei/twelve-palaces', body, options),
+    },
+    zodiac: {
+      aquariusGet: (options) => callGet<'/zodiac/aquarius', GetData<'/zodiac/aquarius'>>('/zodiac/aquarius', options),
+      ariesGet: (options) => callGet<'/zodiac/aries', GetData<'/zodiac/aries'>>('/zodiac/aries', options),
+      cancerGet: (options) => callGet<'/zodiac/cancer', GetData<'/zodiac/cancer'>>('/zodiac/cancer', options),
+      capricornGet: (options) => callGet<'/zodiac/capricorn', GetData<'/zodiac/capricorn'>>('/zodiac/capricorn', options),
+      geminiGet: (options) => callGet<'/zodiac/gemini', GetData<'/zodiac/gemini'>>('/zodiac/gemini', options),
+      leoGet: (options) => callGet<'/zodiac/leo', GetData<'/zodiac/leo'>>('/zodiac/leo', options),
+      libraGet: (options) => callGet<'/zodiac/libra', GetData<'/zodiac/libra'>>('/zodiac/libra', options),
+      piscesGet: (options) => callGet<'/zodiac/pisces', GetData<'/zodiac/pisces'>>('/zodiac/pisces', options),
+      sagittariusGet: (options) => callGet<'/zodiac/sagittarius', GetData<'/zodiac/sagittarius'>>('/zodiac/sagittarius', options),
+      scorpioGet: (options) => callGet<'/zodiac/scorpio', GetData<'/zodiac/scorpio'>>('/zodiac/scorpio', options),
+      taurusGet: (options) => callGet<'/zodiac/taurus', GetData<'/zodiac/taurus'>>('/zodiac/taurus', options),
+      virgoGet: (options) => callGet<'/zodiac/virgo', GetData<'/zodiac/virgo'>>('/zodiac/virgo', options),
     },
   };
 }
