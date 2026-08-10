@@ -38,8 +38,15 @@ const chart = await aw.chart.compute({
   houseSystem: 'P',
 });
 
-console.log(`ASC: ${chart.angles.asc.sign} ${chart.angles.asc.degree.toFixed(2)}°`);
+const SIGNS = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo',
+               'Libra', 'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces'];
+
+const asc = chart.houses.ascendant;                              // 212.0929
+console.log(`ASC: ${SIGNS[Math.floor(asc / 30)]} ${(asc % 30).toFixed(2)}°`);  // ASC: Scorpio 2.09°
+console.log(`Sun: ${chart.planets[0].longitude.toFixed(2)}°`);   // Sun: 111.77°
 ```
+
+`/chart` returns positions, not labels: `houses.ascendant` and every `planets[].longitude` are ecliptic longitudes in degrees, so a sign name is `Math.floor(longitude / 30)` into the list above and the degree within it is `longitude % 30`.
 
 The SDK exposes **94 typed namespaces / 623 methods** auto-generated from the OpenAPI spec — `aw.synastry.aspectGrid({...})`, `aw.bazi.dayMaster({...})`, `aw.vedic.dashasVimshottariMaha({...})`, etc. Path autocomplete and body/response types come straight from your IDE; the `{ ok, data, error }` envelope is unwrapped for you.
 
@@ -148,6 +155,10 @@ try {
 ```
 
 Full hierarchy: `ApiError` → `APIConnectionError` (→ `APITimeoutError`), `BadRequestError` (400), `AuthenticationError` (401), `PermissionDeniedError` (403), `NotFoundError` (404), `UnprocessableEntityError` (422), `RateLimitError` (429), `InternalServerError` (5xx).
+
+### The 400 you are most likely to hit first
+
+Chart bodies take `latitude`, `longitude` and `timezoneOffset`. The short spellings `lat`, `lon`, `lng`, `long`, `tz` and `timezone` are refused with a `BadRequestError` whose `e.code` is `INVALID_FIELD`, and `e.body.error.details` names every offending field at once as `{ path, expected, message }`. They are not accepted and not deprecated: they were never in the spec, and before the API started refusing them they were silently ignored, which charted 0°N 0°E at UTC under a `200`. Details: <https://api.astroway.info/en/errors/#invalid_field>.
 
 ---
 
