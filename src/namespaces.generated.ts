@@ -14,7 +14,11 @@ type PostData<P extends keyof paths> =
   paths[P] extends { post: { responses: { 200: { content: { 'application/json': infer T } } } } }
     ? (T extends { data?: infer D } ? D : T) : unknown;
 
-/** Same, for a GET lookup. These take no body and no query parameters. */
+/** Query parameters of a GET lookup that declares any. */
+type GetQuery<P extends keyof paths> =
+  paths[P] extends { get: { parameters: { query?: infer Q } } } ? Q : never;
+
+/** Same, for a GET lookup. */
 type GetData<P extends keyof paths> =
   paths[P] extends { get: { responses: { 200: { content: { 'application/json': infer T } } } } }
     ? (T extends { data?: infer D } ? D : T) : unknown;
@@ -41,18 +45,26 @@ export interface CallOptions {
 
 export interface AstrowayNamespaces {
   acg: {
+    /** Best places for a life category (POST /acg/best-places) */
+    bestPlaces(body: PostBody<'/acg/best-places'>, options?: CallOptions): ResultPromise<PostData<'/acg/best-places'>>;
     /** A*C*G by Life Category (POST /acg/by-category) */
     byCategory(body: PostBody<'/acg/by-category'>, options?: CallOptions): ResultPromise<PostData<'/acg/by-category'>>;
     /** A*C*G Life Categories (GET /acg/categories) */
     categoriesGet(options?: CallOptions): ResultPromise<GetData<'/acg/categories'>>;
     /** Astrocartography (A*C*G) (POST /acg) */
     compute(body: PostBody<'/acg'>, options?: CallOptions): ResultPromise<PostData<'/acg'>>;
+    /** Countries available for ranking (GET /acg/countries) */
+    countriesGet(options?: CallOptions): ResultPromise<GetData<'/acg/countries'>>;
     /** A*C*G Line Report (POST /acg/line-report) */
     lineReport(body: PostBody<'/acg/line-report'>, options?: CallOptions): ResultPromise<PostData<'/acg/line-report'>>;
   };
   acgZones: {
     /** A*C*G Lines Near a Point (POST /acg-zones) */
     compute(body: PostBody<'/acg-zones'>, options?: CallOptions): ResultPromise<PostData<'/acg-zones'>>;
+  };
+  agent: {
+    /** Agent tool definitions (GET /agent/tools) */
+    toolsGet(query?: GetQuery<'/agent/tools'>, options?: CallOptions): ResultPromise<GetData<'/agent/tools'>>;
   };
   ai: {
     /** AI Chat (RAG over chart) (POST /ai/chat) */
@@ -157,12 +169,24 @@ export interface AstrowayNamespaces {
     compute(body: PostBody<'/chart'>, options?: CallOptions): ResultPromise<PostData<'/chart'>>;
   };
   chinese: {
+    /** Annual flying stars and afflictions (POST /chinese/feng-shui/annual-stars) */
+    fengShuiAnnualStars(body: PostBody<'/chinese/feng-shui/annual-stars'>, options?: CallOptions): ResultPromise<PostData<'/chinese/feng-shui/annual-stars'>>;
     /** Bagua Life Areas (POST /chinese/feng-shui/bagua) */
     fengShuiBagua(body: PostBody<'/chinese/feng-shui/bagua'>, options?: CallOptions): ResultPromise<PostData<'/chinese/feng-shui/bagua'>>;
+    /** Flying Star natal chart (Xuan Kong Fei Xing) (POST /chinese/feng-shui/flying-star) */
+    fengShuiFlyingStar(body: PostBody<'/chinese/feng-shui/flying-star'>, options?: CallOptions): ResultPromise<PostData<'/chinese/feng-shui/flying-star'>>;
     /** Kua Number (POST /chinese/feng-shui/kua) */
     fengShuiKua(body: PostBody<'/chinese/feng-shui/kua'>, options?: CallOptions): ResultPromise<PostData<'/chinese/feng-shui/kua'>>;
     /** Lucky / Unlucky Directions (POST /chinese/feng-shui/lucky-directions) */
     fengShuiLuckyDirections(body: PostBody<'/chinese/feng-shui/lucky-directions'>, options?: CallOptions): ResultPromise<PostData<'/chinese/feng-shui/lucky-directions'>>;
+    /** Gregorian to Lunar Date (POST /chinese/lunar-date) */
+    lunarDate(body: PostBody<'/chinese/lunar-date'>, options?: CallOptions): ResultPromise<PostData<'/chinese/lunar-date'>>;
+    /** 24 Solar Terms (節氣) (POST /chinese/solar-terms) */
+    solarTerms(body: PostBody<'/chinese/solar-terms'>, options?: CallOptions): ResultPromise<PostData<'/chinese/solar-terms'>>;
+    /** Tong Shu day: officer and mansion (POST /chinese/tong-shu) */
+    tongShu(body: PostBody<'/chinese/tong-shu'>, options?: CallOptions): ResultPromise<PostData<'/chinese/tong-shu'>>;
+    /** Tong Shu date selection (POST /chinese/tong-shu/select) */
+    tongShuSelect(body: PostBody<'/chinese/tong-shu/select'>, options?: CallOptions): ResultPromise<PostData<'/chinese/tong-shu/select'>>;
     /** Chinese Zodiac Animal (POST /chinese/zodiac/animal) */
     zodiacAnimal(body: PostBody<'/chinese/zodiac/animal'>, options?: CallOptions): ResultPromise<PostData<'/chinese/zodiac/animal'>>;
     /** Animal Compatibility (POST /chinese/zodiac/compatibility) */
@@ -213,7 +237,7 @@ export interface AstrowayNamespaces {
     compute(body: PostBody<'/davison'>, options?: CallOptions): ResultPromise<PostData<'/davison'>>;
   };
   destinyMatrix: {
-    /** Destiny Matrix — Ladini Method (POST /destiny-matrix/ladini) */
+    /** Destiny Matrix: Ladini Method (POST /destiny-matrix/ladini) */
     ladini(body: PostBody<'/destiny-matrix/ladini'>, options?: CallOptions): ResultPromise<PostData<'/destiny-matrix/ladini'>>;
   };
   dispositionChains: {
@@ -223,7 +247,7 @@ export interface AstrowayNamespaces {
     layout(body: PostBody<'/disposition-chains/layout'>, options?: CallOptions): ResultPromise<PostData<'/disposition-chains/layout'>>;
   };
   djamaspa: {
-    /** Djamaspa (DEPRECATED — RED quality, sunset 2027-06-15) (POST /djamaspa) */
+    /** Djamaspa (DEPRECATED: RED quality, sunset 2027-06-15) (POST /djamaspa) */
     compute(body: PostBody<'/djamaspa'>, options?: CallOptions): ResultPromise<PostData<'/djamaspa'>>;
   };
   draconic: {
@@ -245,11 +269,11 @@ export interface AstrowayNamespaces {
   esoteric: {
     /** Decode Angel Number (POST /esoteric/angel-numbers/decode) */
     angelNumbersDecode(body: PostBody<'/esoteric/angel-numbers/decode'>, options?: CallOptions): ResultPromise<PostData<'/esoteric/angel-numbers/decode'>>;
-    /** Angel Numbers — Catalogue (GET /esoteric/angel-numbers) */
+    /** Angel Numbers: Catalogue (GET /esoteric/angel-numbers) */
     angelNumbersGet(options?: CallOptions): ResultPromise<GetData<'/esoteric/angel-numbers'>>;
     /** Daily Angel Number (GET /esoteric/angel-numbers/today) */
     angelNumbersTodayGet(options?: CallOptions): ResultPromise<GetData<'/esoteric/angel-numbers/today'>>;
-    /** Crystals — Full Directory (GET /esoteric/crystals) */
+    /** Crystals: Full Directory (GET /esoteric/crystals) */
     crystalsGet(options?: CallOptions): ResultPromise<GetData<'/esoteric/crystals'>>;
     /** Crystal Recommendations (POST /esoteric/crystals/recommend) */
     crystalsRecommend(body: PostBody<'/esoteric/crystals/recommend'>, options?: CallOptions): ResultPromise<PostData<'/esoteric/crystals/recommend'>>;
@@ -315,6 +339,8 @@ export interface AstrowayNamespaces {
     compute(body: PostBody<'/firdaria'>, options?: CallOptions): ResultPromise<PostData<'/firdaria'>>;
   };
   fixedStars: {
+    /** Fixed star catalogue (GET /fixed-stars/catalog) */
+    catalogGet(options?: CallOptions): ResultPromise<GetData<'/fixed-stars/catalog'>>;
     /** Fixed Stars (POST /fixed-stars) */
     compute(body: PostBody<'/fixed-stars'>, options?: CallOptions): ResultPromise<PostData<'/fixed-stars'>>;
   };
@@ -331,37 +357,37 @@ export interface AstrowayNamespaces {
     compute(body: PostBody<'/geodetic'>, options?: CallOptions): ResultPromise<PostData<'/geodetic'>>;
   };
   geomancy: {
-    /** Acquisitio — Gain (POST /geomancy/acquisitio) */
+    /** Acquisitio: Gain (POST /geomancy/acquisitio) */
     acquisitio(body: PostBody<'/geomancy/acquisitio'>, options?: CallOptions): ResultPromise<PostData<'/geomancy/acquisitio'>>;
-    /** Albus — White (POST /geomancy/albus) */
+    /** Albus: White (POST /geomancy/albus) */
     albus(body: PostBody<'/geomancy/albus'>, options?: CallOptions): ResultPromise<PostData<'/geomancy/albus'>>;
-    /** Amissio — Loss (POST /geomancy/amissio) */
+    /** Amissio: Loss (POST /geomancy/amissio) */
     amissio(body: PostBody<'/geomancy/amissio'>, options?: CallOptions): ResultPromise<PostData<'/geomancy/amissio'>>;
     /** Caput Draconis (POST /geomancy/caput-draconis) */
     caputDraconis(body: PostBody<'/geomancy/caput-draconis'>, options?: CallOptions): ResultPromise<PostData<'/geomancy/caput-draconis'>>;
-    /** Carcer — Prison (POST /geomancy/carcer) */
+    /** Carcer: Prison (POST /geomancy/carcer) */
     carcer(body: PostBody<'/geomancy/carcer'>, options?: CallOptions): ResultPromise<PostData<'/geomancy/carcer'>>;
     /** Cauda Draconis (POST /geomancy/cauda-draconis) */
     caudaDraconis(body: PostBody<'/geomancy/cauda-draconis'>, options?: CallOptions): ResultPromise<PostData<'/geomancy/cauda-draconis'>>;
-    /** Coniunctio — Conjunction (POST /geomancy/coniunctio) */
+    /** Coniunctio: Conjunction (POST /geomancy/coniunctio) */
     coniunctio(body: PostBody<'/geomancy/coniunctio'>, options?: CallOptions): ResultPromise<PostData<'/geomancy/coniunctio'>>;
     /** Fortuna Major (POST /geomancy/fortuna-major) */
     fortunaMajor(body: PostBody<'/geomancy/fortuna-major'>, options?: CallOptions): ResultPromise<PostData<'/geomancy/fortuna-major'>>;
     /** Fortuna Minor (POST /geomancy/fortuna-minor) */
     fortunaMinor(body: PostBody<'/geomancy/fortuna-minor'>, options?: CallOptions): ResultPromise<PostData<'/geomancy/fortuna-minor'>>;
-    /** Laetitia — Joy (POST /geomancy/laetitia) */
+    /** Laetitia: Joy (POST /geomancy/laetitia) */
     laetitia(body: PostBody<'/geomancy/laetitia'>, options?: CallOptions): ResultPromise<PostData<'/geomancy/laetitia'>>;
-    /** Populus — The People (POST /geomancy/populus) */
+    /** Populus: The People (POST /geomancy/populus) */
     populus(body: PostBody<'/geomancy/populus'>, options?: CallOptions): ResultPromise<PostData<'/geomancy/populus'>>;
-    /** Puella — Girl (POST /geomancy/puella) */
+    /** Puella: Girl (POST /geomancy/puella) */
     puella(body: PostBody<'/geomancy/puella'>, options?: CallOptions): ResultPromise<PostData<'/geomancy/puella'>>;
-    /** Puer — Boy (POST /geomancy/puer) */
+    /** Puer: Boy (POST /geomancy/puer) */
     puer(body: PostBody<'/geomancy/puer'>, options?: CallOptions): ResultPromise<PostData<'/geomancy/puer'>>;
-    /** Rubeus — Red (POST /geomancy/rubeus) */
+    /** Rubeus: Red (POST /geomancy/rubeus) */
     rubeus(body: PostBody<'/geomancy/rubeus'>, options?: CallOptions): ResultPromise<PostData<'/geomancy/rubeus'>>;
-    /** Tristitia — Sorrow (POST /geomancy/tristitia) */
+    /** Tristitia: Sorrow (POST /geomancy/tristitia) */
     tristitia(body: PostBody<'/geomancy/tristitia'>, options?: CallOptions): ResultPromise<PostData<'/geomancy/tristitia'>>;
-    /** Via — The Way (POST /geomancy/via) */
+    /** Via: The Way (POST /geomancy/via) */
     via(body: PostBody<'/geomancy/via'>, options?: CallOptions): ResultPromise<PostData<'/geomancy/via'>>;
   };
   groupSynastry: {
@@ -527,7 +553,7 @@ export interface AstrowayNamespaces {
   iching: {
     /** By Question (POST /iching/by-question) */
     byQuestion(body: PostBody<'/iching/by-question'>, options?: CallOptions): ResultPromise<PostData<'/iching/by-question'>>;
-    /** I Ching Hexagram (DEPRECATED — use /iching/throw-coins) (POST /iching) */
+    /** I Ching Hexagram (DEPRECATED: use /iching/throw-coins) (POST /iching) */
     compute(body: PostBody<'/iching'>, options?: CallOptions): ResultPromise<PostData<'/iching'>>;
     /** Daily I Ching (POST /iching/daily) */
     daily(body: PostBody<'/iching/daily'>, options?: CallOptions): ResultPromise<PostData<'/iching/daily'>>;
@@ -551,6 +577,14 @@ export interface AstrowayNamespaces {
     synastry(body: PostBody<'/interpret/synastry'>, options?: CallOptions): ResultPromise<PostData<'/interpret/synastry'>>;
     /** Transits Interpretation (POST /interpret/transits) */
     transits(body: PostBody<'/interpret/transits'>, options?: CallOptions): ResultPromise<PostData<'/interpret/transits'>>;
+  };
+  kabbalah: {
+    /** Gematria ciphers (POST /kabbalah/gematria) */
+    gematria(body: PostBody<'/kabbalah/gematria'>, options?: CallOptions): ResultPromise<PostData<'/kabbalah/gematria'>>;
+    /** The ten sephirot (GET /kabbalah/sephiroth) */
+    sephirothGet(options?: CallOptions): ResultPromise<GetData<'/kabbalah/sephiroth'>>;
+    /** The seventy-two names (Shem HaMephorash) (GET /kabbalah/shem-names) */
+    shemNamesGet(options?: CallOptions): ResultPromise<GetData<'/kabbalah/shem-names'>>;
   };
   localSpace: {
     /** Local Space Chart (POST /local-space) */
@@ -619,35 +653,35 @@ export interface AstrowayNamespaces {
     compute(body: PostBody<'/minor-progressions'>, options?: CallOptions): ResultPromise<PostData<'/minor-progressions'>>;
   };
   modern: {
-    /** Arroyo — Cycle of Becoming (POST /modern/arroyo/cycle-of-becoming) */
+    /** Arroyo: Cycle of Becoming (POST /modern/arroyo/cycle-of-becoming) */
     arroyoCycleOfBecoming(body: PostBody<'/modern/arroyo/cycle-of-becoming'>, options?: CallOptions): ResultPromise<PostData<'/modern/arroyo/cycle-of-becoming'>>;
-    /** Arroyo — Element Balance (POST /modern/arroyo/element-balance) */
+    /** Arroyo: Element Balance (POST /modern/arroyo/element-balance) */
     arroyoElementBalance(body: PostBody<'/modern/arroyo/element-balance'>, options?: CallOptions): ResultPromise<PostData<'/modern/arroyo/element-balance'>>;
-    /** Arroyo — Element Integration (POST /modern/arroyo/element-integration) */
+    /** Arroyo: Element Integration (POST /modern/arroyo/element-integration) */
     arroyoElementIntegration(body: PostBody<'/modern/arroyo/element-integration'>, options?: CallOptions): ResultPromise<PostData<'/modern/arroyo/element-integration'>>;
-    /** Arroyo — Relational Map (POST /modern/arroyo/relational-element-map) */
+    /** Arroyo: Relational Map (POST /modern/arroyo/relational-element-map) */
     arroyoRelationalElementMap(body: PostBody<'/modern/arroyo/relational-element-map'>, options?: CallOptions): ResultPromise<PostData<'/modern/arroyo/relational-element-map'>>;
-    /** Arroyo — Water Houses Trauma (POST /modern/arroyo/water-houses-trauma) */
+    /** Arroyo: Water Houses Trauma (POST /modern/arroyo/water-houses-trauma) */
     arroyoWaterHousesTrauma(body: PostBody<'/modern/arroyo/water-houses-trauma'>, options?: CallOptions): ResultPromise<PostData<'/modern/arroyo/water-houses-trauma'>>;
-    /** Greene — Archetypal Figures (POST /modern/greene/archetypal-figures) */
+    /** Greene: Archetypal Figures (POST /modern/greene/archetypal-figures) */
     greeneArchetypalFigures(body: PostBody<'/modern/greene/archetypal-figures'>, options?: CallOptions): ResultPromise<PostData<'/modern/greene/archetypal-figures'>>;
-    /** Greene — Individuation Path (POST /modern/greene/individuation-path) */
+    /** Greene: Individuation Path (POST /modern/greene/individuation-path) */
     greeneIndividuationPath(body: PostBody<'/modern/greene/individuation-path'>, options?: CallOptions): ResultPromise<PostData<'/modern/greene/individuation-path'>>;
-    /** Greene — Lunar Myth (POST /modern/greene/lunar-myth) */
+    /** Greene: Lunar Myth (POST /modern/greene/lunar-myth) */
     greeneLunarMyth(body: PostBody<'/modern/greene/lunar-myth'>, options?: CallOptions): ResultPromise<PostData<'/modern/greene/lunar-myth'>>;
-    /** Greene — Parental Imagos (POST /modern/greene/parental-imagos) */
+    /** Greene: Parental Imagos (POST /modern/greene/parental-imagos) */
     greeneParentalImagos(body: PostBody<'/modern/greene/parental-imagos'>, options?: CallOptions): ResultPromise<PostData<'/modern/greene/parental-imagos'>>;
-    /** Greene — Saturn Shadow (POST /modern/greene/saturn-shadow) */
+    /** Greene: Saturn Shadow (POST /modern/greene/saturn-shadow) */
     greeneSaturnShadow(body: PostBody<'/modern/greene/saturn-shadow'>, options?: CallOptions): ResultPromise<PostData<'/modern/greene/saturn-shadow'>>;
-    /** Rudhyar — Cycles of Becoming (POST /modern/rudhyar/cycles-of-becoming) */
+    /** Rudhyar: Cycles of Becoming (POST /modern/rudhyar/cycles-of-becoming) */
     rudhyarCyclesOfBecoming(body: PostBody<'/modern/rudhyar/cycles-of-becoming'>, options?: CallOptions): ResultPromise<PostData<'/modern/rudhyar/cycles-of-becoming'>>;
-    /** Rudhyar — Lunation Phase (POST /modern/rudhyar/lunation-phase) */
+    /** Rudhyar: Lunation Phase (POST /modern/rudhyar/lunation-phase) */
     rudhyarLunationPhase(body: PostBody<'/modern/rudhyar/lunation-phase'>, options?: CallOptions): ResultPromise<PostData<'/modern/rudhyar/lunation-phase'>>;
-    /** Rudhyar — Personality Keynote (POST /modern/rudhyar/personality-keynote) */
+    /** Rudhyar: Personality Keynote (POST /modern/rudhyar/personality-keynote) */
     rudhyarPersonalityKeynote(body: PostBody<'/modern/rudhyar/personality-keynote'>, options?: CallOptions): ResultPromise<PostData<'/modern/rudhyar/personality-keynote'>>;
-    /** Rudhyar — Symbolic Degrees (POST /modern/rudhyar/symbolic-degrees) */
+    /** Rudhyar: Symbolic Degrees (POST /modern/rudhyar/symbolic-degrees) */
     rudhyarSymbolicDegrees(body: PostBody<'/modern/rudhyar/symbolic-degrees'>, options?: CallOptions): ResultPromise<PostData<'/modern/rudhyar/symbolic-degrees'>>;
-    /** Rudhyar — Transits as Rebirth (POST /modern/rudhyar/transits-as-rebirth) */
+    /** Rudhyar: Transits as Rebirth (POST /modern/rudhyar/transits-as-rebirth) */
     rudhyarTransitsAsRebirth(body: PostBody<'/modern/rudhyar/transits-as-rebirth'>, options?: CallOptions): ResultPromise<PostData<'/modern/rudhyar/transits-as-rebirth'>>;
   };
   moonAspects: {
@@ -663,7 +697,7 @@ export interface AstrowayNamespaces {
     compute(body: PostBody<'/moon-voc'>, options?: CallOptions): ResultPromise<PostData<'/moon-voc'>>;
   };
   muhurta: {
-    /** Muhurat — activity catalogue (GET /muhurta/types) */
+    /** Muhurat: activity catalogue (GET /muhurta/types) */
     typesGet(options?: CallOptions): ResultPromise<GetData<'/muhurta/types'>>;
   };
   nakshatras: {
@@ -791,6 +825,8 @@ export interface AstrowayNamespaces {
   parans: {
     /** Parans (POST /parans) */
     compute(body: PostBody<'/parans'>, options?: CallOptions): ResultPromise<PostData<'/parans'>>;
+    /** Star-planet parans (Brady) (POST /parans/star) */
+    star(body: PostBody<'/parans/star'>, options?: CallOptions): ResultPromise<PostData<'/parans/star'>>;
   };
   pet: {
     /** Best Names by Sign (POST /pet/best-names) */
@@ -911,7 +947,7 @@ export interface AstrowayNamespaces {
     biWheel(body: PostBody<'/render/bi-wheel'>, options?: CallOptions): ResultPromise<PostData<'/render/bi-wheel'>>;
     /** Composite Chart (SVG) (POST /render/composite) */
     composite(body: PostBody<'/render/composite'>, options?: CallOptions): ResultPromise<PostData<'/render/composite'>>;
-    /** Cosmogram — Hamburg School 90° dial (SVG) (POST /render/cosmogram) */
+    /** Cosmogram: Hamburg School 90° dial (SVG) (POST /render/cosmogram) */
     cosmogram(body: PostBody<'/render/cosmogram'>, options?: CallOptions): ResultPromise<PostData<'/render/cosmogram'>>;
     /** Eclipse Path Map (SVG) (POST /render/eclipse-path) */
     eclipsePath(body: PostBody<'/render/eclipse-path'>, options?: CallOptions): ResultPromise<PostData<'/render/eclipse-path'>>;
@@ -923,11 +959,11 @@ export interface AstrowayNamespaces {
     timeline(body: PostBody<'/render/timeline'>, options?: CallOptions): ResultPromise<PostData<'/render/timeline'>>;
     /** Tri-Wheel (SVG) (POST /render/tri-wheel) */
     triWheel(body: PostBody<'/render/tri-wheel'>, options?: CallOptions): ResultPromise<PostData<'/render/tri-wheel'>>;
-    /** Vedic Wheel — East Indian (SVG) (POST /render/wheel-vedic-east) */
+    /** Vedic Wheel: East Indian (SVG) (POST /render/wheel-vedic-east) */
     wheelVedicEast(body: PostBody<'/render/wheel-vedic-east'>, options?: CallOptions): ResultPromise<PostData<'/render/wheel-vedic-east'>>;
-    /** Vedic Wheel — North Indian (SVG) (POST /render/wheel-vedic-north) */
+    /** Vedic Wheel: North Indian (SVG) (POST /render/wheel-vedic-north) */
     wheelVedicNorth(body: PostBody<'/render/wheel-vedic-north'>, options?: CallOptions): ResultPromise<PostData<'/render/wheel-vedic-north'>>;
-    /** Vedic Wheel — South Indian (SVG) (POST /render/wheel-vedic-south) */
+    /** Vedic Wheel: South Indian (SVG) (POST /render/wheel-vedic-south) */
     wheelVedicSouth(body: PostBody<'/render/wheel-vedic-south'>, options?: CallOptions): ResultPromise<PostData<'/render/wheel-vedic-south'>>;
     /** Western Wheel (SVG) (POST /render/wheel-western) */
     wheelWestern(body: PostBody<'/render/wheel-western'>, options?: CallOptions): ResultPromise<PostData<'/render/wheel-western'>>;
@@ -949,7 +985,9 @@ export interface AstrowayNamespaces {
     career(body: PostBody<'/reports/career'>, options?: CallOptions): ResultPromise<PostData<'/reports/career'>>;
     /** Generate Child Astrology Report (PDF or HTML) (POST /reports/child) */
     child(body: PostBody<'/reports/child'>, options?: CallOptions): ResultPromise<PostData<'/reports/child'>>;
-    /** Generate Report — Unified Dispatcher (V2) (POST /reports/generate) */
+    /** Generate Gemstone Report (PDF or HTML) (POST /reports/gemstone) */
+    gemstone(body: PostBody<'/reports/gemstone'>, options?: CallOptions): ResultPromise<PostData<'/reports/gemstone'>>;
+    /** Generate Report: Unified Dispatcher (V2) (POST /reports/generate) */
     generate(body: PostBody<'/reports/generate'>, options?: CallOptions): ResultPromise<PostData<'/reports/generate'>>;
     /** List Recent Report Exports (GET /reports/history) */
     historyGet(options?: CallOptions): ResultPromise<GetData<'/reports/history'>>;
@@ -965,6 +1003,8 @@ export interface AstrowayNamespaces {
     muhurta(body: PostBody<'/reports/muhurta'>, options?: CallOptions): ResultPromise<PostData<'/reports/muhurta'>>;
     /** Generate Natal Report (PDF or HTML) (POST /reports/natal) */
     natal(body: PostBody<'/reports/natal'>, options?: CallOptions): ResultPromise<PostData<'/reports/natal'>>;
+    /** Generate Relocation Report (PDF or HTML) (POST /reports/relocation) */
+    relocation(body: PostBody<'/reports/relocation'>, options?: CallOptions): ResultPromise<PostData<'/reports/relocation'>>;
     /** Generate Stellaforge Birth-Chart Poster (PDF or HTML) (POST /reports/stellaforge) */
     stellaforge(body: PostBody<'/reports/stellaforge'>, options?: CallOptions): ResultPromise<PostData<'/reports/stellaforge'>>;
     /** Generate Synastry Report (PDF or HTML) (POST /reports/synastry) */
@@ -1047,119 +1087,119 @@ export interface AstrowayNamespaces {
     houseOverlay(body: PostBody<'/synastry/house-overlay'>, options?: CallOptions): ResultPromise<PostData<'/synastry/house-overlay'>>;
   };
   tarot: {
-    /** Lenormand — All Cards (GET /tarot/lenormand/cards) */
+    /** Lenormand: All Cards (GET /tarot/lenormand/cards) */
     lenormandCardsGet(options?: CallOptions): ResultPromise<GetData<'/tarot/lenormand/cards'>>;
-    /** Lenormand — Daily Cards (POST /tarot/lenormand/daily) */
+    /** Lenormand: Daily Cards (POST /tarot/lenormand/daily) */
     lenormandDaily(body: PostBody<'/tarot/lenormand/daily'>, options?: CallOptions): ResultPromise<PostData<'/tarot/lenormand/daily'>>;
-    /** Lenormand — 9-Card Square (POST /tarot/lenormand/draw/9-card-square) */
+    /** Lenormand: 9-Card Square (POST /tarot/lenormand/draw/9-card-square) */
     lenormandDraw9CardSquare(body: PostBody<'/tarot/lenormand/draw/9-card-square'>, options?: CallOptions): ResultPromise<PostData<'/tarot/lenormand/draw/9-card-square'>>;
-    /** Lenormand — Celtic Cross (POST /tarot/lenormand/draw/celtic-cross-lenormand) */
+    /** Lenormand: Celtic Cross (POST /tarot/lenormand/draw/celtic-cross-lenormand) */
     lenormandDrawCelticCrossLenormand(body: PostBody<'/tarot/lenormand/draw/celtic-cross-lenormand'>, options?: CallOptions): ResultPromise<PostData<'/tarot/lenormand/draw/celtic-cross-lenormand'>>;
-    /** Lenormand — Grand Tableau (POST /tarot/lenormand/draw/grand-tableau) */
+    /** Lenormand: Grand Tableau (POST /tarot/lenormand/draw/grand-tableau) */
     lenormandDrawGrandTableau(body: PostBody<'/tarot/lenormand/draw/grand-tableau'>, options?: CallOptions): ResultPromise<PostData<'/tarot/lenormand/draw/grand-tableau'>>;
-    /** Lenormand — Line of Five (POST /tarot/lenormand/draw/line-of-five) */
+    /** Lenormand: Line of Five (POST /tarot/lenormand/draw/line-of-five) */
     lenormandDrawLineOfFive(body: PostBody<'/tarot/lenormand/draw/line-of-five'>, options?: CallOptions): ResultPromise<PostData<'/tarot/lenormand/draw/line-of-five'>>;
-    /** Lenormand — Relationship (POST /tarot/lenormand/draw/relationship) */
+    /** Lenormand: Relationship (POST /tarot/lenormand/draw/relationship) */
     lenormandDrawRelationship(body: PostBody<'/tarot/lenormand/draw/relationship'>, options?: CallOptions): ResultPromise<PostData<'/tarot/lenormand/draw/relationship'>>;
-    /** Lenormand — Three-Card (POST /tarot/lenormand/draw/three-card) */
+    /** Lenormand: Three-Card (POST /tarot/lenormand/draw/three-card) */
     lenormandDrawThreeCard(body: PostBody<'/tarot/lenormand/draw/three-card'>, options?: CallOptions): ResultPromise<PostData<'/tarot/lenormand/draw/three-card'>>;
-    /** Lenormand — 36 Houses (GET /tarot/lenormand/houses) */
+    /** Lenormand: 36 Houses (GET /tarot/lenormand/houses) */
     lenormandHousesGet(options?: CallOptions): ResultPromise<GetData<'/tarot/lenormand/houses'>>;
-    /** Marseille — Birth Card (POST /tarot/marseille/birth-card) */
+    /** Marseille: Birth Card (POST /tarot/marseille/birth-card) */
     marseilleBirthCard(body: PostBody<'/tarot/marseille/birth-card'>, options?: CallOptions): ResultPromise<PostData<'/tarot/marseille/birth-card'>>;
-    /** Marseille — All Cards (GET /tarot/marseille/cards) */
+    /** Marseille: All Cards (GET /tarot/marseille/cards) */
     marseilleCardsGet(options?: CallOptions): ResultPromise<GetData<'/tarot/marseille/cards'>>;
-    /** Marseille — Clarifier (POST /tarot/marseille/clarify) */
+    /** Marseille: Clarifier (POST /tarot/marseille/clarify) */
     marseilleClarify(body: PostBody<'/tarot/marseille/clarify'>, options?: CallOptions): ResultPromise<PostData<'/tarot/marseille/clarify'>>;
-    /** Marseille — Daily Card (POST /tarot/marseille/daily) */
+    /** Marseille: Daily Card (POST /tarot/marseille/daily) */
     marseilleDaily(body: PostBody<'/tarot/marseille/daily'>, options?: CallOptions): ResultPromise<PostData<'/tarot/marseille/daily'>>;
-    /** Marseille — Career (POST /tarot/marseille/draw/career) */
+    /** Marseille: Career (POST /tarot/marseille/draw/career) */
     marseilleDrawCareer(body: PostBody<'/tarot/marseille/draw/career'>, options?: CallOptions): ResultPromise<PostData<'/tarot/marseille/draw/career'>>;
-    /** Marseille — Celtic Cross (POST /tarot/marseille/draw/celtic-cross) */
+    /** Marseille: Celtic Cross (POST /tarot/marseille/draw/celtic-cross) */
     marseilleDrawCelticCross(body: PostBody<'/tarot/marseille/draw/celtic-cross'>, options?: CallOptions): ResultPromise<PostData<'/tarot/marseille/draw/celtic-cross'>>;
-    /** Marseille — Tirage Réduit (Jodorowsky Reduced Cross) (POST /tarot/marseille/draw/cross) */
+    /** Marseille: Tirage Réduit (Jodorowsky Reduced Cross) (POST /tarot/marseille/draw/cross) */
     marseilleDrawCross(body: PostBody<'/tarot/marseille/draw/cross'>, options?: CallOptions): ResultPromise<PostData<'/tarot/marseille/draw/cross'>>;
-    /** Marseille — Yes/No (POST /tarot/marseille/draw/decision) */
+    /** Marseille: Yes/No (POST /tarot/marseille/draw/decision) */
     marseilleDrawDecision(body: PostBody<'/tarot/marseille/draw/decision'>, options?: CallOptions): ResultPromise<PostData<'/tarot/marseille/draw/decision'>>;
-    /** Marseille — Tirage du Héros (Hero's Journey) (POST /tarot/marseille/draw/hero) */
+    /** Marseille: Tirage du Héros (Hero's Journey) (POST /tarot/marseille/draw/hero) */
     marseilleDrawHero(body: PostBody<'/tarot/marseille/draw/hero'>, options?: CallOptions): ResultPromise<PostData<'/tarot/marseille/draw/hero'>>;
-    /** Marseille — Love (POST /tarot/marseille/draw/love) */
+    /** Marseille: Love (POST /tarot/marseille/draw/love) */
     marseilleDrawLove(body: PostBody<'/tarot/marseille/draw/love'>, options?: CallOptions): ResultPromise<PostData<'/tarot/marseille/draw/love'>>;
-    /** Marseille — Seven-Card (POST /tarot/marseille/draw/seven-card) */
+    /** Marseille: Seven-Card (POST /tarot/marseille/draw/seven-card) */
     marseilleDrawSevenCard(body: PostBody<'/tarot/marseille/draw/seven-card'>, options?: CallOptions): ResultPromise<PostData<'/tarot/marseille/draw/seven-card'>>;
-    /** Marseille — Single Card (POST /tarot/marseille/draw/single) */
+    /** Marseille: Single Card (POST /tarot/marseille/draw/single) */
     marseilleDrawSingle(body: PostBody<'/tarot/marseille/draw/single'>, options?: CallOptions): ResultPromise<PostData<'/tarot/marseille/draw/single'>>;
-    /** Marseille — Spiritual (POST /tarot/marseille/draw/spiritual) */
+    /** Marseille: Spiritual (POST /tarot/marseille/draw/spiritual) */
     marseilleDrawSpiritual(body: PostBody<'/tarot/marseille/draw/spiritual'>, options?: CallOptions): ResultPromise<PostData<'/tarot/marseille/draw/spiritual'>>;
-    /** Marseille — Three-Card (POST /tarot/marseille/draw/three-card) */
+    /** Marseille: Three-Card (POST /tarot/marseille/draw/three-card) */
     marseilleDrawThreeCard(body: PostBody<'/tarot/marseille/draw/three-card'>, options?: CallOptions): ResultPromise<PostData<'/tarot/marseille/draw/three-card'>>;
-    /** Marseille — Interpret (POST /tarot/marseille/interpret) */
+    /** Marseille: Interpret (POST /tarot/marseille/interpret) */
     marseilleInterpret(body: PostBody<'/tarot/marseille/interpret'>, options?: CallOptions): ResultPromise<PostData<'/tarot/marseille/interpret'>>;
-    /** Marseille — 22 Majors (GET /tarot/marseille/majors) */
+    /** Marseille: 22 Majors (GET /tarot/marseille/majors) */
     marseilleMajorsGet(options?: CallOptions): ResultPromise<GetData<'/tarot/marseille/majors'>>;
-    /** Marseille — All Spreads (GET /tarot/marseille/spreads) */
+    /** Marseille: All Spreads (GET /tarot/marseille/spreads) */
     marseilleSpreadsGet(options?: CallOptions): ResultPromise<GetData<'/tarot/marseille/spreads'>>;
-    /** Marseille — Timing (POST /tarot/marseille/timing) */
+    /** Marseille: Timing (POST /tarot/marseille/timing) */
     marseilleTiming(body: PostBody<'/tarot/marseille/timing'>, options?: CallOptions): ResultPromise<PostData<'/tarot/marseille/timing'>>;
-    /** Marseille — Year Card (POST /tarot/marseille/year-card) */
+    /** Marseille: Year Card (POST /tarot/marseille/year-card) */
     marseilleYearCard(body: PostBody<'/tarot/marseille/year-card'>, options?: CallOptions): ResultPromise<PostData<'/tarot/marseille/year-card'>>;
-    /** RWS — Advice Card (POST /tarot/rider-waite/advice) */
+    /** RWS: Advice Card (POST /tarot/rider-waite/advice) */
     riderWaiteAdvice(body: PostBody<'/tarot/rider-waite/advice'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/advice'>>;
-    /** RWS — Birth Card (POST /tarot/rider-waite/birth-card) */
+    /** RWS: Birth Card (POST /tarot/rider-waite/birth-card) */
     riderWaiteBirthCard(body: PostBody<'/tarot/rider-waite/birth-card'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/birth-card'>>;
-    /** RWS — All Cards (GET /tarot/rider-waite/cards) */
+    /** RWS: All Cards (GET /tarot/rider-waite/cards) */
     riderWaiteCardsGet(options?: CallOptions): ResultPromise<GetData<'/tarot/rider-waite/cards'>>;
-    /** RWS — Clarifier Card (POST /tarot/rider-waite/clarify) */
+    /** RWS: Clarifier Card (POST /tarot/rider-waite/clarify) */
     riderWaiteClarify(body: PostBody<'/tarot/rider-waite/clarify'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/clarify'>>;
-    /** RWS — 16 Court Cards (GET /tarot/rider-waite/courts) */
+    /** RWS: 16 Court Cards (GET /tarot/rider-waite/courts) */
     riderWaiteCourtsGet(options?: CallOptions): ResultPromise<GetData<'/tarot/rider-waite/courts'>>;
-    /** RWS — Court Card Cross-Sum (POST /tarot/rider-waite/cross-sum) */
+    /** RWS: Court Card Cross-Sum (POST /tarot/rider-waite/cross-sum) */
     riderWaiteCrossSum(body: PostBody<'/tarot/rider-waite/cross-sum'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/cross-sum'>>;
-    /** RWS — Daily Card (POST /tarot/rider-waite/daily) */
+    /** RWS: Daily Card (POST /tarot/rider-waite/daily) */
     riderWaiteDaily(body: PostBody<'/tarot/rider-waite/daily'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/daily'>>;
-    /** RWS — Career (POST /tarot/rider-waite/draw/career) */
+    /** RWS: Career (POST /tarot/rider-waite/draw/career) */
     riderWaiteDrawCareer(body: PostBody<'/tarot/rider-waite/draw/career'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/draw/career'>>;
-    /** RWS — Celtic Cross (POST /tarot/rider-waite/draw/celtic-cross) */
+    /** RWS: Celtic Cross (POST /tarot/rider-waite/draw/celtic-cross) */
     riderWaiteDrawCelticCross(body: PostBody<'/tarot/rider-waite/draw/celtic-cross'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/draw/celtic-cross'>>;
-    /** RWS — Chakra (POST /tarot/rider-waite/draw/chakra) */
+    /** RWS: Chakra (POST /tarot/rider-waite/draw/chakra) */
     riderWaiteDrawChakra(body: PostBody<'/tarot/rider-waite/draw/chakra'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/draw/chakra'>>;
-    /** RWS — Yes/No (POST /tarot/rider-waite/draw/decision) */
+    /** RWS: Yes/No (POST /tarot/rider-waite/draw/decision) */
     riderWaiteDrawDecision(body: PostBody<'/tarot/rider-waite/draw/decision'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/draw/decision'>>;
-    /** RWS — Horseshoe (POST /tarot/rider-waite/draw/horseshoe) */
+    /** RWS: Horseshoe (POST /tarot/rider-waite/draw/horseshoe) */
     riderWaiteDrawHorseshoe(body: PostBody<'/tarot/rider-waite/draw/horseshoe'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/draw/horseshoe'>>;
-    /** RWS — Love Triangle (POST /tarot/rider-waite/draw/love-triangle) */
+    /** RWS: Love Triangle (POST /tarot/rider-waite/draw/love-triangle) */
     riderWaiteDrawLoveTriangle(body: PostBody<'/tarot/rider-waite/draw/love-triangle'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/draw/love-triangle'>>;
-    /** RWS — Relationship (POST /tarot/rider-waite/draw/relationship) */
+    /** RWS: Relationship (POST /tarot/rider-waite/draw/relationship) */
     riderWaiteDrawRelationship(body: PostBody<'/tarot/rider-waite/draw/relationship'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/draw/relationship'>>;
-    /** RWS — Shadow Work (POST /tarot/rider-waite/draw/shadow-work) */
+    /** RWS: Shadow Work (POST /tarot/rider-waite/draw/shadow-work) */
     riderWaiteDrawShadowWork(body: PostBody<'/tarot/rider-waite/draw/shadow-work'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/draw/shadow-work'>>;
-    /** RWS — Single Card Draw (POST /tarot/rider-waite/draw/single) */
+    /** RWS: Single Card Draw (POST /tarot/rider-waite/draw/single) */
     riderWaiteDrawSingle(body: PostBody<'/tarot/rider-waite/draw/single'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/draw/single'>>;
-    /** RWS — Spiritual Path (POST /tarot/rider-waite/draw/spiritual-path) */
+    /** RWS: Spiritual Path (POST /tarot/rider-waite/draw/spiritual-path) */
     riderWaiteDrawSpiritualPath(body: PostBody<'/tarot/rider-waite/draw/spiritual-path'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/draw/spiritual-path'>>;
-    /** RWS — Three-Card Draw (POST /tarot/rider-waite/draw/three-card) */
+    /** RWS: Three-Card Draw (POST /tarot/rider-waite/draw/three-card) */
     riderWaiteDrawThreeCard(body: PostBody<'/tarot/rider-waite/draw/three-card'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/draw/three-card'>>;
-    /** RWS — Year Ahead (POST /tarot/rider-waite/draw/year-ahead) */
+    /** RWS: Year Ahead (POST /tarot/rider-waite/draw/year-ahead) */
     riderWaiteDrawYearAhead(body: PostBody<'/tarot/rider-waite/draw/year-ahead'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/draw/year-ahead'>>;
-    /** RWS — Interpret a Hand (POST /tarot/rider-waite/interpret) */
+    /** RWS: Interpret a Hand (POST /tarot/rider-waite/interpret) */
     riderWaiteInterpret(body: PostBody<'/tarot/rider-waite/interpret'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/interpret'>>;
-    /** RWS — 22 Majors (GET /tarot/rider-waite/majors) */
+    /** RWS: 22 Majors (GET /tarot/rider-waite/majors) */
     riderWaiteMajorsGet(options?: CallOptions): ResultPromise<GetData<'/tarot/rider-waite/majors'>>;
-    /** RWS — 40 Minors (GET /tarot/rider-waite/minors) */
+    /** RWS: 40 Minors (GET /tarot/rider-waite/minors) */
     riderWaiteMinorsGet(options?: CallOptions): ResultPromise<GetData<'/tarot/rider-waite/minors'>>;
-    /** RWS — Missing Info Card (POST /tarot/rider-waite/missing-info) */
+    /** RWS: Missing Info Card (POST /tarot/rider-waite/missing-info) */
     riderWaiteMissingInfo(body: PostBody<'/tarot/rider-waite/missing-info'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/missing-info'>>;
-    /** RWS — Outcome Card (POST /tarot/rider-waite/outcome) */
+    /** RWS: Outcome Card (POST /tarot/rider-waite/outcome) */
     riderWaiteOutcome(body: PostBody<'/tarot/rider-waite/outcome'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/outcome'>>;
-    /** RWS — Shadow Card (POST /tarot/rider-waite/shadow-card) */
+    /** RWS: Shadow Card (POST /tarot/rider-waite/shadow-card) */
     riderWaiteShadowCard(body: PostBody<'/tarot/rider-waite/shadow-card'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/shadow-card'>>;
-    /** RWS — Soul + Personality (POST /tarot/rider-waite/soul-personality-card) */
+    /** RWS: Soul + Personality (POST /tarot/rider-waite/soul-personality-card) */
     riderWaiteSoulPersonalityCard(body: PostBody<'/tarot/rider-waite/soul-personality-card'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/soul-personality-card'>>;
-    /** RWS — All Spreads (GET /tarot/rider-waite/spreads) */
+    /** RWS: All Spreads (GET /tarot/rider-waite/spreads) */
     riderWaiteSpreadsGet(options?: CallOptions): ResultPromise<GetData<'/tarot/rider-waite/spreads'>>;
-    /** RWS — Timing Card (POST /tarot/rider-waite/timing) */
+    /** RWS: Timing Card (POST /tarot/rider-waite/timing) */
     riderWaiteTiming(body: PostBody<'/tarot/rider-waite/timing'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/timing'>>;
-    /** RWS — Year Card (POST /tarot/rider-waite/year-card) */
+    /** RWS: Year Card (POST /tarot/rider-waite/year-card) */
     riderWaiteYearCard(body: PostBody<'/tarot/rider-waite/year-card'>, options?: CallOptions): ResultPromise<PostData<'/tarot/rider-waite/year-card'>>;
   };
   tertiaryProgressions: {
@@ -1183,343 +1223,351 @@ export interface AstrowayNamespaces {
     languagesGet(options?: CallOptions): ResultPromise<GetData<'/translate/languages'>>;
   };
   vedic: {
-    /** Compatibility — Ashtakoot Guna Milan (8-fold 36-point) (POST /vedic/compatibility/ashtakoot) */
+    /** Bhava Bala: house strength (POST /vedic/bhavabala) */
+    bhavabala(body: PostBody<'/vedic/bhavabala'>, options?: CallOptions): ResultPromise<PostData<'/vedic/bhavabala'>>;
+    /** Compatibility: Ashtakoot Guna Milan (8-fold 36-point) (POST /vedic/compatibility/ashtakoot) */
     compatibilityAshtakoot(body: PostBody<'/vedic/compatibility/ashtakoot'>, options?: CallOptions): ResultPromise<PostData<'/vedic/compatibility/ashtakoot'>>;
-    /** Compatibility — Bhrigu-match (7H placement) (POST /vedic/compatibility/bhrigu-match) */
+    /** Compatibility: Bhrigu-match (7H placement) (POST /vedic/compatibility/bhrigu-match) */
     compatibilityBhriguMatch(body: PostBody<'/vedic/compatibility/bhrigu-match'>, options?: CallOptions): ResultPromise<PostData<'/vedic/compatibility/bhrigu-match'>>;
-    /** Compatibility — Dashakoota (10-fold 39-point) (POST /vedic/compatibility/dashakoota) */
+    /** Compatibility: Dashakoota (10-fold 39-point) (POST /vedic/compatibility/dashakoota) */
     compatibilityDashakoota(body: PostBody<'/vedic/compatibility/dashakoota'>, options?: CallOptions): ResultPromise<PostData<'/vedic/compatibility/dashakoota'>>;
-    /** Compatibility — Parashara full report (POST /vedic/compatibility/full) */
+    /** Compatibility: Parashara full report (POST /vedic/compatibility/full) */
     compatibilityFull(body: PostBody<'/vedic/compatibility/full'>, options?: CallOptions): ResultPromise<PostData<'/vedic/compatibility/full'>>;
-    /** Compatibility — Mangal-match (Manglik between partners) (POST /vedic/compatibility/mangal-match) */
+    /** Compatibility: Mangal-match (Manglik between partners) (POST /vedic/compatibility/mangal-match) */
     compatibilityMangalMatch(body: PostBody<'/vedic/compatibility/mangal-match'>, options?: CallOptions): ResultPromise<PostData<'/vedic/compatibility/mangal-match'>>;
-    /** Compatibility — Manglik check (single chart) (POST /vedic/compatibility/manglik-check) */
+    /** Compatibility: Manglik check (single chart) (POST /vedic/compatibility/manglik-check) */
     compatibilityManglikCheck(body: PostBody<'/vedic/compatibility/manglik-check'>, options?: CallOptions): ResultPromise<PostData<'/vedic/compatibility/manglik-check'>>;
-    /** Dashas — Ashtottari Antardasha (POST /vedic/dashas/ashtottari/antar) */
+    /** Dashas: Ashtottari Antardasha (POST /vedic/dashas/ashtottari/antar) */
     dashasAshtottariAntar(body: PostBody<'/vedic/dashas/ashtottari/antar'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/ashtottari/antar'>>;
-    /** Dashas — Ashtottari Mahadasha (POST /vedic/dashas/ashtottari/maha) */
+    /** Dashas: Ashtottari Mahadasha (POST /vedic/dashas/ashtottari/maha) */
     dashasAshtottariMaha(body: PostBody<'/vedic/dashas/ashtottari/maha'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/ashtottari/maha'>>;
-    /** Dashas — Ashtottari Pranadasha (POST /vedic/dashas/ashtottari/prana) */
+    /** Dashas: Ashtottari Pranadasha (POST /vedic/dashas/ashtottari/prana) */
     dashasAshtottariPrana(body: PostBody<'/vedic/dashas/ashtottari/prana'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/ashtottari/prana'>>;
-    /** Dashas — Ashtottari Pratyantardasha (POST /vedic/dashas/ashtottari/pratyantar) */
+    /** Dashas: Ashtottari Pratyantardasha (POST /vedic/dashas/ashtottari/pratyantar) */
     dashasAshtottariPratyantar(body: PostBody<'/vedic/dashas/ashtottari/pratyantar'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/ashtottari/pratyantar'>>;
-    /** Dashas — Ashtottari Sookshmadasha (POST /vedic/dashas/ashtottari/sookshma) */
+    /** Dashas: Ashtottari Sookshmadasha (POST /vedic/dashas/ashtottari/sookshma) */
     dashasAshtottariSookshma(body: PostBody<'/vedic/dashas/ashtottari/sookshma'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/ashtottari/sookshma'>>;
-    /** Dashas — Chara Antardasha (POST /vedic/dashas/chara/antar) */
+    /** Dashas: Chara Antardasha (POST /vedic/dashas/chara/antar) */
     dashasCharaAntar(body: PostBody<'/vedic/dashas/chara/antar'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/chara/antar'>>;
-    /** Dashas — Chara Mahadasha (POST /vedic/dashas/chara/maha) */
+    /** Dashas: Chara Mahadasha (POST /vedic/dashas/chara/maha) */
     dashasCharaMaha(body: PostBody<'/vedic/dashas/chara/maha'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/chara/maha'>>;
-    /** Dashas — Chara Pranadasha (POST /vedic/dashas/chara/prana) */
+    /** Dashas: Chara Pranadasha (POST /vedic/dashas/chara/prana) */
     dashasCharaPrana(body: PostBody<'/vedic/dashas/chara/prana'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/chara/prana'>>;
-    /** Dashas — Chara Pratyantardasha (POST /vedic/dashas/chara/pratyantar) */
+    /** Dashas: Chara Pratyantardasha (POST /vedic/dashas/chara/pratyantar) */
     dashasCharaPratyantar(body: PostBody<'/vedic/dashas/chara/pratyantar'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/chara/pratyantar'>>;
-    /** Dashas — Chara Sookshmadasha (POST /vedic/dashas/chara/sookshma) */
+    /** Dashas: Chara Sookshmadasha (POST /vedic/dashas/chara/sookshma) */
     dashasCharaSookshma(body: PostBody<'/vedic/dashas/chara/sookshma'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/chara/sookshma'>>;
-    /** Dashas — Kalachakra Antardasha (POST /vedic/dashas/kalachakra/antar) */
+    /** Dashas: Kalachakra Antardasha (POST /vedic/dashas/kalachakra/antar) */
     dashasKalachakraAntar(body: PostBody<'/vedic/dashas/kalachakra/antar'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/kalachakra/antar'>>;
-    /** Dashas — Kalachakra Mahadasha (POST /vedic/dashas/kalachakra/maha) */
+    /** Dashas: Kalachakra Mahadasha (POST /vedic/dashas/kalachakra/maha) */
     dashasKalachakraMaha(body: PostBody<'/vedic/dashas/kalachakra/maha'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/kalachakra/maha'>>;
-    /** Dashas — Kalachakra Pranadasha (POST /vedic/dashas/kalachakra/prana) */
+    /** Dashas: Kalachakra Pranadasha (POST /vedic/dashas/kalachakra/prana) */
     dashasKalachakraPrana(body: PostBody<'/vedic/dashas/kalachakra/prana'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/kalachakra/prana'>>;
-    /** Dashas — Kalachakra Pratyantardasha (POST /vedic/dashas/kalachakra/pratyantar) */
+    /** Dashas: Kalachakra Pratyantardasha (POST /vedic/dashas/kalachakra/pratyantar) */
     dashasKalachakraPratyantar(body: PostBody<'/vedic/dashas/kalachakra/pratyantar'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/kalachakra/pratyantar'>>;
-    /** Dashas — Kalachakra Sookshmadasha (POST /vedic/dashas/kalachakra/sookshma) */
+    /** Dashas: Kalachakra Sookshmadasha (POST /vedic/dashas/kalachakra/sookshma) */
     dashasKalachakraSookshma(body: PostBody<'/vedic/dashas/kalachakra/sookshma'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/kalachakra/sookshma'>>;
-    /** Dashas — Shatabdika Antardasha (POST /vedic/dashas/shatabdika/antar) */
+    /** Dashas: Shatabdika Antardasha (POST /vedic/dashas/shatabdika/antar) */
     dashasShatabdikaAntar(body: PostBody<'/vedic/dashas/shatabdika/antar'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/shatabdika/antar'>>;
-    /** Dashas — Shatabdika Mahadasha (POST /vedic/dashas/shatabdika/maha) */
+    /** Dashas: Shatabdika Mahadasha (POST /vedic/dashas/shatabdika/maha) */
     dashasShatabdikaMaha(body: PostBody<'/vedic/dashas/shatabdika/maha'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/shatabdika/maha'>>;
-    /** Dashas — Shatabdika Pranadasha (POST /vedic/dashas/shatabdika/prana) */
+    /** Dashas: Shatabdika Pranadasha (POST /vedic/dashas/shatabdika/prana) */
     dashasShatabdikaPrana(body: PostBody<'/vedic/dashas/shatabdika/prana'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/shatabdika/prana'>>;
-    /** Dashas — Shatabdika Pratyantardasha (POST /vedic/dashas/shatabdika/pratyantar) */
+    /** Dashas: Shatabdika Pratyantardasha (POST /vedic/dashas/shatabdika/pratyantar) */
     dashasShatabdikaPratyantar(body: PostBody<'/vedic/dashas/shatabdika/pratyantar'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/shatabdika/pratyantar'>>;
-    /** Dashas — Shatabdika Sookshmadasha (POST /vedic/dashas/shatabdika/sookshma) */
+    /** Dashas: Shatabdika Sookshmadasha (POST /vedic/dashas/shatabdika/sookshma) */
     dashasShatabdikaSookshma(body: PostBody<'/vedic/dashas/shatabdika/sookshma'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/shatabdika/sookshma'>>;
-    /** Dashas — Shodashottari Antardasha (POST /vedic/dashas/shodashottari/antar) */
+    /** Dashas: Shodashottari Antardasha (POST /vedic/dashas/shodashottari/antar) */
     dashasShodashottariAntar(body: PostBody<'/vedic/dashas/shodashottari/antar'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/shodashottari/antar'>>;
-    /** Dashas — Shodashottari Mahadasha (POST /vedic/dashas/shodashottari/maha) */
+    /** Dashas: Shodashottari Mahadasha (POST /vedic/dashas/shodashottari/maha) */
     dashasShodashottariMaha(body: PostBody<'/vedic/dashas/shodashottari/maha'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/shodashottari/maha'>>;
-    /** Dashas — Shodashottari Pranadasha (POST /vedic/dashas/shodashottari/prana) */
+    /** Dashas: Shodashottari Pranadasha (POST /vedic/dashas/shodashottari/prana) */
     dashasShodashottariPrana(body: PostBody<'/vedic/dashas/shodashottari/prana'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/shodashottari/prana'>>;
-    /** Dashas — Shodashottari Pratyantardasha (POST /vedic/dashas/shodashottari/pratyantar) */
+    /** Dashas: Shodashottari Pratyantardasha (POST /vedic/dashas/shodashottari/pratyantar) */
     dashasShodashottariPratyantar(body: PostBody<'/vedic/dashas/shodashottari/pratyantar'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/shodashottari/pratyantar'>>;
-    /** Dashas — Shodashottari Sookshmadasha (POST /vedic/dashas/shodashottari/sookshma) */
+    /** Dashas: Shodashottari Sookshmadasha (POST /vedic/dashas/shodashottari/sookshma) */
     dashasShodashottariSookshma(body: PostBody<'/vedic/dashas/shodashottari/sookshma'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/shodashottari/sookshma'>>;
-    /** Dashas — Shoola Antardasha (POST /vedic/dashas/shoola/antar) */
+    /** Dashas: Shoola Antardasha (POST /vedic/dashas/shoola/antar) */
     dashasShoolaAntar(body: PostBody<'/vedic/dashas/shoola/antar'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/shoola/antar'>>;
-    /** Dashas — Shoola Mahadasha (POST /vedic/dashas/shoola/maha) */
+    /** Dashas: Shoola Mahadasha (POST /vedic/dashas/shoola/maha) */
     dashasShoolaMaha(body: PostBody<'/vedic/dashas/shoola/maha'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/shoola/maha'>>;
-    /** Dashas — Shoola Pranadasha (POST /vedic/dashas/shoola/prana) */
+    /** Dashas: Shoola Pranadasha (POST /vedic/dashas/shoola/prana) */
     dashasShoolaPrana(body: PostBody<'/vedic/dashas/shoola/prana'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/shoola/prana'>>;
-    /** Dashas — Shoola Pratyantardasha (POST /vedic/dashas/shoola/pratyantar) */
+    /** Dashas: Shoola Pratyantardasha (POST /vedic/dashas/shoola/pratyantar) */
     dashasShoolaPratyantar(body: PostBody<'/vedic/dashas/shoola/pratyantar'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/shoola/pratyantar'>>;
-    /** Dashas — Shoola Sookshmadasha (POST /vedic/dashas/shoola/sookshma) */
+    /** Dashas: Shoola Sookshmadasha (POST /vedic/dashas/shoola/sookshma) */
     dashasShoolaSookshma(body: PostBody<'/vedic/dashas/shoola/sookshma'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/shoola/sookshma'>>;
-    /** Dashas — Sthira Antardasha (POST /vedic/dashas/sthira/antar) */
+    /** Dashas: Sthira Antardasha (POST /vedic/dashas/sthira/antar) */
     dashasSthiraAntar(body: PostBody<'/vedic/dashas/sthira/antar'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/sthira/antar'>>;
-    /** Dashas — Sthira Mahadasha (POST /vedic/dashas/sthira/maha) */
+    /** Dashas: Sthira Mahadasha (POST /vedic/dashas/sthira/maha) */
     dashasSthiraMaha(body: PostBody<'/vedic/dashas/sthira/maha'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/sthira/maha'>>;
-    /** Dashas — Sthira Pranadasha (POST /vedic/dashas/sthira/prana) */
+    /** Dashas: Sthira Pranadasha (POST /vedic/dashas/sthira/prana) */
     dashasSthiraPrana(body: PostBody<'/vedic/dashas/sthira/prana'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/sthira/prana'>>;
-    /** Dashas — Sthira Pratyantardasha (POST /vedic/dashas/sthira/pratyantar) */
+    /** Dashas: Sthira Pratyantardasha (POST /vedic/dashas/sthira/pratyantar) */
     dashasSthiraPratyantar(body: PostBody<'/vedic/dashas/sthira/pratyantar'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/sthira/pratyantar'>>;
-    /** Dashas — Sthira Sookshmadasha (POST /vedic/dashas/sthira/sookshma) */
+    /** Dashas: Sthira Sookshmadasha (POST /vedic/dashas/sthira/sookshma) */
     dashasSthiraSookshma(body: PostBody<'/vedic/dashas/sthira/sookshma'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/sthira/sookshma'>>;
-    /** Dashas — Tribhagi Antardasha (POST /vedic/dashas/tribhagi/antar) */
+    /** Dashas: Tribhagi Antardasha (POST /vedic/dashas/tribhagi/antar) */
     dashasTribhagiAntar(body: PostBody<'/vedic/dashas/tribhagi/antar'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/tribhagi/antar'>>;
-    /** Dashas — Tribhagi Mahadasha (POST /vedic/dashas/tribhagi/maha) */
+    /** Dashas: Tribhagi Mahadasha (POST /vedic/dashas/tribhagi/maha) */
     dashasTribhagiMaha(body: PostBody<'/vedic/dashas/tribhagi/maha'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/tribhagi/maha'>>;
-    /** Dashas — Tribhagi Pranadasha (POST /vedic/dashas/tribhagi/prana) */
+    /** Dashas: Tribhagi Pranadasha (POST /vedic/dashas/tribhagi/prana) */
     dashasTribhagiPrana(body: PostBody<'/vedic/dashas/tribhagi/prana'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/tribhagi/prana'>>;
-    /** Dashas — Tribhagi Pratyantardasha (POST /vedic/dashas/tribhagi/pratyantar) */
+    /** Dashas: Tribhagi Pratyantardasha (POST /vedic/dashas/tribhagi/pratyantar) */
     dashasTribhagiPratyantar(body: PostBody<'/vedic/dashas/tribhagi/pratyantar'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/tribhagi/pratyantar'>>;
-    /** Dashas — Tribhagi Sookshmadasha (POST /vedic/dashas/tribhagi/sookshma) */
+    /** Dashas: Tribhagi Sookshmadasha (POST /vedic/dashas/tribhagi/sookshma) */
     dashasTribhagiSookshma(body: PostBody<'/vedic/dashas/tribhagi/sookshma'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/tribhagi/sookshma'>>;
-    /** Dashas — Vimshottari Antardasha (POST /vedic/dashas/vimshottari/antar) */
+    /** Dashas: Vimshottari Antardasha (POST /vedic/dashas/vimshottari/antar) */
     dashasVimshottariAntar(body: PostBody<'/vedic/dashas/vimshottari/antar'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/vimshottari/antar'>>;
-    /** Dashas — Vimshottari Mahadasha (POST /vedic/dashas/vimshottari/maha) */
+    /** Dashas: Vimshottari Mahadasha (POST /vedic/dashas/vimshottari/maha) */
     dashasVimshottariMaha(body: PostBody<'/vedic/dashas/vimshottari/maha'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/vimshottari/maha'>>;
-    /** Dashas — Vimshottari Pranadasha (POST /vedic/dashas/vimshottari/prana) */
+    /** Dashas: Vimshottari Pranadasha (POST /vedic/dashas/vimshottari/prana) */
     dashasVimshottariPrana(body: PostBody<'/vedic/dashas/vimshottari/prana'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/vimshottari/prana'>>;
-    /** Dashas — Vimshottari Pratyantardasha (POST /vedic/dashas/vimshottari/pratyantar) */
+    /** Dashas: Vimshottari Pratyantardasha (POST /vedic/dashas/vimshottari/pratyantar) */
     dashasVimshottariPratyantar(body: PostBody<'/vedic/dashas/vimshottari/pratyantar'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/vimshottari/pratyantar'>>;
-    /** Dashas — Vimshottari Sookshmadasha (POST /vedic/dashas/vimshottari/sookshma) */
+    /** Dashas: Vimshottari Sookshmadasha (POST /vedic/dashas/vimshottari/sookshma) */
     dashasVimshottariSookshma(body: PostBody<'/vedic/dashas/vimshottari/sookshma'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/vimshottari/sookshma'>>;
-    /** Dashas — Yogini Antardasha (POST /vedic/dashas/yogini/antar) */
+    /** Dashas: Yogini Antardasha (POST /vedic/dashas/yogini/antar) */
     dashasYoginiAntar(body: PostBody<'/vedic/dashas/yogini/antar'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/yogini/antar'>>;
-    /** Dashas — Yogini Mahadasha (POST /vedic/dashas/yogini/maha) */
+    /** Dashas: Yogini Mahadasha (POST /vedic/dashas/yogini/maha) */
     dashasYoginiMaha(body: PostBody<'/vedic/dashas/yogini/maha'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/yogini/maha'>>;
-    /** Dashas — Yogini Pranadasha (POST /vedic/dashas/yogini/prana) */
+    /** Dashas: Yogini Pranadasha (POST /vedic/dashas/yogini/prana) */
     dashasYoginiPrana(body: PostBody<'/vedic/dashas/yogini/prana'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/yogini/prana'>>;
-    /** Dashas — Yogini Pratyantardasha (POST /vedic/dashas/yogini/pratyantar) */
+    /** Dashas: Yogini Pratyantardasha (POST /vedic/dashas/yogini/pratyantar) */
     dashasYoginiPratyantar(body: PostBody<'/vedic/dashas/yogini/pratyantar'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/yogini/pratyantar'>>;
-    /** Dashas — Yogini Sookshmadasha (POST /vedic/dashas/yogini/sookshma) */
+    /** Dashas: Yogini Sookshmadasha (POST /vedic/dashas/yogini/sookshma) */
     dashasYoginiSookshma(body: PostBody<'/vedic/dashas/yogini/sookshma'>, options?: CallOptions): ResultPromise<PostData<'/vedic/dashas/yogini/sookshma'>>;
-    /** Doshas — KP full summary (POST /vedic/doshas/kp/full) */
+    /** Doshas: KP full summary (POST /vedic/doshas/kp/full) */
     doshasKpFull(body: PostBody<'/vedic/doshas/kp/full'>, options?: CallOptions): ResultPromise<PostData<'/vedic/doshas/kp/full'>>;
-    /** Doshas — KP Kalasarpa (POST /vedic/doshas/kp/kalasarpa) */
+    /** Doshas: KP Kalasarpa (POST /vedic/doshas/kp/kalasarpa) */
     doshasKpKalasarpa(body: PostBody<'/vedic/doshas/kp/kalasarpa'>, options?: CallOptions): ResultPromise<PostData<'/vedic/doshas/kp/kalasarpa'>>;
-    /** Doshas — KP Kemadruma (POST /vedic/doshas/kp/kemadruma) */
+    /** Doshas: KP Kemadruma (POST /vedic/doshas/kp/kemadruma) */
     doshasKpKemadruma(body: PostBody<'/vedic/doshas/kp/kemadruma'>, options?: CallOptions): ResultPromise<PostData<'/vedic/doshas/kp/kemadruma'>>;
-    /** Doshas — KP Manglik (POST /vedic/doshas/kp/manglik) */
+    /** Doshas: KP Manglik (POST /vedic/doshas/kp/manglik) */
     doshasKpManglik(body: PostBody<'/vedic/doshas/kp/manglik'>, options?: CallOptions): ResultPromise<PostData<'/vedic/doshas/kp/manglik'>>;
-    /** Doshas — KP Pitra (POST /vedic/doshas/kp/pitra) */
+    /** Doshas: KP Pitra (POST /vedic/doshas/kp/pitra) */
     doshasKpPitra(body: PostBody<'/vedic/doshas/kp/pitra'>, options?: CallOptions): ResultPromise<PostData<'/vedic/doshas/kp/pitra'>>;
-    /** Doshas — KP Sade Sati (POST /vedic/doshas/kp/sade-sati) */
+    /** Doshas: KP Sade Sati (POST /vedic/doshas/kp/sade-sati) */
     doshasKpSadeSati(body: PostBody<'/vedic/doshas/kp/sade-sati'>, options?: CallOptions): ResultPromise<PostData<'/vedic/doshas/kp/sade-sati'>>;
-    /** Doshas — Lal Kitab full summary (POST /vedic/doshas/lal-kitab/full) */
+    /** Doshas: Lal Kitab full summary (POST /vedic/doshas/lal-kitab/full) */
     doshasLalKitabFull(body: PostBody<'/vedic/doshas/lal-kitab/full'>, options?: CallOptions): ResultPromise<PostData<'/vedic/doshas/lal-kitab/full'>>;
-    /** Doshas — Lal Kitab Kalsarpa (POST /vedic/doshas/lal-kitab/kalsarpa) */
+    /** Doshas: Lal Kitab Kalsarpa (POST /vedic/doshas/lal-kitab/kalsarpa) */
     doshasLalKitabKalsarpa(body: PostBody<'/vedic/doshas/lal-kitab/kalsarpa'>, options?: CallOptions): ResultPromise<PostData<'/vedic/doshas/lal-kitab/kalsarpa'>>;
-    /** Doshas — Lal Kitab Manglik (POST /vedic/doshas/lal-kitab/manglik) */
+    /** Doshas: Lal Kitab Manglik (POST /vedic/doshas/lal-kitab/manglik) */
     doshasLalKitabManglik(body: PostBody<'/vedic/doshas/lal-kitab/manglik'>, options?: CallOptions): ResultPromise<PostData<'/vedic/doshas/lal-kitab/manglik'>>;
-    /** Doshas — Lal Kitab Pitra (POST /vedic/doshas/lal-kitab/pitra) */
+    /** Doshas: Lal Kitab Pitra (POST /vedic/doshas/lal-kitab/pitra) */
     doshasLalKitabPitra(body: PostBody<'/vedic/doshas/lal-kitab/pitra'>, options?: CallOptions): ResultPromise<PostData<'/vedic/doshas/lal-kitab/pitra'>>;
-    /** Doshas — Lal Kitab Rin (6 ancestral debts) (POST /vedic/doshas/lal-kitab/rin) */
+    /** Doshas: Lal Kitab Rin (6 ancestral debts) (POST /vedic/doshas/lal-kitab/rin) */
     doshasLalKitabRin(body: PostBody<'/vedic/doshas/lal-kitab/rin'>, options?: CallOptions): ResultPromise<PostData<'/vedic/doshas/lal-kitab/rin'>>;
-    /** Doshas — Lal Kitab Shrapit (POST /vedic/doshas/lal-kitab/shrapit) */
+    /** Doshas: Lal Kitab Shrapit (POST /vedic/doshas/lal-kitab/shrapit) */
     doshasLalKitabShrapit(body: PostBody<'/vedic/doshas/lal-kitab/shrapit'>, options?: CallOptions): ResultPromise<PostData<'/vedic/doshas/lal-kitab/shrapit'>>;
-    /** Doshas — Parashara full report (POST /vedic/doshas/parashara/full) */
+    /** Doshas: Parashara full report (POST /vedic/doshas/parashara/full) */
     doshasParasharaFull(body: PostBody<'/vedic/doshas/parashara/full'>, options?: CallOptions): ResultPromise<PostData<'/vedic/doshas/parashara/full'>>;
-    /** Doshas — Grahan (eclipse-like) (POST /vedic/doshas/parashara/grahan) */
+    /** Doshas: Grahan (eclipse-like) (POST /vedic/doshas/parashara/grahan) */
     doshasParasharaGrahan(body: PostBody<'/vedic/doshas/parashara/grahan'>, options?: CallOptions): ResultPromise<PostData<'/vedic/doshas/parashara/grahan'>>;
-    /** Doshas — Guru-Chandal (POST /vedic/doshas/parashara/guru-chandal) */
+    /** Doshas: Guru-Chandal (POST /vedic/doshas/parashara/guru-chandal) */
     doshasParasharaGuruChandal(body: PostBody<'/vedic/doshas/parashara/guru-chandal'>, options?: CallOptions): ResultPromise<PostData<'/vedic/doshas/parashara/guru-chandal'>>;
-    /** Doshas — Kaal Sarp (POST /vedic/doshas/parashara/kaal-sarp) */
+    /** Doshas: Kaal Sarp (POST /vedic/doshas/parashara/kaal-sarp) */
     doshasParasharaKaalSarp(body: PostBody<'/vedic/doshas/parashara/kaal-sarp'>, options?: CallOptions): ResultPromise<PostData<'/vedic/doshas/parashara/kaal-sarp'>>;
-    /** Doshas — Mangal (Mars affliction) (POST /vedic/doshas/parashara/mangal) */
+    /** Doshas: Mangal (Mars affliction) (POST /vedic/doshas/parashara/mangal) */
     doshasParasharaMangal(body: PostBody<'/vedic/doshas/parashara/mangal'>, options?: CallOptions): ResultPromise<PostData<'/vedic/doshas/parashara/mangal'>>;
-    /** Doshas — Pitru (ancestral) (POST /vedic/doshas/parashara/pitru) */
+    /** Doshas: Pitru (ancestral) (POST /vedic/doshas/parashara/pitru) */
     doshasParasharaPitru(body: PostBody<'/vedic/doshas/parashara/pitru'>, options?: CallOptions): ResultPromise<PostData<'/vedic/doshas/parashara/pitru'>>;
-    /** Doshas — Shrapit (curse) (POST /vedic/doshas/parashara/shrapit) */
+    /** Doshas: Shrapit (curse) (POST /vedic/doshas/parashara/shrapit) */
     doshasParasharaShrapit(body: PostBody<'/vedic/doshas/parashara/shrapit'>, options?: CallOptions): ResultPromise<PostData<'/vedic/doshas/parashara/shrapit'>>;
-    /** Jaimini — Argala / Virodhargala scan (POST /vedic/jaimini/argala-analysis) */
+    /** Gemstone (ratna) recommendation (POST /vedic/gemstones) */
+    gemstones(body: PostBody<'/vedic/gemstones'>, options?: CallOptions): ResultPromise<PostData<'/vedic/gemstones'>>;
+    /** Navaratna reference table (GET /vedic/gemstones/navaratna) */
+    gemstonesNavaratnaGet(options?: CallOptions): ResultPromise<GetData<'/vedic/gemstones/navaratna'>>;
+    /** Jaimini: Argala / Virodhargala scan (POST /vedic/jaimini/argala-analysis) */
     jaiminiArgalaAnalysis(body: PostBody<'/vedic/jaimini/argala-analysis'>, options?: CallOptions): ResultPromise<PostData<'/vedic/jaimini/argala-analysis'>>;
-    /** Jaimini — Aspects (Rasi + Graha drishti) (POST /vedic/jaimini/aspects) */
+    /** Jaimini: Aspects (Rasi + Graha drishti) (POST /vedic/jaimini/aspects) */
     jaiminiAspects(body: PostBody<'/vedic/jaimini/aspects'>, options?: CallOptions): ResultPromise<PostData<'/vedic/jaimini/aspects'>>;
-    /** Jaimini — Karakamsa (AK in Navamsa) (POST /vedic/jaimini/atmakaraka-navamsa) */
+    /** Jaimini: Karakamsa (AK in Navamsa) (POST /vedic/jaimini/atmakaraka-navamsa) */
     jaiminiAtmakarakaNavamsa(body: PostBody<'/vedic/jaimini/atmakaraka-navamsa'>, options?: CallOptions): ResultPromise<PostData<'/vedic/jaimini/atmakaraka-navamsa'>>;
-    /** Jaimini — Atmakaraka rotation (timeline) (POST /vedic/jaimini/atmakaraka-rotation) */
+    /** Jaimini: Atmakaraka rotation (timeline) (POST /vedic/jaimini/atmakaraka-rotation) */
     jaiminiAtmakarakaRotation(body: PostBody<'/vedic/jaimini/atmakaraka-rotation'>, options?: CallOptions): ResultPromise<PostData<'/vedic/jaimini/atmakaraka-rotation'>>;
-    /** Jaimini — Chara Karakas (detailed) (POST /vedic/jaimini/chara-karakas) */
+    /** Jaimini: Chara Karakas (detailed) (POST /vedic/jaimini/chara-karakas) */
     jaiminiCharaKarakas(body: PostBody<'/vedic/jaimini/chara-karakas'>, options?: CallOptions): ResultPromise<PostData<'/vedic/jaimini/chara-karakas'>>;
-    /** Jaimini — Running Dasha Summary (POST /vedic/jaimini/dasha-summary) */
+    /** Jaimini: Running Dasha Summary (POST /vedic/jaimini/dasha-summary) */
     jaiminiDashaSummary(body: PostBody<'/vedic/jaimini/dasha-summary'>, options?: CallOptions): ResultPromise<PostData<'/vedic/jaimini/dasha-summary'>>;
-    /** Jaimini — Graha Drishti (planet aspects) (POST /vedic/jaimini/drishti-graha) */
+    /** Jaimini: Graha Drishti (planet aspects) (POST /vedic/jaimini/drishti-graha) */
     jaiminiDrishtiGraha(body: PostBody<'/vedic/jaimini/drishti-graha'>, options?: CallOptions): ResultPromise<PostData<'/vedic/jaimini/drishti-graha'>>;
-    /** Jaimini — Rasi Drishti (sign aspects) (POST /vedic/jaimini/drishti-rasi) */
+    /** Jaimini: Rasi Drishti (sign aspects) (POST /vedic/jaimini/drishti-rasi) */
     jaiminiDrishtiRasi(body: PostBody<'/vedic/jaimini/drishti-rasi'>, options?: CallOptions): ResultPromise<PostData<'/vedic/jaimini/drishti-rasi'>>;
-    /** Jaimini — Karakas (Chara + Naisargika) (POST /vedic/jaimini/karakas) */
+    /** Jaimini: Karakas (Chara + Naisargika) (POST /vedic/jaimini/karakas) */
     jaiminiKarakas(body: PostBody<'/vedic/jaimini/karakas'>, options?: CallOptions): ResultPromise<PostData<'/vedic/jaimini/karakas'>>;
-    /** Jaimini — Padas (Bhava/Surya/Chandra/Graha Arudhas) (POST /vedic/jaimini/padas) */
+    /** Jaimini: Padas (Bhava/Surya/Chandra/Graha Arudhas) (POST /vedic/jaimini/padas) */
     jaiminiPadas(body: PostBody<'/vedic/jaimini/padas'>, options?: CallOptions): ResultPromise<PostData<'/vedic/jaimini/padas'>>;
-    /** Jaimini — Upapada Lagna (UL) (POST /vedic/jaimini/upapada) */
+    /** Jaimini: Upapada Lagna (UL) (POST /vedic/jaimini/upapada) */
     jaiminiUpapada(body: PostBody<'/vedic/jaimini/upapada'>, options?: CallOptions): ResultPromise<PostData<'/vedic/jaimini/upapada'>>;
-    /** Jaimini — Yogas (basic AK/DK/PK set) (POST /vedic/jaimini/yogas) */
+    /** Jaimini: Yogas (basic AK/DK/PK set) (POST /vedic/jaimini/yogas) */
     jaiminiYogas(body: PostBody<'/vedic/jaimini/yogas'>, options?: CallOptions): ResultPromise<PostData<'/vedic/jaimini/yogas'>>;
-    /** KP — Ascendant sub-lord (POST /vedic/kp/asc-sub) */
+    /** KP: Ascendant sub-lord (POST /vedic/kp/asc-sub) */
     kpAscSub(body: PostBody<'/vedic/kp/asc-sub'>, options?: CallOptions): ResultPromise<PostData<'/vedic/kp/asc-sub'>>;
-    /** KP — Placidus cusps with sub-lord chain (POST /vedic/kp/cusps) */
+    /** KP: Placidus cusps with sub-lord chain (POST /vedic/kp/cusps) */
     kpCusps(body: PostBody<'/vedic/kp/cusps'>, options?: CallOptions): ResultPromise<PostData<'/vedic/kp/cusps'>>;
-    /** KP — Part of Fortune (POST /vedic/kp/fortuna) */
+    /** KP: Part of Fortune (POST /vedic/kp/fortuna) */
     kpFortuna(body: PostBody<'/vedic/kp/fortuna'>, options?: CallOptions): ResultPromise<PostData<'/vedic/kp/fortuna'>>;
-    /** KP — Horary chart (1..249) (POST /vedic/kp/horary) */
+    /** KP: Horary chart (1..249) (POST /vedic/kp/horary) */
     kpHorary(body: PostBody<'/vedic/kp/horary'>, options?: CallOptions): ResultPromise<PostData<'/vedic/kp/horary'>>;
-    /** KP — Planet cuspal positions (POST /vedic/kp/planet-cuspal-position) */
+    /** KP: Planet cuspal positions (POST /vedic/kp/planet-cuspal-position) */
     kpPlanetCuspalPosition(body: PostBody<'/vedic/kp/planet-cuspal-position'>, options?: CallOptions): ResultPromise<PostData<'/vedic/kp/planet-cuspal-position'>>;
-    /** KP — Ruling Planets (POST /vedic/kp/ruling-planets) */
+    /** KP: Ruling Planets (POST /vedic/kp/ruling-planets) */
     kpRulingPlanets(body: PostBody<'/vedic/kp/ruling-planets'>, options?: CallOptions): ResultPromise<PostData<'/vedic/kp/ruling-planets'>>;
-    /** KP — Significators (primary/secondary/tertiary) (POST /vedic/kp/significators) */
+    /** KP: Significators (primary/secondary/tertiary) (POST /vedic/kp/significators) */
     kpSignificators(body: PostBody<'/vedic/kp/significators'>, options?: CallOptions): ResultPromise<PostData<'/vedic/kp/significators'>>;
-    /** KP — Sub-lords (cusps + planets) (POST /vedic/kp/sub-lords) */
+    /** KP: Sub-lords (cusps + planets) (POST /vedic/kp/sub-lords) */
     kpSubLords(body: PostBody<'/vedic/kp/sub-lords'>, options?: CallOptions): ResultPromise<PostData<'/vedic/kp/sub-lords'>>;
-    /** KP — Sub-sub-lord lookup (POST /vedic/kp/sub-sub-lord) */
+    /** KP: Sub-sub-lord lookup (POST /vedic/kp/sub-sub-lord) */
     kpSubSubLord(body: PostBody<'/vedic/kp/sub-sub-lord'>, options?: CallOptions): ResultPromise<PostData<'/vedic/kp/sub-sub-lord'>>;
-    /** KP — Transit positions (POST /vedic/kp/transit-kp) */
+    /** KP: Transit positions (POST /vedic/kp/transit-kp) */
     kpTransitKp(body: PostBody<'/vedic/kp/transit-kp'>, options?: CallOptions): ResultPromise<PostData<'/vedic/kp/transit-kp'>>;
-    /** Lal Kitab — Blind houses (Andha bhava) (POST /vedic/lal-kitab/blind-house) */
+    /** Lal Kitab: Blind houses (Andha bhava) (POST /vedic/lal-kitab/blind-house) */
     lalKitabBlindHouse(body: PostBody<'/vedic/lal-kitab/blind-house'>, options?: CallOptions): ResultPromise<PostData<'/vedic/lal-kitab/blind-house'>>;
-    /** Lal Kitab — Dasha (35-year cycle) (POST /vedic/lal-kitab/dasha) */
+    /** Lal Kitab: Dasha (35-year cycle) (POST /vedic/lal-kitab/dasha) */
     lalKitabDasha(body: PostBody<'/vedic/lal-kitab/dasha'>, options?: CallOptions): ResultPromise<PostData<'/vedic/lal-kitab/dasha'>>;
-    /** Lal Kitab — Rin (6 ancestral debts) (POST /vedic/lal-kitab/debts) */
+    /** Lal Kitab: Rin (6 ancestral debts) (POST /vedic/lal-kitab/debts) */
     lalKitabDebts(body: PostBody<'/vedic/lal-kitab/debts'>, options?: CallOptions): ResultPromise<PostData<'/vedic/lal-kitab/debts'>>;
-    /** Lal Kitab — Kismat (fortune indicator) (POST /vedic/lal-kitab/kismat) */
+    /** Lal Kitab: Kismat (fortune indicator) (POST /vedic/lal-kitab/kismat) */
     lalKitabKismat(body: PostBody<'/vedic/lal-kitab/kismat'>, options?: CallOptions): ResultPromise<PostData<'/vedic/lal-kitab/kismat'>>;
-    /** Lal Kitab — Kundali (12-house grid) (POST /vedic/lal-kitab/lal-kundali) */
+    /** Lal Kitab: Kundali (12-house grid) (POST /vedic/lal-kitab/lal-kundali) */
     lalKitabLalKundali(body: PostBody<'/vedic/lal-kitab/lal-kundali'>, options?: CallOptions): ResultPromise<PostData<'/vedic/lal-kitab/lal-kundali'>>;
-    /** Lal Kitab — Life graph (age-by-age) (POST /vedic/lal-kitab/life-graph) */
+    /** Lal Kitab: Life graph (age-by-age) (POST /vedic/lal-kitab/life-graph) */
     lalKitabLifeGraph(body: PostBody<'/vedic/lal-kitab/life-graph'>, options?: CallOptions): ResultPromise<PostData<'/vedic/lal-kitab/life-graph'>>;
-    /** Lal Kitab — Planet-in-house effect (POST /vedic/lal-kitab/planet-house-effect) */
+    /** Lal Kitab: Planet-in-house effect (POST /vedic/lal-kitab/planet-house-effect) */
     lalKitabPlanetHouseEffect(body: PostBody<'/vedic/lal-kitab/planet-house-effect'>, options?: CallOptions): ResultPromise<PostData<'/vedic/lal-kitab/planet-house-effect'>>;
-    /** Lal Kitab — Sukh (prosperity yoga) (POST /vedic/lal-kitab/prosperity) */
+    /** Lal Kitab: Sukh (prosperity yoga) (POST /vedic/lal-kitab/prosperity) */
     lalKitabProsperity(body: PostBody<'/vedic/lal-kitab/prosperity'>, options?: CallOptions): ResultPromise<PostData<'/vedic/lal-kitab/prosperity'>>;
-    /** Lal Kitab — Remedies (Upayas) (POST /vedic/lal-kitab/remedies) */
+    /** Lal Kitab: Remedies (Upayas) (POST /vedic/lal-kitab/remedies) */
     lalKitabRemedies(body: PostBody<'/vedic/lal-kitab/remedies'>, options?: CallOptions): ResultPromise<PostData<'/vedic/lal-kitab/remedies'>>;
-    /** Lal Kitab — Sleeping houses (POST /vedic/lal-kitab/sleeping-house) */
+    /** Lal Kitab: Sleeping houses (POST /vedic/lal-kitab/sleeping-house) */
     lalKitabSleepingHouse(body: PostBody<'/vedic/lal-kitab/sleeping-house'>, options?: CallOptions): ResultPromise<PostData<'/vedic/lal-kitab/sleeping-house'>>;
-    /** Lal Kitab — Teva (fixed-house chart) (POST /vedic/lal-kitab/teva) */
+    /** Lal Kitab: Teva (fixed-house chart) (POST /vedic/lal-kitab/teva) */
     lalKitabTeva(body: PostBody<'/vedic/lal-kitab/teva'>, options?: CallOptions): ResultPromise<PostData<'/vedic/lal-kitab/teva'>>;
-    /** Lal Kitab — Varshphal (annual) (POST /vedic/lal-kitab/varshphal) */
+    /** Lal Kitab: Varshphal (annual) (POST /vedic/lal-kitab/varshphal) */
     lalKitabVarshphal(body: PostBody<'/vedic/lal-kitab/varshphal'>, options?: CallOptions): ResultPromise<PostData<'/vedic/lal-kitab/varshphal'>>;
-    /** Muhurat — Business start (Vyapara) (POST /vedic/muhurat/business-start) */
+    /** Muhurat: Business start (Vyapara) (POST /vedic/muhurat/business-start) */
     muhuratBusinessStart(body: PostBody<'/vedic/muhurat/business-start'>, options?: CallOptions): ResultPromise<PostData<'/vedic/muhurat/business-start'>>;
-    /** Muhurat — Education start (Vidyarambha) (POST /vedic/muhurat/education-start) */
+    /** Muhurat: Education start (Vidyarambha) (POST /vedic/muhurat/education-start) */
     muhuratEducationStart(body: PostBody<'/vedic/muhurat/education-start'>, options?: CallOptions): ResultPromise<PostData<'/vedic/muhurat/education-start'>>;
-    /** Muhurat — General auspicious window (POST /vedic/muhurat/general-auspicious) */
+    /** Muhurat: General auspicious window (POST /vedic/muhurat/general-auspicious) */
     muhuratGeneralAuspicious(body: PostBody<'/vedic/muhurat/general-auspicious'>, options?: CallOptions): ResultPromise<PostData<'/vedic/muhurat/general-auspicious'>>;
-    /** Muhurat — Investment / Dhana Sthapana (POST /vedic/muhurat/investment) */
+    /** Muhurat: Investment / Dhana Sthapana (POST /vedic/muhurat/investment) */
     muhuratInvestment(body: PostBody<'/vedic/muhurat/investment'>, options?: CallOptions): ResultPromise<PostData<'/vedic/muhurat/investment'>>;
-    /** Muhurat — Long journey (multi-day Yatra) (POST /vedic/muhurat/journey-long) */
+    /** Muhurat: Long journey (multi-day Yatra) (POST /vedic/muhurat/journey-long) */
     muhuratJourneyLong(body: PostBody<'/vedic/muhurat/journey-long'>, options?: CallOptions): ResultPromise<PostData<'/vedic/muhurat/journey-long'>>;
-    /** Muhurat — Marriage (Vivah) (POST /vedic/muhurat/marriage) */
+    /** Muhurat: Marriage (Vivah) (POST /vedic/muhurat/marriage) */
     muhuratMarriage(body: PostBody<'/vedic/muhurat/marriage'>, options?: CallOptions): ResultPromise<PostData<'/vedic/muhurat/marriage'>>;
-    /** Muhurat — Name change (POST /vedic/muhurat/name-change) */
+    /** Muhurat: Name change (POST /vedic/muhurat/name-change) */
     muhuratNameChange(body: PostBody<'/vedic/muhurat/name-change'>, options?: CallOptions): ResultPromise<PostData<'/vedic/muhurat/name-change'>>;
-    /** Muhurat — Naming ceremony (Namkaran) (POST /vedic/muhurat/naming-ceremony) */
+    /** Muhurat: Naming ceremony (Namkaran) (POST /vedic/muhurat/naming-ceremony) */
     muhuratNamingCeremony(body: PostBody<'/vedic/muhurat/naming-ceremony'>, options?: CallOptions): ResultPromise<PostData<'/vedic/muhurat/naming-ceremony'>>;
-    /** Muhurat — Property purchase / Griha Pravesh (POST /vedic/muhurat/property-purchase) */
+    /** Muhurat: Property purchase / Griha Pravesh (POST /vedic/muhurat/property-purchase) */
     muhuratPropertyPurchase(body: PostBody<'/vedic/muhurat/property-purchase'>, options?: CallOptions): ResultPromise<PostData<'/vedic/muhurat/property-purchase'>>;
-    /** Muhurat — Surgery (Shastrakarma) (POST /vedic/muhurat/surgery) */
+    /** Muhurat: Surgery (Shastrakarma) (POST /vedic/muhurat/surgery) */
     muhuratSurgery(body: PostBody<'/vedic/muhurat/surgery'>, options?: CallOptions): ResultPromise<PostData<'/vedic/muhurat/surgery'>>;
-    /** Muhurat — Travel (short Yatra) (POST /vedic/muhurat/travel) */
+    /** Muhurat: Travel (short Yatra) (POST /vedic/muhurat/travel) */
     muhuratTravel(body: PostBody<'/vedic/muhurat/travel'>, options?: CallOptions): ResultPromise<PostData<'/vedic/muhurat/travel'>>;
-    /** Muhurat — Vehicle purchase (POST /vedic/muhurat/vehicle-purchase) */
+    /** Muhurat: Vehicle purchase (POST /vedic/muhurat/vehicle-purchase) */
     muhuratVehiclePurchase(body: PostBody<'/vedic/muhurat/vehicle-purchase'>, options?: CallOptions): ResultPromise<PostData<'/vedic/muhurat/vehicle-purchase'>>;
-    /** Panchang — Choghadia (POST /vedic/panchang/choghadia) */
+    /** Panchang: Choghadia (POST /vedic/panchang/choghadia) */
     panchangChoghadia(body: PostBody<'/vedic/panchang/choghadia'>, options?: CallOptions): ResultPromise<PostData<'/vedic/panchang/choghadia'>>;
-    /** Panchang — full (POST /vedic/panchang/full) */
+    /** Panchang: full (POST /vedic/panchang/full) */
     panchangFull(body: PostBody<'/vedic/panchang/full'>, options?: CallOptions): ResultPromise<PostData<'/vedic/panchang/full'>>;
-    /** Panchang — Hora (POST /vedic/panchang/hora) */
+    /** Panchang: Hora (POST /vedic/panchang/hora) */
     panchangHora(body: PostBody<'/vedic/panchang/hora'>, options?: CallOptions): ResultPromise<PostData<'/vedic/panchang/hora'>>;
-    /** Panchang — Karana (POST /vedic/panchang/karana) */
+    /** Panchang: Karana (POST /vedic/panchang/karana) */
     panchangKarana(body: PostBody<'/vedic/panchang/karana'>, options?: CallOptions): ResultPromise<PostData<'/vedic/panchang/karana'>>;
-    /** Panchang — Nakshatra of Day (POST /vedic/panchang/nakshatra-of-day) */
+    /** Panchang: Nakshatra of Day (POST /vedic/panchang/nakshatra-of-day) */
     panchangNakshatraOfDay(body: PostBody<'/vedic/panchang/nakshatra-of-day'>, options?: CallOptions): ResultPromise<PostData<'/vedic/panchang/nakshatra-of-day'>>;
-    /** Panchang — Rahu Kaal block (POST /vedic/panchang/rahu-kaal) */
+    /** Panchang: Rahu Kaal block (POST /vedic/panchang/rahu-kaal) */
     panchangRahuKaal(body: PostBody<'/vedic/panchang/rahu-kaal'>, options?: CallOptions): ResultPromise<PostData<'/vedic/panchang/rahu-kaal'>>;
-    /** Panchang — Tithi (POST /vedic/panchang/tithi) */
+    /** Panchang: Tithi (POST /vedic/panchang/tithi) */
     panchangTithi(body: PostBody<'/vedic/panchang/tithi'>, options?: CallOptions): ResultPromise<PostData<'/vedic/panchang/tithi'>>;
-    /** Panchang — Yoga (POST /vedic/panchang/yoga) */
+    /** Panchang: Yoga (POST /vedic/panchang/yoga) */
     panchangYoga(body: PostBody<'/vedic/panchang/yoga'>, options?: CallOptions): ResultPromise<PostData<'/vedic/panchang/yoga'>>;
-    /** Shadbala — Cheshta (motional) (POST /vedic/shadbala/cheshta) */
+    /** Shadbala: Cheshta (motional) (POST /vedic/shadbala/cheshta) */
     shadbalaCheshta(body: PostBody<'/vedic/shadbala/cheshta'>, options?: CallOptions): ResultPromise<PostData<'/vedic/shadbala/cheshta'>>;
-    /** Shadbala — Dig (directional) (POST /vedic/shadbala/dig) */
+    /** Shadbala: Dig (directional) (POST /vedic/shadbala/dig) */
     shadbalaDig(body: PostBody<'/vedic/shadbala/dig'>, options?: CallOptions): ResultPromise<PostData<'/vedic/shadbala/dig'>>;
-    /** Shadbala — Drik (aspectual) (POST /vedic/shadbala/drik) */
+    /** Shadbala: Drik (aspectual) (POST /vedic/shadbala/drik) */
     shadbalaDrik(body: PostBody<'/vedic/shadbala/drik'>, options?: CallOptions): ResultPromise<PostData<'/vedic/shadbala/drik'>>;
-    /** Shadbala — full summary (POST /vedic/shadbala/full) */
+    /** Shadbala: full summary (POST /vedic/shadbala/full) */
     shadbalaFull(body: PostBody<'/vedic/shadbala/full'>, options?: CallOptions): ResultPromise<PostData<'/vedic/shadbala/full'>>;
-    /** Shadbala — Kala (temporal) (POST /vedic/shadbala/kala) */
+    /** Shadbala: Kala (temporal) (POST /vedic/shadbala/kala) */
     shadbalaKala(body: PostBody<'/vedic/shadbala/kala'>, options?: CallOptions): ResultPromise<PostData<'/vedic/shadbala/kala'>>;
-    /** Shadbala — Naisargika (natural) (POST /vedic/shadbala/naisargika) */
+    /** Shadbala: Naisargika (natural) (POST /vedic/shadbala/naisargika) */
     shadbalaNaisargika(body: PostBody<'/vedic/shadbala/naisargika'>, options?: CallOptions): ResultPromise<PostData<'/vedic/shadbala/naisargika'>>;
-    /** Shadbala — Sthana (positional) (POST /vedic/shadbala/sthana) */
+    /** Shadbala: Sthana (positional) (POST /vedic/shadbala/sthana) */
     shadbalaSthana(body: PostBody<'/vedic/shadbala/sthana'>, options?: CallOptions): ResultPromise<PostData<'/vedic/shadbala/sthana'>>;
-    /** Varga D1 — Rashi (POST /vedic/varga/D1) */
+    /** Varga D1: Rashi (POST /vedic/varga/D1) */
     vargaD1(body: PostBody<'/vedic/varga/D1'>, options?: CallOptions): ResultPromise<PostData<'/vedic/varga/D1'>>;
-    /** Varga D10 — Dasamsa (POST /vedic/varga/D10) */
+    /** Varga D10: Dasamsa (POST /vedic/varga/D10) */
     vargaD10(body: PostBody<'/vedic/varga/D10'>, options?: CallOptions): ResultPromise<PostData<'/vedic/varga/D10'>>;
-    /** Varga D12 — Dwadasamsa (POST /vedic/varga/D12) */
+    /** Varga D12: Dwadasamsa (POST /vedic/varga/D12) */
     vargaD12(body: PostBody<'/vedic/varga/D12'>, options?: CallOptions): ResultPromise<PostData<'/vedic/varga/D12'>>;
-    /** Varga D16 — Shodasamsa (POST /vedic/varga/D16) */
+    /** Varga D16: Shodasamsa (POST /vedic/varga/D16) */
     vargaD16(body: PostBody<'/vedic/varga/D16'>, options?: CallOptions): ResultPromise<PostData<'/vedic/varga/D16'>>;
-    /** Varga D2 — Hora (POST /vedic/varga/D2) */
+    /** Varga D2: Hora (POST /vedic/varga/D2) */
     vargaD2(body: PostBody<'/vedic/varga/D2'>, options?: CallOptions): ResultPromise<PostData<'/vedic/varga/D2'>>;
-    /** Varga D20 — Vimsamsa (POST /vedic/varga/D20) */
+    /** Varga D20: Vimsamsa (POST /vedic/varga/D20) */
     vargaD20(body: PostBody<'/vedic/varga/D20'>, options?: CallOptions): ResultPromise<PostData<'/vedic/varga/D20'>>;
-    /** Varga D24 — Chaturvimsamsa (POST /vedic/varga/D24) */
+    /** Varga D24: Chaturvimsamsa (POST /vedic/varga/D24) */
     vargaD24(body: PostBody<'/vedic/varga/D24'>, options?: CallOptions): ResultPromise<PostData<'/vedic/varga/D24'>>;
-    /** Varga D27 — Saptavimsamsa (POST /vedic/varga/D27) */
+    /** Varga D27: Saptavimsamsa (POST /vedic/varga/D27) */
     vargaD27(body: PostBody<'/vedic/varga/D27'>, options?: CallOptions): ResultPromise<PostData<'/vedic/varga/D27'>>;
-    /** Varga D3 — Drekkana (POST /vedic/varga/D3) */
+    /** Varga D3: Drekkana (POST /vedic/varga/D3) */
     vargaD3(body: PostBody<'/vedic/varga/D3'>, options?: CallOptions): ResultPromise<PostData<'/vedic/varga/D3'>>;
-    /** Varga D30 — Trimsamsa (POST /vedic/varga/D30) */
+    /** Varga D30: Trimsamsa (POST /vedic/varga/D30) */
     vargaD30(body: PostBody<'/vedic/varga/D30'>, options?: CallOptions): ResultPromise<PostData<'/vedic/varga/D30'>>;
-    /** Varga D4 — Chaturthamsa (POST /vedic/varga/D4) */
+    /** Varga D4: Chaturthamsa (POST /vedic/varga/D4) */
     vargaD4(body: PostBody<'/vedic/varga/D4'>, options?: CallOptions): ResultPromise<PostData<'/vedic/varga/D4'>>;
-    /** Varga D40 — Khavedamsa (POST /vedic/varga/D40) */
+    /** Varga D40: Khavedamsa (POST /vedic/varga/D40) */
     vargaD40(body: PostBody<'/vedic/varga/D40'>, options?: CallOptions): ResultPromise<PostData<'/vedic/varga/D40'>>;
-    /** Varga D45 — Akshavedamsa (POST /vedic/varga/D45) */
+    /** Varga D45: Akshavedamsa (POST /vedic/varga/D45) */
     vargaD45(body: PostBody<'/vedic/varga/D45'>, options?: CallOptions): ResultPromise<PostData<'/vedic/varga/D45'>>;
-    /** Varga D60 — Shashtiamsa (POST /vedic/varga/D60) */
+    /** Varga D60: Shashtiamsa (POST /vedic/varga/D60) */
     vargaD60(body: PostBody<'/vedic/varga/D60'>, options?: CallOptions): ResultPromise<PostData<'/vedic/varga/D60'>>;
-    /** Varga D7 — Saptamsa (POST /vedic/varga/D7) */
+    /** Varga D7: Saptamsa (POST /vedic/varga/D7) */
     vargaD7(body: PostBody<'/vedic/varga/D7'>, options?: CallOptions): ResultPromise<PostData<'/vedic/varga/D7'>>;
-    /** Varga D9 — Navamsa (POST /vedic/varga/D9) */
+    /** Varga D9: Navamsa (POST /vedic/varga/D9) */
     vargaD9(body: PostBody<'/vedic/varga/D9'>, options?: CallOptions): ResultPromise<PostData<'/vedic/varga/D9'>>;
-    /** Yogas — Jaimini Daridra yoga (POST /vedic/yogas/jaimini/daridra) */
+    /** Varshaphal: Tajika annual chart (POST /vedic/varshaphal) */
+    varshaphal(body: PostBody<'/vedic/varshaphal'>, options?: CallOptions): ResultPromise<PostData<'/vedic/varshaphal'>>;
+    /** Yogas: Jaimini Daridra yoga (POST /vedic/yogas/jaimini/daridra) */
     yogasJaiminiDaridra(body: PostBody<'/vedic/yogas/jaimini/daridra'>, options?: CallOptions): ResultPromise<PostData<'/vedic/yogas/jaimini/daridra'>>;
-    /** Yogas — Jaimini Dhana yoga (POST /vedic/yogas/jaimini/dhana) */
+    /** Yogas: Jaimini Dhana yoga (POST /vedic/yogas/jaimini/dhana) */
     yogasJaiminiDhana(body: PostBody<'/vedic/yogas/jaimini/dhana'>, options?: CallOptions): ResultPromise<PostData<'/vedic/yogas/jaimini/dhana'>>;
-    /** Yogas — Jaimini full summary (POST /vedic/yogas/jaimini/full) */
+    /** Yogas: Jaimini full summary (POST /vedic/yogas/jaimini/full) */
     yogasJaiminiFull(body: PostBody<'/vedic/yogas/jaimini/full'>, options?: CallOptions): ResultPromise<PostData<'/vedic/yogas/jaimini/full'>>;
-    /** Yogas — Karakamsa chart (12-house projection) (POST /vedic/yogas/jaimini/karakamsa) */
+    /** Yogas: Karakamsa chart (12-house projection) (POST /vedic/yogas/jaimini/karakamsa) */
     yogasJaiminiKarakamsa(body: PostBody<'/vedic/yogas/jaimini/karakamsa'>, options?: CallOptions): ResultPromise<PostData<'/vedic/yogas/jaimini/karakamsa'>>;
-    /** Yogas — Jaimini Karaka yoga (all 8 karakas) (POST /vedic/yogas/jaimini/karaka-yoga) */
+    /** Yogas: Jaimini Karaka yoga (all 8 karakas) (POST /vedic/yogas/jaimini/karaka-yoga) */
     yogasJaiminiKarakaYoga(body: PostBody<'/vedic/yogas/jaimini/karaka-yoga'>, options?: CallOptions): ResultPromise<PostData<'/vedic/yogas/jaimini/karaka-yoga'>>;
-    /** Yogas — Jaimini Raja yoga (POST /vedic/yogas/jaimini/raja) */
+    /** Yogas: Jaimini Raja yoga (POST /vedic/yogas/jaimini/raja) */
     yogasJaiminiRaja(body: PostBody<'/vedic/yogas/jaimini/raja'>, options?: CallOptions): ResultPromise<PostData<'/vedic/yogas/jaimini/raja'>>;
-    /** Yogas — Shubha-graha (functional natures) (POST /vedic/yogas/jaimini/shubha-graha) */
+    /** Yogas: Shubha-graha (functional natures) (POST /vedic/yogas/jaimini/shubha-graha) */
     yogasJaiminiShubhaGraha(body: PostBody<'/vedic/yogas/jaimini/shubha-graha'>, options?: CallOptions): ResultPromise<PostData<'/vedic/yogas/jaimini/shubha-graha'>>;
-    /** Yogas — Jaimini Viparita Raja yoga (POST /vedic/yogas/jaimini/viparita) */
+    /** Yogas: Jaimini Viparita Raja yoga (POST /vedic/yogas/jaimini/viparita) */
     yogasJaiminiViparita(body: PostBody<'/vedic/yogas/jaimini/viparita'>, options?: CallOptions): ResultPromise<PostData<'/vedic/yogas/jaimini/viparita'>>;
-    /** Yogas — Adhi (POST /vedic/yogas/parashara/adhi) */
+    /** Yogas: Adhi (POST /vedic/yogas/parashara/adhi) */
     yogasParasharaAdhi(body: PostBody<'/vedic/yogas/parashara/adhi'>, options?: CallOptions): ResultPromise<PostData<'/vedic/yogas/parashara/adhi'>>;
-    /** Yogas — Dhana (wealth) (POST /vedic/yogas/parashara/dhana) */
+    /** Yogas: Dhana (wealth) (POST /vedic/yogas/parashara/dhana) */
     yogasParasharaDhana(body: PostBody<'/vedic/yogas/parashara/dhana'>, options?: CallOptions): ResultPromise<PostData<'/vedic/yogas/parashara/dhana'>>;
-    /** Yogas — Dharma-Karmadhipati (POST /vedic/yogas/parashara/dharma-karmadhipati) */
+    /** Yogas: Dharma-Karmadhipati (POST /vedic/yogas/parashara/dharma-karmadhipati) */
     yogasParasharaDharmaKarmadhipati(body: PostBody<'/vedic/yogas/parashara/dharma-karmadhipati'>, options?: CallOptions): ResultPromise<PostData<'/vedic/yogas/parashara/dharma-karmadhipati'>>;
-    /** Yogas — Parashara full report (POST /vedic/yogas/parashara/full) */
+    /** Yogas: Parashara full report (POST /vedic/yogas/parashara/full) */
     yogasParasharaFull(body: PostBody<'/vedic/yogas/parashara/full'>, options?: CallOptions): ResultPromise<PostData<'/vedic/yogas/parashara/full'>>;
-    /** Yogas — Gajakesari (POST /vedic/yogas/parashara/gajakesari) */
+    /** Yogas: Gajakesari (POST /vedic/yogas/parashara/gajakesari) */
     yogasParasharaGajakesari(body: PostBody<'/vedic/yogas/parashara/gajakesari'>, options?: CallOptions): ResultPromise<PostData<'/vedic/yogas/parashara/gajakesari'>>;
-    /** Yogas — Pancha Mahapurusha (5 great) (POST /vedic/yogas/parashara/pancha-mahapurusha) */
+    /** Yogas: Pancha Mahapurusha (5 great) (POST /vedic/yogas/parashara/pancha-mahapurusha) */
     yogasParasharaPanchaMahapurusha(body: PostBody<'/vedic/yogas/parashara/pancha-mahapurusha'>, options?: CallOptions): ResultPromise<PostData<'/vedic/yogas/parashara/pancha-mahapurusha'>>;
-    /** Yogas — Raja (royal) (POST /vedic/yogas/parashara/raja) */
+    /** Yogas: Raja (royal) (POST /vedic/yogas/parashara/raja) */
     yogasParasharaRaja(body: PostBody<'/vedic/yogas/parashara/raja'>, options?: CallOptions): ResultPromise<PostData<'/vedic/yogas/parashara/raja'>>;
   };
   vedicDivisional: {
-    /** Vedic Divisional Chart (DEPRECATED — use /vedic/varga/{D}<*>) (POST /vedic-divisional) */
+    /** Vedic Divisional Chart (DEPRECATED: use /vedic/varga/{D}<*>) (POST /vedic-divisional) */
     compute(body: PostBody<'/vedic-divisional'>, options?: CallOptions): ResultPromise<PostData<'/vedic-divisional'>>;
   };
   webhooks: {
@@ -1549,6 +1597,8 @@ export interface AstrowayNamespaces {
     voidOfCourseStart(body: PostBody<'/webhooks/void-of-course-start'>, options?: CallOptions): ResultPromise<PostData<'/webhooks/void-of-course-start'>>;
   };
   wellness: {
+    /** Biorhythm (JSON) (POST /wellness/biorhythm) */
+    biorhythm(body: PostBody<'/wellness/biorhythm'>, options?: CallOptions): ResultPromise<PostData<'/wellness/biorhythm'>>;
     /** Healing Crystals by Sign (POST /wellness/crystals) */
     crystals(body: PostBody<'/wellness/crystals'>, options?: CallOptions): ResultPromise<PostData<'/wellness/crystals'>>;
     /** Wellness Cycle Milestones (POST /wellness/cycle) */
@@ -1583,6 +1633,8 @@ export interface AstrowayNamespaces {
     compute(body: PostBody<'/zenith'>, options?: CallOptions): ResultPromise<PostData<'/zenith'>>;
   };
   ziwei: {
+    /** Four Transformations (四化) (POST /ziwei/four-transformations) */
+    fourTransformations(body: PostBody<'/ziwei/four-transformations'>, options?: CallOptions): ResultPromise<PostData<'/ziwei/four-transformations'>>;
     /** Full Chart (MVP) (POST /ziwei/full-chart) */
     fullChart(body: PostBody<'/ziwei/full-chart'>, options?: CallOptions): ResultPromise<PostData<'/ziwei/full-chart'>>;
     /** 14 Main Stars (POST /ziwei/main-stars) */
@@ -1593,7 +1645,7 @@ export interface AstrowayNamespaces {
     palaceChildren(body: PostBody<'/ziwei/palace-children'>, options?: CallOptions): ResultPromise<PostData<'/ziwei/palace-children'>>;
     /** Destiny Palace (Ming) (POST /ziwei/palace-destiny) */
     palaceDestiny(body: PostBody<'/ziwei/palace-destiny'>, options?: CallOptions): ResultPromise<PostData<'/ziwei/palace-destiny'>>;
-    /** Health Palace (Jie\'e) (POST /ziwei/palace-health) */
+    /** Health Palace (Ji'e) (POST /ziwei/palace-health) */
     palaceHealth(body: PostBody<'/ziwei/palace-health'>, options?: CallOptions): ResultPromise<PostData<'/ziwei/palace-health'>>;
     /** Property Palace (Tianzhai) (POST /ziwei/palace-property) */
     palaceProperty(body: PostBody<'/ziwei/palace-property'>, options?: CallOptions): ResultPromise<PostData<'/ziwei/palace-property'>>;
@@ -1609,29 +1661,29 @@ export interface AstrowayNamespaces {
     twelvePalaces(body: PostBody<'/ziwei/twelve-palaces'>, options?: CallOptions): ResultPromise<PostData<'/ziwei/twelve-palaces'>>;
   };
   zodiac: {
-    /** Aquarius — Fixed Air (GET /zodiac/aquarius) */
+    /** Aquarius: Fixed Air (GET /zodiac/aquarius) */
     aquariusGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/aquarius'>>;
-    /** Aries — Cardinal Fire (GET /zodiac/aries) */
+    /** Aries: Cardinal Fire (GET /zodiac/aries) */
     ariesGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/aries'>>;
-    /** Cancer — Cardinal Water (GET /zodiac/cancer) */
+    /** Cancer: Cardinal Water (GET /zodiac/cancer) */
     cancerGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/cancer'>>;
-    /** Capricorn — Cardinal Earth (GET /zodiac/capricorn) */
+    /** Capricorn: Cardinal Earth (GET /zodiac/capricorn) */
     capricornGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/capricorn'>>;
-    /** Gemini — Mutable Air (GET /zodiac/gemini) */
+    /** Gemini: Mutable Air (GET /zodiac/gemini) */
     geminiGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/gemini'>>;
-    /** Leo — Fixed Fire (GET /zodiac/leo) */
+    /** Leo: Fixed Fire (GET /zodiac/leo) */
     leoGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/leo'>>;
-    /** Libra — Cardinal Air (GET /zodiac/libra) */
+    /** Libra: Cardinal Air (GET /zodiac/libra) */
     libraGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/libra'>>;
-    /** Pisces — Mutable Water (GET /zodiac/pisces) */
+    /** Pisces: Mutable Water (GET /zodiac/pisces) */
     piscesGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/pisces'>>;
-    /** Sagittarius — Mutable Fire (GET /zodiac/sagittarius) */
+    /** Sagittarius: Mutable Fire (GET /zodiac/sagittarius) */
     sagittariusGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/sagittarius'>>;
-    /** Scorpio — Fixed Water (GET /zodiac/scorpio) */
+    /** Scorpio: Fixed Water (GET /zodiac/scorpio) */
     scorpioGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/scorpio'>>;
-    /** Taurus — Fixed Earth (GET /zodiac/taurus) */
+    /** Taurus: Fixed Earth (GET /zodiac/taurus) */
     taurusGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/taurus'>>;
-    /** Virgo — Mutable Earth (GET /zodiac/virgo) */
+    /** Virgo: Mutable Earth (GET /zodiac/virgo) */
     virgoGet(options?: CallOptions): ResultPromise<GetData<'/zodiac/virgo'>>;
   };
 }
@@ -1659,9 +1711,10 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
   };
   /* GET lookups take no body. Same envelope unwrap and the same options, minus
      Idempotency-Key, which has no meaning on a read. */
-  const callGet = <P extends keyof paths, T>(path: P, options?: CallOptions): ResultPromise<T> => {
+  const callGet = <P extends keyof paths, T>(path: P, query?: unknown, options?: CallOptions): ResultPromise<T> => {
     return new ResultPromise<T>(async () => {
       const init: Record<string, unknown> = {};
+      if (query && Object.keys(query as object).length > 0) init.params = { query };
       const headers: Record<string, string> = { ...(options?.headers ?? {}) };
       if (options?.timeoutMs !== undefined && options.timeoutMs > 0) {
         headers['x-astroway-timeout-ms'] = String(options.timeoutMs);
@@ -1676,13 +1729,18 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
   };
   return {
     acg: {
+      bestPlaces: (body, options) => call<'/acg/best-places', PostData<'/acg/best-places'>>('/acg/best-places', body, options),
       byCategory: (body, options) => call<'/acg/by-category', PostData<'/acg/by-category'>>('/acg/by-category', body, options),
-      categoriesGet: (options) => callGet<'/acg/categories', GetData<'/acg/categories'>>('/acg/categories', options),
+      categoriesGet: (options) => callGet<'/acg/categories', GetData<'/acg/categories'>>('/acg/categories', undefined, options),
       compute: (body, options) => call<'/acg', PostData<'/acg'>>('/acg', body, options),
+      countriesGet: (options) => callGet<'/acg/countries', GetData<'/acg/countries'>>('/acg/countries', undefined, options),
       lineReport: (body, options) => call<'/acg/line-report', PostData<'/acg/line-report'>>('/acg/line-report', body, options),
     },
     acgZones: {
       compute: (body, options) => call<'/acg-zones', PostData<'/acg-zones'>>('/acg-zones', body, options),
+    },
+    agent: {
+      toolsGet: (query, options) => callGet<'/agent/tools', GetData<'/agent/tools'>>('/agent/tools', query, options),
     },
     ai: {
       chat: (body, options) => call<'/ai/chat', PostData<'/ai/chat'>>('/ai/chat', body, options),
@@ -1749,9 +1807,15 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       compute: (body, options) => call<'/chart', PostData<'/chart'>>('/chart', body, options),
     },
     chinese: {
+      fengShuiAnnualStars: (body, options) => call<'/chinese/feng-shui/annual-stars', PostData<'/chinese/feng-shui/annual-stars'>>('/chinese/feng-shui/annual-stars', body, options),
       fengShuiBagua: (body, options) => call<'/chinese/feng-shui/bagua', PostData<'/chinese/feng-shui/bagua'>>('/chinese/feng-shui/bagua', body, options),
+      fengShuiFlyingStar: (body, options) => call<'/chinese/feng-shui/flying-star', PostData<'/chinese/feng-shui/flying-star'>>('/chinese/feng-shui/flying-star', body, options),
       fengShuiKua: (body, options) => call<'/chinese/feng-shui/kua', PostData<'/chinese/feng-shui/kua'>>('/chinese/feng-shui/kua', body, options),
       fengShuiLuckyDirections: (body, options) => call<'/chinese/feng-shui/lucky-directions', PostData<'/chinese/feng-shui/lucky-directions'>>('/chinese/feng-shui/lucky-directions', body, options),
+      lunarDate: (body, options) => call<'/chinese/lunar-date', PostData<'/chinese/lunar-date'>>('/chinese/lunar-date', body, options),
+      solarTerms: (body, options) => call<'/chinese/solar-terms', PostData<'/chinese/solar-terms'>>('/chinese/solar-terms', body, options),
+      tongShu: (body, options) => call<'/chinese/tong-shu', PostData<'/chinese/tong-shu'>>('/chinese/tong-shu', body, options),
+      tongShuSelect: (body, options) => call<'/chinese/tong-shu/select', PostData<'/chinese/tong-shu/select'>>('/chinese/tong-shu/select', body, options),
       zodiacAnimal: (body, options) => call<'/chinese/zodiac/animal', PostData<'/chinese/zodiac/animal'>>('/chinese/zodiac/animal', body, options),
       zodiacCompatibility: (body, options) => call<'/chinese/zodiac/compatibility', PostData<'/chinese/zodiac/compatibility'>>('/chinese/zodiac/compatibility', body, options),
       zodiacElement: (body, options) => call<'/chinese/zodiac/element', PostData<'/chinese/zodiac/element'>>('/chinese/zodiac/element', body, options),
@@ -1806,13 +1870,13 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
     },
     esoteric: {
       angelNumbersDecode: (body, options) => call<'/esoteric/angel-numbers/decode', PostData<'/esoteric/angel-numbers/decode'>>('/esoteric/angel-numbers/decode', body, options),
-      angelNumbersGet: (options) => callGet<'/esoteric/angel-numbers', GetData<'/esoteric/angel-numbers'>>('/esoteric/angel-numbers', options),
-      angelNumbersTodayGet: (options) => callGet<'/esoteric/angel-numbers/today', GetData<'/esoteric/angel-numbers/today'>>('/esoteric/angel-numbers/today', options),
-      crystalsGet: (options) => callGet<'/esoteric/crystals', GetData<'/esoteric/crystals'>>('/esoteric/crystals', options),
+      angelNumbersGet: (options) => callGet<'/esoteric/angel-numbers', GetData<'/esoteric/angel-numbers'>>('/esoteric/angel-numbers', undefined, options),
+      angelNumbersTodayGet: (options) => callGet<'/esoteric/angel-numbers/today', GetData<'/esoteric/angel-numbers/today'>>('/esoteric/angel-numbers/today', undefined, options),
+      crystalsGet: (options) => callGet<'/esoteric/crystals', GetData<'/esoteric/crystals'>>('/esoteric/crystals', undefined, options),
       crystalsRecommend: (body, options) => call<'/esoteric/crystals/recommend', PostData<'/esoteric/crystals/recommend'>>('/esoteric/crystals/recommend', body, options),
       dreamsDecode: (body, options) => call<'/esoteric/dreams/decode', PostData<'/esoteric/dreams/decode'>>('/esoteric/dreams/decode', body, options),
-      dreamsGet: (options) => callGet<'/esoteric/dreams', GetData<'/esoteric/dreams'>>('/esoteric/dreams', options),
-      dreamsRecurringThemesGet: (options) => callGet<'/esoteric/dreams/recurring-themes', GetData<'/esoteric/dreams/recurring-themes'>>('/esoteric/dreams/recurring-themes', options),
+      dreamsGet: (options) => callGet<'/esoteric/dreams', GetData<'/esoteric/dreams'>>('/esoteric/dreams', undefined, options),
+      dreamsRecurringThemesGet: (options) => callGet<'/esoteric/dreams/recurring-themes', GetData<'/esoteric/dreams/recurring-themes'>>('/esoteric/dreams/recurring-themes', undefined, options),
     },
     essentialDignities: {
       compute: (body, options) => call<'/essential-dignities', PostData<'/essential-dignities'>>('/essential-dignities', body, options),
@@ -1847,6 +1911,7 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       compute: (body, options) => call<'/firdaria', PostData<'/firdaria'>>('/firdaria', body, options),
     },
     fixedStars: {
+      catalogGet: (options) => callGet<'/fixed-stars/catalog', GetData<'/fixed-stars/catalog'>>('/fixed-stars/catalog', undefined, options),
       compute: (body, options) => call<'/fixed-stars', PostData<'/fixed-stars'>>('/fixed-stars', body, options),
     },
     forecastCalendar: {
@@ -1984,6 +2049,11 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       synastry: (body, options) => call<'/interpret/synastry', PostData<'/interpret/synastry'>>('/interpret/synastry', body, options),
       transits: (body, options) => call<'/interpret/transits', PostData<'/interpret/transits'>>('/interpret/transits', body, options),
     },
+    kabbalah: {
+      gematria: (body, options) => call<'/kabbalah/gematria', PostData<'/kabbalah/gematria'>>('/kabbalah/gematria', body, options),
+      sephirothGet: (options) => callGet<'/kabbalah/sephiroth', GetData<'/kabbalah/sephiroth'>>('/kabbalah/sephiroth', undefined, options),
+      shemNamesGet: (options) => callGet<'/kabbalah/shem-names', GetData<'/kabbalah/shem-names'>>('/kabbalah/shem-names', undefined, options),
+    },
     localSpace: {
       compute: (body, options) => call<'/local-space', PostData<'/local-space'>>('/local-space', body, options),
       influenceZone: (body, options) => call<'/local-space/influence-zone', PostData<'/local-space/influence-zone'>>('/local-space/influence-zone', body, options),
@@ -2009,13 +2079,13 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
     },
     mcp: {
       agentDebate: (body, options) => call<'/mcp/agent-debate', PostData<'/mcp/agent-debate'>>('/mcp/agent-debate', body, options),
-      agentPoolStatusGet: (options) => callGet<'/mcp/agent-pool-status', GetData<'/mcp/agent-pool-status'>>('/mcp/agent-pool-status', options),
+      agentPoolStatusGet: (options) => callGet<'/mcp/agent-pool-status', GetData<'/mcp/agent-pool-status'>>('/mcp/agent-pool-status', undefined, options),
       multiAgentCoordinate: (body, options) => call<'/mcp/multi-agent-coordinate', PostData<'/mcp/multi-agent-coordinate'>>('/mcp/multi-agent-coordinate', body, options),
       multiChartContext: (body, options) => call<'/mcp/multi-chart-context', PostData<'/mcp/multi-chart-context'>>('/mcp/multi-chart-context', body, options),
       ragSearch: (body, options) => call<'/mcp/rag-search', PostData<'/mcp/rag-search'>>('/mcp/rag-search', body, options),
       streaming: (body, options) => call<'/mcp/streaming', PostData<'/mcp/streaming'>>('/mcp/streaming', body, options),
       toolCallStream: (body, options) => call<'/mcp/tool-call-stream', PostData<'/mcp/tool-call-stream'>>('/mcp/tool-call-stream', body, options),
-      toolsListGet: (options) => callGet<'/mcp/tools-list', GetData<'/mcp/tools-list'>>('/mcp/tools-list', options),
+      toolsListGet: (options) => callGet<'/mcp/tools-list', GetData<'/mcp/tools-list'>>('/mcp/tools-list', undefined, options),
     },
     midpointTrees: {
       compute: (body, options) => call<'/midpoint-trees', PostData<'/midpoint-trees'>>('/midpoint-trees', body, options),
@@ -2053,7 +2123,7 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       compute: (body, options) => call<'/moon-voc', PostData<'/moon-voc'>>('/moon-voc', body, options),
     },
     muhurta: {
-      typesGet: (options) => callGet<'/muhurta/types', GetData<'/muhurta/types'>>('/muhurta/types', options),
+      typesGet: (options) => callGet<'/muhurta/types', GetData<'/muhurta/types'>>('/muhurta/types', undefined, options),
     },
     nakshatras: {
       compute: (body, options) => call<'/nakshatras', PostData<'/nakshatras'>>('/nakshatras', body, options),
@@ -2122,6 +2192,7 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
     },
     parans: {
       compute: (body, options) => call<'/parans', PostData<'/parans'>>('/parans', body, options),
+      star: (body, options) => call<'/parans/star', PostData<'/parans/star'>>('/parans/star', body, options),
     },
     pet: {
       bestNames: (body, options) => call<'/pet/best-names', PostData<'/pet/best-names'>>('/pet/best-names', body, options),
@@ -2174,20 +2245,20 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       trutine: (body, options) => call<'/rectification/trutine', PostData<'/rectification/trutine'>>('/rectification/trutine', body, options),
     },
     reference: {
-      aspectsGet: (options) => callGet<'/reference/aspects', GetData<'/reference/aspects'>>('/reference/aspects', options),
-      asteroidsGet: (options) => callGet<'/reference/asteroids', GetData<'/reference/asteroids'>>('/reference/asteroids', options),
-      decansGet: (options) => callGet<'/reference/decans', GetData<'/reference/decans'>>('/reference/decans', options),
-      dignitiesGet: (options) => callGet<'/reference/dignities', GetData<'/reference/dignities'>>('/reference/dignities', options),
-      elementsGet: (options) => callGet<'/reference/elements', GetData<'/reference/elements'>>('/reference/elements', options),
-      glyphsGet: (options) => callGet<'/reference/glyphs', GetData<'/reference/glyphs'>>('/reference/glyphs', options),
-      housesGet: (options) => callGet<'/reference/houses', GetData<'/reference/houses'>>('/reference/houses', options),
-      lotsGet: (options) => callGet<'/reference/lots', GetData<'/reference/lots'>>('/reference/lots', options),
-      modalitiesGet: (options) => callGet<'/reference/modalities', GetData<'/reference/modalities'>>('/reference/modalities', options),
-      nakshatrasGet: (options) => callGet<'/reference/nakshatras', GetData<'/reference/nakshatras'>>('/reference/nakshatras', options),
-      planetsGet: (options) => callGet<'/reference/planets', GetData<'/reference/planets'>>('/reference/planets', options),
-      polaritiesGet: (options) => callGet<'/reference/polarities', GetData<'/reference/polarities'>>('/reference/polarities', options),
-      signsGet: (options) => callGet<'/reference/signs', GetData<'/reference/signs'>>('/reference/signs', options),
-      zodiacSystemsGet: (options) => callGet<'/reference/zodiac-systems', GetData<'/reference/zodiac-systems'>>('/reference/zodiac-systems', options),
+      aspectsGet: (options) => callGet<'/reference/aspects', GetData<'/reference/aspects'>>('/reference/aspects', undefined, options),
+      asteroidsGet: (options) => callGet<'/reference/asteroids', GetData<'/reference/asteroids'>>('/reference/asteroids', undefined, options),
+      decansGet: (options) => callGet<'/reference/decans', GetData<'/reference/decans'>>('/reference/decans', undefined, options),
+      dignitiesGet: (options) => callGet<'/reference/dignities', GetData<'/reference/dignities'>>('/reference/dignities', undefined, options),
+      elementsGet: (options) => callGet<'/reference/elements', GetData<'/reference/elements'>>('/reference/elements', undefined, options),
+      glyphsGet: (options) => callGet<'/reference/glyphs', GetData<'/reference/glyphs'>>('/reference/glyphs', undefined, options),
+      housesGet: (options) => callGet<'/reference/houses', GetData<'/reference/houses'>>('/reference/houses', undefined, options),
+      lotsGet: (options) => callGet<'/reference/lots', GetData<'/reference/lots'>>('/reference/lots', undefined, options),
+      modalitiesGet: (options) => callGet<'/reference/modalities', GetData<'/reference/modalities'>>('/reference/modalities', undefined, options),
+      nakshatrasGet: (options) => callGet<'/reference/nakshatras', GetData<'/reference/nakshatras'>>('/reference/nakshatras', undefined, options),
+      planetsGet: (options) => callGet<'/reference/planets', GetData<'/reference/planets'>>('/reference/planets', undefined, options),
+      polaritiesGet: (options) => callGet<'/reference/polarities', GetData<'/reference/polarities'>>('/reference/polarities', undefined, options),
+      signsGet: (options) => callGet<'/reference/signs', GetData<'/reference/signs'>>('/reference/signs', undefined, options),
+      zodiacSystemsGet: (options) => callGet<'/reference/zodiac-systems', GetData<'/reference/zodiac-systems'>>('/reference/zodiac-systems', undefined, options),
     },
     relocation: {
       compute: (body, options) => call<'/relocation', PostData<'/relocation'>>('/relocation', body, options),
@@ -2217,14 +2288,16 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       business: (body, options) => call<'/reports/business', PostData<'/reports/business'>>('/reports/business', body, options),
       career: (body, options) => call<'/reports/career', PostData<'/reports/career'>>('/reports/career', body, options),
       child: (body, options) => call<'/reports/child', PostData<'/reports/child'>>('/reports/child', body, options),
+      gemstone: (body, options) => call<'/reports/gemstone', PostData<'/reports/gemstone'>>('/reports/gemstone', body, options),
       generate: (body, options) => call<'/reports/generate', PostData<'/reports/generate'>>('/reports/generate', body, options),
-      historyGet: (options) => callGet<'/reports/history', GetData<'/reports/history'>>('/reports/history', options),
+      historyGet: (options) => callGet<'/reports/history', GetData<'/reports/history'>>('/reports/history', undefined, options),
       humanDesign: (body, options) => call<'/reports/human-design', PostData<'/reports/human-design'>>('/reports/human-design', body, options),
       lalKitab: (body, options) => call<'/reports/lal-kitab', PostData<'/reports/lal-kitab'>>('/reports/lal-kitab', body, options),
       love: (body, options) => call<'/reports/love', PostData<'/reports/love'>>('/reports/love', body, options),
       money: (body, options) => call<'/reports/money', PostData<'/reports/money'>>('/reports/money', body, options),
       muhurta: (body, options) => call<'/reports/muhurta', PostData<'/reports/muhurta'>>('/reports/muhurta', body, options),
       natal: (body, options) => call<'/reports/natal', PostData<'/reports/natal'>>('/reports/natal', body, options),
+      relocation: (body, options) => call<'/reports/relocation', PostData<'/reports/relocation'>>('/reports/relocation', body, options),
       stellaforge: (body, options) => call<'/reports/stellaforge', PostData<'/reports/stellaforge'>>('/reports/stellaforge', body, options),
       synastry: (body, options) => call<'/reports/synastry', PostData<'/reports/synastry'>>('/reports/synastry', body, options),
       tarot: (body, options) => call<'/reports/tarot', PostData<'/reports/tarot'>>('/reports/tarot', body, options),
@@ -2276,7 +2349,7 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       houseOverlay: (body, options) => call<'/synastry/house-overlay', PostData<'/synastry/house-overlay'>>('/synastry/house-overlay', body, options),
     },
     tarot: {
-      lenormandCardsGet: (options) => callGet<'/tarot/lenormand/cards', GetData<'/tarot/lenormand/cards'>>('/tarot/lenormand/cards', options),
+      lenormandCardsGet: (options) => callGet<'/tarot/lenormand/cards', GetData<'/tarot/lenormand/cards'>>('/tarot/lenormand/cards', undefined, options),
       lenormandDaily: (body, options) => call<'/tarot/lenormand/daily', PostData<'/tarot/lenormand/daily'>>('/tarot/lenormand/daily', body, options),
       lenormandDraw9CardSquare: (body, options) => call<'/tarot/lenormand/draw/9-card-square', PostData<'/tarot/lenormand/draw/9-card-square'>>('/tarot/lenormand/draw/9-card-square', body, options),
       lenormandDrawCelticCrossLenormand: (body, options) => call<'/tarot/lenormand/draw/celtic-cross-lenormand', PostData<'/tarot/lenormand/draw/celtic-cross-lenormand'>>('/tarot/lenormand/draw/celtic-cross-lenormand', body, options),
@@ -2284,9 +2357,9 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       lenormandDrawLineOfFive: (body, options) => call<'/tarot/lenormand/draw/line-of-five', PostData<'/tarot/lenormand/draw/line-of-five'>>('/tarot/lenormand/draw/line-of-five', body, options),
       lenormandDrawRelationship: (body, options) => call<'/tarot/lenormand/draw/relationship', PostData<'/tarot/lenormand/draw/relationship'>>('/tarot/lenormand/draw/relationship', body, options),
       lenormandDrawThreeCard: (body, options) => call<'/tarot/lenormand/draw/three-card', PostData<'/tarot/lenormand/draw/three-card'>>('/tarot/lenormand/draw/three-card', body, options),
-      lenormandHousesGet: (options) => callGet<'/tarot/lenormand/houses', GetData<'/tarot/lenormand/houses'>>('/tarot/lenormand/houses', options),
+      lenormandHousesGet: (options) => callGet<'/tarot/lenormand/houses', GetData<'/tarot/lenormand/houses'>>('/tarot/lenormand/houses', undefined, options),
       marseilleBirthCard: (body, options) => call<'/tarot/marseille/birth-card', PostData<'/tarot/marseille/birth-card'>>('/tarot/marseille/birth-card', body, options),
-      marseilleCardsGet: (options) => callGet<'/tarot/marseille/cards', GetData<'/tarot/marseille/cards'>>('/tarot/marseille/cards', options),
+      marseilleCardsGet: (options) => callGet<'/tarot/marseille/cards', GetData<'/tarot/marseille/cards'>>('/tarot/marseille/cards', undefined, options),
       marseilleClarify: (body, options) => call<'/tarot/marseille/clarify', PostData<'/tarot/marseille/clarify'>>('/tarot/marseille/clarify', body, options),
       marseilleDaily: (body, options) => call<'/tarot/marseille/daily', PostData<'/tarot/marseille/daily'>>('/tarot/marseille/daily', body, options),
       marseilleDrawCareer: (body, options) => call<'/tarot/marseille/draw/career', PostData<'/tarot/marseille/draw/career'>>('/tarot/marseille/draw/career', body, options),
@@ -2300,15 +2373,15 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       marseilleDrawSpiritual: (body, options) => call<'/tarot/marseille/draw/spiritual', PostData<'/tarot/marseille/draw/spiritual'>>('/tarot/marseille/draw/spiritual', body, options),
       marseilleDrawThreeCard: (body, options) => call<'/tarot/marseille/draw/three-card', PostData<'/tarot/marseille/draw/three-card'>>('/tarot/marseille/draw/three-card', body, options),
       marseilleInterpret: (body, options) => call<'/tarot/marseille/interpret', PostData<'/tarot/marseille/interpret'>>('/tarot/marseille/interpret', body, options),
-      marseilleMajorsGet: (options) => callGet<'/tarot/marseille/majors', GetData<'/tarot/marseille/majors'>>('/tarot/marseille/majors', options),
-      marseilleSpreadsGet: (options) => callGet<'/tarot/marseille/spreads', GetData<'/tarot/marseille/spreads'>>('/tarot/marseille/spreads', options),
+      marseilleMajorsGet: (options) => callGet<'/tarot/marseille/majors', GetData<'/tarot/marseille/majors'>>('/tarot/marseille/majors', undefined, options),
+      marseilleSpreadsGet: (options) => callGet<'/tarot/marseille/spreads', GetData<'/tarot/marseille/spreads'>>('/tarot/marseille/spreads', undefined, options),
       marseilleTiming: (body, options) => call<'/tarot/marseille/timing', PostData<'/tarot/marseille/timing'>>('/tarot/marseille/timing', body, options),
       marseilleYearCard: (body, options) => call<'/tarot/marseille/year-card', PostData<'/tarot/marseille/year-card'>>('/tarot/marseille/year-card', body, options),
       riderWaiteAdvice: (body, options) => call<'/tarot/rider-waite/advice', PostData<'/tarot/rider-waite/advice'>>('/tarot/rider-waite/advice', body, options),
       riderWaiteBirthCard: (body, options) => call<'/tarot/rider-waite/birth-card', PostData<'/tarot/rider-waite/birth-card'>>('/tarot/rider-waite/birth-card', body, options),
-      riderWaiteCardsGet: (options) => callGet<'/tarot/rider-waite/cards', GetData<'/tarot/rider-waite/cards'>>('/tarot/rider-waite/cards', options),
+      riderWaiteCardsGet: (options) => callGet<'/tarot/rider-waite/cards', GetData<'/tarot/rider-waite/cards'>>('/tarot/rider-waite/cards', undefined, options),
       riderWaiteClarify: (body, options) => call<'/tarot/rider-waite/clarify', PostData<'/tarot/rider-waite/clarify'>>('/tarot/rider-waite/clarify', body, options),
-      riderWaiteCourtsGet: (options) => callGet<'/tarot/rider-waite/courts', GetData<'/tarot/rider-waite/courts'>>('/tarot/rider-waite/courts', options),
+      riderWaiteCourtsGet: (options) => callGet<'/tarot/rider-waite/courts', GetData<'/tarot/rider-waite/courts'>>('/tarot/rider-waite/courts', undefined, options),
       riderWaiteCrossSum: (body, options) => call<'/tarot/rider-waite/cross-sum', PostData<'/tarot/rider-waite/cross-sum'>>('/tarot/rider-waite/cross-sum', body, options),
       riderWaiteDaily: (body, options) => call<'/tarot/rider-waite/daily', PostData<'/tarot/rider-waite/daily'>>('/tarot/rider-waite/daily', body, options),
       riderWaiteDrawCareer: (body, options) => call<'/tarot/rider-waite/draw/career', PostData<'/tarot/rider-waite/draw/career'>>('/tarot/rider-waite/draw/career', body, options),
@@ -2324,13 +2397,13 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       riderWaiteDrawThreeCard: (body, options) => call<'/tarot/rider-waite/draw/three-card', PostData<'/tarot/rider-waite/draw/three-card'>>('/tarot/rider-waite/draw/three-card', body, options),
       riderWaiteDrawYearAhead: (body, options) => call<'/tarot/rider-waite/draw/year-ahead', PostData<'/tarot/rider-waite/draw/year-ahead'>>('/tarot/rider-waite/draw/year-ahead', body, options),
       riderWaiteInterpret: (body, options) => call<'/tarot/rider-waite/interpret', PostData<'/tarot/rider-waite/interpret'>>('/tarot/rider-waite/interpret', body, options),
-      riderWaiteMajorsGet: (options) => callGet<'/tarot/rider-waite/majors', GetData<'/tarot/rider-waite/majors'>>('/tarot/rider-waite/majors', options),
-      riderWaiteMinorsGet: (options) => callGet<'/tarot/rider-waite/minors', GetData<'/tarot/rider-waite/minors'>>('/tarot/rider-waite/minors', options),
+      riderWaiteMajorsGet: (options) => callGet<'/tarot/rider-waite/majors', GetData<'/tarot/rider-waite/majors'>>('/tarot/rider-waite/majors', undefined, options),
+      riderWaiteMinorsGet: (options) => callGet<'/tarot/rider-waite/minors', GetData<'/tarot/rider-waite/minors'>>('/tarot/rider-waite/minors', undefined, options),
       riderWaiteMissingInfo: (body, options) => call<'/tarot/rider-waite/missing-info', PostData<'/tarot/rider-waite/missing-info'>>('/tarot/rider-waite/missing-info', body, options),
       riderWaiteOutcome: (body, options) => call<'/tarot/rider-waite/outcome', PostData<'/tarot/rider-waite/outcome'>>('/tarot/rider-waite/outcome', body, options),
       riderWaiteShadowCard: (body, options) => call<'/tarot/rider-waite/shadow-card', PostData<'/tarot/rider-waite/shadow-card'>>('/tarot/rider-waite/shadow-card', body, options),
       riderWaiteSoulPersonalityCard: (body, options) => call<'/tarot/rider-waite/soul-personality-card', PostData<'/tarot/rider-waite/soul-personality-card'>>('/tarot/rider-waite/soul-personality-card', body, options),
-      riderWaiteSpreadsGet: (options) => callGet<'/tarot/rider-waite/spreads', GetData<'/tarot/rider-waite/spreads'>>('/tarot/rider-waite/spreads', options),
+      riderWaiteSpreadsGet: (options) => callGet<'/tarot/rider-waite/spreads', GetData<'/tarot/rider-waite/spreads'>>('/tarot/rider-waite/spreads', undefined, options),
       riderWaiteTiming: (body, options) => call<'/tarot/rider-waite/timing', PostData<'/tarot/rider-waite/timing'>>('/tarot/rider-waite/timing', body, options),
       riderWaiteYearCard: (body, options) => call<'/tarot/rider-waite/year-card', PostData<'/tarot/rider-waite/year-card'>>('/tarot/rider-waite/year-card', body, options),
     },
@@ -2346,9 +2419,10 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
     translate: {
       astro: (body, options) => call<'/translate/astro', PostData<'/translate/astro'>>('/translate/astro', body, options),
       batch: (body, options) => call<'/translate/batch', PostData<'/translate/batch'>>('/translate/batch', body, options),
-      languagesGet: (options) => callGet<'/translate/languages', GetData<'/translate/languages'>>('/translate/languages', options),
+      languagesGet: (options) => callGet<'/translate/languages', GetData<'/translate/languages'>>('/translate/languages', undefined, options),
     },
     vedic: {
+      bhavabala: (body, options) => call<'/vedic/bhavabala', PostData<'/vedic/bhavabala'>>('/vedic/bhavabala', body, options),
       compatibilityAshtakoot: (body, options) => call<'/vedic/compatibility/ashtakoot', PostData<'/vedic/compatibility/ashtakoot'>>('/vedic/compatibility/ashtakoot', body, options),
       compatibilityBhriguMatch: (body, options) => call<'/vedic/compatibility/bhrigu-match', PostData<'/vedic/compatibility/bhrigu-match'>>('/vedic/compatibility/bhrigu-match', body, options),
       compatibilityDashakoota: (body, options) => call<'/vedic/compatibility/dashakoota', PostData<'/vedic/compatibility/dashakoota'>>('/vedic/compatibility/dashakoota', body, options),
@@ -2424,6 +2498,8 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       doshasParasharaMangal: (body, options) => call<'/vedic/doshas/parashara/mangal', PostData<'/vedic/doshas/parashara/mangal'>>('/vedic/doshas/parashara/mangal', body, options),
       doshasParasharaPitru: (body, options) => call<'/vedic/doshas/parashara/pitru', PostData<'/vedic/doshas/parashara/pitru'>>('/vedic/doshas/parashara/pitru', body, options),
       doshasParasharaShrapit: (body, options) => call<'/vedic/doshas/parashara/shrapit', PostData<'/vedic/doshas/parashara/shrapit'>>('/vedic/doshas/parashara/shrapit', body, options),
+      gemstones: (body, options) => call<'/vedic/gemstones', PostData<'/vedic/gemstones'>>('/vedic/gemstones', body, options),
+      gemstonesNavaratnaGet: (options) => callGet<'/vedic/gemstones/navaratna', GetData<'/vedic/gemstones/navaratna'>>('/vedic/gemstones/navaratna', undefined, options),
       jaiminiArgalaAnalysis: (body, options) => call<'/vedic/jaimini/argala-analysis', PostData<'/vedic/jaimini/argala-analysis'>>('/vedic/jaimini/argala-analysis', body, options),
       jaiminiAspects: (body, options) => call<'/vedic/jaimini/aspects', PostData<'/vedic/jaimini/aspects'>>('/vedic/jaimini/aspects', body, options),
       jaiminiAtmakarakaNavamsa: (body, options) => call<'/vedic/jaimini/atmakaraka-navamsa', PostData<'/vedic/jaimini/atmakaraka-navamsa'>>('/vedic/jaimini/atmakaraka-navamsa', body, options),
@@ -2501,6 +2577,7 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       vargaD60: (body, options) => call<'/vedic/varga/D60', PostData<'/vedic/varga/D60'>>('/vedic/varga/D60', body, options),
       vargaD7: (body, options) => call<'/vedic/varga/D7', PostData<'/vedic/varga/D7'>>('/vedic/varga/D7', body, options),
       vargaD9: (body, options) => call<'/vedic/varga/D9', PostData<'/vedic/varga/D9'>>('/vedic/varga/D9', body, options),
+      varshaphal: (body, options) => call<'/vedic/varshaphal', PostData<'/vedic/varshaphal'>>('/vedic/varshaphal', body, options),
       yogasJaiminiDaridra: (body, options) => call<'/vedic/yogas/jaimini/daridra', PostData<'/vedic/yogas/jaimini/daridra'>>('/vedic/yogas/jaimini/daridra', body, options),
       yogasJaiminiDhana: (body, options) => call<'/vedic/yogas/jaimini/dhana', PostData<'/vedic/yogas/jaimini/dhana'>>('/vedic/yogas/jaimini/dhana', body, options),
       yogasJaiminiFull: (body, options) => call<'/vedic/yogas/jaimini/full', PostData<'/vedic/yogas/jaimini/full'>>('/vedic/yogas/jaimini/full', body, options),
@@ -2523,7 +2600,7 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
     webhooks: {
       dashaChange: (body, options) => call<'/webhooks/dasha-change', PostData<'/webhooks/dasha-change'>>('/webhooks/dasha-change', body, options),
       eclipseAlert: (body, options) => call<'/webhooks/eclipse-alert', PostData<'/webhooks/eclipse-alert'>>('/webhooks/eclipse-alert', body, options),
-      get: (options) => callGet<'/webhooks', GetData<'/webhooks'>>('/webhooks', options),
+      get: (options) => callGet<'/webhooks', GetData<'/webhooks'>>('/webhooks', undefined, options),
       mahadashaEnd: (body, options) => call<'/webhooks/mahadasha-end', PostData<'/webhooks/mahadasha-end'>>('/webhooks/mahadasha-end', body, options),
       planetaryHourTick: (body, options) => call<'/webhooks/planetary-hour-tick', PostData<'/webhooks/planetary-hour-tick'>>('/webhooks/planetary-hour-tick', body, options),
       retrogradeEnd: (body, options) => call<'/webhooks/retrograde-end', PostData<'/webhooks/retrograde-end'>>('/webhooks/retrograde-end', body, options),
@@ -2535,6 +2612,7 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       voidOfCourseStart: (body, options) => call<'/webhooks/void-of-course-start', PostData<'/webhooks/void-of-course-start'>>('/webhooks/void-of-course-start', body, options),
     },
     wellness: {
+      biorhythm: (body, options) => call<'/wellness/biorhythm', PostData<'/wellness/biorhythm'>>('/wellness/biorhythm', body, options),
       crystals: (body, options) => call<'/wellness/crystals', PostData<'/wellness/crystals'>>('/wellness/crystals', body, options),
       cycle: (body, options) => call<'/wellness/cycle', PostData<'/wellness/cycle'>>('/wellness/cycle', body, options),
       diet: (body, options) => call<'/wellness/diet', PostData<'/wellness/diet'>>('/wellness/diet', body, options),
@@ -2546,7 +2624,7 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       yoga: (body, options) => call<'/wellness/yoga', PostData<'/wellness/yoga'>>('/wellness/yoga', body, options),
     },
     whitelabel: {
-      configGet: (options) => callGet<'/whitelabel/config', GetData<'/whitelabel/config'>>('/whitelabel/config', options),
+      configGet: (options) => callGet<'/whitelabel/config', GetData<'/whitelabel/config'>>('/whitelabel/config', undefined, options),
       domainVerify: (body, options) => call<'/whitelabel/domain/verify', PostData<'/whitelabel/domain/verify'>>('/whitelabel/domain/verify', body, options),
       logo: (body, options) => call<'/whitelabel/logo', PostData<'/whitelabel/logo'>>('/whitelabel/logo', body, options),
       preview: (body, options) => call<'/whitelabel/preview', PostData<'/whitelabel/preview'>>('/whitelabel/preview', body, options),
@@ -2555,6 +2633,7 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       compute: (body, options) => call<'/zenith', PostData<'/zenith'>>('/zenith', body, options),
     },
     ziwei: {
+      fourTransformations: (body, options) => call<'/ziwei/four-transformations', PostData<'/ziwei/four-transformations'>>('/ziwei/four-transformations', body, options),
       fullChart: (body, options) => call<'/ziwei/full-chart', PostData<'/ziwei/full-chart'>>('/ziwei/full-chart', body, options),
       mainStars: (body, options) => call<'/ziwei/main-stars', PostData<'/ziwei/main-stars'>>('/ziwei/main-stars', body, options),
       palaceCareer: (body, options) => call<'/ziwei/palace-career', PostData<'/ziwei/palace-career'>>('/ziwei/palace-career', body, options),
@@ -2569,18 +2648,18 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       twelvePalaces: (body, options) => call<'/ziwei/twelve-palaces', PostData<'/ziwei/twelve-palaces'>>('/ziwei/twelve-palaces', body, options),
     },
     zodiac: {
-      aquariusGet: (options) => callGet<'/zodiac/aquarius', GetData<'/zodiac/aquarius'>>('/zodiac/aquarius', options),
-      ariesGet: (options) => callGet<'/zodiac/aries', GetData<'/zodiac/aries'>>('/zodiac/aries', options),
-      cancerGet: (options) => callGet<'/zodiac/cancer', GetData<'/zodiac/cancer'>>('/zodiac/cancer', options),
-      capricornGet: (options) => callGet<'/zodiac/capricorn', GetData<'/zodiac/capricorn'>>('/zodiac/capricorn', options),
-      geminiGet: (options) => callGet<'/zodiac/gemini', GetData<'/zodiac/gemini'>>('/zodiac/gemini', options),
-      leoGet: (options) => callGet<'/zodiac/leo', GetData<'/zodiac/leo'>>('/zodiac/leo', options),
-      libraGet: (options) => callGet<'/zodiac/libra', GetData<'/zodiac/libra'>>('/zodiac/libra', options),
-      piscesGet: (options) => callGet<'/zodiac/pisces', GetData<'/zodiac/pisces'>>('/zodiac/pisces', options),
-      sagittariusGet: (options) => callGet<'/zodiac/sagittarius', GetData<'/zodiac/sagittarius'>>('/zodiac/sagittarius', options),
-      scorpioGet: (options) => callGet<'/zodiac/scorpio', GetData<'/zodiac/scorpio'>>('/zodiac/scorpio', options),
-      taurusGet: (options) => callGet<'/zodiac/taurus', GetData<'/zodiac/taurus'>>('/zodiac/taurus', options),
-      virgoGet: (options) => callGet<'/zodiac/virgo', GetData<'/zodiac/virgo'>>('/zodiac/virgo', options),
+      aquariusGet: (options) => callGet<'/zodiac/aquarius', GetData<'/zodiac/aquarius'>>('/zodiac/aquarius', undefined, options),
+      ariesGet: (options) => callGet<'/zodiac/aries', GetData<'/zodiac/aries'>>('/zodiac/aries', undefined, options),
+      cancerGet: (options) => callGet<'/zodiac/cancer', GetData<'/zodiac/cancer'>>('/zodiac/cancer', undefined, options),
+      capricornGet: (options) => callGet<'/zodiac/capricorn', GetData<'/zodiac/capricorn'>>('/zodiac/capricorn', undefined, options),
+      geminiGet: (options) => callGet<'/zodiac/gemini', GetData<'/zodiac/gemini'>>('/zodiac/gemini', undefined, options),
+      leoGet: (options) => callGet<'/zodiac/leo', GetData<'/zodiac/leo'>>('/zodiac/leo', undefined, options),
+      libraGet: (options) => callGet<'/zodiac/libra', GetData<'/zodiac/libra'>>('/zodiac/libra', undefined, options),
+      piscesGet: (options) => callGet<'/zodiac/pisces', GetData<'/zodiac/pisces'>>('/zodiac/pisces', undefined, options),
+      sagittariusGet: (options) => callGet<'/zodiac/sagittarius', GetData<'/zodiac/sagittarius'>>('/zodiac/sagittarius', undefined, options),
+      scorpioGet: (options) => callGet<'/zodiac/scorpio', GetData<'/zodiac/scorpio'>>('/zodiac/scorpio', undefined, options),
+      taurusGet: (options) => callGet<'/zodiac/taurus', GetData<'/zodiac/taurus'>>('/zodiac/taurus', undefined, options),
+      virgoGet: (options) => callGet<'/zodiac/virgo', GetData<'/zodiac/virgo'>>('/zodiac/virgo', undefined, options),
     },
   };
 }

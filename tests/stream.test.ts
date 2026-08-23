@@ -14,7 +14,7 @@ function fakeFetch(response: Response): typeof globalThis.fetch {
   return (async () => response) as unknown as typeof globalThis.fetch;
 }
 
-function recordingFetch(response: Response, captured: { last?: { url: string; init?: RequestInit } }): typeof globalThis.fetch {
+function recordingFetch(response: Response, captured: { last?: { url: string; init?: RequestInit | undefined } }): typeof globalThis.fetch {
   return (async (url: unknown, init?: RequestInit) => {
     captured.last = { url: String(url), init };
     return response;

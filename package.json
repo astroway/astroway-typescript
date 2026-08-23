@@ -1,6 +1,6 @@
 {
   "name": "@astroway/sdk",
-  "version": "1.5.1",
+  "version": "1.6.0",
   "description": "Official TypeScript SDK for the AstroWay API — natal, synastry, transits, Vedic, Human Design, Tarot, Numerology, AI horoscopes. Type-safe, retry-aware, OpenAPI 3.1 generated.",
   "type": "module",
   "main": "./dist/index.js",
@@ -37,14 +37,15 @@
   ],
   "scripts": {
     "sync-spec": "tsx scripts/sync-spec.ts",
-    "generate:types": "openapi-typescript openapi.json -o src/types.generated.ts",
+    "generate:types": "openapi-typescript openapi.json --default-non-nullable false -o src/types.generated.ts",
     "generate:namespaces": "node scripts/generate-namespaces.mjs",
     "generate": "npm run generate:types && npm run generate:namespaces",
     "build": "npm run generate && tsc",
     "prepublishOnly": "npm run build && npm test",
-    "test": "vitest run",
+    "test": "vitest run && npm run typecheck",
     "test:watch": "vitest",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "typecheck": "tsc -p tsconfig.test.json"
   },
   "keywords": [
     "astrology",

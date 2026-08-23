@@ -10,8 +10,9 @@
  * - For single-segment opIds the method is `compute` (consistent verb for our
  *   calculation-heavy POST surface).
  *
- * Only POST operations are namespaced — GET/PATCH/DELETE stay accessible via
- * the `client` escape hatch.
+ * POST and GET operations are namespaced (GET since v1.5.0); a GET that
+ * declares query parameters takes them as its first argument. PATCH and DELETE
+ * stay accessible via the `client` escape hatch.
  */
 
 import { readFileSync, writeFileSync } from 'node:fs';
@@ -87,10 +88,6 @@ for (const [path, methods] of Object.entries(spec.paths)) {
      parsed data for them would be a lie. api-calc declares text/html for those
      since 2026-08-04, so this filter needs no per-path list. */
   if (!op.responses?.['200']?.content?.['application/json']) continue;
-  /* Belt and braces while the frozen snapshot predates that api-calc fix: the
-     2026-07-26 spec still claims application/json for the widgets. Drop this
-     line once openapi.json has been resynced past 2026-08-04. */
-  if (path.startsWith('/embed/')) continue;
   /* /public/* is a keyless mirror of endpoints the SDK already exposes with a
      key. Two methods for one calculation is confusing, and the keyed one is
      what an SDK user wants. */
@@ -106,10 +103,16 @@ for (const [path, methods] of Object.entries(spec.paths)) {
   const names = deriveNames(op.operationId);
   if (!names) continue;
   if (!byNs.has(names.ns)) byNs.set(names.ns, []);
+  /* A GET with query parameters needs them in the signature. Without this the
+     method takes options alone and the caller can never ask for anything but
+     the default, which is how /agent/tools would have shipped: four query
+     parameters (format, select, q, limit) and no way to send one. */
+  const query = (op.parameters ?? []).filter((x) => x.in === 'query').map((x) => x.name);
   byNs.get(names.ns).push({
     method: names.method,
     path,
     httpMethod,
+    hasQuery: httpMethod === 'get' && query.length > 0,
     summary: op.summary,
     description: op.description,
   });
@@ -153,7 +156,11 @@ lines.push('type PostData<P extends keyof paths> =');
 lines.push("  paths[P] extends { post: { responses: { 200: { content: { 'application/json': infer T } } } } }");
 lines.push("    ? (T extends { data?: infer D } ? D : T) : unknown;");
 lines.push('');
-lines.push('/** Same, for a GET lookup. These take no body and no query parameters. */');
+lines.push('/** Query parameters of a GET lookup that declares any. */');
+lines.push('type GetQuery<P extends keyof paths> =');
+lines.push("  paths[P] extends { get: { parameters: { query?: infer Q } } } ? Q : never;");
+lines.push('');
+lines.push('/** Same, for a GET lookup. */');
 lines.push('type GetData<P extends keyof paths> =');
 lines.push("  paths[P] extends { get: { responses: { 200: { content: { 'application/json': infer T } } } } }");
 lines.push("    ? (T extends { data?: infer D } ? D : T) : unknown;");
@@ -187,7 +194,9 @@ for (const ns of sortedNs) {
     const tagDoc = item.summary ? `${item.summary}` : `${verb} ${item.path}`;
     lines.push(`    /** ${escapeComment(tagDoc)} (${verb} ${item.path}) */`);
     if (item.httpMethod === 'get') {
-      lines.push(`    ${item.method}(options?: CallOptions): ResultPromise<GetData<'${item.path}'>>;`);
+      lines.push(item.hasQuery
+        ? `    ${item.method}(query?: GetQuery<'${item.path}'>, options?: CallOptions): ResultPromise<GetData<'${item.path}'>>;`
+        : `    ${item.method}(options?: CallOptions): ResultPromise<GetData<'${item.path}'>>;`);
     } else {
       lines.push(`    ${item.method}(body: PostBody<'${item.path}'>, options?: CallOptions): ResultPromise<PostData<'${item.path}'>>;`);
     }
@@ -219,9 +228,10 @@ lines.push("    });");
 lines.push('  };');
 lines.push("  /* GET lookups take no body. Same envelope unwrap and the same options, minus");
 lines.push("     Idempotency-Key, which has no meaning on a read. */");
-lines.push('  const callGet = <P extends keyof paths, T>(path: P, options?: CallOptions): ResultPromise<T> => {');
+lines.push('  const callGet = <P extends keyof paths, T>(path: P, query?: unknown, options?: CallOptions): ResultPromise<T> => {');
 lines.push("    return new ResultPromise<T>(async () => {");
 lines.push("      const init: Record<string, unknown> = {};");
+lines.push("      if (query && Object.keys(query as object).length > 0) init.params = { query };");
 lines.push("      const headers: Record<string, string> = { ...(options?.headers ?? {}) };");
 lines.push("      if (options?.timeoutMs !== undefined && options.timeoutMs > 0) {");
 lines.push("        headers['x-astroway-timeout-ms'] = String(options.timeoutMs);");
@@ -240,7 +250,9 @@ for (const ns of sortedNs) {
   lines.push(`    ${ns}: {`);
   for (const item of items) {
     if (item.httpMethod === 'get') {
-      lines.push(`      ${item.method}: (options) => callGet<'${item.path}', GetData<'${item.path}'>>('${item.path}', options),`);
+      lines.push(item.hasQuery
+        ? `      ${item.method}: (query, options) => callGet<'${item.path}', GetData<'${item.path}'>>('${item.path}', query, options),`
+        : `      ${item.method}: (options) => callGet<'${item.path}', GetData<'${item.path}'>>('${item.path}', undefined, options),`);
     } else {
       lines.push(`      ${item.method}: (body, options) => call<'${item.path}', PostData<'${item.path}'>>('${item.path}', body, options),`);
     }
