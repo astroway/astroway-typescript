@@ -1,6 +1,6 @@
 # @astroway/sdk
 
-> Official TypeScript SDK for the [AstroWay API](https://api.astroway.info) — natal charts, synastry, transits, Vedic dashas, Tarot, Numerology, Human Design, AI horoscopes. Type-safe end to end, generated from the OpenAPI 3.1 spec.
+> Official TypeScript SDK for the [AstroWay API](https://api.astroway.info): natal charts, synastry, transits, Vedic dashas, Tarot, Numerology, Human Design, AI horoscopes. Type-safe end to end, generated from the OpenAPI 3.1 spec.
 
 [![npm version](https://img.shields.io/npm/v/@astroway/sdk.svg?style=flat&color=blue)](https://www.npmjs.com/package/@astroway/sdk)
 [![npm downloads](https://img.shields.io/npm/dm/@astroway/sdk.svg?style=flat)](https://www.npmjs.com/package/@astroway/sdk)
@@ -18,7 +18,7 @@ npm install @astroway/sdk
 # or yarn add @astroway/sdk
 ```
 
-Get an API key at <https://api.astroway.info/dashboard/sign-up> — **10,000 credits/month free**, no card required. Each endpoint costs 5–500 credits depending on what it computes ([pricing](https://api.astroway.info/pricing/)).
+Get an API key at <https://api.astroway.info/dashboard/sign-up>: **10,000 credits/month free**, no card required. Each endpoint costs 5–500 credits depending on what it computes ([pricing](https://api.astroway.info/pricing/)).
 
 ---
 
@@ -48,9 +48,9 @@ console.log(`Sun: ${chart.planets[0].longitude.toFixed(2)}°`);   // Sun: 111.77
 
 `/chart` returns positions, not labels: `houses.ascendant` and every `planets[].longitude` are ecliptic longitudes in degrees, so a sign name is `Math.floor(longitude / 30)` into the list above and the degree within it is `longitude % 30`.
 
-The SDK exposes **94 typed namespaces / 623 methods** auto-generated from the OpenAPI spec — `aw.synastry.aspectGrid({...})`, `aw.bazi.dayMaster({...})`, `aw.vedic.dashasVimshottariMaha({...})`, etc. Path autocomplete and body/response types come straight from your IDE; the `{ ok, data, error }` envelope is unwrapped for you.
+The SDK exposes **94 typed namespaces / 623 methods** auto-generated from the OpenAPI spec: `aw.synastry.aspectGrid({...})`, `aw.bazi.dayMaster({...})`, `aw.vedic.dashasVimshottariMaha({...})`, etc. Path autocomplete and body/response types come straight from your IDE; the `{ ok, data, error }` envelope is unwrapped for you.
 
-Need a raw response or an endpoint not yet covered by namespaces? `aw.client` is the underlying [`openapi-fetch`](https://openapi-ts.dev/openapi-fetch/) instance — `aw.client.POST('/chart', { body })` returns the full envelope with the same typing.
+Need a raw response or an endpoint not yet covered by namespaces? `aw.client` is the underlying [`openapi-fetch`](https://openapi-ts.dev/openapi-fetch/) instance: `aw.client.POST('/chart', { body })` returns the full envelope with the same typing.
 
 ---
 
@@ -103,7 +103,7 @@ const spread = await aw.tarot.riderWaiteSpread({ spreadType: 'three-card', seed:
 const hd = await aw.humanDesign.compute({
   date: '1990-07-14', time: '14:30:00', timezoneOffset: 3, latitude: 50.45, longitude: 30.52,
 });
-console.log(`${hd.type} — ${hd.strategy} — ${hd.authority}`);
+console.log(`${hd.type} - ${hd.strategy} - ${hd.authority}`);
 ```
 
 ### White-label PDF report
@@ -132,7 +132,7 @@ Pass `whitelabel: true` instead of an object to pull branding from your account'
 
 ## Error handling
 
-The SDK throws typed subclasses of `ApiError`. Catch order matters — most specific first:
+The SDK throws typed subclasses of `ApiError`. Catch order matters, most specific first:
 
 ```ts
 import { Astroway, ApiError, AuthenticationError, RateLimitError, BadRequestError } from '@astroway/sdk';
@@ -189,7 +189,7 @@ The default retry honors `Retry-After` (seconds or HTTP-date) on 429 responses.
 Every POST request gets a fresh UUIDv4 `Idempotency-Key` header so a network-blip retry never double-bills:
 
 ```ts
-// Auto: every POST gets a new key (default — recommended for credit-metered POSTs).
+// Auto: every POST gets a new key (default, recommended for credit-metered POSTs).
 const aw = new Astroway({ apiKey });
 
 // Override per call when retrying manually:
@@ -202,16 +202,16 @@ const aw = new Astroway({ apiKey, idempotency: 'off' });
 const aw = new Astroway({ apiKey, idempotency: { generator: () => myUlid() } });
 ```
 
-The header fails open — older backend versions ignore it without breaking anything.
+The header fails open: older backend versions ignore it without breaking anything.
 
 ---
 
 ## Authentication
 
-The SDK supports two equivalent auth schemes — pick whichever your stack prefers:
+The SDK supports two equivalent auth schemes, pick whichever your stack prefers:
 
-- **Header (default):** `X-Api-Key: aw_live_...` — same convention as `curl`/Postman examples.
-- **Bearer:** `Authorization: Bearer aw_live_...` — same convention as Stripe/OpenAI/Anthropic SDKs.
+- **Header (default):** `X-Api-Key: aw_live_...`, the same convention as `curl`/Postman examples.
+- **Bearer:** `Authorization: Bearer aw_live_...`, the same convention as Stripe/OpenAI/Anthropic SDKs.
 
 Set via `authScheme: 'bearer'` in the constructor.
 
@@ -228,7 +228,7 @@ type ChartBody = paths['/chart']['post']['requestBody']['content']['application/
 type ChartResponse = paths['/chart']['post']['responses'][200]['content']['application/json'];
 ```
 
-Path autocomplete and body validation work out of the box — no separate `@types` package needed.
+Path autocomplete and body validation work out of the box, no separate `@types` package needed.
 
 ---
 
@@ -257,17 +257,17 @@ Since **`1.0.0` (2026-05-11)** this package follows strict SemVer:
 
 ### Migration from `0.1.0-alpha.x` / `0.1.0-beta.x` / `0.1.0-rc.x` to `0.1.0`
 
-`0.1.0` freezes the public surface. **No breaking changes** vs `0.1.0-rc.2` — every export, namespace, error class, and option added across alphas/betas/RCs ships unchanged. The freeze means future `0.1.x` patches will not narrow types or remove exports; that level of change requires a `0.2.0` minor bump.
+`0.1.0` freezes the public surface. **No breaking changes** vs `0.1.0-rc.2`: every export, namespace, error class, and option added across alphas/betas/RCs ships unchanged. The freeze means future `0.1.x` patches will not narrow types or remove exports; that level of change requires a `0.2.0` minor bump.
 
 | Coming from | Action |
 |---|---|
-| `0.1.0-alpha.1` / `0.1.0-alpha.2` (manual `aw.client.POST(path, body)` + retry) | Switch to typed namespaces — `aw.chart.compute(body)`, `aw.synastry.aspectGrid(body)`, etc. The escape hatch (`aw.client.POST`) still works. |
+| `0.1.0-alpha.1` / `0.1.0-alpha.2` (manual `aw.client.POST(path, body)` + retry) | Switch to typed namespaces: `aw.chart.compute(body)`, `aw.synastry.aspectGrid(body)`, etc. The escape hatch (`aw.client.POST`) still works. |
 | `0.1.0-alpha.3` … `alpha.6` (no idempotency / errors / helpers) | Pick up automatic `Idempotency-Key` on POSTs, `error.requestId` / `error.creditsRemaining` getters, `BirthDateTime.fromCity()` helpers in the `/helpers` subpath. |
 | `0.1.0-beta.1` … `beta.3` (no streaming / cache) | Use `aw.streamSSE('/horoscope/daily', body)` for AI streams. Opt into caching via `new Astroway({ cache: 'memory' })`. |
 | `0.1.0-rc.1` (no test client) | `import { MockAstroway } from '@astroway/sdk/testing'` for unit tests. |
 | `0.1.0-rc.2` (no transport tuning) | Optional: pass `dispatcher` (undici Agent) and per-call `timeoutMs` for heavy workloads. |
 
-A type-stability test suite (`tests/types.test.ts`) using vitest's `expectTypeOf` locks the surface — any future PR that breaks the public types fails CI before reaching npm.
+A type-stability test suite (`tests/types.test.ts`) using vitest's `expectTypeOf` locks the surface: any future PR that breaks the public types fails CI before reaching npm.
 
 ---
 
@@ -284,4 +284,4 @@ A type-stability test suite (`tests/types.test.ts`) using vitest's `expectTypeOf
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT, see [LICENSE](LICENSE).
