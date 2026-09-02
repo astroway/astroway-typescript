@@ -22,6 +22,7 @@
 
 import { ApiError, classifyHttpError } from './errors.js';
 import { buildNamespaces, type AstrowayNamespaces } from './namespaces.generated.js';
+import type { StreamChunk } from './stream.js';
 import type { paths } from './types.generated.js';
 
 /** Recorded call. The body is whatever was passed; the response is what the mock returned. */
@@ -156,7 +157,18 @@ export class MockAstroway {
       PUT: ((path, init) => dispatch('PUT', path as string, init as { body?: unknown; headers?: Record<string, string> })) as (typeof this)['client']['PUT'],
       DELETE: ((path, init) => dispatch('DELETE', path as string, init as { headers?: Record<string, string> })) as (typeof this)['client']['DELETE'],
     };
-    Object.assign(this, buildNamespaces(this.client as never));
+    /* The two `/mcp/*` streaming methods go through the same fixture table as
+       everything else. A fixture that is an array is yielded frame by frame,
+       which is what a test of a stream wants; anything else is one frame. */
+    Object.assign(this, buildNamespaces(this.client as never, {
+      async *streamSSE(path: string, body?: unknown): AsyncGenerator<StreamChunk, void, void> {
+        const res = await dispatch('POST', path, { body });
+        const payload = (res.data as { data?: unknown }).data;
+        for (const frame of Array.isArray(payload) ? payload : [payload]) {
+          yield frame as StreamChunk;
+        }
+      },
+    }));
   }
 
   /**

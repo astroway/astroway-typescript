@@ -4,6 +4,7 @@
 import type { paths } from './types.generated.js';
 import type { AstrowayClient } from './index.js';
 import { ResultPromise } from './with-response.js';
+import type { StreamChunk } from './stream.js';
 
 /** Body type extracted from a POST endpoint, or `never` if no body schema. */
 type PostBody<P extends keyof paths> =
@@ -43,6 +44,19 @@ export interface CallOptions {
   timeoutMs?: number;
 }
 
+/** Options for a streaming call. No idempotency replay and no envelope: an
+ *  SSE endpoint answers frames, so the only knobs are the ones the transport
+ *  honours. */
+export interface StreamOptions {
+  signal?: AbortSignal;
+  idempotencyKey?: string;
+}
+
+/** The half of the client a streaming method needs. `Astroway` satisfies it. */
+export interface SseCapable {
+  streamSSE(path: string, body?: unknown, options?: StreamOptions): AsyncGenerator<StreamChunk, void, void>;
+}
+
 export interface AstrowayNamespaces {
   acg: {
     /** Best places for a life category (POST /acg/best-places) */
@@ -67,7 +81,7 @@ export interface AstrowayNamespaces {
     toolsGet(query?: GetQuery<'/agent/tools'>, options?: CallOptions): ResultPromise<GetData<'/agent/tools'>>;
   };
   ai: {
-    /** AI Chat (RAG over chart) (POST /ai/chat) */
+    /** Chart-grounded AI chat (POST /ai/chat) */
     chat(body: PostBody<'/ai/chat'>, options?: CallOptions): ResultPromise<PostData<'/ai/chat'>>;
     /** Comparison Coach (POST /ai/comparison-coach) */
     comparisonCoach(body: PostBody<'/ai/comparison-coach'>, options?: CallOptions): ResultPromise<PostData<'/ai/comparison-coach'>>;
@@ -634,9 +648,9 @@ export interface AstrowayNamespaces {
     /** MCP RAG Search (POST /mcp/rag-search) */
     ragSearch(body: PostBody<'/mcp/rag-search'>, options?: CallOptions): ResultPromise<PostData<'/mcp/rag-search'>>;
     /** MCP Streaming Chat (POST /mcp/streaming) */
-    streaming(body: PostBody<'/mcp/streaming'>, options?: CallOptions): ResultPromise<PostData<'/mcp/streaming'>>;
+    streaming(body: PostBody<'/mcp/streaming'>, options?: StreamOptions): AsyncGenerator<StreamChunk, void, void>;
     /** MCP Tool-Call Stream (POST /mcp/tool-call-stream) */
-    toolCallStream(body: PostBody<'/mcp/tool-call-stream'>, options?: CallOptions): ResultPromise<PostData<'/mcp/tool-call-stream'>>;
+    toolCallStream(body: PostBody<'/mcp/tool-call-stream'>, options?: StreamOptions): AsyncGenerator<StreamChunk, void, void>;
     /** MCP Tools List (GET /mcp/tools-list) */
     toolsListGet(options?: CallOptions): ResultPromise<GetData<'/mcp/tools-list'>>;
   };
@@ -1688,7 +1702,7 @@ export interface AstrowayNamespaces {
   };
 }
 
-export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
+export function buildNamespaces(client: AstrowayClient, sse: SseCapable): AstrowayNamespaces {
   const call = <P extends keyof paths, T>(path: P, body: unknown, options?: CallOptions): ResultPromise<T> => {
     return new ResultPromise<T>(async () => {
       const init: Record<string, unknown> = { body: body as never };
@@ -2083,8 +2097,8 @@ export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {
       multiAgentCoordinate: (body, options) => call<'/mcp/multi-agent-coordinate', PostData<'/mcp/multi-agent-coordinate'>>('/mcp/multi-agent-coordinate', body, options),
       multiChartContext: (body, options) => call<'/mcp/multi-chart-context', PostData<'/mcp/multi-chart-context'>>('/mcp/multi-chart-context', body, options),
       ragSearch: (body, options) => call<'/mcp/rag-search', PostData<'/mcp/rag-search'>>('/mcp/rag-search', body, options),
-      streaming: (body, options) => call<'/mcp/streaming', PostData<'/mcp/streaming'>>('/mcp/streaming', body, options),
-      toolCallStream: (body, options) => call<'/mcp/tool-call-stream', PostData<'/mcp/tool-call-stream'>>('/mcp/tool-call-stream', body, options),
+      streaming: (body, options) => sse.streamSSE('/mcp/streaming', body, options),
+      toolCallStream: (body, options) => sse.streamSSE('/mcp/tool-call-stream', body, options),
       toolsListGet: (options) => callGet<'/mcp/tools-list', GetData<'/mcp/tools-list'>>('/mcp/tools-list', undefined, options),
     },
     midpointTrees: {

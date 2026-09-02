@@ -150,12 +150,30 @@ export async function* parseSSEStream(
  * narrow via `switch (chunk.type)`. Conventional event names: `text_delta`,
  * `done`, `error`. Anything else falls through as `{type: 'event'}`.
  */
+/** Event names this function has always understood. A server that sets one of
+ *  these means it, and it takes precedence over a `type` inside the payload. */
+const KNOWN_EVENTS = new Set(['text_delta', 'done', 'end', 'message_stop', 'error']);
+
 export function normaliseStreamChunk(event: SSEEvent): StreamChunk {
-  switch (event.event) {
+  /* Our own endpoints emit two shapes, and until 2026-09-02 this function
+     normalised neither of them. `/v1/mcp/streaming` and
+     `/v1/mcp/tool-call-stream` send no `event:` line at all and put the kind in
+     the payload, `{"type":"token","text":"..."}`; `/v1/dev-assistant/stream`
+     sends `event: token` with `{"delta":"..."}`. Both fell through to
+     `{type:'event'}`, so a caller following the README's `chunk.type ===
+     'text_delta'` saw nothing on any AstroWay stream. The event name still wins
+     where it is one this function knows. */
+  const payload = (event.data && typeof event.data === 'object' ? event.data : {}) as {
+    type?: string; text?: string; delta?: string; content?: string; message?: string; code?: string;
+  };
+  const kind = KNOWN_EVENTS.has(event.event) ? event.event : (payload.type ?? event.event);
+  const deltaText = payload.text ?? payload.delta ?? payload.content;
+  switch (kind) {
+    case 'token':
+    case 'delta':
+      return { type: 'text_delta', text: deltaText ?? event.rawData, raw: event };
     case 'text_delta': {
-      const text = typeof event.data === 'string'
-        ? event.data
-        : (event.data as { text?: string })?.text ?? event.rawData;
+      const text = typeof event.data === 'string' ? event.data : deltaText ?? event.rawData;
       return { type: 'text_delta', text, raw: event };
     }
     case 'done':

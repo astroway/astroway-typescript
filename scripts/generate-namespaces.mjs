@@ -87,7 +87,15 @@ for (const [path, methods] of Object.entries(spec.paths)) {
      /embed/* widgets serve an HTML document; a namespace method promising
      parsed data for them would be a lie. api-calc declares text/html for those
      since 2026-08-04, so this filter needs no per-path list. */
-  if (!op.responses?.['200']?.content?.['application/json']) continue;
+  /* Two endpoints answer `text/event-stream` and nothing else. Dropping them
+     here is what the JSON filter did until 2026-09-02, and it silently removed
+     `mcp.streaming` and `mcp.toolCallStream` the day api-calc corrected their
+     declared media type. Neither had ever worked as a JSON method: the server
+     has always answered SSE, so `res.json()` threw on the first frame. They are
+     emitted as streaming methods instead, over the client's own `streamSSE`. */
+  const sseOnly = !!op.responses?.['200']?.content?.['text/event-stream']
+    && !op.responses?.['200']?.content?.['application/json'];
+  if (!op.responses?.['200']?.content?.['application/json'] && !sseOnly) continue;
   /* /public/* is a keyless mirror of endpoints the SDK already exposes with a
      key. Two methods for one calculation is confusing, and the keyed one is
      what an SDK user wants. */
@@ -113,6 +121,7 @@ for (const [path, methods] of Object.entries(spec.paths)) {
     path,
     httpMethod,
     hasQuery: httpMethod === 'get' && query.length > 0,
+    sse: sseOnly,
     summary: op.summary,
     description: op.description,
   });
@@ -146,6 +155,7 @@ lines.push('');
 lines.push("import type { paths } from './types.generated.js';");
 lines.push("import type { AstrowayClient } from './index.js';");
 lines.push("import { ResultPromise } from './with-response.js';");
+lines.push("import type { StreamChunk } from './stream.js';");
 lines.push('');
 lines.push('/** Body type extracted from a POST endpoint, or `never` if no body schema. */');
 lines.push("type PostBody<P extends keyof paths> =");
@@ -185,6 +195,19 @@ lines.push('   */');
 lines.push('  timeoutMs?: number;');
 lines.push('}');
 lines.push('');
+lines.push('/** Options for a streaming call. No idempotency replay and no envelope: an');
+lines.push(' *  SSE endpoint answers frames, so the only knobs are the ones the transport');
+lines.push(' *  honours. */');
+lines.push('export interface StreamOptions {');
+lines.push('  signal?: AbortSignal;');
+lines.push('  idempotencyKey?: string;');
+lines.push('}');
+lines.push('');
+lines.push('/** The half of the client a streaming method needs. `Astroway` satisfies it. */');
+lines.push('export interface SseCapable {');
+lines.push('  streamSSE(path: string, body?: unknown, options?: StreamOptions): AsyncGenerator<StreamChunk, void, void>;');
+lines.push('}');
+lines.push('');
 lines.push('export interface AstrowayNamespaces {');
 for (const ns of sortedNs) {
   const items = byNs.get(ns);
@@ -193,7 +216,9 @@ for (const ns of sortedNs) {
     const verb = item.httpMethod.toUpperCase();
     const tagDoc = item.summary ? `${item.summary}` : `${verb} ${item.path}`;
     lines.push(`    /** ${escapeComment(tagDoc)} (${verb} ${item.path}) */`);
-    if (item.httpMethod === 'get') {
+    if (item.sse) {
+      lines.push(`    ${item.method}(body: PostBody<'${item.path}'>, options?: StreamOptions): AsyncGenerator<StreamChunk, void, void>;`);
+    } else if (item.httpMethod === 'get') {
       lines.push(item.hasQuery
         ? `    ${item.method}(query?: GetQuery<'${item.path}'>, options?: CallOptions): ResultPromise<GetData<'${item.path}'>>;`
         : `    ${item.method}(options?: CallOptions): ResultPromise<GetData<'${item.path}'>>;`);
@@ -205,7 +230,7 @@ for (const ns of sortedNs) {
 }
 lines.push('}');
 lines.push('');
-lines.push('export function buildNamespaces(client: AstrowayClient): AstrowayNamespaces {');
+lines.push('export function buildNamespaces(client: AstrowayClient, sse: SseCapable): AstrowayNamespaces {');
 lines.push('  const call = <P extends keyof paths, T>(path: P, body: unknown, options?: CallOptions): ResultPromise<T> => {');
 lines.push("    return new ResultPromise<T>(async () => {");
 lines.push("      const init: Record<string, unknown> = { body: body as never };");
@@ -249,7 +274,9 @@ for (const ns of sortedNs) {
   const items = byNs.get(ns);
   lines.push(`    ${ns}: {`);
   for (const item of items) {
-    if (item.httpMethod === 'get') {
+    if (item.sse) {
+      lines.push(`      ${item.method}: (body, options) => sse.streamSSE('${item.path}', body, options),`);
+    } else if (item.httpMethod === 'get') {
       lines.push(item.hasQuery
         ? `      ${item.method}: (query, options) => callGet<'${item.path}', GetData<'${item.path}'>>('${item.path}', query, options),`
         : `      ${item.method}: (options) => callGet<'${item.path}', GetData<'${item.path}'>>('${item.path}', undefined, options),`);

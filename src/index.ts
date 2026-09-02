@@ -344,7 +344,10 @@ export class Astroway {
     };
 
     this.client = createClient<paths>(clientOpts);
-    Object.assign(this, buildNamespaces(this.client));
+    /* `this` goes in as well as the fetch client: the two `/mcp/*` endpoints
+       that answer `text/event-stream` are generated as streaming methods and
+       call `streamSSE` on it. */
+    Object.assign(this, buildNamespaces(this.client, this));
   }
 
   /**

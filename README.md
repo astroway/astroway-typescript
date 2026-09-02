@@ -128,6 +128,21 @@ console.log(report.url); // signed PDF URL
 
 Pass `whitelabel: true` instead of an object to pull branding from your account's stored config (requires a wpUserId-bound key).
 
+### Streaming
+
+Two endpoints answer Server-Sent Events rather than JSON, and their namespace
+methods are async iterables:
+
+```ts
+for await (const chunk of aw.mcp.streaming({ message: 'What is a stellium?' })) {
+  if (chunk.type === 'text_delta') process.stdout.write(chunk.text);
+  if (chunk.type === 'done') break;
+}
+```
+
+Any other SSE-capable path goes through `aw.streamSSE(path, body)`, which
+returns the same chunks.
+
 ---
 
 ## Error handling
