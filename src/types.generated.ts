@@ -965,6 +965,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/chinese/true-solar-time": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * True solar time
+         * @description The clock corrected to the sun over the birth longitude, split into the meridian term and the equation of time. China runs one zone across sixty degrees, so a Kashgar birth reads nearly three hours from solar noon on a Beijing clock, which moves the hour pillar.
+         */
+        post: operations["chinese_true-solar-time"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/chinese/solar-terms": {
         parameters: {
             query?: never;
@@ -2385,6 +2405,146 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/bazi/chart": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Full BaZi chart
+         * @description The four pillars with everything the classical apparatus reads off them in one call: hidden stems, na yin, the twelve stages of the day master, element balance over all eight characters, the strength verdict, symbolic stars from both reference pillars, and the branch and stem interactions. Localised by language. Pass longitude with trueSolarTime true to cut the double-hour from the sun over the birth place; the correction reaches the day and hour only, never the year and month, which turn on world instants.
+         */
+        post: operations["bazi_chart"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/bazi/hidden-stems": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Hidden stems (Cang Gan)
+         * @description The one to three stems each branch shelters, with role and weight. This is where most of a chart's elements live: a chart with no visible Water can still be soaked in it. On the four storage branches the middle role belongs to the stored element, not to the second in the list.
+         */
+        post: operations["bazi_hidden-stems"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/bazi/na-yin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Na Yin sound-element
+         * @description The sound-element of each pillar. The sixty jiazi collapse into thirty names, two consecutive pillars to a name; the year pillar na yin is what popular readings mean by "your element", and it is not the day master.
+         */
+        post: operations["bazi_na-yin"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/bazi/life-stages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Twelve life stages
+         * @description A stem read against each branch as a life cycle, from Chang Sheng through Di Wang to Jue. The day master through the chart; pass includeFullTable for the ten-by-twelve reference table. stageSchool picks the classical yin-reverse rule or the unified one.
+         */
+        post: operations["bazi_life-stages"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/bazi/symbolic-stars": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Symbolic stars (Shen Sha)
+         * @description Peach Blossom, Travelling Horse, Canopy, Heavenly Nobleman, Blade and Void, computed from BOTH the year and the day reference pillar because the transmissions disagree about which one the rules read from. Where two transmissions place a star differently, both placements ship and each names the other.
+         */
+        post: operations["bazi_symbolic-stars"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/bazi/interactions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Branch and stem interactions
+         * @description Stem combinations, six harmonies, full and half trines, clashes, harms, punishments and self-punishments present in the chart, with the pillars involved and the element a combination produces.
+         */
+        post: operations["bazi_interactions"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/bazi/strength": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Day-master strength
+         * @description The support-and-suppress reading over the weighted hidden-stem count, with the three classical criteria (season, root, allies) reported unweighted and the favourable elements that follow. The caveat names both limits: the month is counted like any other branch, and the cut points are this API's convention.
+         */
+        post: operations["bazi_strength"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/bazi/day-master": {
         parameters: {
             query?: never;
@@ -2416,7 +2576,7 @@ export interface paths {
         put?: never;
         /**
          * 5-Element Balance
-         * @description Element counts across year + month (4 of 8 chars). Identifies dominant + missing elements.
+         * @description Element balance across the whole chart. The `balance` object opens the branches and counts all eight characters three ways: visible, with every hidden stem, and weighted so the total stays at eight. The top-level elementCounts, dominantElement and missingElements are DEPRECATED (year and month only, four characters, branches unopened) and keep answering unchanged until 2027-09-08; the response carries RFC 8594 Deprecation and Sunset headers.
          */
         post: operations["bazi_element-balance"];
         delete?: never;
@@ -2565,6 +2725,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/ziwei/chart": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Full Chart (computed)
+         * @description Real star placement: soul and body palaces, the five-element class, all 14 main stars plus auxiliaries, the twelve stages, the 12 decade limits and the 四化 marked on the stars that carry them.
+         */
+        post: operations["ziwei_chart"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/ziwei/four-transformations": {
         parameters: {
             query?: never;
@@ -2615,8 +2795,8 @@ export interface paths {
         get?: never;
         put?: never;
         /**
-         * Full Chart (MVP)
-         * @description Year pillar + animal + 12 palaces overview.
+         * Full Chart (deprecated)
+         * @description Deprecated 2026-09-08, sunset 2027-11-26. Year pillar + animal + a 12-palace overview, identical for every birth date. Use POST /ziwei/chart, which actually places the stars.
          */
         post: operations["ziwei_full-chart"];
         delete?: never;
@@ -10918,13 +11098,33 @@ export interface paths {
         put?: never;
         /**
          * Create API Key
-         * @description Create a new API key. Requires an internal or enterprise API key. Returns the generated key string: save it, it cannot be retrieved later.
+         * @description Create a new API key. Requires an internal or enterprise API key. Returns the generated key string: save it, it cannot be retrieved later. The plan comes from the account and is not accepted in the body. allowed_endpoints limits the key to a subset of the API: paths under /v1, exact ("chart") or a namespace ("embed/*"); omit it and the key may call everything the plan includes.
          */
         post: operations["keys"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/keys/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /**
+         * Rename a Key, Edit Origins, Budget or Scope
+         * @description Rename a key, rewrite the origin list of a publishable key, set a per-key credit budget, limit the key to a subset of endpoints, or any combination. The class is fixed at creation: a pk_ key cannot become server-only, and a secret key cannot be given a list, so either request is refused with 400 rather than quietly rewritten. A new list takes effect at once and the key string does not change. credits_cap_cycle caps what this one key may spend per billing cycle, which credits alone do not, since they pool across the account; null clears it and a call over the cap answers 429 KEY_BUDGET_EXHAUSTED without falling through to overage. allowed_endpoints takes paths under /v1, exact ("chart") or a namespace ("embed/*"); null removes the limit and a call outside the list answers 403 ENDPOINT_NOT_IN_SCOPE.
+         */
+        patch: operations["keys_{id}_patch"];
         trace?: never;
     };
     "/keys/usage": {
@@ -15043,8 +15243,8 @@ export interface paths {
                          *         "input": {
                          *           "name": "",
                          *           "date": "1990-05-15",
-                         *           "time": "14:30:00",
-                         *           "timezoneOffset": 3,
+                         *           "time": "15:30:00",
+                         *           "timezoneOffset": 4,
                          *           "latitude": 50.45,
                          *           "longitude": 30.52,
                          *           "houseSystem": "P",
@@ -15275,7 +15475,7 @@ export interface paths {
                          *           {
                          *             "path": "tz",
                          *             "expected": "timezoneOffset",
-                         *             "message": "numeric hours from UTC, e.g. 5.75, not a timezone name"
+                         *             "message": "numeric hours from UTC, e.g. 5.75; a zone name goes in timezone"
                          *           },
                          *           {
                          *             "path": "lat",
@@ -15318,8 +15518,14 @@ export interface paths {
          */
         post: {
             parameters: {
-                query?: never;
-                header?: never;
+                query?: {
+                    /** @description Language for this call, overriding `Accept-Language`. The canonical per-call form: a page that renders in one language passes it here rather than reconfiguring its client. Unknown or inactive codes fall back to `uk`. */
+                    lang?: string;
+                };
+                header?: {
+                    /** @description BCP-47 language (e.g. `uk`, `en`, `de`). Set it once on your HTTP client as its default; for a single call, `?lang=` overrides it. Unknown or inactive codes fall back to `uk`. */
+                    "Accept-Language"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -15351,8 +15557,8 @@ export interface paths {
                          *         "input": {
                          *           "name": "",
                          *           "date": "1990-05-15",
-                         *           "time": "14:30:00",
-                         *           "timezoneOffset": 3,
+                         *           "time": "15:30:00",
+                         *           "timezoneOffset": 4,
                          *           "latitude": 50.45,
                          *           "longitude": 30.52,
                          *           "houseSystem": "P",
@@ -15582,7 +15788,7 @@ export interface paths {
                          *           {
                          *             "path": "tz",
                          *             "expected": "timezoneOffset",
-                         *             "message": "numeric hours from UTC, e.g. 5.75, not a timezone name"
+                         *             "message": "numeric hours from UTC, e.g. 5.75; a zone name goes in timezone"
                          *           },
                          *           {
                          *             "path": "lat",
@@ -15733,7 +15939,7 @@ export interface paths {
                          *           {
                          *             "path": "tz",
                          *             "expected": "timezoneOffset",
-                         *             "message": "numeric hours from UTC, e.g. 5.75, not a timezone name"
+                         *             "message": "numeric hours from UTC, e.g. 5.75; a zone name goes in timezone"
                          *           },
                          *           {
                          *             "path": "lat",
@@ -16457,19 +16663,27 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         ChartInput: {
             date: string;
             time: string;
             /**
-             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC.
+             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC. Ignored when timezone is sent.
              * @default 0
              */
             timezoneOffset?: number | null;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
             latitude: number;
             longitude: number;
-            /** @default P */
-            houseSystem?: string;
+            /**
+             * @default P
+             * @enum {string}
+             */
+            houseSystem?: "P" | "K" | "R" | "C" | "E" | "W" | "B" | "M" | "O" | "A" | "T" | "V" | "D" | "F" | "G" | "H" | "I" | "i" | "L" | "N" | "Q" | "S" | "U" | "X" | "Y";
             /** @default  */
             name?: string;
             /** @default  */
@@ -16496,7 +16710,7 @@ export interface components {
             customDomain?: string | null;
         };
         ThemedReport: {
-            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
             chart: components["schemas"]["ChartInput"] & ({
                 /** @description Birth latitude. Required here: the whole document is computed from it. */
                 latitude?: number;
@@ -16543,6 +16757,7 @@ export interface components {
         };
         BaziDecade: {
             startYear: number;
+            language?: string;
         };
         WellnessDate: {
             date: string;
@@ -16567,39 +16782,135 @@ export interface components {
         ZiweiDateInput: {
             date: string;
             time?: string;
+            /** @description Ignored when timezone is sent. */
             timezoneOffset?: number;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
         };
         ZiweiSihuaInput: {
             date: string;
             time?: string;
+            /** @description Ignored when timezone is sent. */
             timezoneOffset?: number;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
             /** @enum {string} */
             school?: "zhongzhou" | "quanji" | "quanshu" | "beipai";
+        };
+        ZiweiChartInput: {
+            date: string;
+            time: string;
+            /** @description Ignored when timezone is sent. */
+            timezoneOffset?: number;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
+            /** @enum {string} */
+            gender: "male" | "female";
+            /** @enum {string} */
+            school?: "zhongzhou" | "quanji" | "quanshu" | "beipai";
+            /** @enum {string} */
+            yearDivide?: "lunar" | "lichun";
+            fixLeap?: boolean;
+            /** @enum {string} */
+            dayDivide?: "forward" | "current";
+            /** @enum {string} */
+            tianmaSchool?: "year" | "month";
+            age?: number;
+            language?: string;
         };
         BaziDateInput: {
             date: string;
             time?: string;
+            /** @description Ignored when timezone is sent. */
             timezoneOffset?: number;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
+            language?: string;
         };
         BaziFourPillarsInput: {
             date: string;
             time?: string;
+            /** @description Ignored when timezone is sent. */
             timezoneOffset?: number;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
+            language?: string;
+        };
+        BaziChartInput: {
+            date: string;
+            time?: string;
+            /** @description Ignored when timezone is sent. */
+            timezoneOffset?: number;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
+            longitude?: number;
+            trueSolarTime?: boolean;
+            /** @enum {string} */
+            stageSchool?: "classical" | "unified";
+            includeFullTable?: boolean;
+            language?: string;
+        };
+        ChineseTrueSolarTimeInput: {
+            date: string;
+            time: string;
+            /** @description Ignored when timezone is sent. */
+            timezoneOffset: number;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
+            longitude: number;
+            language?: string;
         };
         BaziHourInput: {
             date: string;
             time: string;
-            /** @default 8 */
+            /**
+             * @description Ignored when timezone is sent.
+             * @default 8
+             */
             timezoneOffset?: number;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
+            language?: string;
         };
         BaziLuckPillarsInput: {
             date: string;
             time?: string;
+            /** @description Ignored when timezone is sent. */
             timezoneOffset?: number;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
             /** @enum {string} */
             gender: "male" | "female";
             /** @default 8 */
             count?: number;
+            language?: string;
         };
         BaziMonthlyInput: {
             natalDate: string;
@@ -16607,35 +16918,52 @@ export interface components {
             natalTzOffset?: number;
             targetYear: number;
             targetMonth: number;
+            language?: string;
         };
         BaziTenGodsInput: {
             date: string;
             time?: string;
+            /** @description Ignored when timezone is sent. */
             timezoneOffset?: number;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
+            language?: string;
         };
         BaziYearlyInput: {
             natalDate: string;
             natalTime?: string;
             natalTzOffset?: number;
             targetYear: number;
+            language?: string;
         };
         WellnessCycleInput: {
             birthDate: string;
             targetDate?: string;
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         WellnessSignFromChartInput: {
             date: string;
             time: string;
             /**
-             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC.
+             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC. Ignored when timezone is sent.
              * @default 0
              */
             timezoneOffset?: number | null;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
             latitude: number;
             longitude: number;
-            /** @default P */
-            houseSystem?: string;
+            /**
+             * @default P
+             * @enum {string}
+             */
+            houseSystem?: "P" | "K" | "R" | "C" | "E" | "W" | "B" | "M" | "O" | "A" | "T" | "V" | "D" | "F" | "G" | "H" | "I" | "i" | "L" | "N" | "Q" | "S" | "U" | "X" | "Y";
             /** @default  */
             name?: string;
             /** @default  */
@@ -16666,19 +16994,27 @@ export interface components {
                 date: string;
             };
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         FinancialFinancialInput: {
             date: string;
             time: string;
             /**
-             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC.
+             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC. Ignored when timezone is sent.
              * @default 0
              */
             timezoneOffset?: number | null;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
             latitude: number;
             longitude: number;
-            /** @default P */
-            houseSystem?: string;
+            /**
+             * @default P
+             * @enum {string}
+             */
+            houseSystem?: "P" | "K" | "R" | "C" | "E" | "W" | "B" | "M" | "O" | "A" | "T" | "V" | "D" | "F" | "G" | "H" | "I" | "i" | "L" | "N" | "Q" | "S" | "U" | "X" | "Y";
             /** @default  */
             name?: string;
             /** @default  */
@@ -16695,19 +17031,27 @@ export interface components {
         } & {
             [key: string]: unknown;
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         BusinessBusinessInput: {
             date: string;
             time: string;
             /**
-             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC.
+             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC. Ignored when timezone is sent.
              * @default 0
              */
             timezoneOffset?: number | null;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
             latitude: number;
             longitude: number;
-            /** @default P */
-            houseSystem?: string;
+            /**
+             * @default P
+             * @enum {string}
+             */
+            houseSystem?: "P" | "K" | "R" | "C" | "E" | "W" | "B" | "M" | "O" | "A" | "T" | "V" | "D" | "F" | "G" | "H" | "I" | "i" | "L" | "N" | "Q" | "S" | "U" | "X" | "Y";
             /** @default  */
             name?: string;
             /** @default  */
@@ -16724,7 +17068,7 @@ export interface components {
         } & {
             [key: string]: unknown;
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         PetNameInput: components["schemas"]["ChartInput"] & ({
             /** @enum {string} */
             gender?: "masculine" | "feminine";
@@ -16735,19 +17079,27 @@ export interface components {
             owner: components["schemas"]["ChartInput"];
             pet: components["schemas"]["ChartInput"];
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         PetPetInput: {
             date: string;
             time: string;
             /**
-             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC.
+             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC. Ignored when timezone is sent.
              * @default 0
              */
             timezoneOffset?: number | null;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
             latitude: number;
             longitude: number;
-            /** @default P */
-            houseSystem?: string;
+            /**
+             * @default P
+             * @enum {string}
+             */
+            houseSystem?: "P" | "K" | "R" | "C" | "E" | "W" | "B" | "M" | "O" | "A" | "T" | "V" | "D" | "F" | "G" | "H" | "I" | "i" | "L" | "N" | "Q" | "S" | "U" | "X" | "Y";
             /** @default  */
             name?: string;
             /** @default  */
@@ -16769,31 +17121,49 @@ export interface components {
             date?: string;
             time?: string;
             /**
-             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC.
+             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC. Ignored when timezone is sent.
              * @default 0
              */
             timezoneOffset?: number | null;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
             includeMonthly?: boolean;
+            language?: string;
         };
         ChineseDateInput: {
             date: string;
             time?: string;
             /**
-             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC.
+             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC. Ignored when timezone is sent.
              * @default 0
              */
             timezoneOffset?: number | null;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
             solarYear?: number;
+            language?: string;
         };
         ChineseDateTimeInput: {
             date: string;
             time?: string;
             /**
-             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC.
+             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC. Ignored when timezone is sent.
              * @default 0
              */
             timezoneOffset?: number | null;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
             solarYear?: number;
+            language?: string;
         };
         ChineseFlyingStarInput: {
             facing?: number;
@@ -16807,61 +17177,94 @@ export interface components {
              */
             timezoneOffset?: number | null;
             year?: number;
+            language?: string;
         };
         ChineseKuaInput: {
             date: string;
             time?: string;
             /**
-             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC.
+             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC. Ignored when timezone is sent.
              * @default 0
              */
             timezoneOffset?: number | null;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
             /** @enum {string} */
             gender: "male" | "female";
             solarYear?: number;
+            language?: string;
         };
         ChineseLunarDateInput: {
             date: string;
             time?: string;
             /**
-             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC.
+             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC. Ignored when timezone is sent.
              * @default 0
              */
             timezoneOffset?: number | null;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
+            language?: string;
         };
         ChinesePairInput: {
             person1: {
                 date: string;
                 time?: string;
                 /**
-                 * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC.
+                 * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC. Ignored when timezone is sent.
                  * @default 0
                  */
                 timezoneOffset?: number | null;
+                /**
+                 * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+                 * @example Europe/Kyiv
+                 */
+                timezone?: string;
                 solarYear?: number;
+                language?: string;
             };
             person2: {
                 date: string;
                 time?: string;
                 /**
-                 * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC.
+                 * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC. Ignored when timezone is sent.
                  * @default 0
                  */
                 timezoneOffset?: number | null;
+                /**
+                 * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+                 * @example Europe/Kyiv
+                 */
+                timezone?: string;
                 solarYear?: number;
+                language?: string;
             };
+            language?: string;
         };
         ChineseSolarTermsInput: {
             year: number;
+            language?: string;
         };
         ChineseTongShuInput: {
             date: string;
             time?: string;
             /**
-             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC.
+             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC. Ignored when timezone is sent.
              * @default 0
              */
             timezoneOffset?: number | null;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
+            language?: string;
         };
         ChineseTongShuSelectInput: {
             from: string;
@@ -16870,8 +17273,9 @@ export interface components {
             activity: "marriage" | "opening" | "moving" | "travel" | "contract" | "construction" | "demolition" | "medical" | "funeral" | "education";
             avoidClashWith?: string;
             includeNeutral?: boolean;
+            language?: string;
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         Harmonic: components["schemas"]["ChartInput"] & ({
             harmonic: number;
         } & {
@@ -16881,10 +17285,15 @@ export interface components {
             date: string;
             time: string;
             /**
-             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC.
+             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC. Ignored when timezone is sent.
              * @default 0
              */
             timezoneOffset?: number | null;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
             rangeDays?: number;
         };
         NumerologyNameDate: {
@@ -16921,14 +17330,22 @@ export interface components {
             date: string;
             time?: string;
             /**
-             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC.
+             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC. Ignored when timezone is sent.
              * @default 0
              */
             timezoneOffset?: number | null;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
             latitude: number;
             longitude: number;
-            /** @default P */
-            houseSystem?: string;
+            /**
+             * @default P
+             * @enum {string}
+             */
+            houseSystem?: "P" | "K" | "R" | "C" | "E" | "W" | "B" | "M" | "O" | "A" | "T" | "V" | "D" | "F" | "G" | "H" | "I" | "i" | "L" | "N" | "Q" | "S" | "U" | "X" | "Y";
             /** @default  */
             name?: string;
             /** @default  */
@@ -17181,7 +17598,7 @@ export interface components {
         NatalWrapper: {
             natal: components["schemas"]["ChartInput"];
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         AcgByCategory: components["schemas"]["ChartInput"] & ({
             /** @enum {string} */
             category: "adventure" | "career" | "communication" | "creativity" | "health" | "home" | "learning" | "love" | "money" | "power" | "relationship" | "retreat" | "spirituality" | "stability" | "success" | "transformation" | "travel" | "vitality" | "wealth";
@@ -17205,7 +17622,7 @@ export interface components {
         } & {
             [key: string]: unknown;
         });
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         AcgLineReport: components["schemas"]["ChartInput"] & ({
             planet: string;
             /** @enum {string} */
@@ -17217,7 +17634,7 @@ export interface components {
         } & {
             [key: string]: unknown;
         });
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         AcgZones: components["schemas"]["ChartInput"] & ({
             point: {
                 lat: number;
@@ -17271,6 +17688,7 @@ export interface components {
                  * @enum {string}
                  */
                 format?: "svg" | "json";
+                bodies?: ("Sun" | "Moon" | "Mercury" | "Venus" | "Mars" | "Jupiter" | "Saturn" | "Uranus" | "Neptune" | "Pluto" | "North Node" | "South Node" | "Chiron" | "Lilith")[];
                 /** @default TR */
                 outerLabel?: string;
             };
@@ -17329,14 +17747,22 @@ export interface components {
             date: string;
             time: string;
             /**
-             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC.
+             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC. Ignored when timezone is sent.
              * @default 0
              */
             timezoneOffset?: number | null;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
             latitude: number;
             longitude: number;
-            /** @default P */
-            houseSystem?: string;
+            /**
+             * @default P
+             * @enum {string}
+             */
+            houseSystem?: "P" | "K" | "R" | "C" | "E" | "W" | "B" | "M" | "O" | "A" | "T" | "V" | "D" | "F" | "G" | "H" | "I" | "i" | "L" | "N" | "Q" | "S" | "U" | "X" | "Y";
             /** @default  */
             name?: string;
             /** @default  */
@@ -17413,6 +17839,7 @@ export interface components {
                  * @enum {string}
                  */
                 format?: "svg" | "json";
+                bodies?: ("Sun" | "Moon" | "Mercury" | "Venus" | "Mars" | "Jupiter" | "Saturn" | "Uranus" | "Neptune" | "Pluto" | "North Node" | "South Node" | "Chiron" | "Lilith")[];
             };
         };
         CreateKey: {
@@ -17424,9 +17851,23 @@ export interface components {
                  * @default server-only
                  * @enum {string}
                  */
-                type?: "server-only" | "public" | "allowlist";
+                type?: "server-only" | "public";
                 allowed_origins?: string[];
             };
+            allowed_endpoints?: string[];
+        };
+        UpdateKey: {
+            name?: string;
+            origin_restriction?: {
+                /**
+                 * @default public
+                 * @enum {string}
+                 */
+                type?: "server-only" | "public";
+                allowed_origins?: string[];
+            };
+            credits_cap_cycle?: number | unknown;
+            allowed_endpoints?: string[] | unknown;
         };
         CyclicIndex: {
             startYear: number | null;
@@ -17436,7 +17877,7 @@ export interface components {
         Daily: {
             date?: string;
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         DashaInput: components["schemas"]["ChartInput"] & ({
             targetDate?: string;
             targetTime?: string;
@@ -17457,7 +17898,7 @@ export interface components {
              */
             language?: "uk" | "en" | "ru" | "es" | "pl" | "de" | "fr" | "it" | "pt";
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         Decennials: components["schemas"]["ChartInput"] & ({
             /** @default 90 */
             lifespanYears?: number;
@@ -17603,10 +18044,15 @@ export interface components {
             date: string;
             time: string;
             /**
-             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC.
+             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC. Ignored when timezone is sent.
              * @default 0
              */
             timezoneOffset?: number | null;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
             latitude: number;
             longitude: number;
             ayanamsaId?: number | null;
@@ -17631,7 +18077,7 @@ export interface components {
             startDate: string;
             endDate: string;
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         InterpretElement: components["schemas"]["ChartInput"] & ({
             /** @enum {string} */
             language?: "uk" | "en" | "de" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id" | "ru";
@@ -17640,7 +18086,7 @@ export interface components {
         } & {
             [key: string]: unknown;
         });
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         InterpretNatal: components["schemas"]["ChartInput"] & ({
             /** @enum {string} */
             language?: "uk" | "en" | "de" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id" | "ru";
@@ -17649,7 +18095,7 @@ export interface components {
         } & {
             [key: string]: unknown;
         });
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         InterpretPlacement: components["schemas"]["ChartInput"] & ({
             planet: string;
             /** @enum {string} */
@@ -17666,7 +18112,7 @@ export interface components {
             /** @default false */
             disclaimer_inline?: boolean;
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         InterpretTransits: components["schemas"]["ChartInput"] & ({
             transitDate: string;
             transitTime?: string;
@@ -17686,7 +18132,7 @@ export interface components {
         Logo: {
             data_url: string;
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         LordOfPrediction: components["schemas"]["ChartInput"] & ({
             targetAge: number | null;
         } & {
@@ -17696,7 +18142,7 @@ export interface components {
             year: number | null;
             month: number | null;
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         LunarReturn: components["schemas"]["ChartInput"] & ({
             afterDate: string;
             afterTime?: string;
@@ -17730,7 +18176,7 @@ export interface components {
             year: number;
             month: number;
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         MoonPhase: components["schemas"]["ChartInput"] & ({
             options?: {
                 size?: number;
@@ -17782,7 +18228,7 @@ export interface components {
              */
             language?: "uk" | "en" | "ru" | "es" | "pl" | "de" | "fr" | "it" | "pt";
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         MultiForecast: components["schemas"]["ChartInput"] & ({
             targetDate: string;
         } & {
@@ -17815,7 +18261,7 @@ export interface components {
         GenerateReport: {
             /** @enum {string} */
             report_type: "natal" | "transit-yearly" | "synastry" | "business" | "career" | "love" | "money" | "child" | "lal-kitab" | "human-design" | "tarot" | "vedic-kundli";
-            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
             chart?: components["schemas"]["ChartInput"] & ({
                 /** @description Birth latitude. Required here: the whole document is computed from it. */
                 latitude?: number;
@@ -17824,7 +18270,7 @@ export interface components {
             } & {
                 [key: string]: unknown;
             });
-            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
             chart1?: components["schemas"]["ChartInput"] & ({
                 /** @description Birth latitude. Required here: the whole document is computed from it. */
                 latitude?: number;
@@ -17833,7 +18279,7 @@ export interface components {
             } & {
                 [key: string]: unknown;
             });
-            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
             chart2?: components["schemas"]["ChartInput"] & ({
                 /** @description Birth latitude. Required here: the whole document is computed from it. */
                 latitude?: number;
@@ -17875,7 +18321,7 @@ export interface components {
             };
         };
         NatalReport: {
-            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
             chart: components["schemas"]["ChartInput"] & ({
                 /** @description Birth latitude. Required here: the whole document is computed from it. */
                 latitude?: number;
@@ -17917,7 +18363,7 @@ export interface components {
             length?: "short" | "medium" | "long";
         };
         RelocationReport: {
-            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
             chart: components["schemas"]["ChartInput"] & ({
                 /** @description Birth latitude. Required here: the whole document is computed from it. */
                 latitude?: number;
@@ -17961,7 +18407,7 @@ export interface components {
             };
         };
         GemstoneReport: {
-            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
             chart: components["schemas"]["ChartInput"] & ({
                 /** @description Birth latitude. Required here: the whole document is computed from it. */
                 latitude?: number;
@@ -18022,14 +18468,22 @@ export interface components {
             date: string;
             time: string;
             /**
-             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC.
+             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC. Ignored when timezone is sent.
              * @default 0
              */
             timezoneOffset?: number | null;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
             latitude: number;
             longitude: number;
-            /** @default P */
-            houseSystem?: string;
+            /**
+             * @default P
+             * @enum {string}
+             */
+            houseSystem?: "P" | "K" | "R" | "C" | "E" | "W" | "B" | "M" | "O" | "A" | "T" | "V" | "D" | "F" | "G" | "H" | "I" | "i" | "L" | "N" | "Q" | "S" | "U" | "X" | "Y";
             /** @default  */
             name?: string;
             /** @default  */
@@ -18062,13 +18516,13 @@ export interface components {
         Penta: {
             inputs: components["schemas"]["ChartInput"][];
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         Perfections: components["schemas"]["ChartInput"] & ({
             targetAge: number | null;
         } & {
             [key: string]: unknown;
         });
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         PhaseReturn: components["schemas"]["ChartInput"] & ({
             startYear: number | null;
             endYear: number | null;
@@ -18099,17 +18553,22 @@ export interface components {
             latitude: number | null;
             longitude: number | null;
             /**
-             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC.
+             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC. Ignored when timezone is sent.
              * @default 0
              */
             timezoneOffset?: number | null;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
             /**
              * @description Local time of day in decimal hours, e.g. 15.2 for 15:12. When sent, the hour containing it carries isCurrent: true and every other hour carries false. When omitted, no hour carries the field at all: it is not false, it is unasked.
              * @example 15.2
              */
             atLocalHour?: number;
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         PlanetaryReturn: components["schemas"]["ChartInput"] & ({
             planetId: number | null;
             year: number | null;
@@ -18124,13 +18583,13 @@ export interface components {
             /** @enum {string} */
             language?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "hi" | "fr" | "ko" | "it" | "ja" | "id" | "tr" | "nl" | "ro" | "cs" | "vi" | "ar" | "el" | "hu";
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         Profections: components["schemas"]["ChartInput"] & ({
             targetAge: number | null;
         } & {
             [key: string]: unknown;
         });
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         QuarterLord: components["schemas"]["ChartInput"] & ({
             targetDate: string;
         } & {
@@ -18179,7 +18638,7 @@ export interface components {
                 city?: string;
             };
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         Remedies: components["schemas"]["ChartInput"] & ({
             planet?: number;
         } & {
@@ -18203,7 +18662,7 @@ export interface components {
         Sabian: {
             longitudes: (number | null)[];
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         ShoolaInput: components["schemas"]["ChartInput"] & ({
             targetDate?: string;
             targetTime?: string;
@@ -18233,13 +18692,13 @@ export interface components {
             /** @default true */
             allowReversed?: boolean;
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         SolarAcg: components["schemas"]["ChartInput"] & ({
             year: number | null;
         } & {
             [key: string]: unknown;
         });
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         SolarReturn: components["schemas"]["ChartInput"] & ({
             year: number | null;
             locationLat?: number | null;
@@ -18306,13 +18765,18 @@ export interface components {
             latitude: number | null;
             longitude: number | null;
             /**
-             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC.
+             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC. Ignored when timezone is sent.
              * @default 0
              */
             timezoneOffset?: number | null;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
         };
         SynastryReport: {
-            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
             chart1: components["schemas"]["ChartInput"] & ({
                 /** @description Birth latitude. Required here: the whole document is computed from it. */
                 latitude?: number;
@@ -18321,7 +18785,7 @@ export interface components {
             } & {
                 [key: string]: unknown;
             });
-            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
             chart2: components["schemas"]["ChartInput"] & ({
                 /** @description Birth latitude. Required here: the whole document is computed from it. */
                 latitude?: number;
@@ -18456,7 +18920,7 @@ export interface components {
             };
         };
         StellaforgePoster: {
-            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
             chart: components["schemas"]["ChartInput"] & ({
                 /** @description Birth latitude. Required here: the whole document is computed from it. */
                 latitude?: number;
@@ -18546,7 +19010,7 @@ export interface components {
              */
             language?: "uk" | "en" | "ru" | "es" | "pl" | "de" | "fr" | "it" | "pt";
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         TransitAlerts: components["schemas"]["ChartInput"] & ({
             hours?: number | null;
             orb?: number | null;
@@ -18565,10 +19029,15 @@ export interface components {
             date?: string;
             time?: string;
             /**
-             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC.
+             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC. Ignored when timezone is sent.
              * @default 0
              */
             timezoneOffset?: number | null;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
             ayanamsaId?: number | null;
             /**
              * @description Sidereal school by name. Lahiri when omitted. Equivalent to ayanamsaId; send either.
@@ -18577,7 +19046,7 @@ export interface components {
             ayanamsa?: "fagan-bradley" | "lahiri" | "de-luce" | "raman" | "krishnamurti" | "kp" | "yukteshwar" | "jn-bhasin" | "true-citra" | "djwhal-khul";
         };
         TransitYearlyReport: {
-            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
             chart: components["schemas"]["ChartInput"] & ({
                 /** @description Birth latitude. Required here: the whole document is computed from it. */
                 latitude?: number;
@@ -18614,7 +19083,7 @@ export interface components {
                 reportName?: string;
             };
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         Transits: components["schemas"]["ChartInput"] & ({
             transitDate: string;
             transitTime?: string;
@@ -18656,20 +19125,21 @@ export interface components {
                  * @enum {string}
                  */
                 format?: "svg" | "json";
+                bodies?: ("Sun" | "Moon" | "Mercury" | "Venus" | "Mars" | "Jupiter" | "Saturn" | "Uranus" | "Neptune" | "Pluto" | "North Node" | "South Node" | "Chiron" | "Lilith")[];
                 /** @default PR */
                 middleLabel?: string;
                 /** @default TR */
                 outerLabel?: string;
             };
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         Varshphal: components["schemas"]["ChartInput"] & ({
             age?: number;
         } & {
             [key: string]: unknown;
         });
         VedicKundli: {
-            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+            /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
             chart: components["schemas"]["ChartInput"] & ({
                 /** @description Birth latitude. Required here: the whole document is computed from it. */
                 latitude?: number;
@@ -18705,7 +19175,7 @@ export interface components {
                 reportName?: string;
             };
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         Vedic: components["schemas"]["ChartInput"] & ({
             varga?: unknown;
         } & {
@@ -18714,7 +19184,7 @@ export interface components {
         VerifyConfirm: {
             token: string;
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         WheelWestern: components["schemas"]["ChartInput"] & ({
             options?: {
                 size?: number;
@@ -18728,6 +19198,7 @@ export interface components {
                  * @enum {string}
                  */
                 format?: "svg" | "json";
+                bodies?: ("Sun" | "Moon" | "Mercury" | "Venus" | "Mars" | "Jupiter" | "Saturn" | "Uranus" | "Neptune" | "Pluto" | "North Node" | "South Node" | "Chiron" | "Lilith")[];
             };
         } & {
             [key: string]: unknown;
@@ -18755,7 +19226,7 @@ export interface components {
             startYear: number | null;
             endYear: number | null;
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         YearlyFusion: components["schemas"]["ChartInput"] & ({
             year: number;
         } & {
@@ -18765,7 +19236,7 @@ export interface components {
             /** @enum {string} */
             sign: "aries" | "taurus" | "gemini" | "cancer" | "leo" | "virgo" | "libra" | "scorpio" | "sagittarius" | "capricorn" | "aquarius" | "pisces";
         };
-        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. */
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         Zr: components["schemas"]["ChartInput"] & ({
             /** @default 80 */
             years?: number;
@@ -18793,8 +19264,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -18816,8 +19287,8 @@ export interface operations {
                      *         "input": {
                      *           "name": "",
                      *           "date": "1990-05-15",
-                     *           "time": "14:30:00",
-                     *           "timezoneOffset": 3,
+                     *           "time": "15:30:00",
+                     *           "timezoneOffset": 4,
                      *           "latitude": 50.45,
                      *           "longitude": 30.52,
                      *           "houseSystem": "P",
@@ -19082,8 +19553,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv"
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -19104,15 +19575,15 @@ export interface operations {
                      *           {
                      *             "id": 0,
                      *             "name": "Sun",
-                     *             "longitude": 54.23,
-                     *             "latitude": 0,
-                     *             "distance": 1.01,
-                     *             "speedLong": 0.98,
-                     *             "speedLat": 0,
-                     *             "speedDist": 0,
+                     *             "longitude": 54.37601980167181,
+                     *             "latitude": -0.000020054940759470553,
+                     *             "distance": 1.0108955908980104,
+                     *             "speedLong": 0.9642248003676466,
+                     *             "speedLat": 0.00003805311526169511,
+                     *             "speedDist": 0.00022039347866615117,
                      *             "isRetrograde": false,
-                     *             "declination": 21.68,
-                     *             "rightAscension": 113.53
+                     *             "declination": 18.867035147029778,
+                     *             "rightAscension": 52.00919841916813
                      *           }
                      *         ]
                      *       }
@@ -19404,15 +19875,15 @@ export interface operations {
                  * @example {
                  *       "chart1": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "chart2": {
                  *         "date": "1985-11-03",
-                 *         "time": "08:15:00",
-                 *         "timezoneOffset": 2,
+                 *         "time": "09:15:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 48.46,
                  *         "longitude": 35.04
                  *       }
@@ -19436,8 +19907,8 @@ export interface operations {
                      *           "input": {
                      *             "name": "",
                      *             "date": "1990-05-15",
-                     *             "time": "14:30:00",
-                     *             "timezoneOffset": 3,
+                     *             "time": "15:30:00",
+                     *             "timezoneOffset": 4,
                      *             "latitude": 50.45,
                      *             "longitude": 30.52,
                      *             "houseSystem": "P",
@@ -19545,8 +20016,8 @@ export interface operations {
                      *           "input": {
                      *             "name": "",
                      *             "date": "1985-11-03",
-                     *             "time": "08:15:00",
-                     *             "timezoneOffset": 2,
+                     *             "time": "09:15:00",
+                     *             "timezoneOffset": 3,
                      *             "latitude": 48.46,
                      *             "longitude": 35.04,
                      *             "houseSystem": "P",
@@ -19671,10 +20142,34 @@ export interface operations {
                      *           }
                      *         ],
                      *         "compatibility": {
-                     *           "score": 55,
-                     *           "label": "balanced",
-                     *           "harmony": 23.1,
-                     *           "tension": 18.7
+                     *           "score": 51,
+                     *           "label": "mixed",
+                     *           "harmony": 15.8,
+                     *           "tension": 16.8,
+                     *           "top": [
+                     *             {
+                     *               "aspect": {
+                     *                 "planet1": "Venus",
+                     *                 "planet1Id": 3,
+                     *                 "planet2": "Moon",
+                     *                 "planet2Id": 1,
+                     *                 "type": {
+                     *                   "name": "Square",
+                     *                   "i18nKey": "aspect_square",
+                     *                   "angle": 90,
+                     *                   "orb": 10,
+                     *                   "symbol": "□",
+                     *                   "isMajor": true,
+                     *                   "color": "#cc3333"
+                     *                 },
+                     *                 "exactAngle": 88.18365203424705,
+                     *                 "orb": 1.8163479657529535,
+                     *                 "isApplying": false
+                     *               },
+                     *               "strength": 2.0869825615583784,
+                     *               "sign": -1
+                     *             }
+                     *           ]
                      *         }
                      *       }
                      *     }
@@ -19900,6 +20395,28 @@ export interface operations {
                                 label?: string | null;
                                 harmony?: number | null;
                                 tension?: number | null;
+                                top?: ({
+                                    aspect?: {
+                                        planet1?: string | null;
+                                        planet1Id?: number | null;
+                                        planet2?: string | null;
+                                        planet2Id?: number | null;
+                                        type?: {
+                                            name?: string | null;
+                                            i18nKey?: string | null;
+                                            angle?: number | null;
+                                            orb?: number | null;
+                                            symbol?: string | null;
+                                            isMajor?: boolean | null;
+                                            color?: string | null;
+                                        } | null;
+                                        exactAngle?: number | null;
+                                        orb?: number | null;
+                                        isApplying?: boolean | null;
+                                    } | null;
+                                    strength?: number | null;
+                                    sign?: number | null;
+                                } | null)[] | null;
                             } | null;
                         };
                     };
@@ -19962,15 +20479,15 @@ export interface operations {
                  * @example {
                  *       "chart1": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "chart2": {
                  *         "date": "1985-11-03",
-                 *         "time": "08:15:00",
-                 *         "timezoneOffset": 2,
+                 *         "time": "09:15:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 48.46,
                  *         "longitude": 35.04
                  *       }
@@ -19990,32 +20507,55 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "score": 62,
-                     *         "label": "balanced",
-                     *         "harmony": 14.2,
-                     *         "tension": 8.7,
+                     *         "score": 51,
+                     *         "label": "mixed",
+                     *         "harmony": 15.8,
+                     *         "tension": 16.8,
                      *         "attraction": {
-                     *           "score": 71
+                     *           "score": 10.12,
+                     *           "components": {
+                     *             "sunMoon": 0,
+                     *             "marsVenus": 0,
+                     *             "ascDsc": 5.92,
+                     *             "marsMars": 0,
+                     *             "sunMars": 4.2,
+                     *             "fifthHouseOverlay": 0
+                     *           },
+                     *           "notes": [
+                     *             "chart1 Sun on chart2 DSC (orb 4.8°)",
+                     *             "Moon-Venus Square"
+                     *           ]
                      *         },
                      *         "topAspects": [
                      *           {
-                     *             "aspect": "Venus trine Moon",
-                     *             "type": "Trine",
-                     *             "angle": 120,
-                     *             "orb": 1.2,
+                     *             "aspect": "Venus square Moon",
+                     *             "planet1": "Venus",
+                     *             "planet2": "Moon",
+                     *             "type": "Square",
+                     *             "angle": 90,
+                     *             "orb": 1.8,
+                     *             "tone": "challenging"
+                     *           },
+                     *           {
+                     *             "aspect": "Jupiter conjunction Moon",
+                     *             "planet1": "Jupiter",
+                     *             "planet2": "Moon",
+                     *             "type": "Conjunction",
+                     *             "angle": 0,
+                     *             "orb": 1.4,
                      *             "tone": "harmonious"
                      *           }
                      *         ],
                      *         "greenFlags": [
                      *           {
-                     *             "aspect": "Venus trine Moon",
-                     *             "note": "affection & values"
+                     *             "aspect": "Jupiter conjunction Moon",
+                     *             "note": "emotional bond"
                      *           }
                      *         ],
                      *         "redFlags": [
                      *           {
-                     *             "aspect": "Mars square Saturn",
-                     *             "note": "passion & drive"
+                     *             "aspect": "Uranus opposition Moon",
+                     *             "note": "emotional bond"
                      *           }
                      *         ]
                      *       }
@@ -20031,9 +20571,20 @@ export interface operations {
                             tension?: number | null;
                             attraction?: {
                                 score?: number | null;
+                                components?: {
+                                    sunMoon?: number | null;
+                                    marsVenus?: number | null;
+                                    ascDsc?: number | null;
+                                    marsMars?: number | null;
+                                    sunMars?: number | null;
+                                    fifthHouseOverlay?: number | null;
+                                } | null;
+                                notes?: (string | null)[] | null;
                             } | null;
                             topAspects?: ({
                                 aspect?: string | null;
+                                planet1?: string | null;
+                                planet2?: string | null;
                                 type?: string | null;
                                 angle?: number | null;
                                 orb?: number | null;
@@ -20108,15 +20659,15 @@ export interface operations {
                  * @example {
                  *       "chart1": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "chart2": {
                  *         "date": "1985-11-03",
-                 *         "time": "08:15:00",
-                 *         "timezoneOffset": 2,
+                 *         "time": "09:15:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 48.46,
                  *         "longitude": 35.04
                  *       }
@@ -20139,8 +20690,8 @@ export interface operations {
                      *         "input": {
                      *           "name": "Composite:  & ",
                      *           "date": "1990-05-15",
-                     *           "time": "14:30:00",
-                     *           "timezoneOffset": 3,
+                     *           "time": "15:30:00",
+                     *           "timezoneOffset": 4,
                      *           "latitude": 50.45,
                      *           "longitude": 30.52,
                      *           "city": " / ",
@@ -20366,15 +20917,15 @@ export interface operations {
                  * @example {
                  *       "chart1": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "chart2": {
                  *         "date": "1985-11-03",
-                 *         "time": "08:15:00",
-                 *         "timezoneOffset": 2,
+                 *         "time": "09:15:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 48.46,
                  *         "longitude": 35.04
                  *       }
@@ -20678,15 +21229,15 @@ export interface operations {
                  * @example {
                  *       "input1": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "input2": {
                  *         "date": "1985-11-03",
-                 *         "time": "08:15:00",
-                 *         "timezoneOffset": 2,
+                 *         "time": "09:15:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 48.46,
                  *         "longitude": 35.04
                  *       }
@@ -20975,16 +21526,16 @@ export interface operations {
                  *       "inputs": [
                  *         {
                  *           "date": "1990-05-15",
-                 *           "time": "14:30:00",
-                 *           "timezoneOffset": 3,
+                 *           "time": "15:30:00",
+                 *           "timezone": "Europe/Kyiv",
                  *           "latitude": 50.45,
                  *           "longitude": 30.52,
                  *           "name": "Person A"
                  *         },
                  *         {
                  *           "date": "1985-11-03",
-                 *           "time": "08:15:00",
-                 *           "timezoneOffset": 2,
+                 *           "time": "09:15:00",
+                 *           "timezone": "Europe/Kyiv",
                  *           "latitude": 48.46,
                  *           "longitude": 35.04,
                  *           "name": "Person B"
@@ -21011,8 +21562,8 @@ export interface operations {
                      *             "input": {
                      *               "name": "Person A",
                      *               "date": "1990-05-15",
-                     *               "time": "14:30:00",
-                     *               "timezoneOffset": 3,
+                     *               "time": "15:30:00",
+                     *               "timezoneOffset": 4,
                      *               "latitude": 50.45,
                      *               "longitude": 30.52,
                      *               "houseSystem": "P",
@@ -21142,10 +21693,34 @@ export interface operations {
                      *               }
                      *             ],
                      *             "compatibility": {
-                     *               "score": 55,
-                     *               "label": "balanced",
-                     *               "harmony": 23.1,
-                     *               "tension": 18.7
+                     *               "score": 51,
+                     *               "label": "mixed",
+                     *               "harmony": 15.8,
+                     *               "tension": 16.8,
+                     *               "top": [
+                     *                 {
+                     *                   "aspect": {
+                     *                     "planet1": "Venus",
+                     *                     "planet1Id": 3,
+                     *                     "planet2": "Moon",
+                     *                     "planet2Id": 1,
+                     *                     "type": {
+                     *                       "name": "Square",
+                     *                       "i18nKey": "aspect_square",
+                     *                       "angle": 90,
+                     *                       "orb": 10,
+                     *                       "symbol": "□",
+                     *                       "isMajor": true,
+                     *                       "color": "#cc3333"
+                     *                     },
+                     *                     "exactAngle": 88.18365203424705,
+                     *                     "orb": 1.8163479657529535,
+                     *                     "isApplying": false
+                     *                   },
+                     *                   "strength": 2.0869825615583784,
+                     *                   "sign": -1
+                     *                 }
+                     *               ]
                      *             }
                      *           }
                      *         ],
@@ -21154,7 +21729,7 @@ export interface operations {
                      *             100
                      *           ]
                      *         ],
-                     *         "averageScore": 55
+                     *         "averageScore": 51
                      *       }
                      *     }
                      */
@@ -21285,6 +21860,28 @@ export interface operations {
                                     label?: string | null;
                                     harmony?: number | null;
                                     tension?: number | null;
+                                    top?: ({
+                                        aspect?: {
+                                            planet1?: string | null;
+                                            planet1Id?: number | null;
+                                            planet2?: string | null;
+                                            planet2Id?: number | null;
+                                            type?: {
+                                                name?: string | null;
+                                                i18nKey?: string | null;
+                                                angle?: number | null;
+                                                orb?: number | null;
+                                                symbol?: string | null;
+                                                isMajor?: boolean | null;
+                                                color?: string | null;
+                                            } | null;
+                                            exactAngle?: number | null;
+                                            orb?: number | null;
+                                            isApplying?: boolean | null;
+                                        } | null;
+                                        strength?: number | null;
+                                        sign?: number | null;
+                                    } | null)[] | null;
                                 } | null;
                             } | null)[] | null;
                             matrix?: ((number | null)[] | null)[] | null;
@@ -21350,15 +21947,15 @@ export interface operations {
                  * @example {
                  *       "chart1": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "chart2": {
                  *         "date": "1985-11-03",
-                 *         "time": "08:15:00",
-                 *         "timezoneOffset": 2,
+                 *         "time": "09:15:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 48.46,
                  *         "longitude": 35.04
                  *       }
@@ -21486,15 +22083,15 @@ export interface operations {
                  * @example {
                  *       "chart1": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "chart2": {
                  *         "date": "1985-11-03",
-                 *         "time": "08:15:00",
-                 *         "timezoneOffset": 2,
+                 *         "time": "09:15:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 48.46,
                  *         "longitude": 35.04
                  *       }
@@ -21622,15 +22219,15 @@ export interface operations {
                  * @example {
                  *       "chart1": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "chart2": {
                  *         "date": "1985-11-03",
-                 *         "time": "08:15:00",
-                 *         "timezoneOffset": 2,
+                 *         "time": "09:15:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 48.46,
                  *         "longitude": 35.04
                  *       }
@@ -21780,15 +22377,15 @@ export interface operations {
                  * @example {
                  *       "chart1": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "chart2": {
                  *         "date": "1985-11-03",
-                 *         "time": "08:15:00",
-                 *         "timezoneOffset": 2,
+                 *         "time": "09:15:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 48.46,
                  *         "longitude": 35.04
                  *       }
@@ -21808,18 +22405,18 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "score": 73.5,
+                     *         "score": 10.12,
                      *         "components": {
-                     *           "sunMoon": 17,
-                     *           "marsVenus": 21.25,
-                     *           "ascDsc": 12.3,
-                     *           "marsMars": 7,
-                     *           "sunMars": 11.45,
-                     *           "fifthHouseOverlay": 8
+                     *           "sunMoon": 0,
+                     *           "marsVenus": 0,
+                     *           "ascDsc": 5.92,
+                     *           "marsMars": 0,
+                     *           "sunMars": 4.2,
+                     *           "fifthHouseOverlay": 0
                      *         },
                      *         "notes": [
-                     *           "Sun-Moon Trine (orb 1.2°)",
-                     *           "Mars-Venus Conjunction (orb 0.6°)",
+                     *           "chart1 Sun on chart2 DSC (orb 4.8°)",
+                     *           "Moon-Venus Square",
                      *           "chart2 Venus on chart1 ASC (orb 1.5°)",
                      *           "2 personal-planet hits in partner’s 5th house"
                      *         ]
@@ -21900,8 +22497,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "transitDate": "2024-06-15",
@@ -22145,8 +22742,8 @@ export interface operations {
                  * @example {
                  *       "natal": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -22171,7 +22768,7 @@ export interface operations {
                      *         "startDate": "2024-01-01",
                      *         "endDate": "2024-12-31",
                      *         "maxOrb": 1,
-                     *         "count": 290,
+                     *         "count": 449,
                      *         "events": [
                      *           {
                      *             "jd": 2460313.2036132812,
@@ -22282,8 +22879,8 @@ export interface operations {
                  * @example {
                  *       "natal": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -22413,8 +23010,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "targetDate": "2024-06-15",
@@ -22439,8 +23036,8 @@ export interface operations {
                      *         "input": {
                      *           "name": "Progressions → 2024-06-15",
                      *           "date": "1990-05-15",
-                     *           "time": "14:30:00",
-                     *           "timezoneOffset": 3,
+                     *           "time": "15:30:00",
+                     *           "timezoneOffset": 4,
                      *           "latitude": 50.45,
                      *           "longitude": 30.52,
                      *           "houseSystem": "P",
@@ -22673,8 +23270,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "targetDate": "2024-06-15",
@@ -22700,8 +23297,8 @@ export interface operations {
                      *         "input": {
                      *           "name": "Tertiary → 2024-06-15",
                      *           "date": "1990-05-15",
-                     *           "time": "14:30:00",
-                     *           "timezoneOffset": 3,
+                     *           "time": "15:30:00",
+                     *           "timezoneOffset": 4,
                      *           "latitude": 50.45,
                      *           "longitude": 30.52,
                      *           "houseSystem": "P",
@@ -22918,8 +23515,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "targetDate": "2024-06-15",
@@ -22945,8 +23542,8 @@ export interface operations {
                      *         "input": {
                      *           "name": "Minor → 2024-06-15",
                      *           "date": "1990-05-15",
-                     *           "time": "14:30:00",
-                     *           "timezoneOffset": 3,
+                     *           "time": "15:30:00",
+                     *           "timezoneOffset": 4,
                      *           "latitude": 50.45,
                      *           "longitude": 30.52,
                      *           "houseSystem": "P",
@@ -23163,8 +23760,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "key": 0.9856353,
@@ -23281,8 +23878,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "targetDate": "2026-05-15",
@@ -23429,8 +24026,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "year": 2024,
@@ -23455,8 +24052,8 @@ export interface operations {
                      *         "input": {
                      *           "name": "Solar Return 2024",
                      *           "date": "1990-05-15",
-                     *           "time": "14:30:00",
-                     *           "timezoneOffset": 3,
+                     *           "time": "15:30:00",
+                     *           "timezoneOffset": 4,
                      *           "latitude": 50.45,
                      *           "longitude": 30.52,
                      *           "houseSystem": "P",
@@ -23689,8 +24286,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "afterDate": "2024-05-01",
@@ -23715,8 +24312,8 @@ export interface operations {
                      *         "input": {
                      *           "name": "Lunar Return",
                      *           "date": "1990-05-15",
-                     *           "time": "14:30:00",
-                     *           "timezoneOffset": 3,
+                     *           "time": "15:30:00",
+                     *           "timezoneOffset": 4,
                      *           "latitude": 50.45,
                      *           "longitude": 30.52,
                      *           "houseSystem": "P",
@@ -23933,8 +24530,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "planetId": 5,
@@ -24026,8 +24623,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "targetDate": "2024-05-15",
@@ -24130,8 +24727,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "maxYears": 75
@@ -24235,8 +24832,8 @@ export interface operations {
                  * @example {
                  *       "baseInput": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -24337,8 +24934,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -24434,8 +25031,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "harmonic": 7
@@ -24458,8 +25055,8 @@ export interface operations {
                      *         "input": {
                      *           "name": "",
                      *           "date": "1990-05-15",
-                     *           "time": "14:30:00",
-                     *           "timezoneOffset": 3,
+                     *           "time": "15:30:00",
+                     *           "timezoneOffset": 4,
                      *           "latitude": 50.45,
                      *           "longitude": 30.52,
                      *           "houseSystem": "P",
@@ -24690,8 +25287,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -24713,8 +25310,8 @@ export interface operations {
                      *         "input": {
                      *           "name": "",
                      *           "date": "1990-05-15",
-                     *           "time": "14:30:00",
-                     *           "timezoneOffset": 3,
+                     *           "time": "15:30:00",
+                     *           "timezoneOffset": 4,
                      *           "latitude": 50.45,
                      *           "longitude": 30.52,
                      *           "houseSystem": "P",
@@ -24945,8 +25542,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -24968,8 +25565,8 @@ export interface operations {
                      *         "input": {
                      *           "name": "",
                      *           "date": "1990-05-15",
-                     *           "time": "14:30:00",
-                     *           "timezoneOffset": 3,
+                     *           "time": "15:30:00",
+                     *           "timezoneOffset": 4,
                      *           "latitude": 50.45,
                      *           "longitude": 30.52,
                      *           "houseSystem": "P",
@@ -25162,8 +25759,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -25277,8 +25874,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "varga": "D9"
@@ -25387,8 +25984,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "options": {
@@ -25486,8 +26083,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -25508,7 +26105,7 @@ export interface operations {
                      *       "data": {
                      *         "svg": "<svg ...>",
                      *         "format": "svg",
-                     *         "byteLength": 10300
+                     *         "byteLength": 14033
                      *       }
                      *     }
                      */
@@ -25579,8 +26176,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -25600,8 +26197,8 @@ export interface operations {
                      *       "ok": true,
                      *       "data": {
                      *         "svg": "<svg ...>",
-                     *         "illuminationFraction": 0.576,
-                     *         "elongationDeg": 145.7,
+                     *         "illuminationFraction": 0.730652,
+                     *         "elongationDeg": 242.5287,
                      *         "waxing": false,
                      *         "phase": "Waning Gibbous"
                      *       }
@@ -25780,8 +26377,8 @@ export interface operations {
                  * @example {
                  *       "natal": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -25814,7 +26411,7 @@ export interface operations {
                      *       "data": {
                      *         "svg": "<svg ...>",
                      *         "format": "svg",
-                     *         "byteLength": 22800
+                     *         "byteLength": 24613
                      *       }
                      *     }
                      */
@@ -25886,8 +26483,8 @@ export interface operations {
                  * @example {
                  *       "natal": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -25926,7 +26523,7 @@ export interface operations {
                      *       "data": {
                      *         "svg": "<svg ...>",
                      *         "format": "svg",
-                     *         "byteLength": 24800
+                     *         "byteLength": 26856
                      *       }
                      *     }
                      */
@@ -25998,15 +26595,15 @@ export interface operations {
                  * @example {
                  *       "chart1": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "chart2": {
                  *         "date": "1985-11-03",
-                 *         "time": "08:15:00",
-                 *         "timezoneOffset": 2,
+                 *         "time": "09:15:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 48.46,
                  *         "longitude": 35.04
                  *       }
@@ -26028,7 +26625,7 @@ export interface operations {
                      *       "data": {
                      *         "svg": "<svg ...>",
                      *         "format": "svg",
-                     *         "byteLength": 22400
+                     *         "byteLength": 22274
                      *       }
                      *     }
                      */
@@ -26194,8 +26791,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -26216,7 +26813,7 @@ export interface operations {
                      *       "data": {
                      *         "svg": "<svg ...>",
                      *         "format": "svg",
-                     *         "byteLength": 8500
+                     *         "byteLength": 5432
                      *       }
                      *     }
                      */
@@ -26287,8 +26884,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -26309,7 +26906,7 @@ export interface operations {
                      *       "data": {
                      *         "svg": "<svg ...>",
                      *         "format": "svg",
-                     *         "byteLength": 11500
+                     *         "byteLength": 5836
                      *       }
                      *     }
                      */
@@ -26380,8 +26977,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -26402,7 +26999,7 @@ export interface operations {
                      *       "data": {
                      *         "svg": "<svg ...>",
                      *         "format": "svg",
-                     *         "byteLength": 9000
+                     *         "byteLength": 5267
                      *       }
                      *     }
                      */
@@ -26473,8 +27070,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -26495,7 +27092,7 @@ export interface operations {
                      *       "data": {
                      *         "svg": "<svg ...>",
                      *         "format": "svg",
-                     *         "byteLength": 14000
+                     *         "byteLength": 55810
                      *       }
                      *     }
                      */
@@ -26703,6 +27300,126 @@ export interface operations {
                             svg?: string | null;
                             format?: string | null;
                             byteLength?: number | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    "chinese_true-solar-time": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "date": "1995-06-15",
+                 *       "time": "09:20:00",
+                 *       "timezoneOffset": 8,
+                 *       "longitude": 75.9
+                 *     }
+                 */
+                "application/json": components["schemas"]["ChineseTrueSolarTimeInput"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "input": {
+                     *           "date": "1995-06-15",
+                     *           "time": "09:20:00",
+                     *           "timezoneOffset": 8,
+                     *           "longitude": 75.9
+                     *         },
+                     *         "clockTime": "09:20:00",
+                     *         "trueSolarTime": "06:23:20",
+                     *         "totalCorrectionMinutes": -176.66,
+                     *         "longitudeCorrectionMinutes": -176.4,
+                     *         "equationOfTimeMinutes": -0.26,
+                     *         "dayShift": 0,
+                     *         "date": "1995-06-15",
+                     *         "hourBranchNote": "The double-hour is cut from the sun over the birth place, so this is the clock the hour pillar should be read from. A correction of an hour or more moves the branch; near midnight it moves the day pillar too.",
+                     *         "methodology": "True solar time is the hour angle of the apparent Sun at the birth longitude, carried round by half a day. It decomposes into the meridian term, (longitude - 15 x timezoneOffset) x 4 minutes, and the equation of time, the Sun's own annual wobble of up to about sixteen minutes. Both are reported.",
+                     *         "note": "timezoneOffset is the offset the clock was actually running on, which only the caller knows: a 1988 Beijing birth ran on UTC+9 under summer time, not UTC+8, and no arithmetic here can recover that from the date.",
+                     *         "source": "Swiss Ephemeris apparent right ascension; equation of time verified against the published annual extrema"
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            input?: {
+                                date?: string | null;
+                                time?: string | null;
+                                timezoneOffset?: number | null;
+                                longitude?: number | null;
+                            } | null;
+                            clockTime?: string | null;
+                            trueSolarTime?: string | null;
+                            totalCorrectionMinutes?: number | null;
+                            longitudeCorrectionMinutes?: number | null;
+                            equationOfTimeMinutes?: number | null;
+                            dayShift?: number | null;
+                            date?: string | null;
+                            hourBranchNote?: string | null;
+                            methodology?: string | null;
+                            note?: string | null;
+                            source?: string | null;
                         };
                     };
                 };
@@ -26975,8 +27692,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -27084,8 +27801,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -29342,8 +30059,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -29449,8 +30166,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -29558,8 +30275,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -29663,8 +30380,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -29770,8 +30487,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -29988,8 +30705,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -30181,8 +30898,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -30527,8 +31244,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -30634,8 +31351,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -30739,8 +31456,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -30840,8 +31557,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -30939,8 +31656,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -31040,8 +31757,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -31143,8 +31860,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -31238,8 +31955,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -31343,8 +32060,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -31436,8 +32153,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -31537,8 +32254,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -31732,8 +32449,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -31753,7 +32470,7 @@ export interface operations {
                      *       "ok": true,
                      *       "data": {
                      *         "luckyDays": [
-                     *           "Wednesday"
+                     *           "Friday"
                      *         ]
                      *       }
                      *     }
@@ -31824,8 +32541,8 @@ export interface operations {
                  * @example {
                  *       "owner": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -31853,8 +32570,8 @@ export interface operations {
                      *       "ok": true,
                      *       "data": {
                      *         "compatibility": {
-                     *           "score": 85,
-                     *           "category": "aligned"
+                     *           "score": 65,
+                     *           "category": "good"
                      *         }
                      *       }
                      *     }
@@ -31927,8 +32644,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -32038,8 +32755,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -32137,8 +32854,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -32234,8 +32951,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -32349,8 +33066,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -32458,8 +33175,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -32556,15 +33273,15 @@ export interface operations {
                  * @example {
                  *       "founder": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "partner": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       }
@@ -32585,8 +33302,8 @@ export interface operations {
                      *       "ok": true,
                      *       "data": {
                      *         "compatibility": {
-                     *           "score": 85,
-                     *           "category": "trine"
+                     *           "score": 80,
+                     *           "category": "aligned"
                      *         }
                      *       }
                      *     }
@@ -32659,8 +33376,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -32760,8 +33477,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -32849,8 +33566,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -32944,8 +33661,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -32965,8 +33682,8 @@ export interface operations {
                      *       "ok": true,
                      *       "data": {
                      *         "idealPartnerSigns": [
-                     *           "Aries",
-                     *           "Sagittarius"
+                     *           "Virgo",
+                     *           "Capricorn"
                      *         ]
                      *       }
                      *     }
@@ -33036,8 +33753,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -33141,8 +33858,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -33240,8 +33957,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -33261,7 +33978,7 @@ export interface operations {
                      *       "ok": true,
                      *       "data": {
                      *         "riskTolerance": {
-                     *           "level": "Medium",
+                     *           "level": "Low",
                      *           "allocation": "60-70% equities..."
                      *         }
                      *       }
@@ -33335,8 +34052,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -33424,8 +34141,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -33521,8 +34238,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -33610,8 +34327,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -33631,16 +34348,16 @@ export interface operations {
                      *       "ok": true,
                      *       "data": {
                      *         "house2": {
-                     *           "cusp": 192.87,
+                     *           "cusp": 192.86501417031306,
                      *           "sign": "Libra",
                      *           "theme": "Personal earnings, possessions, self-worth"
                      *         },
                      *         "house8": {
-                     *           "cusp": 12.87,
+                     *           "cusp": 12.865014170313088,
                      *           "sign": "Aries",
                      *           "theme": "Shared resources, inheritance, debt, transformation"
                      *         },
-                     *         "disclaimer": "NOT INVESTMENT ADVICE. Financial astrology is entertainment / heuristic only."
+                     *         "disclaimer": "⚠️ NOT INVESTMENT ADVICE. Financial astrology is entertainment / heuristic only. Consult a licensed financial advisor before any trading or investment decision."
                      *       }
                      *     }
                      */
@@ -33719,8 +34436,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -33740,9 +34457,9 @@ export interface operations {
                      *       "ok": true,
                      *       "data": {
                      *         "luckyNumbers": [
-                     *           3,
-                     *           21,
-                     *           39
+                     *           2,
+                     *           6,
+                     *           11
                      *         ]
                      *       }
                      *     }
@@ -33812,8 +34529,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -33833,7 +34550,7 @@ export interface operations {
                      *       "ok": true,
                      *       "data": {
                      *         "luckyDays": [
-                     *           "Thursday"
+                     *           "Friday"
                      *         ]
                      *       }
                      *     }
@@ -33996,8 +34713,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -34297,8 +35014,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv"
                  *     }
                  */
                 "application/json": components["schemas"]["BaziFourPillarsInput"];
@@ -34342,13 +35059,13 @@ export interface operations {
                      *           "yin": false
                      *         },
                      *         "hourPillar": {
-                     *           "stem": "Gui",
-                     *           "branch": "Wei",
-                     *           "pillar": "Gui-Wei",
-                     *           "animal": "Goat",
-                     *           "stemElement": "Water",
-                     *           "branchElement": "Earth",
-                     *           "yin": true
+                     *           "stem": "Jia",
+                     *           "branch": "Shen",
+                     *           "pillar": "Jia-Shen",
+                     *           "animal": "Monkey",
+                     *           "stemElement": "Wood",
+                     *           "branchElement": "Metal",
+                     *           "yin": false
                      *         },
                      *         "notes": [],
                      *         "disclaimer": "BaZi pillars use the canonical 60-jiazi cycle, anchored at 1990-01-01 = Bing-Yin. Year and month boundaries are the exact Lichun and 節 instants from the ephemeris, stated in China Standard Time; pass time and timezoneOffset for births near a boundary. Day and hour follow the birthplace clock, with the day rolling at 23:00 local."
@@ -34444,7 +35161,7 @@ export interface operations {
             };
         };
     };
-    "bazi_day-master": {
+    bazi_chart: {
         parameters: {
             query?: never;
             header?: never;
@@ -34457,7 +35174,1643 @@ export interface operations {
                  * @example {
                  *       "date": "1990-05-15",
                  *       "time": "14:30:00",
-                 *       "timezoneOffset": 3
+                 *       "timezoneOffset": 8
+                 *     }
+                 */
+                "application/json": components["schemas"]["BaziChartInput"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "solarYear": 1990,
+                     *         "pillars": [
+                     *           {
+                     *             "name": "year",
+                     *             "stem": "Geng",
+                     *             "branch": "Wu",
+                     *             "pillar": "Geng-Wu",
+                     *             "animal": "Horse",
+                     *             "animalName": "Кінь",
+                     *             "stemElement": "Metal",
+                     *             "stemElementName": "Метал",
+                     *             "hiddenStems": [
+                     *               {
+                     *                 "stem": "Ding",
+                     *                 "stemIndex": 3,
+                     *                 "element": "Fire",
+                     *                 "yin": true,
+                     *                 "role": "principal",
+                     *                 "weight": 0.7
+                     *               },
+                     *               {
+                     *                 "stem": "Ji",
+                     *                 "stemIndex": 5,
+                     *                 "element": "Earth",
+                     *                 "yin": true,
+                     *                 "role": "middle",
+                     *                 "weight": 0.3
+                     *               }
+                     *             ],
+                     *             "naYin": {
+                     *               "chinese": "路旁土",
+                     *               "pinyin": "Lu Pang Tu",
+                     *               "english": "Roadside Earth",
+                     *               "element": "Earth",
+                     *               "jiaziIndex": 6,
+                     *               "elementName": "Земля"
+                     *             },
+                     *             "dayMasterStage": {
+                     *               "stage": "bath",
+                     *               "chinese": "沐浴",
+                     *               "name": "Обмивання"
+                     *             }
+                     *           },
+                     *           {
+                     *             "name": "month",
+                     *             "stem": "Xin",
+                     *             "branch": "Si",
+                     *             "pillar": "Xin-Si",
+                     *             "animal": "Snake",
+                     *             "animalName": "Змія",
+                     *             "stemElement": "Metal",
+                     *             "stemElementName": "Метал",
+                     *             "hiddenStems": [
+                     *               {
+                     *                 "stem": "Bing",
+                     *                 "stemIndex": 2,
+                     *                 "element": "Fire",
+                     *                 "yin": false,
+                     *                 "role": "principal",
+                     *                 "weight": 0.6
+                     *               },
+                     *               {
+                     *                 "stem": "Geng",
+                     *                 "stemIndex": 6,
+                     *                 "element": "Metal",
+                     *                 "yin": false,
+                     *                 "role": "middle",
+                     *                 "weight": 0.3
+                     *               },
+                     *               {
+                     *                 "stem": "Wu",
+                     *                 "stemIndex": 4,
+                     *                 "element": "Earth",
+                     *                 "yin": false,
+                     *                 "role": "residual",
+                     *                 "weight": 0.1
+                     *               }
+                     *             ],
+                     *             "naYin": {
+                     *               "chinese": "白蠟金",
+                     *               "pinyin": "Bai La Jin",
+                     *               "english": "White Wax Metal",
+                     *               "element": "Metal",
+                     *               "jiaziIndex": 17,
+                     *               "elementName": "Метал"
+                     *             },
+                     *             "dayMasterStage": {
+                     *               "stage": "growth",
+                     *               "chinese": "長生",
+                     *               "name": "Зростання"
+                     *             }
+                     *           },
+                     *           {
+                     *             "name": "day",
+                     *             "stem": "Geng",
+                     *             "branch": "Chen",
+                     *             "pillar": "Geng-Chen",
+                     *             "animal": "Dragon",
+                     *             "animalName": "Дракон",
+                     *             "stemElement": "Metal",
+                     *             "stemElementName": "Метал",
+                     *             "hiddenStems": [
+                     *               {
+                     *                 "stem": "Wu",
+                     *                 "stemIndex": 4,
+                     *                 "element": "Earth",
+                     *                 "yin": false,
+                     *                 "role": "principal",
+                     *                 "weight": 0.6
+                     *               },
+                     *               {
+                     *                 "stem": "Yi",
+                     *                 "stemIndex": 1,
+                     *                 "element": "Wood",
+                     *                 "yin": true,
+                     *                 "role": "residual",
+                     *                 "weight": 0.3
+                     *               },
+                     *               {
+                     *                 "stem": "Gui",
+                     *                 "stemIndex": 9,
+                     *                 "element": "Water",
+                     *                 "yin": true,
+                     *                 "role": "middle",
+                     *                 "weight": 0.1
+                     *               }
+                     *             ],
+                     *             "naYin": {
+                     *               "chinese": "白蠟金",
+                     *               "pinyin": "Bai La Jin",
+                     *               "english": "White Wax Metal",
+                     *               "element": "Metal",
+                     *               "jiaziIndex": 16,
+                     *               "elementName": "Метал"
+                     *             },
+                     *             "dayMasterStage": {
+                     *               "stage": "nurture",
+                     *               "chinese": "養",
+                     *               "name": "Виношування"
+                     *             }
+                     *           },
+                     *           {
+                     *             "name": "hour",
+                     *             "stem": "Gui",
+                     *             "branch": "Wei",
+                     *             "pillar": "Gui-Wei",
+                     *             "animal": "Goat",
+                     *             "animalName": "Коза",
+                     *             "stemElement": "Water",
+                     *             "stemElementName": "Вода",
+                     *             "hiddenStems": [
+                     *               {
+                     *                 "stem": "Ji",
+                     *                 "stemIndex": 5,
+                     *                 "element": "Earth",
+                     *                 "yin": true,
+                     *                 "role": "principal",
+                     *                 "weight": 0.6
+                     *               },
+                     *               {
+                     *                 "stem": "Ding",
+                     *                 "stemIndex": 3,
+                     *                 "element": "Fire",
+                     *                 "yin": true,
+                     *                 "role": "residual",
+                     *                 "weight": 0.3
+                     *               },
+                     *               {
+                     *                 "stem": "Yi",
+                     *                 "stemIndex": 1,
+                     *                 "element": "Wood",
+                     *                 "yin": true,
+                     *                 "role": "middle",
+                     *                 "weight": 0.1
+                     *               }
+                     *             ],
+                     *             "naYin": {
+                     *               "chinese": "楊柳木",
+                     *               "pinyin": "Yang Liu Mu",
+                     *               "english": "Willow Wood",
+                     *               "element": "Wood",
+                     *               "jiaziIndex": 19,
+                     *               "elementName": "Дерево"
+                     *             },
+                     *             "dayMasterStage": {
+                     *               "stage": "cap",
+                     *               "chinese": "冠帶",
+                     *               "name": "Повноліття"
+                     *             }
+                     *           }
+                     *         ],
+                     *         "dayMaster": {
+                     *           "stem": "Geng",
+                     *           "element": "Metal",
+                     *           "elementName": "Метал",
+                     *           "polarity": "Ян"
+                     *         },
+                     *         "elementBalance": {
+                     *           "visible": {
+                     *             "Wood": 0,
+                     *             "Fire": 2,
+                     *             "Earth": 2,
+                     *             "Metal": 3,
+                     *             "Water": 1
+                     *           },
+                     *           "withHiddenStems": {
+                     *             "Wood": 2,
+                     *             "Fire": 3,
+                     *             "Earth": 4,
+                     *             "Metal": 4,
+                     *             "Water": 2
+                     *           },
+                     *           "weighted": {
+                     *             "Wood": 0.4,
+                     *             "Fire": 1.6,
+                     *             "Earth": 1.6,
+                     *             "Metal": 3.3,
+                     *             "Water": 1.1
+                     *           },
+                     *           "dominantElement": "Metal",
+                     *           "missingElements": [],
+                     *           "weighting": "Each branch contributes one character split among the stems it shelters: 1.0 alone, 0.7/0.3 for two, 0.6/0.3/0.1 for three (本气/中气/余气). The membership is canonical; the split is a stated convention, and the day-count 人元司令 scheme distributes the same characters differently.",
+                     *           "dominantElementName": "Метал",
+                     *           "missingElementNames": []
+                     *         },
+                     *         "strength": {
+                     *           "framework": "扶抑 support-and-suppress",
+                     *           "supportScore": 3.9,
+                     *           "drainScore": 3.1,
+                     *           "supportRatio": 0.557,
+                     *           "verdict": "strong",
+                     *           "hasSeason": false,
+                     *           "hasRoot": true,
+                     *           "hasAllies": true,
+                     *           "favourableElements": [
+                     *             "Water",
+                     *             "Wood",
+                     *             "Fire"
+                     *           ],
+                     *           "unfavourableElements": [
+                     *             "Earth",
+                     *             "Metal"
+                     *           ],
+                     *           "caveat": "One framework of several, and the thresholds are ours. 扶抑 weighs support against drain; 調候, 通關, 病藥 and 專旺 read the same chart by other rules and can reach the opposite verdict, and a chart near the boundary is exactly where they part. Two limits worth stating plainly: the ratio counts the month branch exactly like the other three, where the tradition weighs the month above all, and the 0.55 / 0.45 cut points are a convention of this API rather than a canonical rule. The three classical criteria are reported unweighted beside the ratio, so a reader who weighs the month can reach their own verdict from the same inputs."
+                     *         },
+                     *         "symbolicStars": {
+                     *           "byYearPillar": [
+                     *             {
+                     *               "key": "nobleman",
+                     *               "chinese": "天乙貴人",
+                     *               "pinyin": "Tian Yi Gui Ren",
+                     *               "english": "Heavenly Nobleman",
+                     *               "pillars": [
+                     *                 "hour"
+                     *               ],
+                     *               "meaning": "help arriving from outside, the patron and the timely intervention",
+                     *               "schoolNote": "The 三命通會 reading for 庚 (甲戊庚牛羊). 淵海子平 puts the 庚 nobleman at 午 and 寅 instead; that reading is reported separately."
+                     *             },
+                     *             {
+                     *               "key": "noblemanAlt",
+                     *               "chinese": "天乙貴人",
+                     *               "pinyin": "Tian Yi Gui Ren",
+                     *               "english": "Heavenly Nobleman (淵海子平 reading)",
+                     *               "pillars": [
+                     *                 "year"
+                     *               ],
+                     *               "meaning": "help arriving from outside, the patron and the timely intervention",
+                     *               "schoolNote": "The 淵海子平 and 星平會海 reading for 庚 (庚辛逢馬虎). The 三命通會 reading is reported under `nobleman`."
+                     *             }
+                     *           ],
+                     *           "byDayPillar": [
+                     *             {
+                     *               "key": "canopy",
+                     *               "chinese": "華蓋",
+                     *               "pinyin": "Hua Gai",
+                     *               "english": "Canopy",
+                     *               "pillars": [
+                     *                 "day"
+                     *               ],
+                     *               "meaning": "solitude and study, the scholar and the recluse"
+                     *             },
+                     *             {
+                     *               "key": "nobleman",
+                     *               "chinese": "天乙貴人",
+                     *               "pinyin": "Tian Yi Gui Ren",
+                     *               "english": "Heavenly Nobleman",
+                     *               "pillars": [
+                     *                 "hour"
+                     *               ],
+                     *               "meaning": "help arriving from outside, the patron and the timely intervention",
+                     *               "schoolNote": "The 三命通會 reading for 庚 (甲戊庚牛羊). 淵海子平 puts the 庚 nobleman at 午 and 寅 instead; that reading is reported separately."
+                     *             },
+                     *             {
+                     *               "key": "noblemanAlt",
+                     *               "chinese": "天乙貴人",
+                     *               "pinyin": "Tian Yi Gui Ren",
+                     *               "english": "Heavenly Nobleman (淵海子平 reading)",
+                     *               "pillars": [
+                     *                 "year"
+                     *               ],
+                     *               "meaning": "help arriving from outside, the patron and the timely intervention",
+                     *               "schoolNote": "The 淵海子平 and 星平會海 reading for 庚 (庚辛逢馬虎). The 三命通會 reading is reported under `nobleman`."
+                     *             }
+                     *           ]
+                     *         },
+                     *         "interactions": [
+                     *           {
+                     *             "type": "sixHarmony",
+                     *             "chinese": "六合",
+                     *             "english": "Six Harmony",
+                     *             "pillars": [
+                     *               "year",
+                     *               "hour"
+                     *             ],
+                     *             "members": [
+                     *               "Wu",
+                     *               "Wei"
+                     *             ],
+                     *             "producesElement": "Earth",
+                     *             "schoolNote": "The Wu-Wei harmony is given as Earth here; other transmissions read it as the sun-and-moon pair and assign no element."
+                     *           }
+                     *         ],
+                     *         "stageSchool": "classical",
+                     *         "language": "uk",
+                     *         "notes": [],
+                     *         "methodology": "The four pillars with everything the classical apparatus reads off them: hidden stems, na yin, the twelve stages of the day master, the element balance over all eight characters, the 扶抑 strength verdict, the symbolic stars from both reference pillars, and the branch and stem interactions. Where a transmission splits, both readings ship and the split is named at the field.",
+                     *         "source": "淵海子平, 三命通會, 子平真詮: all public domain",
+                     *         "disclaimer": "BaZi pillars use the canonical 60-jiazi cycle, anchored at 1990-01-01 = Bing-Yin. Year and month boundaries are the exact Lichun and 節 instants from the ephemeris, stated in China Standard Time; pass time and timezoneOffset for births near a boundary. Day and hour follow the birthplace clock, with the day rolling at 23:00 local."
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            solarYear?: number | null;
+                            pillars?: ({
+                                name?: string | null;
+                                stem?: string | null;
+                                branch?: string | null;
+                                pillar?: string | null;
+                                animal?: string | null;
+                                animalName?: string | null;
+                                stemElement?: string | null;
+                                stemElementName?: string | null;
+                                hiddenStems?: ({
+                                    stem?: string | null;
+                                    stemIndex?: number | null;
+                                    element?: string | null;
+                                    yin?: boolean | null;
+                                    role?: string | null;
+                                    weight?: number | null;
+                                } | null)[] | null;
+                                naYin?: {
+                                    chinese?: string | null;
+                                    pinyin?: string | null;
+                                    english?: string | null;
+                                    element?: string | null;
+                                    jiaziIndex?: number | null;
+                                    elementName?: string | null;
+                                } | null;
+                                dayMasterStage?: {
+                                    stage?: string | null;
+                                    chinese?: string | null;
+                                    name?: string | null;
+                                } | null;
+                            } | null)[] | null;
+                            dayMaster?: {
+                                stem?: string | null;
+                                element?: string | null;
+                                elementName?: string | null;
+                                polarity?: string | null;
+                            } | null;
+                            elementBalance?: {
+                                visible?: {
+                                    Wood?: number | null;
+                                    Fire?: number | null;
+                                    Earth?: number | null;
+                                    Metal?: number | null;
+                                    Water?: number | null;
+                                } | null;
+                                withHiddenStems?: {
+                                    Wood?: number | null;
+                                    Fire?: number | null;
+                                    Earth?: number | null;
+                                    Metal?: number | null;
+                                    Water?: number | null;
+                                } | null;
+                                weighted?: {
+                                    Wood?: number | null;
+                                    Fire?: number | null;
+                                    Earth?: number | null;
+                                    Metal?: number | null;
+                                    Water?: number | null;
+                                } | null;
+                                dominantElement?: string | null;
+                                missingElements?: unknown[] | null;
+                                weighting?: string | null;
+                                dominantElementName?: string | null;
+                                missingElementNames?: unknown[] | null;
+                            } | null;
+                            strength?: {
+                                framework?: string | null;
+                                supportScore?: number | null;
+                                drainScore?: number | null;
+                                supportRatio?: number | null;
+                                verdict?: string | null;
+                                hasSeason?: boolean | null;
+                                hasRoot?: boolean | null;
+                                hasAllies?: boolean | null;
+                                favourableElements?: (string | null)[] | null;
+                                unfavourableElements?: (string | null)[] | null;
+                                caveat?: string | null;
+                            } | null;
+                            symbolicStars?: {
+                                byYearPillar?: ({
+                                    key?: string | null;
+                                    chinese?: string | null;
+                                    pinyin?: string | null;
+                                    english?: string | null;
+                                    pillars?: (string | null)[] | null;
+                                    meaning?: string | null;
+                                    schoolNote?: string | null;
+                                } | null)[] | null;
+                                byDayPillar?: ({
+                                    key?: string | null;
+                                    chinese?: string | null;
+                                    pinyin?: string | null;
+                                    english?: string | null;
+                                    pillars?: (string | null)[] | null;
+                                    meaning?: string | null;
+                                } | null)[] | null;
+                            } | null;
+                            interactions?: ({
+                                type?: string | null;
+                                chinese?: string | null;
+                                english?: string | null;
+                                pillars?: (string | null)[] | null;
+                                members?: (string | null)[] | null;
+                                producesElement?: string | null;
+                                schoolNote?: string | null;
+                            } | null)[] | null;
+                            stageSchool?: string | null;
+                            language?: string | null;
+                            notes?: unknown[] | null;
+                            methodology?: string | null;
+                            source?: string | null;
+                            disclaimer?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    "bazi_hidden-stems": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 8
+                 *     }
+                 */
+                "application/json": components["schemas"]["BaziChartInput"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "solarYear": 1990,
+                     *         "pillars": [
+                     *           {
+                     *             "name": "year",
+                     *             "stem": "Geng",
+                     *             "branch": "Wu",
+                     *             "pillar": "Geng-Wu",
+                     *             "hiddenStems": [
+                     *               {
+                     *                 "stem": "Ding",
+                     *                 "stemIndex": 3,
+                     *                 "element": "Fire",
+                     *                 "yin": true,
+                     *                 "role": "principal",
+                     *                 "weight": 0.7,
+                     *                 "elementName": "Вогонь",
+                     *                 "polarity": "Інь"
+                     *               },
+                     *               {
+                     *                 "stem": "Ji",
+                     *                 "stemIndex": 5,
+                     *                 "element": "Earth",
+                     *                 "yin": true,
+                     *                 "role": "middle",
+                     *                 "weight": 0.3,
+                     *                 "elementName": "Земля",
+                     *                 "polarity": "Інь"
+                     *               }
+                     *             ]
+                     *           },
+                     *           {
+                     *             "name": "month",
+                     *             "stem": "Xin",
+                     *             "branch": "Si",
+                     *             "pillar": "Xin-Si",
+                     *             "hiddenStems": [
+                     *               {
+                     *                 "stem": "Bing",
+                     *                 "stemIndex": 2,
+                     *                 "element": "Fire",
+                     *                 "yin": false,
+                     *                 "role": "principal",
+                     *                 "weight": 0.6,
+                     *                 "elementName": "Вогонь",
+                     *                 "polarity": "Ян"
+                     *               },
+                     *               {
+                     *                 "stem": "Geng",
+                     *                 "stemIndex": 6,
+                     *                 "element": "Metal",
+                     *                 "yin": false,
+                     *                 "role": "middle",
+                     *                 "weight": 0.3,
+                     *                 "elementName": "Метал",
+                     *                 "polarity": "Ян"
+                     *               },
+                     *               {
+                     *                 "stem": "Wu",
+                     *                 "stemIndex": 4,
+                     *                 "element": "Earth",
+                     *                 "yin": false,
+                     *                 "role": "residual",
+                     *                 "weight": 0.1,
+                     *                 "elementName": "Земля",
+                     *                 "polarity": "Ян"
+                     *               }
+                     *             ]
+                     *           },
+                     *           {
+                     *             "name": "day",
+                     *             "stem": "Geng",
+                     *             "branch": "Chen",
+                     *             "pillar": "Geng-Chen",
+                     *             "hiddenStems": [
+                     *               {
+                     *                 "stem": "Wu",
+                     *                 "stemIndex": 4,
+                     *                 "element": "Earth",
+                     *                 "yin": false,
+                     *                 "role": "principal",
+                     *                 "weight": 0.6,
+                     *                 "elementName": "Земля",
+                     *                 "polarity": "Ян"
+                     *               },
+                     *               {
+                     *                 "stem": "Yi",
+                     *                 "stemIndex": 1,
+                     *                 "element": "Wood",
+                     *                 "yin": true,
+                     *                 "role": "residual",
+                     *                 "weight": 0.3,
+                     *                 "elementName": "Дерево",
+                     *                 "polarity": "Інь"
+                     *               },
+                     *               {
+                     *                 "stem": "Gui",
+                     *                 "stemIndex": 9,
+                     *                 "element": "Water",
+                     *                 "yin": true,
+                     *                 "role": "middle",
+                     *                 "weight": 0.1,
+                     *                 "elementName": "Вода",
+                     *                 "polarity": "Інь"
+                     *               }
+                     *             ]
+                     *           },
+                     *           {
+                     *             "name": "hour",
+                     *             "stem": "Gui",
+                     *             "branch": "Wei",
+                     *             "pillar": "Gui-Wei",
+                     *             "hiddenStems": [
+                     *               {
+                     *                 "stem": "Ji",
+                     *                 "stemIndex": 5,
+                     *                 "element": "Earth",
+                     *                 "yin": true,
+                     *                 "role": "principal",
+                     *                 "weight": 0.6,
+                     *                 "elementName": "Земля",
+                     *                 "polarity": "Інь"
+                     *               },
+                     *               {
+                     *                 "stem": "Ding",
+                     *                 "stemIndex": 3,
+                     *                 "element": "Fire",
+                     *                 "yin": true,
+                     *                 "role": "residual",
+                     *                 "weight": 0.3,
+                     *                 "elementName": "Вогонь",
+                     *                 "polarity": "Інь"
+                     *               },
+                     *               {
+                     *                 "stem": "Yi",
+                     *                 "stemIndex": 1,
+                     *                 "element": "Wood",
+                     *                 "yin": true,
+                     *                 "role": "middle",
+                     *                 "weight": 0.1,
+                     *                 "elementName": "Дерево",
+                     *                 "polarity": "Інь"
+                     *               }
+                     *             ]
+                     *           }
+                     *         ],
+                     *         "weighting": "Each branch contributes one character split among the stems it shelters: 1.0 alone, 0.7/0.3 for two, 0.6/0.3/0.1 for three (本气/中气/余气). The membership is canonical; the split is a stated convention, and the day-count 人元司令 scheme distributes the same characters differently.",
+                     *         "notes": [],
+                     *         "methodology": "地支藏干. Each branch shelters one to three stems: 本气 the principal, 中气 the middle, 余气 the residual. A chart with no visible Water can still be soaked in it, which is why an element count over the eight visible characters alone is not a balance.",
+                     *         "source": "淵海子平 (Song) + 三命通會 (Wan Minying, Ming), public domain",
+                     *         "disclaimer": "BaZi pillars use the canonical 60-jiazi cycle, anchored at 1990-01-01 = Bing-Yin. Year and month boundaries are the exact Lichun and 節 instants from the ephemeris, stated in China Standard Time; pass time and timezoneOffset for births near a boundary. Day and hour follow the birthplace clock, with the day rolling at 23:00 local."
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            solarYear?: number | null;
+                            pillars?: ({
+                                name?: string | null;
+                                stem?: string | null;
+                                branch?: string | null;
+                                pillar?: string | null;
+                                hiddenStems?: ({
+                                    stem?: string | null;
+                                    stemIndex?: number | null;
+                                    element?: string | null;
+                                    yin?: boolean | null;
+                                    role?: string | null;
+                                    weight?: number | null;
+                                    elementName?: string | null;
+                                    polarity?: string | null;
+                                } | null)[] | null;
+                            } | null)[] | null;
+                            weighting?: string | null;
+                            notes?: unknown[] | null;
+                            methodology?: string | null;
+                            source?: string | null;
+                            disclaimer?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    "bazi_na-yin": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 8
+                 *     }
+                 */
+                "application/json": components["schemas"]["BaziChartInput"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "solarYear": 1990,
+                     *         "pillars": [
+                     *           {
+                     *             "name": "year",
+                     *             "stem": "Geng",
+                     *             "branch": "Wu",
+                     *             "pillar": "Geng-Wu",
+                     *             "naYin": {
+                     *               "chinese": "路旁土",
+                     *               "pinyin": "Lu Pang Tu",
+                     *               "english": "Roadside Earth",
+                     *               "element": "Earth",
+                     *               "jiaziIndex": 6,
+                     *               "elementName": "Земля"
+                     *             }
+                     *           },
+                     *           {
+                     *             "name": "month",
+                     *             "stem": "Xin",
+                     *             "branch": "Si",
+                     *             "pillar": "Xin-Si",
+                     *             "naYin": {
+                     *               "chinese": "白蠟金",
+                     *               "pinyin": "Bai La Jin",
+                     *               "english": "White Wax Metal",
+                     *               "element": "Metal",
+                     *               "jiaziIndex": 17,
+                     *               "elementName": "Метал"
+                     *             }
+                     *           },
+                     *           {
+                     *             "name": "day",
+                     *             "stem": "Geng",
+                     *             "branch": "Chen",
+                     *             "pillar": "Geng-Chen",
+                     *             "naYin": {
+                     *               "chinese": "白蠟金",
+                     *               "pinyin": "Bai La Jin",
+                     *               "english": "White Wax Metal",
+                     *               "element": "Metal",
+                     *               "jiaziIndex": 16,
+                     *               "elementName": "Метал"
+                     *             }
+                     *           },
+                     *           {
+                     *             "name": "hour",
+                     *             "stem": "Gui",
+                     *             "branch": "Wei",
+                     *             "pillar": "Gui-Wei",
+                     *             "naYin": {
+                     *               "chinese": "楊柳木",
+                     *               "pinyin": "Yang Liu Mu",
+                     *               "english": "Willow Wood",
+                     *               "element": "Wood",
+                     *               "jiaziIndex": 19,
+                     *               "elementName": "Дерево"
+                     *             }
+                     *           }
+                     *         ],
+                     *         "notes": [],
+                     *         "methodology": "六十甲子納音. The sixty pillars collapse into thirty sound-elements, two consecutive pillars to a name. The year pillar's na yin is the one popular readings mean by \"your element\", and it is not the day master.",
+                     *         "source": "The standard 納音 table, public domain",
+                     *         "disclaimer": "BaZi pillars use the canonical 60-jiazi cycle, anchored at 1990-01-01 = Bing-Yin. Year and month boundaries are the exact Lichun and 節 instants from the ephemeris, stated in China Standard Time; pass time and timezoneOffset for births near a boundary. Day and hour follow the birthplace clock, with the day rolling at 23:00 local."
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            solarYear?: number | null;
+                            pillars?: ({
+                                name?: string | null;
+                                stem?: string | null;
+                                branch?: string | null;
+                                pillar?: string | null;
+                                naYin?: {
+                                    chinese?: string | null;
+                                    pinyin?: string | null;
+                                    english?: string | null;
+                                    element?: string | null;
+                                    jiaziIndex?: number | null;
+                                    elementName?: string | null;
+                                } | null;
+                            } | null)[] | null;
+                            notes?: unknown[] | null;
+                            methodology?: string | null;
+                            source?: string | null;
+                            disclaimer?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    "bazi_life-stages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 8
+                 *     }
+                 */
+                "application/json": components["schemas"]["BaziChartInput"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "solarYear": 1990,
+                     *         "school": "classical",
+                     *         "dayMaster": {
+                     *           "stem": "Geng",
+                     *           "element": "Metal"
+                     *         },
+                     *         "dayMasterThroughChart": [
+                     *           {
+                     *             "pillar": "year",
+                     *             "branch": "Wu",
+                     *             "stage": "bath",
+                     *             "chinese": "沐浴",
+                     *             "name": "Обмивання"
+                     *           },
+                     *           {
+                     *             "pillar": "month",
+                     *             "branch": "Si",
+                     *             "stage": "growth",
+                     *             "chinese": "長生",
+                     *             "name": "Зростання"
+                     *           },
+                     *           {
+                     *             "pillar": "day",
+                     *             "branch": "Chen",
+                     *             "stage": "nurture",
+                     *             "chinese": "養",
+                     *             "name": "Виношування"
+                     *           },
+                     *           {
+                     *             "pillar": "hour",
+                     *             "branch": "Wei",
+                     *             "stage": "cap",
+                     *             "chinese": "冠帶",
+                     *             "name": "Повноліття"
+                     *           }
+                     *         ],
+                     *         "schoolNote": "Classical 陽順陰逆: yang stems run forward through the cycle, yin stems backward. Pass stageSchool=unified for 陰陽同生同死, where a yin stem runs with its yang partner.",
+                     *         "notes": [
+                     *           "Pass includeFullTable: true for the whole ten-by-twelve table of every stem in every branch."
+                     *         ],
+                     *         "methodology": "十二長生. A stem read against each branch as a life cycle, from 長生 through 帝旺 to 絕 and back through 胎 and 養. The starting branch per stem is settled; the direction for yin stems is not, so both ship.",
+                     *         "source": "三命通會 (Wan Minying, Ming), public domain",
+                     *         "disclaimer": "BaZi pillars use the canonical 60-jiazi cycle, anchored at 1990-01-01 = Bing-Yin. Year and month boundaries are the exact Lichun and 節 instants from the ephemeris, stated in China Standard Time; pass time and timezoneOffset for births near a boundary. Day and hour follow the birthplace clock, with the day rolling at 23:00 local."
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            solarYear?: number | null;
+                            school?: string | null;
+                            dayMaster?: {
+                                stem?: string | null;
+                                element?: string | null;
+                            } | null;
+                            dayMasterThroughChart?: ({
+                                pillar?: string | null;
+                                branch?: string | null;
+                                stage?: string | null;
+                                chinese?: string | null;
+                                name?: string | null;
+                            } | null)[] | null;
+                            schoolNote?: string | null;
+                            notes?: (string | null)[] | null;
+                            methodology?: string | null;
+                            source?: string | null;
+                            disclaimer?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    "bazi_symbolic-stars": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 8
+                 *     }
+                 */
+                "application/json": components["schemas"]["BaziChartInput"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "solarYear": 1990,
+                     *         "pillars": [
+                     *           {
+                     *             "name": "year",
+                     *             "stem": "Geng",
+                     *             "branch": "Wu",
+                     *             "pillar": "Geng-Wu"
+                     *           },
+                     *           {
+                     *             "name": "month",
+                     *             "stem": "Xin",
+                     *             "branch": "Si",
+                     *             "pillar": "Xin-Si"
+                     *           },
+                     *           {
+                     *             "name": "day",
+                     *             "stem": "Geng",
+                     *             "branch": "Chen",
+                     *             "pillar": "Geng-Chen"
+                     *           },
+                     *           {
+                     *             "name": "hour",
+                     *             "stem": "Gui",
+                     *             "branch": "Wei",
+                     *             "pillar": "Gui-Wei"
+                     *           }
+                     *         ],
+                     *         "byYearPillar": [
+                     *           {
+                     *             "key": "nobleman",
+                     *             "chinese": "天乙貴人",
+                     *             "pinyin": "Tian Yi Gui Ren",
+                     *             "english": "Heavenly Nobleman",
+                     *             "pillars": [
+                     *               "hour"
+                     *             ],
+                     *             "meaning": "help arriving from outside, the patron and the timely intervention",
+                     *             "schoolNote": "The 三命通會 reading for 庚 (甲戊庚牛羊). 淵海子平 puts the 庚 nobleman at 午 and 寅 instead; that reading is reported separately."
+                     *           },
+                     *           {
+                     *             "key": "noblemanAlt",
+                     *             "chinese": "天乙貴人",
+                     *             "pinyin": "Tian Yi Gui Ren",
+                     *             "english": "Heavenly Nobleman (淵海子平 reading)",
+                     *             "pillars": [
+                     *               "year"
+                     *             ],
+                     *             "meaning": "help arriving from outside, the patron and the timely intervention",
+                     *             "schoolNote": "The 淵海子平 and 星平會海 reading for 庚 (庚辛逢馬虎). The 三命通會 reading is reported under `nobleman`."
+                     *           }
+                     *         ],
+                     *         "byDayPillar": [
+                     *           {
+                     *             "key": "canopy",
+                     *             "chinese": "華蓋",
+                     *             "pinyin": "Hua Gai",
+                     *             "english": "Canopy",
+                     *             "pillars": [
+                     *               "day"
+                     *             ],
+                     *             "meaning": "solitude and study, the scholar and the recluse"
+                     *           },
+                     *           {
+                     *             "key": "nobleman",
+                     *             "chinese": "天乙貴人",
+                     *             "pinyin": "Tian Yi Gui Ren",
+                     *             "english": "Heavenly Nobleman",
+                     *             "pillars": [
+                     *               "hour"
+                     *             ],
+                     *             "meaning": "help arriving from outside, the patron and the timely intervention",
+                     *             "schoolNote": "The 三命通會 reading for 庚 (甲戊庚牛羊). 淵海子平 puts the 庚 nobleman at 午 and 寅 instead; that reading is reported separately."
+                     *           },
+                     *           {
+                     *             "key": "noblemanAlt",
+                     *             "chinese": "天乙貴人",
+                     *             "pinyin": "Tian Yi Gui Ren",
+                     *             "english": "Heavenly Nobleman (淵海子平 reading)",
+                     *             "pillars": [
+                     *               "year"
+                     *             ],
+                     *             "meaning": "help arriving from outside, the patron and the timely intervention",
+                     *             "schoolNote": "The 淵海子平 and 星平會海 reading for 庚 (庚辛逢馬虎). The 三命通會 reading is reported under `nobleman`."
+                     *           }
+                     *         ],
+                     *         "referenceNote": "Star rules key off a reference pillar. The older transmission reads from the year, later practice from the day, and the two disagree often enough that picking one silently would be a school choice disguised as a result.",
+                     *         "notes": [],
+                     *         "methodology": "神煞. Only the six stars every transmission carries with the same rule are implemented: 桃花, 驛馬, 華蓋, 天乙貴人, 羊刃 and 空亡. The full register runs to hundreds of entries, most of them local to one almanac, and those are deliberately absent rather than guessed.",
+                     *         "source": "三命通會 (Wan Minying, Ming), public domain",
+                     *         "disclaimer": "BaZi pillars use the canonical 60-jiazi cycle, anchored at 1990-01-01 = Bing-Yin. Year and month boundaries are the exact Lichun and 節 instants from the ephemeris, stated in China Standard Time; pass time and timezoneOffset for births near a boundary. Day and hour follow the birthplace clock, with the day rolling at 23:00 local."
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            solarYear?: number | null;
+                            pillars?: ({
+                                name?: string | null;
+                                stem?: string | null;
+                                branch?: string | null;
+                                pillar?: string | null;
+                            } | null)[] | null;
+                            byYearPillar?: ({
+                                key?: string | null;
+                                chinese?: string | null;
+                                pinyin?: string | null;
+                                english?: string | null;
+                                pillars?: (string | null)[] | null;
+                                meaning?: string | null;
+                                schoolNote?: string | null;
+                            } | null)[] | null;
+                            byDayPillar?: ({
+                                key?: string | null;
+                                chinese?: string | null;
+                                pinyin?: string | null;
+                                english?: string | null;
+                                pillars?: (string | null)[] | null;
+                                meaning?: string | null;
+                            } | null)[] | null;
+                            referenceNote?: string | null;
+                            notes?: unknown[] | null;
+                            methodology?: string | null;
+                            source?: string | null;
+                            disclaimer?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    bazi_interactions: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 8
+                 *     }
+                 */
+                "application/json": components["schemas"]["BaziChartInput"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "solarYear": 1990,
+                     *         "pillars": [
+                     *           {
+                     *             "name": "year",
+                     *             "stem": "Geng",
+                     *             "branch": "Wu",
+                     *             "pillar": "Geng-Wu"
+                     *           },
+                     *           {
+                     *             "name": "month",
+                     *             "stem": "Xin",
+                     *             "branch": "Si",
+                     *             "pillar": "Xin-Si"
+                     *           },
+                     *           {
+                     *             "name": "day",
+                     *             "stem": "Geng",
+                     *             "branch": "Chen",
+                     *             "pillar": "Geng-Chen"
+                     *           },
+                     *           {
+                     *             "name": "hour",
+                     *             "stem": "Gui",
+                     *             "branch": "Wei",
+                     *             "pillar": "Gui-Wei"
+                     *           }
+                     *         ],
+                     *         "interactions": [
+                     *           {
+                     *             "type": "sixHarmony",
+                     *             "chinese": "六合",
+                     *             "english": "Six Harmony",
+                     *             "pillars": [
+                     *               "year",
+                     *               "hour"
+                     *             ],
+                     *             "members": [
+                     *               "Wu",
+                     *               "Wei"
+                     *             ],
+                     *             "producesElement": "Earth",
+                     *             "schoolNote": "The Wu-Wei harmony is given as Earth here; other transmissions read it as the sun-and-moon pair and assign no element."
+                     *           }
+                     *         ],
+                     *         "notes": [],
+                     *         "methodology": "天干五合, 六合, 三合 and 半合, 六沖, 六害, 三刑 and 自刑. Most of these are arithmetic rather than tables: a six harmony is a pair of branch indices summing to one, a harm sums to seven, a clash is a distance of six. Only the punishments need a table, because they are not a relation on the indices.",
+                     *         "source": "淵海子平 (Song), public domain",
+                     *         "disclaimer": "BaZi pillars use the canonical 60-jiazi cycle, anchored at 1990-01-01 = Bing-Yin. Year and month boundaries are the exact Lichun and 節 instants from the ephemeris, stated in China Standard Time; pass time and timezoneOffset for births near a boundary. Day and hour follow the birthplace clock, with the day rolling at 23:00 local."
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            solarYear?: number | null;
+                            pillars?: ({
+                                name?: string | null;
+                                stem?: string | null;
+                                branch?: string | null;
+                                pillar?: string | null;
+                            } | null)[] | null;
+                            interactions?: ({
+                                type?: string | null;
+                                chinese?: string | null;
+                                english?: string | null;
+                                pillars?: (string | null)[] | null;
+                                members?: (string | null)[] | null;
+                                producesElement?: string | null;
+                                schoolNote?: string | null;
+                            } | null)[] | null;
+                            notes?: unknown[] | null;
+                            methodology?: string | null;
+                            source?: string | null;
+                            disclaimer?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    bazi_strength: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 8
+                 *     }
+                 */
+                "application/json": components["schemas"]["BaziChartInput"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "solarYear": 1990,
+                     *         "pillars": [
+                     *           {
+                     *             "name": "year",
+                     *             "stem": "Geng",
+                     *             "branch": "Wu",
+                     *             "pillar": "Geng-Wu"
+                     *           },
+                     *           {
+                     *             "name": "month",
+                     *             "stem": "Xin",
+                     *             "branch": "Si",
+                     *             "pillar": "Xin-Si"
+                     *           },
+                     *           {
+                     *             "name": "day",
+                     *             "stem": "Geng",
+                     *             "branch": "Chen",
+                     *             "pillar": "Geng-Chen"
+                     *           },
+                     *           {
+                     *             "name": "hour",
+                     *             "stem": "Gui",
+                     *             "branch": "Wei",
+                     *             "pillar": "Gui-Wei"
+                     *           }
+                     *         ],
+                     *         "dayMaster": {
+                     *           "stem": "Geng",
+                     *           "element": "Metal",
+                     *           "elementName": "Метал",
+                     *           "polarity": "Ян"
+                     *         },
+                     *         "strength": {
+                     *           "framework": "扶抑 support-and-suppress",
+                     *           "supportScore": 3.9,
+                     *           "drainScore": 3.1,
+                     *           "supportRatio": 0.557,
+                     *           "verdict": "strong",
+                     *           "hasSeason": false,
+                     *           "hasRoot": true,
+                     *           "hasAllies": true,
+                     *           "favourableElements": [
+                     *             "Water",
+                     *             "Wood",
+                     *             "Fire"
+                     *           ],
+                     *           "unfavourableElements": [
+                     *             "Earth",
+                     *             "Metal"
+                     *           ],
+                     *           "caveat": "One framework of several, and the thresholds are ours. 扶抑 weighs support against drain; 調候, 通關, 病藥 and 專旺 read the same chart by other rules and can reach the opposite verdict, and a chart near the boundary is exactly where they part. Two limits worth stating plainly: the ratio counts the month branch exactly like the other three, where the tradition weighs the month above all, and the 0.55 / 0.45 cut points are a convention of this API rather than a canonical rule. The three classical criteria are reported unweighted beside the ratio, so a reader who weighs the month can reach their own verdict from the same inputs.",
+                     *           "favourableElementNames": [
+                     *             "Вода",
+                     *             "Дерево",
+                     *             "Вогонь"
+                     *           ],
+                     *           "unfavourableElementNames": [
+                     *             "Земля",
+                     *             "Метал"
+                     *           ]
+                     *         },
+                     *         "notes": [],
+                     *         "methodology": "扶抑 support-and-suppress over the weighted hidden-stem count. Everything producing or sharing the day master supports it; everything else drains it. The three classical criteria (得令 season, 得地 root, 得勢 allies) are reported unweighted beside the ratio so a reader can apply their own weighting.",
+                     *         "source": "子平真詮 (Shen Xiaozhan, Qing), public domain",
+                     *         "disclaimer": "BaZi pillars use the canonical 60-jiazi cycle, anchored at 1990-01-01 = Bing-Yin. Year and month boundaries are the exact Lichun and 節 instants from the ephemeris, stated in China Standard Time; pass time and timezoneOffset for births near a boundary. Day and hour follow the birthplace clock, with the day rolling at 23:00 local."
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            solarYear?: number | null;
+                            pillars?: ({
+                                name?: string | null;
+                                stem?: string | null;
+                                branch?: string | null;
+                                pillar?: string | null;
+                            } | null)[] | null;
+                            dayMaster?: {
+                                stem?: string | null;
+                                element?: string | null;
+                                elementName?: string | null;
+                                polarity?: string | null;
+                            } | null;
+                            strength?: {
+                                framework?: string | null;
+                                supportScore?: number | null;
+                                drainScore?: number | null;
+                                supportRatio?: number | null;
+                                verdict?: string | null;
+                                hasSeason?: boolean | null;
+                                hasRoot?: boolean | null;
+                                hasAllies?: boolean | null;
+                                favourableElements?: (string | null)[] | null;
+                                unfavourableElements?: (string | null)[] | null;
+                                caveat?: string | null;
+                                favourableElementNames?: (string | null)[] | null;
+                                unfavourableElementNames?: (string | null)[] | null;
+                            } | null;
+                            notes?: unknown[] | null;
+                            methodology?: string | null;
+                            source?: string | null;
+                            disclaimer?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    "bazi_day-master": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "date": "1990-05-15",
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv"
                  *     }
                  */
                 "application/json": components["schemas"]["BaziFourPillarsInput"];
@@ -34584,10 +36937,12 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "date": "1990-06-15"
+                 *       "date": "1990-05-15",
+                 *       "time": "14:30:00",
+                 *       "timezoneOffset": 8
                  *     }
                  */
-                "application/json": components["schemas"]["BaziDateInput"];
+                "application/json": components["schemas"]["BaziChartInput"];
             };
         };
         responses: {
@@ -34601,20 +36956,205 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
+                     *         "solarYear": 1990,
+                     *         "pillars": [
+                     *           {
+                     *             "name": "year",
+                     *             "stem": "Geng",
+                     *             "branch": "Wu",
+                     *             "pillar": "Geng-Wu"
+                     *           },
+                     *           {
+                     *             "name": "month",
+                     *             "stem": "Xin",
+                     *             "branch": "Si",
+                     *             "pillar": "Xin-Si"
+                     *           },
+                     *           {
+                     *             "name": "day",
+                     *             "stem": "Geng",
+                     *             "branch": "Chen",
+                     *             "pillar": "Geng-Chen"
+                     *           },
+                     *           {
+                     *             "name": "hour",
+                     *             "stem": "Gui",
+                     *             "branch": "Wei",
+                     *             "pillar": "Gui-Wei"
+                     *           }
+                     *         ],
                      *         "elementCounts": {
                      *           "Wood": 0,
                      *           "Fire": 2,
                      *           "Earth": 0,
-                     *           "Metal": 1,
-                     *           "Water": 1
+                     *           "Metal": 2,
+                     *           "Water": 0
                      *         },
                      *         "dominantElement": "Fire",
                      *         "missingElements": [
-                     *           "Wood"
+                     *           "Wood",
+                     *           "Earth",
+                     *           "Water"
                      *         ],
-                     *         "notes": [
-                     *           "Based on year + month pillars only (4 of 8 characters). Full BaZi balance needs day + hour pillars."
+                     *         "balance": {
+                     *           "scope": "eight characters",
+                     *           "visible": {
+                     *             "Wood": 0,
+                     *             "Fire": 2,
+                     *             "Earth": 2,
+                     *             "Metal": 3,
+                     *             "Water": 1
+                     *           },
+                     *           "withHiddenStems": {
+                     *             "Wood": 2,
+                     *             "Fire": 3,
+                     *             "Earth": 4,
+                     *             "Metal": 4,
+                     *             "Water": 2
+                     *           },
+                     *           "weighted": {
+                     *             "Wood": 0.4,
+                     *             "Fire": 1.6,
+                     *             "Earth": 1.6,
+                     *             "Metal": 3.3,
+                     *             "Water": 1.1
+                     *           },
+                     *           "weighting": "Each branch contributes one character split among the stems it shelters: 1.0 alone, 0.7/0.3 for two, 0.6/0.3/0.1 for three (本气/中气/余气). The membership is canonical; the split is a stated convention, and the day-count 人元司令 scheme distributes the same characters differently.",
+                     *           "dominantElement": "Metal",
+                     *           "dominantElementName": "Метал",
+                     *           "missingElements": [],
+                     *           "missingElementNames": [],
+                     *           "hiddenStems": [
+                     *             {
+                     *               "pillar": "year",
+                     *               "branch": "Wu",
+                     *               "stems": [
+                     *                 {
+                     *                   "stem": "Ding",
+                     *                   "stemIndex": 3,
+                     *                   "element": "Fire",
+                     *                   "yin": true,
+                     *                   "role": "principal",
+                     *                   "weight": 0.7
+                     *                 },
+                     *                 {
+                     *                   "stem": "Ji",
+                     *                   "stemIndex": 5,
+                     *                   "element": "Earth",
+                     *                   "yin": true,
+                     *                   "role": "middle",
+                     *                   "weight": 0.3
+                     *                 }
+                     *               ]
+                     *             },
+                     *             {
+                     *               "pillar": "month",
+                     *               "branch": "Si",
+                     *               "stems": [
+                     *                 {
+                     *                   "stem": "Bing",
+                     *                   "stemIndex": 2,
+                     *                   "element": "Fire",
+                     *                   "yin": false,
+                     *                   "role": "principal",
+                     *                   "weight": 0.6
+                     *                 },
+                     *                 {
+                     *                   "stem": "Geng",
+                     *                   "stemIndex": 6,
+                     *                   "element": "Metal",
+                     *                   "yin": false,
+                     *                   "role": "middle",
+                     *                   "weight": 0.3
+                     *                 },
+                     *                 {
+                     *                   "stem": "Wu",
+                     *                   "stemIndex": 4,
+                     *                   "element": "Earth",
+                     *                   "yin": false,
+                     *                   "role": "residual",
+                     *                   "weight": 0.1
+                     *                 }
+                     *               ]
+                     *             },
+                     *             {
+                     *               "pillar": "day",
+                     *               "branch": "Chen",
+                     *               "stems": [
+                     *                 {
+                     *                   "stem": "Wu",
+                     *                   "stemIndex": 4,
+                     *                   "element": "Earth",
+                     *                   "yin": false,
+                     *                   "role": "principal",
+                     *                   "weight": 0.6
+                     *                 },
+                     *                 {
+                     *                   "stem": "Yi",
+                     *                   "stemIndex": 1,
+                     *                   "element": "Wood",
+                     *                   "yin": true,
+                     *                   "role": "residual",
+                     *                   "weight": 0.3
+                     *                 },
+                     *                 {
+                     *                   "stem": "Gui",
+                     *                   "stemIndex": 9,
+                     *                   "element": "Water",
+                     *                   "yin": true,
+                     *                   "role": "middle",
+                     *                   "weight": 0.1
+                     *                 }
+                     *               ]
+                     *             },
+                     *             {
+                     *               "pillar": "hour",
+                     *               "branch": "Wei",
+                     *               "stems": [
+                     *                 {
+                     *                   "stem": "Ji",
+                     *                   "stemIndex": 5,
+                     *                   "element": "Earth",
+                     *                   "yin": true,
+                     *                   "role": "principal",
+                     *                   "weight": 0.6
+                     *                 },
+                     *                 {
+                     *                   "stem": "Ding",
+                     *                   "stemIndex": 3,
+                     *                   "element": "Fire",
+                     *                   "yin": true,
+                     *                   "role": "residual",
+                     *                   "weight": 0.3
+                     *                 },
+                     *                 {
+                     *                   "stem": "Yi",
+                     *                   "stemIndex": 1,
+                     *                   "element": "Wood",
+                     *                   "yin": true,
+                     *                   "role": "middle",
+                     *                   "weight": 0.1
+                     *                 }
+                     *               ]
+                     *             }
+                     *           ]
+                     *         },
+                     *         "deprecations": [
+                     *           {
+                     *             "fields": [
+                     *               "elementCounts",
+                     *               "dominantElement",
+                     *               "missingElements"
+                     *             ],
+                     *             "since": "2026-09-08",
+                     *             "sunset": "2027-09-08",
+                     *             "successor": "balance",
+                     *             "reason": "They count the year and month pillars only, four of the eight characters, and never open the branches, so an element sheltered as a hidden stem is reported absent. `balance` counts the whole chart. The old fields keep answering unchanged until the sunset date."
+                     *           }
                      *         ],
+                     *         "notes": [],
+                     *         "methodology": "Under `balance`: all eight characters with the branches opened. `visible` counts the four stems plus each branch's principal hidden stem, the classic count of eight. `withHiddenStems` counts every sheltered stem whole. `weighted` splits each branch among the stems it shelters, so the total stays at eight. An element is called missing only when the weighted count reaches zero.",
+                     *         "source": "地支藏干 per 淵海子平 and 三命通會, public domain",
                      *         "disclaimer": "BaZi pillars use the canonical 60-jiazi cycle, anchored at 1990-01-01 = Bing-Yin. Year and month boundaries are the exact Lichun and 節 instants from the ephemeris, stated in China Standard Time; pass time and timezoneOffset for births near a boundary. Day and hour follow the birthplace clock, with the day rolling at 23:00 local."
                      *       }
                      *     }
@@ -34623,6 +37163,13 @@ export interface operations {
                         /** @example true */
                         ok?: boolean;
                         data?: {
+                            solarYear?: number | null;
+                            pillars?: ({
+                                name?: string | null;
+                                stem?: string | null;
+                                branch?: string | null;
+                                pillar?: string | null;
+                            } | null)[] | null;
                             elementCounts?: {
                                 Wood?: number | null;
                                 Fire?: number | null;
@@ -34632,7 +37179,57 @@ export interface operations {
                             } | null;
                             dominantElement?: string | null;
                             missingElements?: (string | null)[] | null;
-                            notes?: (string | null)[] | null;
+                            balance?: {
+                                scope?: string | null;
+                                visible?: {
+                                    Wood?: number | null;
+                                    Fire?: number | null;
+                                    Earth?: number | null;
+                                    Metal?: number | null;
+                                    Water?: number | null;
+                                } | null;
+                                withHiddenStems?: {
+                                    Wood?: number | null;
+                                    Fire?: number | null;
+                                    Earth?: number | null;
+                                    Metal?: number | null;
+                                    Water?: number | null;
+                                } | null;
+                                weighted?: {
+                                    Wood?: number | null;
+                                    Fire?: number | null;
+                                    Earth?: number | null;
+                                    Metal?: number | null;
+                                    Water?: number | null;
+                                } | null;
+                                weighting?: string | null;
+                                dominantElement?: string | null;
+                                dominantElementName?: string | null;
+                                missingElements?: unknown[] | null;
+                                missingElementNames?: unknown[] | null;
+                                hiddenStems?: ({
+                                    pillar?: string | null;
+                                    branch?: string | null;
+                                    stems?: ({
+                                        stem?: string | null;
+                                        stemIndex?: number | null;
+                                        element?: string | null;
+                                        yin?: boolean | null;
+                                        role?: string | null;
+                                        weight?: number | null;
+                                    } | null)[] | null;
+                                } | null)[] | null;
+                            } | null;
+                            deprecations?: ({
+                                fields?: (string | null)[] | null;
+                                since?: string | null;
+                                sunset?: string | null;
+                                successor?: string | null;
+                                reason?: string | null;
+                            } | null)[] | null;
+                            notes?: unknown[] | null;
+                            methodology?: string | null;
+                            source?: string | null;
                             disclaimer?: string | null;
                         };
                     };
@@ -35115,8 +37712,8 @@ export interface operations {
                      *       "ok": true,
                      *       "data": {
                      *         "date": "1990-06-15",
-                     *         "time": "14:30:00",
-                     *         "timezoneOffset": 3,
+                     *         "time": "15:30:00",
+                     *         "timezoneOffset": 4,
                      *         "localHour": 14,
                      *         "cstHour": 19,
                      *         "dayPillar": {
@@ -35512,7 +38109,7 @@ export interface operations {
                      *             "governingAnimal": "Horse"
                      *           }
                      *         ],
-                     *         "disclaimer": "Zi Wei Dou Shu MVP: reference tables. Palace meanings and the 14 main stars are static reference data and do not vary with the birth date; only solarYear and animal derive from it. Placing the stars into palaces (needs lunar month, birth hour and the wu-xing ju) is not implemented yet. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
+                     *         "disclaimer": "Zi Wei Dou Shu reference tables. Palace meanings and the 14 main stars here are static and do not vary with the birth date; only solarYear and animal derive from it. Star placement lives on POST /v1/ziwei/chart, which computes the soul and body palaces, the five-element class and every star from the lunar date and the birth hour. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
                      *       }
                      *     }
                      */
@@ -35532,6 +38129,171 @@ export interface operations {
                                 governingAnimal?: string | null;
                             } | null)[] | null;
                             disclaimer?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    ziwei_chart: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "date": "2000-08-16",
+                 *       "time": "04:00:00",
+                 *       "gender": "male"
+                 *     }
+                 */
+                "application/json": components["schemas"]["ZiweiChartInput"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "lunar": {
+                     *           "month": 7,
+                     *           "isLeapMonth": false,
+                     *           "day": 17,
+                     *           "monthStart": "2000-07-31"
+                     *         },
+                     *         "fiveElementClass": {
+                     *           "key": "wood3",
+                     *           "chinese": "木三局",
+                     *           "value": 3
+                     *         },
+                     *         "soulPalace": {
+                     *           "index": 4,
+                     *           "branch": "Wu"
+                     *         },
+                     *         "ziwei": {
+                     *           "index": 4,
+                     *           "branch": "Wu"
+                     *         },
+                     *         "palaces": [
+                     *           {
+                     *             "branch": "Wu",
+                     *             "palace": "destiny",
+                     *             "pillar": "Ren-Wu",
+                     *             "majorStars": [
+                     *               {
+                     *                 "chinese": "紫微",
+                     *                 "name": "Purple Star"
+                     *               }
+                     *             ],
+                     *             "lifeStage": {
+                     *               "chinese": "死",
+                     *               "name": "Death"
+                     *             },
+                     *             "decade": {
+                     *               "index": 0,
+                     *               "fromAge": 3,
+                     *               "toAge": 12
+                     *             }
+                     *           }
+                     *         ],
+                     *         "computed": true
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            lunar?: {
+                                month?: number | null;
+                                isLeapMonth?: boolean | null;
+                                day?: number | null;
+                                monthStart?: string | null;
+                            } | null;
+                            fiveElementClass?: {
+                                key?: string | null;
+                                chinese?: string | null;
+                                value?: number | null;
+                            } | null;
+                            soulPalace?: {
+                                index?: number | null;
+                                branch?: string | null;
+                            } | null;
+                            ziwei?: {
+                                index?: number | null;
+                                branch?: string | null;
+                            } | null;
+                            palaces?: ({
+                                branch?: string | null;
+                                palace?: string | null;
+                                pillar?: string | null;
+                                majorStars?: ({
+                                    chinese?: string | null;
+                                    name?: string | null;
+                                } | null)[] | null;
+                                lifeStage?: {
+                                    chinese?: string | null;
+                                    name?: string | null;
+                                } | null;
+                                decade?: {
+                                    index?: number | null;
+                                    fromAge?: number | null;
+                                    toAge?: number | null;
+                                } | null;
+                            } | null)[] | null;
+                            computed?: boolean | null;
                         };
                     };
                 };
@@ -35901,7 +38663,7 @@ export interface operations {
                      *             "theme": "Emperor: leadership, dignity, command"
                      *           }
                      *         ],
-                     *         "disclaimer": "Zi Wei Dou Shu MVP: reference tables. Palace meanings and the 14 main stars are static reference data and do not vary with the birth date; only solarYear and animal derive from it. Placing the stars into palaces (needs lunar month, birth hour and the wu-xing ju) is not implemented yet. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
+                     *         "disclaimer": "Zi Wei Dou Shu reference tables. Palace meanings and the 14 main stars here are static and do not vary with the birth date; only solarYear and animal derive from it. Star placement lives on POST /v1/ziwei/chart, which computes the soul and body palaces, the five-element class and every star from the lunar date and the birth hour. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
                      *       }
                      *     }
                      */
@@ -36004,9 +38766,9 @@ export interface operations {
                      *           }
                      *         ],
                      *         "notes": [
-                     *           "MVP: star placement into palaces is deferred. Palace meanings are provided for orientation."
+                     *           "Palace meanings are provided for orientation. Star placement lives on POST /v1/ziwei/chart."
                      *         ],
-                     *         "disclaimer": "Zi Wei Dou Shu MVP: reference tables. Palace meanings and the 14 main stars are static reference data and do not vary with the birth date; only solarYear and animal derive from it. Placing the stars into palaces (needs lunar month, birth hour and the wu-xing ju) is not implemented yet. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
+                     *         "disclaimer": "Zi Wei Dou Shu reference tables. Palace meanings and the 14 main stars here are static and do not vary with the birth date; only solarYear and animal derive from it. Star placement lives on POST /v1/ziwei/chart, which computes the soul and body palaces, the five-element class and every star from the lunar date and the birth hour. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
                      *       }
                      *     }
                      */
@@ -36112,7 +38874,7 @@ export interface operations {
                      *             "Personality essence"
                      *           ]
                      *         },
-                     *         "disclaimer": "Zi Wei Dou Shu MVP: reference tables. Palace meanings and the 14 main stars are static reference data and do not vary with the birth date; only solarYear and animal derive from it. Placing the stars into palaces (needs lunar month, birth hour and the wu-xing ju) is not implemented yet. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
+                     *         "disclaimer": "Zi Wei Dou Shu reference tables. Palace meanings and the 14 main stars here are static and do not vary with the birth date; only solarYear and animal derive from it. Star placement lives on POST /v1/ziwei/chart, which computes the soul and body palaces, the five-element class and every star from the lunar date and the birth hour. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
                      *       }
                      *     }
                      */
@@ -36219,7 +38981,7 @@ export interface operations {
                      *             "Sibling bonds"
                      *           ]
                      *         },
-                     *         "disclaimer": "Zi Wei Dou Shu MVP: reference tables. Palace meanings and the 14 main stars are static reference data and do not vary with the birth date; only solarYear and animal derive from it. Placing the stars into palaces (needs lunar month, birth hour and the wu-xing ju) is not implemented yet. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
+                     *         "disclaimer": "Zi Wei Dou Shu reference tables. Palace meanings and the 14 main stars here are static and do not vary with the birth date; only solarYear and animal derive from it. Star placement lives on POST /v1/ziwei/chart, which computes the soul and body palaces, the five-element class and every star from the lunar date and the birth hour. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
                      *       }
                      *     }
                      */
@@ -36326,7 +39088,7 @@ export interface operations {
                      *             "Spouse personality"
                      *           ]
                      *         },
-                     *         "disclaimer": "Zi Wei Dou Shu MVP: reference tables. Palace meanings and the 14 main stars are static reference data and do not vary with the birth date; only solarYear and animal derive from it. Placing the stars into palaces (needs lunar month, birth hour and the wu-xing ju) is not implemented yet. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
+                     *         "disclaimer": "Zi Wei Dou Shu reference tables. Palace meanings and the 14 main stars here are static and do not vary with the birth date; only solarYear and animal derive from it. Star placement lives on POST /v1/ziwei/chart, which computes the soul and body palaces, the five-element class and every star from the lunar date and the birth hour. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
                      *       }
                      *     }
                      */
@@ -36433,7 +39195,7 @@ export interface operations {
                      *             "Number of children"
                      *           ]
                      *         },
-                     *         "disclaimer": "Zi Wei Dou Shu MVP: reference tables. Palace meanings and the 14 main stars are static reference data and do not vary with the birth date; only solarYear and animal derive from it. Placing the stars into palaces (needs lunar month, birth hour and the wu-xing ju) is not implemented yet. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
+                     *         "disclaimer": "Zi Wei Dou Shu reference tables. Palace meanings and the 14 main stars here are static and do not vary with the birth date; only solarYear and animal derive from it. Star placement lives on POST /v1/ziwei/chart, which computes the soul and body palaces, the five-element class and every star from the lunar date and the birth hour. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
                      *       }
                      *     }
                      */
@@ -36540,7 +39302,7 @@ export interface operations {
                      *             "Earning capacity"
                      *           ]
                      *         },
-                     *         "disclaimer": "Zi Wei Dou Shu MVP: reference tables. Palace meanings and the 14 main stars are static reference data and do not vary with the birth date; only solarYear and animal derive from it. Placing the stars into palaces (needs lunar month, birth hour and the wu-xing ju) is not implemented yet. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
+                     *         "disclaimer": "Zi Wei Dou Shu reference tables. Palace meanings and the 14 main stars here are static and do not vary with the birth date; only solarYear and animal derive from it. Star placement lives on POST /v1/ziwei/chart, which computes the soul and body palaces, the five-element class and every star from the lunar date and the birth hour. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
                      *       }
                      *     }
                      */
@@ -36647,7 +39409,7 @@ export interface operations {
                      *             "Constitutional health"
                      *           ]
                      *         },
-                     *         "disclaimer": "Zi Wei Dou Shu MVP: reference tables. Palace meanings and the 14 main stars are static reference data and do not vary with the birth date; only solarYear and animal derive from it. Placing the stars into palaces (needs lunar month, birth hour and the wu-xing ju) is not implemented yet. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
+                     *         "disclaimer": "Zi Wei Dou Shu reference tables. Palace meanings and the 14 main stars here are static and do not vary with the birth date; only solarYear and animal derive from it. Star placement lives on POST /v1/ziwei/chart, which computes the soul and body palaces, the five-element class and every star from the lunar date and the birth hour. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
                      *       }
                      *     }
                      */
@@ -36754,7 +39516,7 @@ export interface operations {
                      *             "Migration"
                      *           ]
                      *         },
-                     *         "disclaimer": "Zi Wei Dou Shu MVP: reference tables. Palace meanings and the 14 main stars are static reference data and do not vary with the birth date; only solarYear and animal derive from it. Placing the stars into palaces (needs lunar month, birth hour and the wu-xing ju) is not implemented yet. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
+                     *         "disclaimer": "Zi Wei Dou Shu reference tables. Palace meanings and the 14 main stars here are static and do not vary with the birth date; only solarYear and animal derive from it. Star placement lives on POST /v1/ziwei/chart, which computes the soul and body palaces, the five-element class and every star from the lunar date and the birth hour. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
                      *       }
                      *     }
                      */
@@ -36861,7 +39623,7 @@ export interface operations {
                      *             "Career path"
                      *           ]
                      *         },
-                     *         "disclaimer": "Zi Wei Dou Shu MVP: reference tables. Palace meanings and the 14 main stars are static reference data and do not vary with the birth date; only solarYear and animal derive from it. Placing the stars into palaces (needs lunar month, birth hour and the wu-xing ju) is not implemented yet. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
+                     *         "disclaimer": "Zi Wei Dou Shu reference tables. Palace meanings and the 14 main stars here are static and do not vary with the birth date; only solarYear and animal derive from it. Star placement lives on POST /v1/ziwei/chart, which computes the soul and body palaces, the five-element class and every star from the lunar date and the birth hour. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
                      *       }
                      *     }
                      */
@@ -36968,7 +39730,7 @@ export interface operations {
                      *             "Property luck"
                      *           ]
                      *         },
-                     *         "disclaimer": "Zi Wei Dou Shu MVP: reference tables. Palace meanings and the 14 main stars are static reference data and do not vary with the birth date; only solarYear and animal derive from it. Placing the stars into palaces (needs lunar month, birth hour and the wu-xing ju) is not implemented yet. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
+                     *         "disclaimer": "Zi Wei Dou Shu reference tables. Palace meanings and the 14 main stars here are static and do not vary with the birth date; only solarYear and animal derive from it. Star placement lives on POST /v1/ziwei/chart, which computes the soul and body palaces, the five-element class and every star from the lunar date and the birth hour. Where schools disagree we follow 中州派 (Zhongzhou, the Wang Tingzhi corpus); this is stated up front so results are comparable against the calculators built on the same tables."
                      *       }
                      *     }
                      */
@@ -37047,8 +39809,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -37152,8 +39914,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "orb": 1.5
@@ -37290,8 +40052,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -37393,8 +40155,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "orb": 1
@@ -37501,8 +40263,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "lots": [
@@ -37607,8 +40369,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "orb": 1
@@ -37813,8 +40575,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -39684,8 +42446,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -40102,8 +42864,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -40124,20 +42886,20 @@ export interface operations {
                      *       "data": {
                      *         "dignities": [
                      *           {
-                     *             "planetId": 1,
-                     *             "planetName": "Moon",
-                     *             "longitude": 296.9046877765158,
-                     *             "signIndex": 9,
+                     *             "planetId": 0,
+                     *             "planetName": "Sun",
+                     *             "longitude": 54.37601980167181,
+                     *             "signIndex": 1,
                      *             "dignity": {
                      *               "rulership": null,
                      *               "exaltation": null,
                      *               "triplicity": null,
-                     *               "detriment": "Moon",
+                     *               "detriment": null,
                      *               "fall": null,
-                     *               "term": "Mars",
-                     *               "decan": "Sun",
+                     *               "term": "Saturn",
+                     *               "decan": "Saturn",
                      *               "peregrine": true,
-                     *               "score": -10
+                     *               "score": -5
                      *             }
                      *           }
                      *         ],
@@ -40158,7 +42920,7 @@ export interface operations {
                                     rulership?: unknown;
                                     exaltation?: unknown;
                                     triplicity?: unknown;
-                                    detriment?: string | null;
+                                    detriment?: unknown;
                                     fall?: unknown;
                                     term?: string | null;
                                     decan?: string | null;
@@ -40227,8 +42989,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -40264,8 +43026,8 @@ export interface operations {
                      *           "input": {
                      *             "name": "",
                      *             "date": "1990-05-15",
-                     *             "time": "14:30:00",
-                     *             "timezoneOffset": 3,
+                     *             "time": "15:30:00",
+                     *             "timezoneOffset": 4,
                      *             "latitude": 50.45,
                      *             "longitude": 30.52,
                      *             "houseSystem": "P",
@@ -40546,8 +43308,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -40568,7 +43330,7 @@ export interface operations {
                      *       "data": {
                      *         "hyleg": {
                      *           "planet": "Moon",
-                     *           "longitude": 210.3,
+                     *           "longitude": 54.37601980167181,
                      *           "house": 9,
                      *           "condition": "angular"
                      *         },
@@ -40657,8 +43419,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -40768,8 +43530,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -40907,8 +43669,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -41106,8 +43868,8 @@ export interface operations {
                      *           "input": {
                      *             "name": "",
                      *             "date": "2024-06-15",
-                     *             "time": "14:30:00",
-                     *             "timezoneOffset": 3,
+                     *             "time": "15:30:00",
+                     *             "timezoneOffset": 4,
                      *             "latitude": 50.45,
                      *             "longitude": 30.52,
                      *             "houseSystem": "P",
@@ -41982,8 +44744,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -42005,8 +44767,8 @@ export interface operations {
                      *         "input": {
                      *           "name": "",
                      *           "date": "1990-05-15",
-                     *           "time": "14:30:00",
-                     *           "timezoneOffset": 3,
+                     *           "time": "15:30:00",
+                     *           "timezoneOffset": 4,
                      *           "latitude": 50.45,
                      *           "longitude": 30.52,
                      *           "houseSystem": "P",
@@ -42240,15 +45002,15 @@ export interface operations {
                  * @example {
                  *       "chart1": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "chart2": {
                  *         "date": "1985-11-03",
-                 *         "time": "08:15:00",
-                 *         "timezoneOffset": 2,
+                 *         "time": "09:15:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 48.46,
                  *         "longitude": 35.04
                  *       }
@@ -42272,8 +45034,8 @@ export interface operations {
                      *           "input": {
                      *             "name": "",
                      *             "date": "1990-05-15",
-                     *             "time": "14:30:00",
-                     *             "timezoneOffset": 3,
+                     *             "time": "15:30:00",
+                     *             "timezoneOffset": 4,
                      *             "latitude": 50.45,
                      *             "longitude": 30.52,
                      *             "houseSystem": "P",
@@ -42368,8 +45130,8 @@ export interface operations {
                      *           "input": {
                      *             "name": "",
                      *             "date": "1985-11-03",
-                     *             "time": "08:15:00",
-                     *             "timezoneOffset": 2,
+                     *             "time": "09:15:00",
+                     *             "timezoneOffset": 3,
                      *             "latitude": 48.46,
                      *             "longitude": 35.04,
                      *             "houseSystem": "P",
@@ -42384,7 +45146,7 @@ export interface operations {
                      *             "profile": "4/6",
                      *             "personalityLine": 4,
                      *             "designLine": 6,
-                     *             "geometry": "Left Angle"
+                     *             "geometry": "Right Angle"
                      *           },
                      *           "definition": "Single",
                      *           "cross": {
@@ -42933,8 +45695,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -42953,13 +45715,13 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "name": "Right Angle Cross of the Vessel of Love",
-                     *         "type": "Right Angle",
+                     *         "name": "Left Angle Cross of Dedication",
+                     *         "type": "LAC",
                      *         "gates": [
-                     *           46,
-                     *           25,
-                     *           15,
-                     *           10
+                     *           23,
+                     *           43,
+                     *           30,
+                     *           29
                      *         ],
                      *         "lines": [
                      *           1,
@@ -43040,8 +45802,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -43171,8 +45933,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -43388,15 +46150,15 @@ export interface operations {
                  *       "inputs": [
                  *         {
                  *           "date": "1990-05-15",
-                 *           "time": "14:30:00",
-                 *           "timezoneOffset": 3,
+                 *           "time": "15:30:00",
+                 *           "timezone": "Europe/Kyiv",
                  *           "latitude": 50.45,
                  *           "longitude": 30.52
                  *         },
                  *         {
                  *           "date": "1985-11-03",
-                 *           "time": "08:15:00",
-                 *           "timezoneOffset": 2,
+                 *           "time": "09:15:00",
+                 *           "timezone": "Europe/Kyiv",
                  *           "latitude": 48.46,
                  *           "longitude": 35.04
                  *         },
@@ -43515,15 +46277,15 @@ export interface operations {
                  *       "inputs": [
                  *         {
                  *           "date": "1990-05-15",
-                 *           "time": "14:30:00",
-                 *           "timezoneOffset": 3,
+                 *           "time": "15:30:00",
+                 *           "timezone": "Europe/Kyiv",
                  *           "latitude": 50.45,
                  *           "longitude": 30.52
                  *         },
                  *         {
                  *           "date": "1985-11-03",
-                 *           "time": "08:15:00",
-                 *           "timezoneOffset": 2,
+                 *           "time": "09:15:00",
+                 *           "timezone": "Europe/Kyiv",
                  *           "latitude": 48.46,
                  *           "longitude": 35.04
                  *         }
@@ -43546,8 +46308,8 @@ export interface operations {
                      *       "data": {
                      *         "count": 2,
                      *         "definedCenters": [
-                     *           "Sacral",
-                     *           "Throat"
+                     *           "Head",
+                     *           "Ajna"
                      *         ],
                      *         "definedChannels": [
                      *           {
@@ -43640,8 +46402,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -43847,8 +46609,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv"
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -43865,13 +46627,13 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "birthJd": 2447996.3,
-                     *         "designJd": 2447876.1,
+                     *         "birthJd": 2448026.9791666665,
+                     *         "designJd": 2447937.835688273,
                      *         "designDate": {
                      *           "year": 1990,
-                     *           "month": 1,
+                     *           "month": 2,
                      *           "day": 15,
-                     *           "hour": 8.4
+                     *           "hour": 8.05651855096221
                      *         }
                      *       }
                      *     }
@@ -43948,8 +46710,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -44079,8 +46841,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -44184,8 +46946,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv"
                  *     }
                  */
                 "application/json": components["schemas"]["ChartInput"];
@@ -44297,8 +47059,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "category": "career",
                  *       "countries": [
                  *         "UA",
@@ -44644,8 +47406,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "stars": [
                  *         "Regulus",
                  *         "Sirius"
@@ -44795,8 +47557,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "planetId": 0
                  *     }
                  */
@@ -44897,8 +47659,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -45119,8 +47881,8 @@ export interface operations {
                  * @example {
                  *       "natal": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -45148,8 +47910,8 @@ export interface operations {
                      *           "input": {
                      *             "name": "",
                      *             "date": "1990-05-15",
-                     *             "time": "14:30:00",
-                     *             "timezoneOffset": 3,
+                     *             "time": "15:30:00",
+                     *             "timezoneOffset": 4,
                      *             "latitude": 50.45,
                      *             "longitude": 30.52,
                      *             "houseSystem": "P",
@@ -45257,8 +48019,8 @@ export interface operations {
                      *           "input": {
                      *             "name": "",
                      *             "date": "1990-05-15",
-                     *             "time": "14:30:00",
-                     *             "timezoneOffset": 3,
+                     *             "time": "15:30:00",
+                     *             "timezoneOffset": 4,
                      *             "latitude": 48.8566,
                      *             "longitude": 2.3522,
                      *             "houseSystem": "P",
@@ -45632,8 +48394,8 @@ export interface operations {
                  * @example {
                  *       "natal": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -45756,8 +48518,8 @@ export interface operations {
                  * @example {
                  *       "natal": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -45965,8 +48727,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "year": 2024
@@ -46073,8 +48835,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "point": {
@@ -46299,8 +49061,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "category": "career",
@@ -46461,8 +49223,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "planet": "Venus",
@@ -46601,8 +49363,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "startYear": 2024,
@@ -46627,7 +49389,7 @@ export interface operations {
                      *         "phase": "heliacal-rising",
                      *         "returns": [
                      *           {
-                     *             "date": "2024-09-12",
+                     *             "date": "2028-09-15",
                      *             "longitude": 154.2
                      *           },
                      *           {
@@ -46708,8 +49470,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -46829,8 +49591,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -46944,8 +49706,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -47077,8 +49839,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -47210,8 +49972,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -47343,8 +50105,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -47476,8 +50238,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -47609,8 +50371,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -47742,8 +50504,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -47875,8 +50637,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -48008,8 +50770,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -48141,8 +50903,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -48274,8 +51036,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -48407,8 +51169,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -48540,8 +51302,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -48673,8 +51435,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -48806,8 +51568,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -48939,8 +51701,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -49072,8 +51834,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -49094,8 +51856,8 @@ export interface operations {
                      *       "data": {
                      *         "jd": 2448026.9791666665,
                      *         "ayanamsa": 23.72254952235926,
-                     *         "sunrise": "05:10:54",
-                     *         "sunset": "20:38:29",
+                     *         "sunrise": "06:10:54",
+                     *         "sunset": "21:38:29",
                      *         "tithi": {
                      *           "number": 21,
                      *           "name": "Shashthi",
@@ -49136,8 +51898,8 @@ export interface operations {
                      *               "index": 1,
                      *               "name": "Rog",
                      *               "quality": "bad",
-                     *               "startHour": 5.1816186010837555,
-                     *               "endHour": 7.114082143642008,
+                     *               "startHour": 6.1816186010837555,
+                     *               "endHour": 8.114082143642008,
                      *               "isDaytime": true
                      *             }
                      *           ],
@@ -49146,8 +51908,8 @@ export interface operations {
                      *               "index": 9,
                      *               "name": "Kaal",
                      *               "quality": "bad",
-                     *               "startHour": 20.641326941549778,
-                     *               "endHour": 21.705915165133774,
+                     *               "startHour": 21.641326941549778,
+                     *               "endHour": 22.705915165133774,
                      *               "isDaytime": false
                      *             }
                      *           ]
@@ -49155,34 +51917,34 @@ export interface operations {
                      *         "rahuKaal": {
                      *           "name": "Rahu Kaal",
                      *           "weekdaySlot": 7,
-                     *           "startHour": 16.776399856433272,
-                     *           "endHour": 18.708863398991525,
-                     *           "startTime": "16:46:35",
-                     *           "endTime": "18:42:32"
+                     *           "startHour": 17.776399856433272,
+                     *           "endHour": 19.708863398991525,
+                     *           "startTime": "17:46:35",
+                     *           "endTime": "19:42:32"
                      *         },
                      *         "yamaganda": {
                      *           "name": "Yamaganda",
                      *           "weekdaySlot": 3,
-                     *           "startHour": 9.046545686200261,
-                     *           "endHour": 10.979009228758514,
-                     *           "startTime": "09:02:48",
-                     *           "endTime": "10:58:44"
+                     *           "startHour": 10.046545686200261,
+                     *           "endHour": 11.979009228758514,
+                     *           "startTime": "10:02:48",
+                     *           "endTime": "11:58:44"
                      *         },
                      *         "gulika": {
                      *           "name": "Gulika",
                      *           "weekdaySlot": 5,
-                     *           "startHour": 12.911472771316767,
-                     *           "endHour": 14.84393631387502,
-                     *           "startTime": "12:54:41",
-                     *           "endTime": "14:50:38"
+                     *           "startHour": 13.911472771316767,
+                     *           "endHour": 15.84393631387502,
+                     *           "startTime": "13:54:41",
+                     *           "endTime": "15:50:38"
                      *         },
                      *         "abhijitMuhurat": {
-                     *           "startHour": 12.3961491599679,
-                     *           "endHour": 13.426796382665634,
-                     *           "midHour": 12.911472771316767,
+                     *           "startHour": 13.3961491599679,
+                     *           "endHour": 14.426796382665634,
+                     *           "midHour": 13.911472771316767,
                      *           "muhurtaMinutes": 61.83883336186409,
-                     *           "startTime": "12:23:46",
-                     *           "endTime": "13:25:36"
+                     *           "startTime": "13:23:46",
+                     *           "endTime": "14:25:36"
                      *         }
                      *       }
                      *     }
@@ -49339,8 +52101,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -49359,12 +52121,12 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "number": 18,
-                     *         "name": "Tritiya",
+                     *         "number": 21,
+                     *         "name": "Shashthi",
                      *         "paksha": "krishna",
-                     *         "indexInPaksha": 3,
-                     *         "elongation": 207.4,
-                     *         "percentComplete": 0.28
+                     *         "indexInPaksha": 6,
+                     *         "elongation": 242.52866797484398,
+                     *         "percentComplete": 0.21072233123699866
                      *       }
                      *     }
                      */
@@ -49438,8 +52200,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -49458,8 +52220,8 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "index": 35,
-                     *         "name": "Vanija",
+                     *         "index": 41,
+                     *         "name": "Garaja",
                      *         "isFixed": false
                      *       }
                      *     }
@@ -49531,8 +52293,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -49551,9 +52313,9 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "number": 23,
-                     *         "name": "Shubha",
-                     *         "sumLongitude": 294.91
+                     *         "number": 27,
+                     *         "name": "Vaidhriti",
+                     *         "sumLongitude": 351.2807075781876
                      *       }
                      *     }
                      */
@@ -49624,8 +52386,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -49644,14 +52406,14 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "moonSiderealLongitude": 226.93,
+                     *         "moonSiderealLongitude": 273.178879897163,
                      *         "nakshatra": {
-                     *           "number": 18,
-                     *           "name": "Jyeshtha",
-                     *           "ruler": "Mercury"
+                     *           "number": 21,
+                     *           "name": "Uttara Ashadha",
+                     *           "ruler": "Sun"
                      *         },
-                     *         "pada": 1,
-                     *         "percentComplete": 0.02
+                     *         "pada": 2,
+                     *         "percentComplete": 0.4884159922872221
                      *       }
                      *     }
                      */
@@ -49727,8 +52489,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -49747,18 +52509,18 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "sunrise": "05:10:54",
-                     *         "sunset": "20:38:29",
+                     *         "sunrise": "06:10:54",
+                     *         "sunset": "21:38:29",
                      *         "daytime": [
                      *           {
                      *             "index": 1,
                      *             "name": "Rog",
                      *             "quality": "bad",
-                     *             "startHour": 5.1816186010837555,
-                     *             "endHour": 7.114082143642008,
+                     *             "startHour": 6.1816186010837555,
+                     *             "endHour": 8.114082143642008,
                      *             "isDaytime": true,
-                     *             "startTime": "05:10:54",
-                     *             "endTime": "07:06:51"
+                     *             "startTime": "06:10:54",
+                     *             "endTime": "08:06:51"
                      *           }
                      *         ],
                      *         "nighttime": [
@@ -49766,11 +52528,11 @@ export interface operations {
                      *             "index": 9,
                      *             "name": "Kaal",
                      *             "quality": "bad",
-                     *             "startHour": 20.641326941549778,
-                     *             "endHour": 21.705915165133774,
+                     *             "startHour": 21.641326941549778,
+                     *             "endHour": 22.705915165133774,
                      *             "isDaytime": false,
-                     *             "startTime": "20:38:29",
-                     *             "endTime": "21:42:21"
+                     *             "startTime": "21:38:29",
+                     *             "endTime": "22:42:21"
                      *           }
                      *         ]
                      *       }
@@ -49862,8 +52624,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -49885,12 +52647,12 @@ export interface operations {
                      *         "date": "1990-05-15",
                      *         "latitude": 50.45,
                      *         "longitude": 30.52,
-                     *         "timezone": 3,
+                     *         "timezone": 4,
                      *         "sunTimes": {
                      *           "riseJD": 2448026.590900775,
                      *           "setJD": 2448027.235055289,
-                     *           "riseHour": 5.1816186010837555,
-                     *           "setHour": 20.641326941549778,
+                     *           "riseHour": 6.1816186010837555,
+                     *           "setHour": 21.641326941549778,
                      *           "polarState": "normal"
                      *         },
                      *         "dayRulerPlanetId": 4,
@@ -49901,8 +52663,8 @@ export interface operations {
                      *             "number": 1,
                      *             "planetId": 4,
                      *             "planetName": "Mars",
-                     *             "startHour": 5.1816186010837555,
-                     *             "endHour": 6.469927629455924,
+                     *             "startHour": 6.1816186010837555,
+                     *             "endHour": 7.469927629455924,
                      *             "isDaytime": true,
                      *             "isCurrent": false
                      *           }
@@ -49997,8 +52759,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -50017,39 +52779,39 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "sunrise": "05:10:54",
-                     *         "sunset": "20:38:29",
+                     *         "sunrise": "06:10:54",
+                     *         "sunset": "21:38:29",
                      *         "rahuKaal": {
                      *           "name": "Rahu Kaal",
                      *           "weekdaySlot": 7,
-                     *           "startHour": 16.776399856433272,
-                     *           "endHour": 18.708863398991525,
-                     *           "startTime": "16:46:35",
-                     *           "endTime": "18:42:32"
+                     *           "startHour": 17.776399856433272,
+                     *           "endHour": 19.708863398991525,
+                     *           "startTime": "17:46:35",
+                     *           "endTime": "19:42:32"
                      *         },
                      *         "yamaganda": {
                      *           "name": "Yamaganda",
                      *           "weekdaySlot": 3,
-                     *           "startHour": 9.046545686200261,
-                     *           "endHour": 10.979009228758514,
-                     *           "startTime": "09:02:48",
-                     *           "endTime": "10:58:44"
+                     *           "startHour": 10.046545686200261,
+                     *           "endHour": 11.979009228758514,
+                     *           "startTime": "10:02:48",
+                     *           "endTime": "11:58:44"
                      *         },
                      *         "gulika": {
                      *           "name": "Gulika",
                      *           "weekdaySlot": 5,
-                     *           "startHour": 12.911472771316767,
-                     *           "endHour": 14.84393631387502,
-                     *           "startTime": "12:54:41",
-                     *           "endTime": "14:50:38"
+                     *           "startHour": 13.911472771316767,
+                     *           "endHour": 15.84393631387502,
+                     *           "startTime": "13:54:41",
+                     *           "endTime": "15:50:38"
                      *         },
                      *         "abhijitMuhurat": {
-                     *           "startHour": 12.3961491599679,
-                     *           "endHour": 13.426796382665634,
-                     *           "midHour": 12.911472771316767,
+                     *           "startHour": 13.3961491599679,
+                     *           "endHour": 14.426796382665634,
+                     *           "midHour": 13.911472771316767,
                      *           "muhurtaMinutes": 61.83883336186409,
-                     *           "startTime": "12:23:46",
-                     *           "endTime": "13:25:36"
+                     *           "startTime": "13:23:46",
+                     *           "endTime": "14:25:36"
                      *         }
                      *       }
                      *     }
@@ -50152,8 +52914,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -50265,8 +53027,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -50368,8 +53130,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -50394,12 +53156,12 @@ export interface operations {
                      *           {
                      *             "planet": 0,
                      *             "planetName": "Sun",
-                     *             "nathonnatha": 47.5,
+                     *             "nathonnatha": 42.5,
                      *             "paksha": 20.842889324947997,
                      *             "tribhaga": 60,
                      *             "abdaMasaVaraHora": 0,
                      *             "ayana": 108.37701319751226,
-                     *             "total": 236.71990252246025
+                     *             "total": 231.71990252246025
                      *           }
                      *         ]
                      *       }
@@ -50481,8 +53243,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -50584,8 +53346,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -50687,8 +53449,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -50790,8 +53552,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -50818,12 +53580,12 @@ export interface operations {
                      *             "planetName": "Sun",
                      *             "sthana": 131.86659602589367,
                      *             "dig": 52.43283314314894,
-                     *             "kala": 236.71990252246025,
+                     *             "kala": 231.71990252246025,
                      *             "cheshta": 0,
                      *             "naisargika": 60,
                      *             "drik": -15,
-                     *             "totalVirupa": 466.0193316915029,
-                     *             "totalRupa": 7.766988861525048
+                     *             "totalVirupa": 461.0193316915029,
+                     *             "totalRupa": 7.683655528191715
                      *           }
                      *         ]
                      *       }
@@ -50907,8 +53669,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -50947,11 +53709,11 @@ export interface operations {
                      *         ],
                      *         "strongest": {
                      *           "house": 4,
-                     *           "totalVirupas": 604.61
+                     *           "totalVirupas": 599.61
                      *         },
                      *         "weakest": {
                      *           "house": 11,
-                     *           "totalVirupas": 404.64
+                     *           "totalVirupas": 409.64
                      *         }
                      *       }
                      *     }
@@ -51044,8 +53806,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "school": "lagna-lord"
@@ -51634,8 +54396,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "year": 2026
@@ -51658,8 +54420,8 @@ export interface operations {
                      *         "year": 2026,
                      *         "yearsElapsed": 36,
                      *         "pravesh": {
-                     *           "julianDay": 2461176.210016,
-                     *           "utc": "2026-05-15T17:02:25Z"
+                     *           "julianDay": 2461176.210015529,
+                     *           "utc": "2026-05-15T17:02:25.341Z"
                      *         },
                      *         "isDayBirth": true,
                      *         "ayanamsa": 24.23,
@@ -51713,7 +54475,7 @@ export interface operations {
                      *             "hadda": 11.25,
                      *             "haddaLord": 2,
                      *             "drekkana": 7.5,
-                     *             "drekkanaLord": 3,
+                     *             "drekkanaLord": 2,
                      *             "navamsa": 5,
                      *             "navamsaLord": 3,
                      *             "total": 59.05,
@@ -51726,10 +54488,10 @@ export interface operations {
                      *             "id": "punya",
                      *             "name": "Punya",
                      *             "of": "merit, protection, the tone of the whole year",
-                     *             "longitude": 189.33,
+                     *             "longitude": 189.32,
                      *             "sign": 6,
                      *             "signName": "Libra",
-                     *             "degreeInSign": 9.33,
+                     *             "degreeInSign": 9.32,
                      *             "house": 1,
                      *             "lord": 3,
                      *             "lordName": "Venus",
@@ -51738,20 +54500,20 @@ export interface operations {
                      *         ],
                      *         "candidates": [
                      *           {
-                     *             "role": "varsha-lagnesha",
-                     *             "planet": 3,
-                     *             "planetName": "Venus",
-                     *             "vishwaBala": 14.76,
+                     *             "role": "munthesha",
+                     *             "planet": 0,
+                     *             "planetName": "Sun",
+                     *             "vishwaBala": 8.18,
                      *             "aspectToVarshaLagna": {
-                     *               "kind": "trine",
-                     *               "strength": "full",
-                     *               "nature": "friendly",
-                     *               "signDistance": 9,
-                     *               "separation": 143.44,
-                     *               "orb": 7,
+                     *               "kind": "none",
+                     *               "strength": "none",
+                     *               "nature": "neutral",
+                     *               "signDistance": 8,
+                     *               "separation": 174.57,
+                     *               "orb": 15,
                      *               "withinOrb": false
                      *             },
-                     *             "qualifies": true
+                     *             "qualifies": false
                      *           }
                      *         ],
                      *         "varshesha": {
@@ -51929,8 +54691,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -52028,8 +54790,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -52127,8 +54889,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -52226,8 +54988,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -52339,8 +55101,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -52361,7 +55123,7 @@ export interface operations {
                      *       "data": {
                      *         "yoga": "Gajakesari",
                      *         "school": "parashara",
-                     *         "present": true,
+                     *         "present": false,
                      *         "contributingPlanets": [
                      *           {
                      *             "graha": 1,
@@ -52373,7 +55135,7 @@ export interface operations {
                      *           }
                      *         ],
                      *         "details": [
-                     *           "Jupiter in house 4 from Moon (kendra): Gajakesari Yoga formed"
+                     *           "Jupiter in house 6 from Moon (not kendra): Gajakesari not formed"
                      *         ]
                      *       }
                      *     }
@@ -52450,8 +55212,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -52565,8 +55327,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -52750,8 +55512,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "school": "south"
@@ -52872,8 +55634,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -52894,16 +55656,16 @@ export interface operations {
                      *       "data": {
                      *         "dosha": "Kaal Sarp",
                      *         "school": "parashara",
-                     *         "present": true,
-                     *         "subType": "Vishdhar",
+                     *         "present": false,
+                     *         "subType": null,
                      *         "partial": false,
-                     *         "severity": "strong",
+                     *         "severity": "none",
                      *         "affectedHouses": [
-                     *           11,
-                     *           5
+                     *           6,
+                     *           12
                      *         ],
                      *         "details": [
-                     *           "Sub-type: Vishdhar (Rahu in house 11)"
+                     *           "5 grahas on Rahu-side, 2 on Ketu-side: Kaal Sarp not formed"
                      *         ]
                      *       }
                      *     }
@@ -52915,7 +55677,7 @@ export interface operations {
                             dosha?: string | null;
                             school?: string | null;
                             present?: boolean | null;
-                            subType?: string | null;
+                            subType?: unknown;
                             partial?: boolean | null;
                             severity?: string | null;
                             affectedHouses?: (number | null)[] | null;
@@ -52980,8 +55742,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -53085,8 +55847,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -53204,8 +55966,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -53323,8 +56085,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -53428,8 +56190,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -53664,15 +56426,15 @@ export interface operations {
                  * @example {
                  *       "chart1": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "chart2": {
                  *         "date": "1985-11-03",
-                 *         "time": "08:15:00",
-                 *         "timezoneOffset": 2,
+                 *         "time": "09:15:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 48.46,
                  *         "longitude": 35.04
                  *       }
@@ -53904,15 +56666,15 @@ export interface operations {
                  * @example {
                  *       "chart1": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "chart2": {
                  *         "date": "1985-11-03",
-                 *         "time": "08:15:00",
-                 *         "timezoneOffset": 2,
+                 *         "time": "09:15:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 48.46,
                  *         "longitude": 35.04
                  *       }
@@ -54167,8 +56929,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "school": "south"
@@ -54292,15 +57054,15 @@ export interface operations {
                  * @example {
                  *       "chart1": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "chart2": {
                  *         "date": "1985-11-03",
-                 *         "time": "08:15:00",
-                 *         "timezoneOffset": 2,
+                 *         "time": "09:15:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 48.46,
                  *         "longitude": 35.04
                  *       }
@@ -54422,15 +57184,15 @@ export interface operations {
                  * @example {
                  *       "chart1": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "chart2": {
                  *         "date": "1985-11-03",
-                 *         "time": "08:15:00",
-                 *         "timezoneOffset": 2,
+                 *         "time": "09:15:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 48.46,
                  *         "longitude": 35.04
                  *       }
@@ -54558,15 +57320,15 @@ export interface operations {
                  * @example {
                  *       "chart1": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "chart2": {
                  *         "date": "1985-11-03",
-                 *         "time": "08:15:00",
-                 *         "timezoneOffset": 2,
+                 *         "time": "09:15:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 48.46,
                  *         "longitude": 35.04
                  *       }
@@ -57032,8 +59794,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -57083,8 +59845,8 @@ export interface operations {
                      *             "planetName": "Sun",
                      *             "startJd": 2448026.9791666665,
                      *             "endJd": 2449148.1155195693,
-                     *             "startDate": "1990-05-15 14:29",
-                     *             "endDate": "1993-06-09 17:46",
+                     *             "startDate": "1990-05-15 15:29",
+                     *             "endDate": "1993-06-09 18:46",
                      *             "durationYears": 3.069504046276697
                      *           }
                      *         ]
@@ -57995,8 +60757,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -58047,8 +60809,8 @@ export interface operations {
                      *             "planetName": "Mercury",
                      *             "startJd": 2448026.9791666665,
                      *             "endJd": 2448961.259460752,
-                     *             "startDate": "1990-05-15 14:29",
-                     *             "endDate": "1992-12-04 21:13",
+                     *             "startDate": "1990-05-15 15:29",
+                     *             "endDate": "1992-12-04 22:13",
                      *             "durationYears": 2.557920038563914
                      *           }
                      *         ]
@@ -58974,8 +61736,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -59035,8 +61797,8 @@ export interface operations {
                      *             "planetName": "Saturn",
                      *             "startJd": 2448026.9791666665,
                      *             "endJd": 2449867.332696057,
-                     *             "startDate": "1990-05-15 14:29",
-                     *             "endDate": "1995-05-29 22:59",
+                     *             "startDate": "1990-05-15 15:29",
+                     *             "endDate": "1995-05-29 23:59",
                      *             "durationYears": 5.038613359042614
                      *           }
                      *         ]
@@ -60043,8 +62805,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -60110,8 +62872,8 @@ export interface operations {
                      *             "rowIndex": 8,
                      *             "startJd": 2448026.9791666665,
                      *             "endJd": 2449482.463399747,
-                     *             "startDate": "1990-05-15 14:29",
-                     *             "endDate": "1994-05-10 02:07",
+                     *             "startDate": "1990-05-15 15:29",
+                     *             "endDate": "1994-05-10 03:07",
                      *             "durationYears": 3.984898653197291
                      *           }
                      *         ]
@@ -61202,8 +63964,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -61240,8 +64002,8 @@ export interface operations {
                      *             "durationYears": 3,
                      *             "startJd": 2448026.9791666665,
                      *             "endJd": 2449122.7291666665,
-                     *             "startDate": "1990-05-15 14:29",
-                     *             "endDate": "1993-05-15 08:29",
+                     *             "startDate": "1990-05-15 15:29",
+                     *             "endDate": "1993-05-15 09:29",
                      *             "rowIndex": 0
                      *           }
                      *         ]
@@ -62081,8 +64843,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -62130,8 +64892,8 @@ export interface operations {
                      *             "planetName": "Sun",
                      *             "startJd": 2448026.9791666665,
                      *             "endJd": 2448400.6912843008,
-                     *             "startDate": "1990-05-15 14:29",
-                     *             "endDate": "1991-05-24 07:35",
+                     *             "startDate": "1990-05-15 15:29",
+                     *             "endDate": "1991-05-24 08:35",
                      *             "durationYears": 1.0231680154255658
                      *           }
                      *         ]
@@ -63030,8 +65792,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -63081,8 +65843,8 @@ export interface operations {
                      *             "planetName": "Sun",
                      *             "startJd": 2448026.9791666665,
                      *             "endJd": 2448961.259460752,
-                     *             "startDate": "1990-05-15 14:29",
-                     *             "endDate": "1992-12-04 21:13",
+                     *             "startDate": "1990-05-15 15:29",
+                     *             "endDate": "1992-12-04 22:13",
                      *             "durationYears": 2.557920038563914
                      *           }
                      *         ]
@@ -63999,8 +66761,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -64050,8 +66812,8 @@ export interface operations {
                      *             "planetName": "Moon",
                      *             "startJd": 2448026.9791666665,
                      *             "endJd": 2451016.67610774,
-                     *             "startDate": "1990-05-15 14:29",
-                     *             "endDate": "1998-07-22 07:13",
+                     *             "startDate": "1990-05-15 15:29",
+                     *             "endDate": "1998-07-22 08:13",
                      *             "durationYears": 8.185344123404526
                      *           }
                      *         ]
@@ -64968,8 +67730,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -65008,8 +67770,8 @@ export interface operations {
                      *             "durationYears": 7,
                      *             "startJd": 2448026.9791666665,
                      *             "endJd": 2450583.7737146667,
-                     *             "startDate": "1990-05-15 14:29",
-                     *             "endDate": "1997-05-15 09:34",
+                     *             "startDate": "1990-05-15 15:29",
+                     *             "endDate": "1997-05-15 10:34",
                      *             "rowIndex": 0
                      *           }
                      *         ]
@@ -66699,8 +69461,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -66834,8 +69596,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -66987,8 +69749,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -67132,8 +69894,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -67239,8 +70001,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -67374,8 +70136,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -67493,8 +70255,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -67608,8 +70370,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -67861,8 +70623,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -68130,8 +70892,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -68303,8 +71065,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -68442,8 +71204,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -68615,8 +71377,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -68928,8 +71690,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -69055,8 +71817,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -69311,8 +72073,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -69452,8 +72214,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -69724,8 +72486,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -69853,8 +72615,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -69972,8 +72734,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -70091,8 +72853,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -70336,8 +73098,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -70451,8 +73213,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -70654,8 +73416,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -70755,8 +73517,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -70856,8 +73618,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -70963,8 +73725,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -71078,8 +73840,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -71199,8 +73961,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -71316,8 +74078,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -71437,8 +74199,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -71544,8 +74306,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -71683,8 +74445,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -71818,8 +74580,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -71951,8 +74713,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -71972,27 +74734,27 @@ export interface operations {
                      *       "ok": true,
                      *       "data": {
                      *         "lagna": {
-                     *           "sign": 10,
-                     *           "signName": "Aquarius"
+                     *           "sign": 4,
+                     *           "signName": "Leo"
                      *         },
                      *         "planets": [
                      *           {
-                     *             "graha": 3,
-                     *             "grahaName": "Venus",
-                     *             "naturalNature": "benefic",
+                     *             "graha": 0,
+                     *             "grahaName": "Sun",
+                     *             "naturalNature": "malefic",
                      *             "functionalNature": "yogakaraka",
                      *             "housesOwned": [
-                     *               4,
+                     *               1,
                      *               9
                      *             ],
                      *             "reasoning": "..."
                      *           }
                      *         ],
                      *         "yogakarakas": [
-                     *           3
+                     *           0
                      *         ],
                      *         "marakas": [
-                     *           4
+                     *           2
                      *         ]
                      *       }
                      *     }
@@ -72075,8 +74837,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -72184,8 +74946,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -72205,7 +74967,7 @@ export interface operations {
                      *       "ok": true,
                      *       "data": {
                      *         "dosha": "Kalsarpa (Lal Kitab)",
-                     *         "present": true,
+                     *         "present": false,
                      *         "remedy": "..."
                      *       }
                      *     }
@@ -72277,8 +75039,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -72378,8 +75140,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -72399,7 +75161,7 @@ export interface operations {
                      *       "ok": true,
                      *       "data": {
                      *         "dosha": "Shrapit (Lal Kitab)",
-                     *         "present": false,
+                     *         "present": true,
                      *         "details": "...",
                      *         "remedy": "..."
                      *       }
@@ -72473,8 +75235,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -72586,8 +75348,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -72763,8 +75525,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -72896,8 +75658,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -73019,8 +75781,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -73276,8 +76038,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -73411,8 +76173,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -74009,8 +76771,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -74190,7 +76952,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -74310,7 +77072,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -74441,7 +77203,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -74560,7 +77322,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -74687,7 +77449,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -74813,7 +77575,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -74826,8 +77588,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "language": "uk"
@@ -74946,7 +77708,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -74960,15 +77722,15 @@ export interface operations {
                  * @example {
                  *       "chart1": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "chart2": {
                  *         "date": "1985-11-03",
-                 *         "time": "08:15:00",
-                 *         "timezoneOffset": 2,
+                 *         "time": "09:15:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 48.46,
                  *         "longitude": 35.04
                  *       }
@@ -75077,7 +77839,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -75090,8 +77852,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "transitDate": "2026-06-15",
@@ -75202,7 +77964,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -75215,8 +77977,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "language": "uk"
@@ -75337,7 +78099,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -75350,8 +78112,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "planet": "Venus",
@@ -93957,7 +96719,11 @@ export interface operations {
                 /**
                  * @example {
                  *       "name": "My App",
-                 *       "plan": "free"
+                 *       "mode": "live",
+                 *       "allowed_endpoints": [
+                 *         "chart",
+                 *         "embed/*"
+                 *       ]
                  *     }
                  */
                 "application/json": components["schemas"]["CreateKey"];
@@ -93987,7 +96753,12 @@ export interface operations {
                      *         "is_active": true,
                      *         "origin_restriction": {
                      *           "type": "server-only"
-                     *         }
+                     *         },
+                     *         "credits_cap_cycle": null,
+                     *         "allowed_endpoints": [
+                     *           "chart",
+                     *           "embed/*"
+                     *         ]
                      *       }
                      *     }
                      */
@@ -94009,6 +96780,139 @@ export interface operations {
                             origin_restriction?: {
                                 type?: string | null;
                             } | null;
+                            credits_cap_cycle?: unknown;
+                            allowed_endpoints?: (string | null)[] | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    "keys_{id}_patch": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "name": "site-widget",
+                 *       "credits_cap_cycle": 5000,
+                 *       "allowed_endpoints": [
+                 *         "embed/*"
+                 *       ],
+                 *       "origin_restriction": {
+                 *         "type": "public",
+                 *         "allowed_origins": [
+                 *           "example.com",
+                 *           "*.example.com"
+                 *         ]
+                 *       }
+                 *     }
+                 */
+                "application/json": components["schemas"]["UpdateKey"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "id": 42,
+                     *         "api_key_masked": "pk_live…e5f6",
+                     *         "name": "site-widget",
+                     *         "plan": "free",
+                     *         "rate_limit": 10,
+                     *         "credits_limit": 10000,
+                     *         "credits_used": 0,
+                     *         "created_at": "2026-08-22T21:05:14.335Z",
+                     *         "last_used_at": null,
+                     *         "is_active": true,
+                     *         "origin_restriction": {
+                     *           "type": "public",
+                     *           "allowed_origins": [
+                     *             "example.com",
+                     *             "*.example.com"
+                     *           ]
+                     *         },
+                     *         "credits_cap_cycle": 5000,
+                     *         "allowed_endpoints": [
+                     *           "embed/*"
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            id?: number | null;
+                            api_key_masked?: string | null;
+                            name?: string | null;
+                            plan?: string | null;
+                            rate_limit?: number | null;
+                            credits_limit?: number | null;
+                            credits_used?: number | null;
+                            created_at?: string | null;
+                            last_used_at?: unknown;
+                            is_active?: boolean | null;
+                            origin_restriction?: {
+                                type?: string | null;
+                                allowed_origins?: (string | null)[] | null;
+                            } | null;
+                            credits_cap_cycle?: number | null;
+                            allowed_endpoints?: (string | null)[] | null;
                         };
                     };
                 };
@@ -94749,7 +97653,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -94763,8 +97667,8 @@ export interface operations {
                  * @example {
                  *       "chart": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -94786,12 +97690,12 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "url": "https://api.astroway.info/reports/abc-natal.pdf",
-                     *         "storage_key": "reports/abc-natal.pdf",
-                     *         "byte_length": 124350,
-                     *         "page_count": 1,
-                     *         "duration_ms": 3210,
-                     *         "expires_at": "2026-05-09T07:00:00Z"
+                     *         "url": "https://api.astroway.info/reports/7423f03c-0853-4bfa-bb3c-74f0abbcb9e3-natal.pdf",
+                     *         "storage_key": "reports/7423f03c-0853-4bfa-bb3c-74f0abbcb9e3-natal.pdf",
+                     *         "byte_length": 121072,
+                     *         "page_count": 3,
+                     *         "duration_ms": 1706,
+                     *         "expires_at": "2026-09-18T20:02:25.525Z"
                      *       }
                      *     }
                      */
@@ -94866,8 +97770,8 @@ export interface operations {
                  * @example {
                  *       "chart": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -94906,12 +97810,12 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "url": "https://api.astroway.info/reports/abc-relocation.pdf",
-                     *         "storage_key": "reports/abc-relocation.pdf",
-                     *         "byte_length": 210400,
-                     *         "page_count": 4,
-                     *         "duration_ms": 6100,
-                     *         "expires_at": "2026-08-14T07:00:00Z"
+                     *         "url": "https://api.astroway.info/reports/6af5f28d-9b1b-429e-adf1-581ec2edf188-relocation.pdf",
+                     *         "storage_key": "reports/6af5f28d-9b1b-429e-adf1-581ec2edf188-relocation.pdf",
+                     *         "byte_length": 129257,
+                     *         "page_count": 6,
+                     *         "duration_ms": 1588,
+                     *         "expires_at": "2026-09-18T20:02:25.399Z"
                      *       }
                      *     }
                      */
@@ -94986,8 +97890,8 @@ export interface operations {
                  * @example {
                  *       "chart": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -95011,12 +97915,12 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "url": "https://api.astroway.info/reports/abc-gemstone.pdf",
-                     *         "storage_key": "reports/abc-gemstone.pdf",
-                     *         "byte_length": 202703,
+                     *         "url": "https://api.astroway.info/reports/9b1f0077-73dd-41fd-a644-6591dcb7614e-gemstone.pdf",
+                     *         "storage_key": "reports/9b1f0077-73dd-41fd-a644-6591dcb7614e-gemstone.pdf",
+                     *         "byte_length": 134431,
                      *         "page_count": 7,
-                     *         "duration_ms": 3497,
-                     *         "expires_at": "2026-08-14T07:00:00Z"
+                     *         "duration_ms": 1392,
+                     *         "expires_at": "2026-09-18T20:02:22.513Z"
                      *       }
                      *     }
                      */
@@ -95091,8 +97995,8 @@ export interface operations {
                  * @example {
                  *       "chart": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -95115,12 +98019,12 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "url": "https://api.astroway.info/reports/abc-transit-2027.pdf",
-                     *         "storage_key": "reports/abc-transit-2027.pdf",
-                     *         "byte_length": 145200,
-                     *         "page_count": 4,
-                     *         "duration_ms": 8500,
-                     *         "expires_at": "2026-05-09T07:00:00Z"
+                     *         "url": "https://api.astroway.info/reports/6ae6661a-7b1b-4ccc-b28c-64d119ee76ed-transit-2027.pdf",
+                     *         "storage_key": "reports/6ae6661a-7b1b-4ccc-b28c-64d119ee76ed-transit-2027.pdf",
+                     *         "byte_length": 172279,
+                     *         "page_count": 5,
+                     *         "duration_ms": 1465,
+                     *         "expires_at": "2026-09-18T20:02:26.788Z"
                      *       }
                      *     }
                      */
@@ -95195,15 +98099,15 @@ export interface operations {
                  * @example {
                  *       "chart1": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "chart2": {
                  *         "date": "1985-11-03",
-                 *         "time": "08:15:00",
-                 *         "timezoneOffset": 2,
+                 *         "time": "09:15:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 48.46,
                  *         "longitude": 35.04
                  *       },
@@ -95224,12 +98128,12 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "url": "https://api.astroway.info/reports/abc-synastry.pdf",
-                     *         "storage_key": "reports/abc-synastry.pdf",
-                     *         "byte_length": 138000,
+                     *         "url": "https://api.astroway.info/reports/04a864b0-91ed-43df-a535-66848eded653-synastry.pdf",
+                     *         "storage_key": "reports/04a864b0-91ed-43df-a535-66848eded653-synastry.pdf",
+                     *         "byte_length": 114494,
                      *         "page_count": 2,
-                     *         "duration_ms": 5800,
-                     *         "expires_at": "2026-05-09T07:00:00Z"
+                     *         "duration_ms": 1387,
+                     *         "expires_at": "2026-09-18T20:02:25.940Z"
                      *       }
                      *     }
                      */
@@ -95304,8 +98208,8 @@ export interface operations {
                  * @example {
                  *       "chart": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -95326,12 +98230,12 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "url": "https://api.astroway.info/reports/abc-child.pdf",
-                     *         "storage_key": "reports/abc-child.pdf",
-                     *         "byte_length": 128000,
-                     *         "page_count": 1,
-                     *         "duration_ms": 3500,
-                     *         "expires_at": "2026-05-09T07:00:00Z"
+                     *         "url": "https://api.astroway.info/reports/36342b8f-4dd9-4502-918a-18a006aa0515-child.pdf",
+                     *         "storage_key": "reports/36342b8f-4dd9-4502-918a-18a006aa0515-child.pdf",
+                     *         "byte_length": 92493,
+                     *         "page_count": 2,
+                     *         "duration_ms": 1422,
+                     *         "expires_at": "2026-09-18T20:02:20.736Z"
                      *       }
                      *     }
                      */
@@ -95509,8 +98413,8 @@ export interface operations {
                  * @example {
                  *       "chart": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -95531,12 +98435,12 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "url": "https://api.astroway.info/reports/abc-love.pdf",
-                     *         "storage_key": "reports/abc-love.pdf",
-                     *         "byte_length": 130000,
-                     *         "page_count": 1,
-                     *         "duration_ms": 3700,
-                     *         "expires_at": "2026-05-09T07:00:00Z"
+                     *         "url": "https://api.astroway.info/reports/2a3ae5fc-c57d-4ee1-8b07-6bb2e7c047df-love.pdf",
+                     *         "storage_key": "reports/2a3ae5fc-c57d-4ee1-8b07-6bb2e7c047df-love.pdf",
+                     *         "byte_length": 100132,
+                     *         "page_count": 2,
+                     *         "duration_ms": 1485,
+                     *         "expires_at": "2026-09-18T20:02:24.276Z"
                      *       }
                      *     }
                      */
@@ -95914,8 +98818,8 @@ export interface operations {
                  * @example {
                  *       "chart": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -95936,12 +98840,12 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "url": "https://api.astroway.info/reports/abc-hd.pdf",
-                     *         "storage_key": "reports/abc-hd.pdf",
-                     *         "byte_length": 132000,
-                     *         "page_count": 1,
-                     *         "duration_ms": 3800,
-                     *         "expires_at": "2026-05-09T07:00:00Z"
+                     *         "url": "https://api.astroway.info/reports/0a38f6b7-b3bf-4394-adca-ff5571db999c-hd.pdf",
+                     *         "storage_key": "reports/0a38f6b7-b3bf-4394-adca-ff5571db999c-hd.pdf",
+                     *         "byte_length": 69522,
+                     *         "page_count": 2,
+                     *         "duration_ms": 1527,
+                     *         "expires_at": "2026-09-18T20:02:23.404Z"
                      *       }
                      *     }
                      */
@@ -96016,8 +98920,8 @@ export interface operations {
                  * @example {
                  *       "chart": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -96038,12 +98942,12 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "url": "https://api.astroway.info/reports/abc-lal-kitab.pdf",
-                     *         "storage_key": "reports/abc-lal-kitab.pdf",
-                     *         "byte_length": 138000,
+                     *         "url": "https://api.astroway.info/reports/70d9f4f2-d074-4069-898f-4fb4b90adc20-lal-kitab.pdf",
+                     *         "storage_key": "reports/70d9f4f2-d074-4069-898f-4fb4b90adc20-lal-kitab.pdf",
+                     *         "byte_length": 74169,
                      *         "page_count": 2,
-                     *         "duration_ms": 4200,
-                     *         "expires_at": "2026-05-09T07:00:00Z"
+                     *         "duration_ms": 1447,
+                     *         "expires_at": "2026-09-18T20:02:23.519Z"
                      *       }
                      *     }
                      */
@@ -96118,8 +99022,8 @@ export interface operations {
                  * @example {
                  *       "chart": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -96140,12 +99044,12 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "url": "https://api.astroway.info/reports/abc-vedic-kundli.pdf",
-                     *         "storage_key": "reports/abc-vedic-kundli.pdf",
-                     *         "byte_length": 145000,
+                     *         "url": "https://api.astroway.info/reports/ccaec60d-1872-4744-826c-73d2dd64019c-vedic-kundli.pdf",
+                     *         "storage_key": "reports/ccaec60d-1872-4744-826c-73d2dd64019c-vedic-kundli.pdf",
+                     *         "byte_length": 94267,
                      *         "page_count": 2,
-                     *         "duration_ms": 4500,
-                     *         "expires_at": "2026-05-09T07:00:00Z"
+                     *         "duration_ms": 1358,
+                     *         "expires_at": "2026-09-18T20:02:27.111Z"
                      *       }
                      *     }
                      */
@@ -96220,8 +99124,8 @@ export interface operations {
                  * @example {
                  *       "chart": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -96242,12 +99146,12 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "url": "https://api.astroway.info/reports/abc-money.pdf",
-                     *         "storage_key": "reports/abc-money.pdf",
-                     *         "byte_length": 132000,
-                     *         "page_count": 1,
-                     *         "duration_ms": 3900,
-                     *         "expires_at": "2026-05-09T07:00:00Z"
+                     *         "url": "https://api.astroway.info/reports/0278b192-f31a-4984-9b7d-b7391d62e6f7-money.pdf",
+                     *         "storage_key": "reports/0278b192-f31a-4984-9b7d-b7391d62e6f7-money.pdf",
+                     *         "byte_length": 105279,
+                     *         "page_count": 3,
+                     *         "duration_ms": 1343,
+                     *         "expires_at": "2026-09-18T20:02:24.968Z"
                      *       }
                      *     }
                      */
@@ -96322,8 +99226,8 @@ export interface operations {
                  * @example {
                  *       "chart": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -96344,12 +99248,12 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "url": "https://api.astroway.info/reports/abc-career.pdf",
-                     *         "storage_key": "reports/abc-career.pdf",
-                     *         "byte_length": 130000,
-                     *         "page_count": 1,
-                     *         "duration_ms": 3800,
-                     *         "expires_at": "2026-05-09T07:00:00Z"
+                     *         "url": "https://api.astroway.info/reports/bb2d5c43-8d70-4d38-bd74-a47f2f43900f-career.pdf",
+                     *         "storage_key": "reports/bb2d5c43-8d70-4d38-bd74-a47f2f43900f-career.pdf",
+                     *         "byte_length": 99721,
+                     *         "page_count": 2,
+                     *         "duration_ms": 1444,
+                     *         "expires_at": "2026-09-18T20:02:19.035Z"
                      *       }
                      *     }
                      */
@@ -96425,8 +99329,8 @@ export interface operations {
                  *       "report_type": "natal",
                  *       "chart": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -96452,12 +99356,12 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "url": "https://api.astroway.info/reports/abc.pdf",
-                     *         "storage_key": "reports/abc.pdf",
-                     *         "byte_length": 145000,
-                     *         "page_count": 1,
-                     *         "duration_ms": 4100,
-                     *         "expires_at": "2026-05-16T07:00:00Z"
+                     *         "url": "https://api.astroway.info/reports/9edded79-0880-4147-8eb7-a33efdbf6158-natal.pdf",
+                     *         "storage_key": "reports/9edded79-0880-4147-8eb7-a33efdbf6158-natal.pdf",
+                     *         "byte_length": 122645,
+                     *         "page_count": 3,
+                     *         "duration_ms": 1567,
+                     *         "expires_at": "2026-09-18T20:02:23.467Z"
                      *       }
                      *     }
                      */
@@ -96636,7 +99540,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -96650,8 +99554,8 @@ export interface operations {
                  * @example {
                  *       "chart": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -96766,7 +99670,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -96780,8 +99684,8 @@ export interface operations {
                  * @example {
                  *       "chart": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -96889,7 +99793,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -96903,15 +99807,15 @@ export interface operations {
                  * @example {
                  *       "chart1": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "chart2": {
                  *         "date": "1985-11-03",
-                 *         "time": "08:15:00",
-                 *         "timezoneOffset": 2,
+                 *         "time": "09:15:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 48.46,
                  *         "longitude": 35.04
                  *       },
@@ -97016,7 +99920,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -97030,8 +99934,8 @@ export interface operations {
                  * @example {
                  *       "chart": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -97138,7 +100042,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -97152,8 +100056,8 @@ export interface operations {
                  * @example {
                  *       "chart": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -97181,8 +100085,8 @@ export interface operations {
                      *         "disclaimer": "...",
                      *         "model": "...",
                      *         "tokens": {
-                     *           "input": 600,
-                     *           "output": 1500
+                     *           "input": 1209,
+                     *           "output": 667
                      *         }
                      *       }
                      *     }
@@ -98601,7 +101505,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -98616,8 +101520,8 @@ export interface operations {
                  *       "message": "What does my Saturn placement mean?",
                  *       "chart": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -98641,13 +101545,13 @@ export interface operations {
                      *       "data": {
                      *         "reply": "Saturn sits at 25° Capricorn, retrograde...",
                      *         "disclaimer": "AI-generated for entertainment and self-reflection only. Not medical, legal, or financial advice.",
-                     *         "model": "openai/gpt-oss-120b",
+                     *         "model": "glm-4.5-flash",
                      *         "language": "en",
                      *         "tokens": {
-                     *           "input": 317,
-                     *           "output": 402
+                     *           "input": 1606,
+                     *           "output": 576
                      *         },
-                     *         "duration_ms": 2983,
+                     *         "duration_ms": 100160,
                      *         "persona": "plain"
                      *       }
                      *     }
@@ -98729,7 +101633,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -98832,7 +101736,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -98846,8 +101750,8 @@ export interface operations {
                  * @example {
                  *       "chart": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
@@ -98943,7 +101847,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -98957,15 +101861,15 @@ export interface operations {
                  * @example {
                  *       "chart1": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "chart2": {
                  *         "date": "1985-11-03",
-                 *         "time": "08:15:00",
-                 *         "timezoneOffset": 2,
+                 *         "time": "09:15:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 48.46,
                  *         "longitude": 35.04
                  *       },
@@ -99170,7 +102074,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -99185,8 +102089,8 @@ export interface operations {
                  *       "message": "What does my Saturn placement mean?",
                  *       "chart": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       }
@@ -99263,15 +102167,15 @@ export interface operations {
                  *       "charts": [
                  *         {
                  *           "date": "1990-05-15",
-                 *           "time": "14:30:00",
-                 *           "timezoneOffset": 3,
+                 *           "time": "15:30:00",
+                 *           "timezone": "Europe/Kyiv",
                  *           "latitude": 50.45,
                  *           "longitude": 30.52
                  *         },
                  *         {
                  *           "date": "1990-05-15",
-                 *           "time": "14:30:00",
-                 *           "timezoneOffset": 3,
+                 *           "time": "15:30:00",
+                 *           "timezone": "Europe/Kyiv",
                  *           "latitude": 50.45,
                  *           "longitude": 30.52
                  *         }
@@ -99292,8 +102196,8 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "contextHash": "awctx_ffdb2c89",
-                     *         "chartCount": 1,
+                     *         "contextHash": "awctx_58cb5623",
+                     *         "chartCount": 2,
                      *         "intent": "general",
                      *         "summaries": [
                      *           {
@@ -99306,7 +102210,7 @@ export interface operations {
                      *             }
                      *           }
                      *         ],
-                     *         "summaryString": ": Taurus Sun · Capricorn Moon · Virgo ASC",
+                     *         "summaryString": ": Taurus Sun · Capricorn Moon · Virgo ASC | : Taurus Sun · Capricorn Moon · Virgo ASC",
                      *         "notes": [
                      *           "contextHash is a stable djb2 of the chart datetimes/locations, pass into MCP system prompt."
                      *         ]
@@ -99393,15 +102297,15 @@ export interface operations {
                  *       "members": [
                  *         {
                  *           "date": "1990-05-15",
-                 *           "time": "14:30:00",
-                 *           "timezoneOffset": 3,
+                 *           "time": "15:30:00",
+                 *           "timezone": "Europe/Kyiv",
                  *           "latitude": 50.45,
                  *           "longitude": 30.52
                  *         },
                  *         {
                  *           "date": "1990-05-15",
-                 *           "time": "14:30:00",
-                 *           "timezoneOffset": 3,
+                 *           "time": "15:30:00",
+                 *           "timezone": "Europe/Kyiv",
                  *           "latitude": 50.45,
                  *           "longitude": 30.52
                  *         }
@@ -99522,15 +102426,15 @@ export interface operations {
                  * @example {
                  *       "parent": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "child": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       }
@@ -99656,22 +102560,22 @@ export interface operations {
                  * @example {
                  *       "grandparent": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "parent": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "child": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       }
@@ -99835,15 +102739,15 @@ export interface operations {
                  * @example {
                  *       "sibling1": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       },
                  *       "sibling2": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       }
@@ -99960,15 +102864,15 @@ export interface operations {
                  *       "members": [
                  *         {
                  *           "date": "1990-05-15",
-                 *           "time": "14:30:00",
-                 *           "timezoneOffset": 3,
+                 *           "time": "15:30:00",
+                 *           "timezone": "Europe/Kyiv",
                  *           "latitude": 50.45,
                  *           "longitude": 30.52
                  *         },
                  *         {
                  *           "date": "1990-05-15",
-                 *           "time": "14:30:00",
-                 *           "timezoneOffset": 3,
+                 *           "time": "15:30:00",
+                 *           "timezone": "Europe/Kyiv",
                  *           "latitude": 50.45,
                  *           "longitude": 30.52
                  *         }
@@ -100112,8 +103016,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -100247,8 +103151,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -100382,8 +103286,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -100489,8 +103393,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -100604,8 +103508,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -100719,8 +103623,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "targetAge": 35
@@ -100847,8 +103751,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "targetAge": 35
@@ -100985,8 +103889,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -101098,8 +104002,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -101217,8 +104121,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -101338,8 +104242,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -101453,8 +104357,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -101568,8 +104472,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "targetAge": 35
@@ -101680,8 +104584,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -101769,8 +104673,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -101888,8 +104792,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -102005,8 +104909,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "targetDate": "2026-06-15"
@@ -102095,8 +104999,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -102206,8 +105110,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -102461,8 +105365,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -102658,8 +105562,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -102791,8 +105695,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -102918,8 +105822,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -103029,8 +105933,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -103142,8 +106046,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -103253,8 +106157,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -103376,8 +106280,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -103499,8 +106403,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -103610,8 +106514,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -103735,8 +106639,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -103860,8 +106764,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -103981,8 +106885,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -104090,8 +106994,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -104225,8 +107129,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "targetAge": 35
@@ -104315,8 +107219,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -104424,8 +107328,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -104533,8 +107437,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -104553,7 +107457,7 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "sect": "diurnal"
+                     *         "sect": "day"
                      *       }
                      *     }
                      */
@@ -104622,8 +107526,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -104747,8 +107651,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -104882,8 +107786,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -104995,8 +107899,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -105106,8 +108010,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -105239,8 +108143,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -105346,8 +108250,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -105453,8 +108357,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -105558,8 +108462,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -105675,8 +108579,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -105796,8 +108700,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -105917,8 +108821,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -106046,8 +108950,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -106151,8 +109055,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -106240,8 +109144,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -106351,8 +109255,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -106464,8 +109368,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -106553,8 +109457,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -106674,8 +109578,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -106797,8 +109701,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -106930,8 +109834,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -107063,8 +109967,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -107152,8 +110056,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -107293,8 +110197,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "withTnp": true
@@ -107403,8 +110307,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "orb": 1.5
@@ -107523,8 +110427,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -107652,8 +110556,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -107791,8 +110695,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "targetDate": "2026-06-15"
@@ -107907,8 +110811,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -108018,8 +110922,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -108171,8 +111075,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -108290,8 +111194,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -108435,8 +111339,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52
                  *     }
@@ -108703,8 +111607,8 @@ export interface operations {
                 /**
                  * @example {
                  *       "date": "1990-05-15",
-                 *       "time": "14:30:00",
-                 *       "timezoneOffset": 3,
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
                  *       "latitude": 50.45,
                  *       "longitude": 30.52,
                  *       "hours": 24
@@ -110989,8 +113893,8 @@ export interface operations {
                  *       "tool": "chart",
                  *       "args": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       }
@@ -111068,7 +113972,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -111166,7 +114070,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -111261,8 +114165,8 @@ export interface operations {
                  *       "query": "saturn return meaning",
                  *       "chart": {
                  *         "date": "1990-05-15",
-                 *         "time": "14:30:00",
-                 *         "timezoneOffset": 3,
+                 *         "time": "15:30:00",
+                 *         "timezone": "Europe/Kyiv",
                  *         "latitude": 50.45,
                  *         "longitude": 30.52
                  *       }
@@ -111282,7 +114186,7 @@ export interface operations {
                      * @example {
                      *       "ok": true,
                      *       "data": {
-                     *         "query": "saturn",
+                     *         "query": "saturn return meaning",
                      *         "tokens": [
                      *           "saturn"
                      *         ],
@@ -111290,9 +114194,9 @@ export interface operations {
                      *         "matches": 4,
                      *         "results": [
                      *           {
-                     *             "text": "Sun 120° Saturn (orb 0.87°)",
+                     *             "text": "Saturn at 295.25° (retrograde)",
                      *             "tags": [
-                     *               "sun"
+                     *               "saturn"
                      *             ],
                      *             "score": 4
                      *           }
@@ -117573,7 +120477,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;
@@ -117688,7 +120592,7 @@ export interface operations {
                  */
                 "X-Provider-Key"?: string;
                 /**
-                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → llama-3.3-70b-versatile, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
                  * @example claude-sonnet-4-5
                  */
                 "X-Provider-Model"?: string;

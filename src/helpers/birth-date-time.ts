@@ -13,11 +13,17 @@
  *     latitude: 50.45, longitude: 30.52, timezoneOffset: 3,
  *   });
  *   const chart = await aw.chart.compute(birth.toBody());
+ *
+ * Pass `timezone` instead of `timezoneOffset` when you know the place but not
+ * the offset that was in force: `timezone: 'Europe/Kyiv'` resolves server-side
+ * to the offset that date kept, and wins if both are sent.
  */
 
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_RE = /^\d{2}:\d{2}:\d{2}$/;
 const ISO_RE = /^(\d{4}-\d{2}-\d{2})[T ](\d{2}:\d{2}(?::\d{2})?)/;
+/* '+03:00', '-5', 'UTC+2' are offsets, and the API answers 400 for them. */
+const OFFSET_LIKE_RE = /^(?:UTC|GMT)?\s*[+-]?\d{1,2}(?::\d{2})?$/i;
 
 export interface BirthDateTimeInit {
   /** ISO date `YYYY-MM-DD`. */
@@ -26,6 +32,14 @@ export interface BirthDateTimeInit {
   time: string;
   /** UTC offset in hours. Defaults to 0 if omitted. */
   timezoneOffset?: number;
+  /**
+   * IANA zone name (`Europe/Kyiv`) or `auto` to derive it from the
+   * coordinates. The server resolves it into the offset in force at that local
+   * date and time, and it wins over `timezoneOffset`. Omit it rather than
+   * sending an empty string: the API refuses `''` so an unfilled form field
+   * cannot silently read as UTC.
+   */
+  timezone?: string | undefined;
   /** Decimal latitude, north positive. Defaults to 0. */
   latitude?: number;
   /** Decimal longitude, east positive. Defaults to 0. */
@@ -38,6 +52,8 @@ export interface BirthDateTimeBody {
   timezoneOffset: number;
   latitude: number;
   longitude: number;
+  /** Present only when a zone name was given. */
+  timezone?: string;
 }
 
 export class BirthDateTime {
@@ -46,13 +62,15 @@ export class BirthDateTime {
   readonly timezoneOffset: number;
   readonly latitude: number;
   readonly longitude: number;
+  readonly timezone?: string | undefined;
 
-  private constructor(init: Required<BirthDateTimeInit>) {
+  private constructor(init: Omit<Required<BirthDateTimeInit>, 'timezone'> & { timezone?: string | undefined }) {
     this.date = init.date;
     this.time = init.time;
     this.timezoneOffset = init.timezoneOffset;
     this.latitude = init.latitude;
     this.longitude = init.longitude;
+    this.timezone = init.timezone;
   }
 
   /**
@@ -66,12 +84,21 @@ export class BirthDateTime {
     if (!TIME_RE.test(init.time)) {
       throw new Error(`BirthDateTime: time must be HH:MM:SS, got '${init.time}'`);
     }
+    if (init.timezone !== undefined) {
+      if (init.timezone.trim() === '') {
+        throw new Error("BirthDateTime: timezone must be a zone name or 'auto'; omit it instead of sending an empty string");
+      }
+      if (OFFSET_LIKE_RE.test(init.timezone)) {
+        throw new Error(`BirthDateTime: timezone takes a zone name, not an offset; use timezoneOffset for '${init.timezone}'`);
+      }
+    }
     return new BirthDateTime({
       date: init.date,
       time: init.time,
       timezoneOffset: init.timezoneOffset ?? 0,
       latitude: init.latitude ?? 0,
       longitude: init.longitude ?? 0,
+      timezone: init.timezone,
     });
   }
 
@@ -85,7 +112,7 @@ export class BirthDateTime {
    */
   static fromDate(
     date: Date,
-    geo: { latitude: number; longitude: number; timezoneOffset?: number },
+    geo: { latitude: number; longitude: number; timezoneOffset?: number; timezone?: string },
   ): BirthDateTime {
     const yyyy = date.getUTCFullYear().toString().padStart(4, '0');
     const mm = (date.getUTCMonth() + 1).toString().padStart(2, '0');
@@ -99,6 +126,7 @@ export class BirthDateTime {
       latitude: geo.latitude,
       longitude: geo.longitude,
       timezoneOffset: geo.timezoneOffset ?? 0,
+      timezone: geo.timezone,
     });
   }
 
@@ -109,7 +137,7 @@ export class BirthDateTime {
    */
   static parse(
     iso: string,
-    geo: { latitude: number; longitude: number; timezoneOffset?: number },
+    geo: { latitude: number; longitude: number; timezoneOffset?: number; timezone?: string },
   ): BirthDateTime {
     const match = ISO_RE.exec(iso);
     if (!match) {
@@ -123,18 +151,21 @@ export class BirthDateTime {
       latitude: geo.latitude,
       longitude: geo.longitude,
       timezoneOffset: geo.timezoneOffset ?? 0,
+      timezone: geo.timezone,
     });
   }
 
   /** Wire shape suitable for `aw.chart.compute(birth.toBody())` etc. */
   toBody(): BirthDateTimeBody {
-    return {
+    const body: BirthDateTimeBody = {
       date: this.date,
       time: this.time,
       timezoneOffset: this.timezoneOffset,
       latitude: this.latitude,
       longitude: this.longitude,
     };
+    if (this.timezone !== undefined) body.timezone = this.timezone;
+    return body;
   }
 
   /** Same fields, but as a JS `Date` (constructed in UTC for determinism). */

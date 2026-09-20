@@ -125,20 +125,34 @@ export interface AstrowayNamespaces {
     compute(body: PostBody<'/aspects'>, options?: CallOptions): ResultPromise<PostData<'/aspects'>>;
   };
   bazi: {
+    /** Full BaZi chart (POST /bazi/chart) */
+    chart(body: PostBody<'/bazi/chart'>, options?: CallOptions): ResultPromise<PostData<'/bazi/chart'>>;
     /** Day Master (POST /bazi/day-master) */
     dayMaster(body: PostBody<'/bazi/day-master'>, options?: CallOptions): ResultPromise<PostData<'/bazi/day-master'>>;
     /** 5-Element Balance (POST /bazi/element-balance) */
     elementBalance(body: PostBody<'/bazi/element-balance'>, options?: CallOptions): ResultPromise<PostData<'/bazi/element-balance'>>;
     /** Four Pillars (full) (POST /bazi/four-pillars) */
     fourPillars(body: PostBody<'/bazi/four-pillars'>, options?: CallOptions): ResultPromise<PostData<'/bazi/four-pillars'>>;
+    /** Hidden stems (Cang Gan) (POST /bazi/hidden-stems) */
+    hiddenStems(body: PostBody<'/bazi/hidden-stems'>, options?: CallOptions): ResultPromise<PostData<'/bazi/hidden-stems'>>;
     /** Hour Pillar (POST /bazi/hour-pillar) */
     hourPillar(body: PostBody<'/bazi/hour-pillar'>, options?: CallOptions): ResultPromise<PostData<'/bazi/hour-pillar'>>;
+    /** Branch and stem interactions (POST /bazi/interactions) */
+    interactions(body: PostBody<'/bazi/interactions'>, options?: CallOptions): ResultPromise<PostData<'/bazi/interactions'>>;
+    /** Twelve life stages (POST /bazi/life-stages) */
+    lifeStages(body: PostBody<'/bazi/life-stages'>, options?: CallOptions): ResultPromise<PostData<'/bazi/life-stages'>>;
     /** Luck Pillars (Da Yun) (POST /bazi/luck-pillars) */
     luckPillars(body: PostBody<'/bazi/luck-pillars'>, options?: CallOptions): ResultPromise<PostData<'/bazi/luck-pillars'>>;
     /** Monthly Forecast (POST /bazi/monthly) */
     monthly(body: PostBody<'/bazi/monthly'>, options?: CallOptions): ResultPromise<PostData<'/bazi/monthly'>>;
     /** Month Pillar (POST /bazi/month-pillar) */
     monthPillar(body: PostBody<'/bazi/month-pillar'>, options?: CallOptions): ResultPromise<PostData<'/bazi/month-pillar'>>;
+    /** Na Yin sound-element (POST /bazi/na-yin) */
+    naYin(body: PostBody<'/bazi/na-yin'>, options?: CallOptions): ResultPromise<PostData<'/bazi/na-yin'>>;
+    /** Day-master strength (POST /bazi/strength) */
+    strength(body: PostBody<'/bazi/strength'>, options?: CallOptions): ResultPromise<PostData<'/bazi/strength'>>;
+    /** Symbolic stars (Shen Sha) (POST /bazi/symbolic-stars) */
+    symbolicStars(body: PostBody<'/bazi/symbolic-stars'>, options?: CallOptions): ResultPromise<PostData<'/bazi/symbolic-stars'>>;
     /** Ten Gods (Shi Shen) (POST /bazi/ten-gods) */
     tenGods(body: PostBody<'/bazi/ten-gods'>, options?: CallOptions): ResultPromise<PostData<'/bazi/ten-gods'>>;
     /** Yearly Forecast (POST /bazi/yearly) */
@@ -201,6 +215,8 @@ export interface AstrowayNamespaces {
     tongShu(body: PostBody<'/chinese/tong-shu'>, options?: CallOptions): ResultPromise<PostData<'/chinese/tong-shu'>>;
     /** Tong Shu date selection (POST /chinese/tong-shu/select) */
     tongShuSelect(body: PostBody<'/chinese/tong-shu/select'>, options?: CallOptions): ResultPromise<PostData<'/chinese/tong-shu/select'>>;
+    /** True solar time (POST /chinese/true-solar-time) */
+    trueSolarTime(body: PostBody<'/chinese/true-solar-time'>, options?: CallOptions): ResultPromise<PostData<'/chinese/true-solar-time'>>;
     /** Chinese Zodiac Animal (POST /chinese/zodiac/animal) */
     zodiacAnimal(body: PostBody<'/chinese/zodiac/animal'>, options?: CallOptions): ResultPromise<PostData<'/chinese/zodiac/animal'>>;
     /** Animal Compatibility (POST /chinese/zodiac/compatibility) */
@@ -1647,9 +1663,11 @@ export interface AstrowayNamespaces {
     compute(body: PostBody<'/zenith'>, options?: CallOptions): ResultPromise<PostData<'/zenith'>>;
   };
   ziwei: {
+    /** Full Chart (computed) (POST /ziwei/chart) */
+    chart(body: PostBody<'/ziwei/chart'>, options?: CallOptions): ResultPromise<PostData<'/ziwei/chart'>>;
     /** Four Transformations (四化) (POST /ziwei/four-transformations) */
     fourTransformations(body: PostBody<'/ziwei/four-transformations'>, options?: CallOptions): ResultPromise<PostData<'/ziwei/four-transformations'>>;
-    /** Full Chart (MVP) (POST /ziwei/full-chart) */
+    /** Full Chart (deprecated) (POST /ziwei/full-chart) */
     fullChart(body: PostBody<'/ziwei/full-chart'>, options?: CallOptions): ResultPromise<PostData<'/ziwei/full-chart'>>;
     /** 14 Main Stars (POST /ziwei/main-stars) */
     mainStars(body: PostBody<'/ziwei/main-stars'>, options?: CallOptions): ResultPromise<PostData<'/ziwei/main-stars'>>;
@@ -1788,13 +1806,20 @@ export function buildNamespaces(client: AstrowayClient, sse: SseCapable): Astrow
       compute: (body, options) => call<'/aspects', PostData<'/aspects'>>('/aspects', body, options),
     },
     bazi: {
+      chart: (body, options) => call<'/bazi/chart', PostData<'/bazi/chart'>>('/bazi/chart', body, options),
       dayMaster: (body, options) => call<'/bazi/day-master', PostData<'/bazi/day-master'>>('/bazi/day-master', body, options),
       elementBalance: (body, options) => call<'/bazi/element-balance', PostData<'/bazi/element-balance'>>('/bazi/element-balance', body, options),
       fourPillars: (body, options) => call<'/bazi/four-pillars', PostData<'/bazi/four-pillars'>>('/bazi/four-pillars', body, options),
+      hiddenStems: (body, options) => call<'/bazi/hidden-stems', PostData<'/bazi/hidden-stems'>>('/bazi/hidden-stems', body, options),
       hourPillar: (body, options) => call<'/bazi/hour-pillar', PostData<'/bazi/hour-pillar'>>('/bazi/hour-pillar', body, options),
+      interactions: (body, options) => call<'/bazi/interactions', PostData<'/bazi/interactions'>>('/bazi/interactions', body, options),
+      lifeStages: (body, options) => call<'/bazi/life-stages', PostData<'/bazi/life-stages'>>('/bazi/life-stages', body, options),
       luckPillars: (body, options) => call<'/bazi/luck-pillars', PostData<'/bazi/luck-pillars'>>('/bazi/luck-pillars', body, options),
       monthly: (body, options) => call<'/bazi/monthly', PostData<'/bazi/monthly'>>('/bazi/monthly', body, options),
       monthPillar: (body, options) => call<'/bazi/month-pillar', PostData<'/bazi/month-pillar'>>('/bazi/month-pillar', body, options),
+      naYin: (body, options) => call<'/bazi/na-yin', PostData<'/bazi/na-yin'>>('/bazi/na-yin', body, options),
+      strength: (body, options) => call<'/bazi/strength', PostData<'/bazi/strength'>>('/bazi/strength', body, options),
+      symbolicStars: (body, options) => call<'/bazi/symbolic-stars', PostData<'/bazi/symbolic-stars'>>('/bazi/symbolic-stars', body, options),
       tenGods: (body, options) => call<'/bazi/ten-gods', PostData<'/bazi/ten-gods'>>('/bazi/ten-gods', body, options),
       yearly: (body, options) => call<'/bazi/yearly', PostData<'/bazi/yearly'>>('/bazi/yearly', body, options),
       yearPillar: (body, options) => call<'/bazi/year-pillar', PostData<'/bazi/year-pillar'>>('/bazi/year-pillar', body, options),
@@ -1830,6 +1855,7 @@ export function buildNamespaces(client: AstrowayClient, sse: SseCapable): Astrow
       solarTerms: (body, options) => call<'/chinese/solar-terms', PostData<'/chinese/solar-terms'>>('/chinese/solar-terms', body, options),
       tongShu: (body, options) => call<'/chinese/tong-shu', PostData<'/chinese/tong-shu'>>('/chinese/tong-shu', body, options),
       tongShuSelect: (body, options) => call<'/chinese/tong-shu/select', PostData<'/chinese/tong-shu/select'>>('/chinese/tong-shu/select', body, options),
+      trueSolarTime: (body, options) => call<'/chinese/true-solar-time', PostData<'/chinese/true-solar-time'>>('/chinese/true-solar-time', body, options),
       zodiacAnimal: (body, options) => call<'/chinese/zodiac/animal', PostData<'/chinese/zodiac/animal'>>('/chinese/zodiac/animal', body, options),
       zodiacCompatibility: (body, options) => call<'/chinese/zodiac/compatibility', PostData<'/chinese/zodiac/compatibility'>>('/chinese/zodiac/compatibility', body, options),
       zodiacElement: (body, options) => call<'/chinese/zodiac/element', PostData<'/chinese/zodiac/element'>>('/chinese/zodiac/element', body, options),
@@ -2647,6 +2673,7 @@ export function buildNamespaces(client: AstrowayClient, sse: SseCapable): Astrow
       compute: (body, options) => call<'/zenith', PostData<'/zenith'>>('/zenith', body, options),
     },
     ziwei: {
+      chart: (body, options) => call<'/ziwei/chart', PostData<'/ziwei/chart'>>('/ziwei/chart', body, options),
       fourTransformations: (body, options) => call<'/ziwei/four-transformations', PostData<'/ziwei/four-transformations'>>('/ziwei/four-transformations', body, options),
       fullChart: (body, options) => call<'/ziwei/full-chart', PostData<'/ziwei/full-chart'>>('/ziwei/full-chart', body, options),
       mainStars: (body, options) => call<'/ziwei/main-stars', PostData<'/ziwei/main-stars'>>('/ziwei/main-stars', body, options),

@@ -93,3 +93,57 @@ describe('BirthDateTime.toBody / toDate', () => {
     expect(d.getUTCMinutes()).toBe(30);
   });
 });
+
+describe('BirthDateTime timezone', () => {
+  it('omits timezone from the body when it was never given', () => {
+    const b = BirthDateTime.fromCoordinates({ date: '1990-05-15', time: '14:30:00' });
+    expect('timezone' in b.toBody()).toBe(false);
+  });
+
+  it('carries a zone name into the body beside the offset', () => {
+    const b = BirthDateTime.fromCoordinates({
+      date: '1990-05-15',
+      time: '14:30:00',
+      latitude: 50.45,
+      longitude: 30.52,
+      timezone: 'Europe/Kyiv',
+    });
+    expect(b.toBody().timezone).toBe('Europe/Kyiv');
+    expect(b.toBody().timezoneOffset).toBe(0);
+  });
+
+  it('accepts auto', () => {
+    const b = BirthDateTime.fromCoordinates({ date: '1990-05-15', time: '14:30:00', timezone: 'auto' });
+    expect(b.timezone).toBe('auto');
+  });
+
+  it('refuses an empty zone, which the API reads as a 400', () => {
+    expect(() =>
+      BirthDateTime.fromCoordinates({ date: '1990-05-15', time: '14:30:00', timezone: '' }),
+    ).toThrow(/omit it/);
+  });
+
+  it('refuses an offset written as a zone', () => {
+    expect(() =>
+      BirthDateTime.fromCoordinates({ date: '1990-05-15', time: '14:30:00', timezone: '+03:00' }),
+    ).toThrow(/timezoneOffset/);
+    expect(() =>
+      BirthDateTime.fromCoordinates({ date: '1990-05-15', time: '14:30:00', timezone: 'UTC+2' }),
+    ).toThrow(/timezoneOffset/);
+  });
+
+  it('threads the zone through fromDate and parse', () => {
+    const d = BirthDateTime.fromDate(new Date(Date.UTC(1990, 4, 15, 14, 30, 0)), {
+      latitude: 50.45,
+      longitude: 30.52,
+      timezone: 'Europe/Kyiv',
+    });
+    expect(d.toBody().timezone).toBe('Europe/Kyiv');
+    const p = BirthDateTime.parse('1990-05-15T14:30:00', {
+      latitude: 50.45,
+      longitude: 30.52,
+      timezone: 'auto',
+    });
+    expect(p.toBody().timezone).toBe('auto');
+  });
+});
