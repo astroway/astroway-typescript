@@ -23,7 +23,7 @@ import {
 import { fetchWithRetry, type RetryOptions } from './retry.js';
 import { SDK_VERSION } from './version.js';
 import { detectRuntime } from './runtime.js';
-import { buildNamespaces, type AstrowayNamespaces } from './namespaces.generated.js';
+import { buildNamespaces, type AstrowayNamespaces, type CallOptions } from './namespaces.generated.js';
 import {
   type IdempotencyMode,
   resolveKeyGenerator,
@@ -163,6 +163,23 @@ export type AstrowayClient = ReturnType<typeof createClient<paths>>;
  */
 export function createAstroway(options: AstrowayOptions): AstrowayClient {
   return new Astroway(options).client;
+}
+
+/** One prose entry from `aw.natalTexts()`: a planet-in-sign, planet-in-house, or aspect reading. */
+export interface NatalTextEntry {
+  title: string;
+  /** Plain text, paragraphs separated by a blank line. */
+  body: string;
+  kind: 'planet_in_sign' | 'planet_in_house' | 'aspect';
+}
+
+/** Result of `aw.natalTexts()`. */
+export interface NatalTextsResult {
+  lang: string;
+  /** Keyed by the same string you asked for, e.g. `texts['sun.aries']`. */
+  texts: Record<string, NatalTextEntry>;
+  /** Keys with no text in `lang`; there is no fallback to another language. */
+  missing: string[];
 }
 
 /**
@@ -382,6 +399,38 @@ export class Astroway {
     const { data, error } = await this.client.GET('/health' as never);
     if (error) throw new ApiError(`SDK health() call failed: ${String(error)}`);
     return (data as { data: never }).data;
+  }
+
+  /**
+   * Prose for chart positions: a planet in a sign or house, or an aspect
+   * between two planets. `keys` are lowercase strings: `sun.aries`,
+   * `ascendant.leo` for a planet in a sign, `moon.h4`, `lilith.h7` for a
+   * planet in a house, `sun_moon.trine` for an aspect (pair order is
+   * normalised server-side). Up to 64 distinct keys per call; duplicates are
+   * removed server-side before the cap. One ordinary call regardless of key
+   * count, no AI involved.
+   *
+   * A key with no text in `lang` comes back in `result.missing` rather than
+   * falling back to another language.
+   *
+   *   const { texts, missing } = await aw.natalTexts(['sun.aries', 'moon.h4'], 'uk');
+   *   console.log(texts['sun.aries'].body);
+   */
+  async natalTexts(keys: string[], lang: string, options?: CallOptions): Promise<NatalTextsResult> {
+    const init: Record<string, unknown> = {
+      params: { query: { keys: keys.join(','), lang } },
+    };
+    const headers: Record<string, string> = { ...(options?.headers ?? {}) };
+    if (options?.timeoutMs !== undefined && options.timeoutMs > 0) {
+      headers['x-astroway-timeout-ms'] = String(options.timeoutMs);
+    }
+    if (Object.keys(headers).length > 0) init.headers = headers;
+    if (options?.signal) init.signal = options.signal;
+    const { data, error } = await (
+      this.client.GET as (path: '/natal-texts', i: Record<string, unknown>) => Promise<{ data?: unknown; error?: unknown }>
+    )('/natal-texts', init);
+    if (error) throw new ApiError(`SDK natalTexts() call failed: ${String(error)}`);
+    return (data as { data: NatalTextsResult }).data;
   }
 
   /**

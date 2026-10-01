@@ -106,6 +106,16 @@ const hd = await aw.humanDesign.compute({
 console.log(`${hd.type} - ${hd.strategy} - ${hd.authority}`);
 ```
 
+### Natal texts
+
+Prose for chart positions, keyed by lowercase strings you build yourself: a planet in a sign (`sun.aries`), a planet in a house (`moon.h4`), or an aspect (`sun_moon.trine`, pair order is normalised server-side). One ordinary call regardless of how many keys you ask for, no AI.
+
+```ts
+const { texts, missing } = await aw.natalTexts(['sun.aries', 'moon.h4', 'sun_moon.trine'], 'uk');
+console.log(texts['sun.aries'].title, texts['sun.aries'].body);
+console.log(missing); // keys with no text in that language, no fallback
+```
+
 ### White-label PDF report
 
 `/reports/*` endpoints accept an inline `whitelabel` object (the `BrandingObject` schema) to brand the generated PDF with your own name, colours, and footer:
