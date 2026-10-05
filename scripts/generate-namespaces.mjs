@@ -100,6 +100,9 @@ for (const [path, methods] of Object.entries(spec.paths)) {
      key. Two methods for one calculation is confusing, and the keyed one is
      what an SDK user wants. */
   if (path.startsWith('/public/')) continue;
+  /* Hand-written on the class as natalTexts() (src/index.ts). The path
+     derives a natalTexts namespace too, which would clash with the method. */
+  if (path === '/natal-texts') continue;
   /* System endpoints are already hand-written on the Astroway class as
      `aw.health()` and `aw.version()`. Generating them produced a `health`
      namespace whose `compute` clashed with the class method, which is how

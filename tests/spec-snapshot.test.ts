@@ -118,4 +118,22 @@ describe('spec snapshot', () => {
     const required = (spec.components.schemas.ChartInput as unknown as { required: string[] }).required;
     expect(required).toEqual(expect.arrayContaining(['date', 'time', 'latitude', 'longitude']));
   });
+
+  it('types the three request bodies corrected in api-calc 2.206.5 (resync to 2.207.4)', () => {
+    /* The 2.188.4 snapshot published another route's body for each of these,
+       so a typed call could not be written at all. */
+    const chart = { date: '1990-05-10', time: '12:00:00', latitude: 50.45, longitude: 30.52 };
+    const team: Body<'/business/team-compatibility'> = { founder: chart, partner: chart };
+    const hours: Body<'/horary/planetary-hours'> = { dayOfWeek: 3, sunriseHour: 6.5, sunsetHour: 19.25 };
+    const multi: Body<'/mcp/multi-chart-context'> = { charts: [chart, chart], intent: 'compatibility' };
+    expect([team.founder.date, hours.dayOfWeek, multi.charts.length]).toEqual(['1990-05-10', 3, 2]);
+  });
+
+  it('leaves /natal-texts to the hand-written method and keeps site keys out', () => {
+    const aw = new Astroway({ apiKey: 'aw_test_x' }) as unknown as Record<string, unknown>;
+    expect(spec.paths['/natal-texts']).toBeDefined();
+    expect(typeof aw.natalTexts).toBe('function');
+    expect(spec.paths['/site-keys']).toBeDefined();
+    expect(aw.siteKeys).toBeUndefined();
+  });
 });
