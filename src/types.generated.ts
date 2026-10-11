@@ -15,7 +15,7 @@ export interface paths {
         put?: never;
         /**
          * Natal Chart
-         * @description Calculate a full natal chart: planets, house cusps, aspects, sect, and angular data for a given birth moment. When the birth time is unknown, send timeUnknown: true instead of time and the response carries planets and aspects with houses, angles and sect set to null, plus a timeUnknown block giving the range the Moon covers that day.
+         * @description Calculate a full natal chart: planets, house cusps, aspects, sect, and angular data for a given birth moment. When the birth time is unknown, send timeUnknown: true instead of time and the response carries planets and aspects with houses, angles and sect set to null, plus a timeUnknown block giving the range the Moon covers that day. With ?lang= the response adds localized: planet, sign and aspect names in that language, keyed by the English names.
          */
         post: operations["chart"];
         delete?: never;
@@ -1036,7 +1036,7 @@ export interface paths {
         put?: never;
         /**
          * Chinese Zodiac Animal
-         * @description Animal sign of the birth year, bounded by the exact Lichun instant, plus the full pillar (stem + branch + element). Pass time + timezoneOffset for births on the boundary day.
+         * @description Animal sign of the birth year, bounded by the exact Lichun instant, plus the full pillar (stem + branch + element). `yearStart` and `yearEnd` are the two Lichun instants that bound the solar year, in UTC and Beijing time. Pass time + timezoneOffset for births on the boundary day.
          */
         post: operations["chinese_zodiac_animal"];
         delete?: never;
@@ -3276,7 +3276,7 @@ export interface paths {
         put?: never;
         /**
          * Retrograde Periods
-         * @description Find all retrograde stations (direct, retrograde, stationary) for a planet within a date range.
+         * @description Retrograde periods of the planets in `planetIds` (default Mercury) within a date range: the two stations and their longitudes, plus `shadowStart` (the planet first reaches the longitude of its direct station) and `shadowEnd` (it regains the longitude of its retrograde station).
          */
         post: operations["retrograde-periods"];
         delete?: never;
@@ -4936,7 +4936,7 @@ export interface paths {
         put?: never;
         /**
          * Shadbala: Cheshta (motional)
-         * @description Cheshta Bala, motional strength via simplified retrograde+speed model: retrograde=60v, direct slow=ratio*60, direct fast=(2-ratio)*60. Sun=0 (handled via Ayana with ×2), Moon=0 (handled via Paksha with ×2). Full BPHS Cheshta-Kendra method (mean-longitude based) queued for Phase Q, current divergence vs jhora ≤30v on non-stationary dates.
+         * @description Cheshta Bala, motional strength via simplified retrograde+speed model: retrograde=60v, direct slow=ratio*60, direct fast=(2-ratio)*60. Sun=0 (handled via Ayana with ×2), Moon=0 (handled via Paksha with ×2). Full BPHS Cheshta-Kendra method (mean-longitude based) is not implemented yet; current divergence vs jhora ≤30v on non-stationary dates.
          */
         post: operations["vedic_shadbala_cheshta"];
         delete?: never;
@@ -5276,7 +5276,7 @@ export interface paths {
         put?: never;
         /**
          * Doshas: Pitru (ancestral)
-         * @description Pitru Dosha: Sun + Rahu or Sun + Saturn conjunct, plus Sun in 9th house as auxiliary marker. Note: BPHS lists 14 patterns of Pitru Dosha; this endpoint detects 3 most-cited conjunction patterns. Full canonical detection (9th-lord placement, malefic in 9H) deferred to Phase Q.
+         * @description Pitru Dosha: Sun + Rahu or Sun + Saturn conjunct, plus Sun in 9th house as auxiliary marker. Note: BPHS lists 14 patterns of Pitru Dosha; this endpoint detects 3 most-cited conjunction patterns. Full canonical detection (9th-lord placement, malefic in 9H) is not done yet.
          */
         post: operations["vedic_doshas_parashara_pitru"];
         delete?: never;
@@ -5739,6 +5739,26 @@ export interface paths {
         get: operations["muhurta_types_get"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/vedic/kundli": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Kundli (one call)
+         * @description A kundli card in one call: D1 lagna and the nine grahas with sign names, the Moon nakshatra and pada, the running Vimshottari maha and antar at `targetDate` (default now), and the Parashari yogas and doshas with a `present` list of the ones found. Each part is the same answer as its own route (/vedic/varga/D1, /vedic/dashas/vimshottari/antar, /vedic/yogas/parashara/full, /vedic/doshas/parashara/full). `latitude` and `longitude` are required; `time` is `HH:mm:ss` or `HH:mm`. `nakshatra.nameLocalized` is the name in the requested language (Devanagari for hi, the Cyrillic forms for uk and ru, the international transliteration elsewhere). 50 credits.
+         */
+        post: operations["vedic_kundli"];
         delete?: never;
         options?: never;
         head?: never;
@@ -7938,7 +7958,7 @@ export interface paths {
         put?: never;
         /**
          * Daily Horoscope
-         * @description Generate a daily horoscope by zodiac sign, grounded in real ephemeris data (current Moon phase, transits). Multi-language. AI-written, not pre-generated content.
+         * @description Daily horoscope for a zodiac sign in 21 languages, written by a model from that sign's solar houses and the day's transits. Returns `sections` (overview, love, career, health, finance, advice) and the same text as `horoscope`, plus computed `transits` with solar houses, `aspects`, `events`, `energy` (1-10 with its factors), `lucky` and `compatibleSigns`.
          */
         post: operations["horoscope_daily"];
         delete?: never;
@@ -7958,7 +7978,7 @@ export interface paths {
         put?: never;
         /**
          * Weekly Horoscope
-         * @description Generate a weekly horoscope (7-day window) with key transit events and themes. AI-written, ephemeris-grounded.
+         * @description Weekly horoscope for a zodiac sign: the same shape as the daily one, with the week's ingresses, stations and lunar phases in `events` and in the text.
          */
         post: operations["horoscope_weekly"];
         delete?: never;
@@ -7978,7 +7998,7 @@ export interface paths {
         put?: never;
         /**
          * Monthly Horoscope
-         * @description Generate a monthly horoscope with major transits, Moon phases, and personal-year themes (profections-aware).
+         * @description Monthly horoscope for a zodiac sign: the same shape as the daily one, over 30 days from `date`, with the month's ingresses, stations and lunar phases.
          */
         post: operations["horoscope_monthly"];
         delete?: never;
@@ -8121,6 +8141,26 @@ export interface paths {
          * @description AI interpretation of a specific planet+sign+house combination: concise, focused on the placement only.
          */
         post: operations["interpret_placement"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/interpret/tarot": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Tarot Spread Reading
+         * @description AI reading of a tarot, Marseille or Lenormand spread: each position read in context, then a synthesis of the whole spread and one piece of advice. Takes card slugs or the drawn array of any draw response. Multi-language.
+         */
+        post: operations["interpret_tarot"];
         delete?: never;
         options?: never;
         head?: never;
@@ -8927,6 +8967,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/numerology/pythagorean/chart": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Core Numbers Chart (pythagorean)
+         * @description The six core numbers in one call: Life Path, Expression, Soul Urge, Personality, Birthday and Personal Year (`year` defaults to the current year), each with its meaning. 20 credits instead of 60 for six single calls. Every number carries `meaning` (English) and `meaningLocalized` in the requested language (`translated: false` with the English text while a language's strings are on their way). Numerology: Pythagorean system.
+         */
+        post: operations["numerology_pythagorean_chart"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/numerology/chaldean/life-path": {
         parameters: {
             query?: never;
@@ -9121,6 +9181,26 @@ export interface paths {
          * @description Calculate the Personal Year number for a given calendar year: the 9-year cycle of personal evolution. Numerology: Chaldean system.
          */
         post: operations["numerology_chaldean_personal-year"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/numerology/chaldean/chart": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Core Numbers Chart (chaldean)
+         * @description The six core numbers in one call: Life Path, Expression, Soul Urge, Personality, Birthday and Personal Year (`year` defaults to the current year), each with its meaning. 20 credits instead of 60 for six single calls. Every number carries `meaning` (English) and `meaningLocalized` in the requested language (`translated: false` with the English text while a language's strings are on their way). Numerology: Chaldean system.
+         */
+        post: operations["numerology_chaldean_chart"];
         delete?: never;
         options?: never;
         head?: never;
@@ -9327,6 +9407,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/numerology/kabbalistic/chart": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Core Numbers Chart (kabbalistic)
+         * @description The six core numbers in one call: Life Path, Expression, Soul Urge, Personality, Birthday and Personal Year (`year` defaults to the current year), each with its meaning. 20 credits instead of 60 for six single calls. Every number carries `meaning` (English) and `meaningLocalized` in the requested language (`translated: false` with the English text while a language's strings are on their way). Numerology: Kabbalistic (phonetic) system.
+         */
+        post: operations["numerology_kabbalistic_chart"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/numerology/kabbalistic-strict/life-path": {
         parameters: {
             query?: never;
@@ -9527,6 +9627,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/numerology/kabbalistic-strict/chart": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Core Numbers Chart (kabbalistic-strict)
+         * @description The six core numbers in one call: Life Path, Expression, Soul Urge, Personality, Birthday and Personal Year (`year` defaults to the current year), each with its meaning. 20 credits instead of 60 for six single calls. Every number carries `meaning` (English) and `meaningLocalized` in the requested language (`translated: false` with the English text while a language's strings are on their way). Numerology: Kabbalistic (Mathers strict) system.
+         */
+        post: operations["numerology_kabbalistic-strict_chart"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/numerology/vedic/life-path": {
         parameters: {
             query?: never;
@@ -9721,6 +9841,46 @@ export interface paths {
          * @description Calculate the Personal Year number for a given calendar year: the 9-year cycle of personal evolution. Numerology: Vedic system.
          */
         post: operations["numerology_vedic_personal-year"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/numerology/vedic/chart": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Core Numbers Chart (vedic)
+         * @description The six core numbers in one call: Life Path, Expression, Soul Urge, Personality, Birthday and Personal Year (`year` defaults to the current year), each with its meaning. 20 credits instead of 60 for six single calls. Every number carries `meaning` (English) and `meaningLocalized` in the requested language (`translated: false` with the English text while a language's strings are on their way). Numerology: Vedic system.
+         */
+        post: operations["numerology_vedic_chart"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/tarot/decks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Tarot: Decks and Card Art
+         * @description Every deck with its spreads and the public-domain card art sets you can pick with `art` on any tarot route: id, artist, year, source, a preview image, the card back, and any card a set has no picture for.
+         */
+        get: operations["tarot_decks_get"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -10318,7 +10478,7 @@ export interface paths {
         put?: never;
         /**
          * RWS: Interpret a Hand
-         * @description Resolve a list of card slugs into structured meanings (use AI /interpret/* for full narrative).
+         * @description Resolve a list of card slugs into structured meanings (POST /interpret/tarot writes the reading of the whole spread).
          */
         post: operations["tarot_rider-waite_interpret"];
         delete?: never;
@@ -11058,7 +11218,7 @@ export interface paths {
         put?: never;
         /**
          * Destiny Matrix: Ladini Method
-         * @description Calculate the full 22-position Destiny Matrix per Natalia Ladini's method from birth date. Returns centre arcanum, body positions (day/month/year/centre), soul positions, karmic and resource arcana with full meaning structure for each.
+         * @description The core of the Destiny Matrix per Natalia Ladini's method from a birth date: the personal square (pointA day, pointB month, pointC year digits, pointD bottom = A+B+C, pointE centre = A+B+C+D), the ancestral square corners, the sky (B+D) and earth (A+C) lines and the personal purpose, each with its arcanum. Numbers above 22 are reduced by summing digits. Not the full chart: the karmic tail chain and the age scale are not included.
          */
         post: operations["destiny-matrix_ladini"];
         delete?: never;
@@ -11118,7 +11278,7 @@ export interface paths {
         put?: never;
         /**
          * Create API Key
-         * @description Create a new API key. Requires an internal or enterprise API key. Returns the generated key string: save it, it cannot be retrieved later. The plan comes from the account and is not accepted in the body. allowed_endpoints limits the key to a subset of the API: paths under /v1, exact ("chart") or a namespace ("embed/*"); omit it and the key may call everything the plan includes.
+         * @description Create a new API key. Requires an internal or enterprise API key. Returns the generated key string: save it, it cannot be retrieved later. The plan comes from the account and is not accepted in the body. allowed_endpoints limits the key to a subset of the API: paths under /v1, exact ("chart") or a namespace ("embed/*"); omit it and the key may call everything the plan includes. credits_cap_cycle caps what this key may spend per billing cycle (0 parks it). A publishable key (origin_restriction.type "public", prefix pk_) is for page source, so it needs allowed_origins, credits_cap_cycle and allowed_endpoints: without any of them the request is refused with 400, and a pk_ key missing a bound is refused with 403 PUBLISHABLE_KEY_UNBOUNDED wherever it is used.
          */
         post: operations["keys"];
         delete?: never;
@@ -11142,7 +11302,7 @@ export interface paths {
         head?: never;
         /**
          * Rename a Key, Edit Origins, Budget or Scope
-         * @description Rename a key, rewrite the origin list of a publishable key, set a per-key credit budget, limit the key to a subset of endpoints, or any combination. The class is fixed at creation: a pk_ key cannot become server-only, and a secret key cannot be given a list, so either request is refused with 400 rather than quietly rewritten. A new list takes effect at once and the key string does not change. credits_cap_cycle caps what this one key may spend per billing cycle, which credits alone do not, since they pool across the account; null clears it and a call over the cap answers 429 KEY_BUDGET_EXHAUSTED without falling through to overage. allowed_endpoints takes paths under /v1, exact ("chart") or a namespace ("embed/*"); null removes the limit and a call outside the list answers 403 ENDPOINT_NOT_IN_SCOPE.
+         * @description Rename a key, rewrite the origin list of a publishable key, set a per-key credit budget, limit the key to a subset of endpoints, or any combination. The class is fixed at creation: a pk_ key cannot become server-only, and a secret key cannot be given a list, so either request is refused with 400 rather than quietly rewritten. A new list takes effect at once and the key string does not change. credits_cap_cycle caps what this one key may spend per billing cycle, which credits alone do not, since they pool across the account; null clears it and a call over the cap answers 429 KEY_BUDGET_EXHAUSTED without falling through to overage. allowed_endpoints takes paths under /v1, exact ("chart") or a namespace ("embed/*"); null removes the limit and a call outside the list answers 403 ENDPOINT_NOT_IN_SCOPE. On a publishable pk_ key neither bound can be cleared: null for either is refused with 400.
          */
         patch: operations["keys_{id}_patch"];
         trace?: never;
@@ -11176,7 +11336,7 @@ export interface paths {
         };
         /**
          * API Key Introspection
-         * @description Return metadata about the calling API key: plan, remaining credits, period end, bound domain, status. Useful for any SDK consumer that wants to surface plan and balance in its own UI.
+         * @description Return metadata about the calling API key: plan, remaining credits, period end, bound domain, status. Useful for any SDK consumer that wants to surface plan and balance in its own UI. A key that is not metered (internal, or a custom plan without a limit) returns `credits_remaining` and `credits_total_this_period` as null with `unlimited: true`; a site key returns them as null with `limits.per_hour`.
          */
         get: operations["auth_keys_me_get"];
         put?: never;
@@ -15417,6 +15577,19 @@ export interface paths {
                          *         "meta": {
                          *           "engineVersion": "2.10.03",
                          *           "calculatedAt": "2026-08-23T22:03:43.067Z"
+                         *         },
+                         *         "localized": {
+                         *           "planets": {
+                         *             "Sun": "Sonne",
+                         *             "Moon": "Mond"
+                         *           },
+                         *           "signs": {
+                         *             "aries": "Widder",
+                         *             "taurus": "Stier"
+                         *           },
+                         *           "aspects": {
+                         *             "Trine": "Trigon"
+                         *           }
                          *         }
                          *       },
                          *       "_footer": "Powered by astroway.api - get your own key at https://api.astroway.info"
@@ -15520,6 +15693,19 @@ export interface paths {
                                 meta?: {
                                     engineVersion?: string | null;
                                     calculatedAt?: string | null;
+                                } | null;
+                                localized?: {
+                                    planets?: {
+                                        Sun?: string | null;
+                                        Moon?: string | null;
+                                    } | null;
+                                    signs?: {
+                                        aries?: string | null;
+                                        taurus?: string | null;
+                                    } | null;
+                                    aspects?: {
+                                        Trine?: string | null;
+                                    } | null;
                                 } | null;
                             };
                             /**
@@ -15908,11 +16094,13 @@ export interface paths {
         put?: never;
         /**
          * Synastry score and cross-aspects (public, no key)
-         * @description Compatibility score and the planet-to-planet aspect grid for two birth charts, served anonymously. Aspects come back sorted by orb, tightest first, so taking the first six gives the six an embed would show. `applying` is true when the aspect is still closing. `spheres` splits the same score by area of life: each sphere is the subset of cross-aspects that touch its body (identity: Sun, emotional: Moon, communication: Mercury, love: Venus, passion: Mars, commitment: Saturn), scored by the same model as `score`. An aspect between two sphere bodies counts in both. A sphere with no aspect has `score: null` and `count: 0`, not 50. The six keys are a closed list; new ones may be added, existing ones are not renamed. What stays behind a key: the per-aspect interpretations, the house overlay, composite and Davison charts, and the two natal charts themselves, all of which the authed POST /synastry returns. Either partner may set `timeUnknown: true`; cross-aspects survive an unknown time because they are planet to planet. **This call costs 3 units** of the public rate-limit bucket rather than 1, because it computes two charts and the full matrix: 10 an hour on an undeclared address, 100 per declared site, 200 per address. The response carries `X-RateLimit-Cost: 3`.
+         * @description Compatibility score and the planet-to-planet aspect grid for two birth charts, served anonymously. Aspects come back sorted by orb, tightest first, so taking the first six gives the six an embed would show. `applying` is true when the aspect is still closing. `spheres` splits the same score by area of life: each sphere is the subset of cross-aspects that touch its body (identity: Sun, emotional: Moon, communication: Mercury, love: Venus, passion: Mars, commitment: Saturn), scored by the same model as `score`. An aspect between two sphere bodies counts in both. A sphere with no aspect has `score: null` and `count: 0`, not 50. The six keys are a closed list; new ones may be added, existing ones are not renamed. `strength` (0-100) is the weight the score is summed from (aspect type, the two bodies, orb), over its ceiling, an exact Sun-Moon conjunction; `tone` is the side of the score it lands on, `harmonious` or `challenging`, by the same rule (Venus-Mars counts as harmonious in any aspect). `chart1` and `chart2` are the two natal charts in the shape of POST /public/chart, so houses of one partner can be read against the other without two more calls; a partner with `timeUnknown: true` has no houses or angles. What stays behind a key: the per-aspect interpretations, the house overlay, composite and Davison charts, all of which the authed POST /synastry returns. Either partner may set `timeUnknown: true`; cross-aspects survive an unknown time because they are planet to planet. **This call costs 3 units** of the public rate-limit bucket rather than 1, because it computes two charts and the full matrix: 10 an hour on an undeclared address, 100 per declared site, 200 per address. The response carries `X-RateLimit-Cost: 3`. `localized` (follows `?lang=` / `Accept-Language`) carries display names beside the English identifiers, which stay as they are: `label` translated, `labels` and `spheres` as lookup tables keyed by the identifiers, `aspects` and `planets` keyed exactly as the `aspects` rows spell them.
          */
         post: {
             parameters: {
                 query?: {
+                    /** @description Language for this call, overriding `Accept-Language`. The canonical per-call form: a page that renders in one language passes it here rather than reconfiguring its client. Unknown or inactive codes fall back to `uk`. */
+                    lang?: string;
                     /**
                      * @description Comma-separated dotted paths, relative to `data`, to keep in the response. A path is applied to every element of an array, so `planets.name` means the name of each planet. Paths that match nothing come back in `_fields_unmatched`; a list where nothing matches at all is a 400, because an empty object would be a confident wrong answer.
                      * @example planets.name,planets.longitude
@@ -15924,7 +16112,10 @@ export interface paths {
                      */
                     precision?: components["parameters"]["ResponsePrecision"];
                 };
-                header?: never;
+                header?: {
+                    /** @description BCP-47 language (e.g. `uk`, `en`, `de`). Set it once on your HTTP client as its default; for a single call, `?lang=` overrides it. Unknown or inactive codes fall back to `uk`. */
+                    "Accept-Language"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -15970,21 +16161,27 @@ export interface paths {
                          *             "planetB": "Saturn",
                          *             "aspect": "Square",
                          *             "orb": 0.0509,
-                         *             "applying": false
+                         *             "applying": false,
+                         *             "strength": 24,
+                         *             "tone": "challenging"
                          *           },
                          *           {
                          *             "planetA": "Uranus",
                          *             "planetB": "Jupiter",
                          *             "aspect": "Trine",
                          *             "orb": 0.0787,
-                         *             "applying": true
+                         *             "applying": true,
+                         *             "strength": 22,
+                         *             "tone": "harmonious"
                          *           },
                          *           {
                          *             "planetA": "Chiron",
                          *             "planetB": "Neptune",
                          *             "aspect": "Opposition",
                          *             "orb": 0.3942,
-                         *             "applying": false
+                         *             "applying": false,
+                         *             "strength": 19,
+                         *             "tone": "challenging"
                          *           }
                          *         ],
                          *         "count": 45,
@@ -16025,7 +16222,37 @@ export interface paths {
                          *             "label": "mixed",
                          *             "count": 5
                          *           }
-                         *         ]
+                         *         ],
+                         *         "localized": {
+                         *           "label": "Збалансована",
+                         *           "labels": {
+                         *             "harmonious": "Гармонійна",
+                         *             "balanced": "Збалансована",
+                         *             "mixed": "Змішана",
+                         *             "challenging": "Напружена"
+                         *           },
+                         *           "spheres": {
+                         *             "identity": "Особистість",
+                         *             "emotional": "Емоції",
+                         *             "communication": "Спілкування",
+                         *             "love": "Кохання",
+                         *             "passion": "Пристрасть",
+                         *             "commitment": "Зобов’язання"
+                         *           },
+                         *           "aspects": {
+                         *             "Square": "Квадратура",
+                         *             "Trine": "Трин",
+                         *             "Opposition": "Опозиція"
+                         *           },
+                         *           "planets": {
+                         *             "Pluto": "Плутон",
+                         *             "Saturn": "Сатурн",
+                         *             "Uranus": "Уран",
+                         *             "Jupiter": "Юпітер",
+                         *             "Chiron": "Хірон",
+                         *             "Neptune": "Нептун"
+                         *           }
+                         *         }
                          *       },
                          *       "_footer": "Powered by astroway.api - get your own key at https://api.astroway.info"
                          *     }
@@ -16042,6 +16269,8 @@ export interface paths {
                                     aspect?: string | null;
                                     orb?: number | null;
                                     applying?: boolean | null;
+                                    strength?: number | null;
+                                    tone?: string | null;
                                 } | null)[] | null;
                                 count?: number | null;
                                 spheres?: ({
@@ -16050,6 +16279,36 @@ export interface paths {
                                     label?: string | null;
                                     count?: number | null;
                                 } | null)[] | null;
+                                localized?: {
+                                    label?: string | null;
+                                    labels?: {
+                                        harmonious?: string | null;
+                                        balanced?: string | null;
+                                        mixed?: string | null;
+                                        challenging?: string | null;
+                                    } | null;
+                                    spheres?: {
+                                        identity?: string | null;
+                                        emotional?: string | null;
+                                        communication?: string | null;
+                                        love?: string | null;
+                                        passion?: string | null;
+                                        commitment?: string | null;
+                                    } | null;
+                                    aspects?: {
+                                        Square?: string | null;
+                                        Trine?: string | null;
+                                        Opposition?: string | null;
+                                    } | null;
+                                    planets?: {
+                                        Pluto?: string | null;
+                                        Saturn?: string | null;
+                                        Uranus?: string | null;
+                                        Jupiter?: string | null;
+                                        Chiron?: string | null;
+                                        Neptune?: string | null;
+                                    } | null;
+                                } | null;
                             };
                             /**
                              * @description Free-tier watermark, present on every public response. Keys on a paid plan do not receive it.
@@ -16112,11 +16371,13 @@ export interface paths {
         };
         /**
          * Zodiac sign pair relations (public, no key)
-         * @description All 78 unordered pairs of zodiac signs (each sign with itself included), each with the classical whole-sign relation: `same`, `sextile`, `square`, `trine`, `opposition`, or `aversion` for signs one or five apart, which classically do not see each other. `tone` follows Ptolemy (Tetrabiblos I.13): trine, sextile and same sign are `harmonious`, square and opposition `challenging`, aversion `neutral`. There is deliberately no 0-100 score: a pair of signs has no orb and no bodies for the synastry model to weigh, so any number would be invented. For a score, send two birth charts to POST /public/synastry. Static data, `Cache-Control: public, max-age=604800`.
+         * @description All 78 unordered pairs of zodiac signs (each sign with itself included), each with the classical whole-sign relation: `same`, `sextile`, `square`, `trine`, `opposition`, or `aversion` for signs one or five apart, which classically do not see each other. `tone` follows Ptolemy (Tetrabiblos I.13): trine, sextile and same sign are `harmonious`, square and opposition `challenging`, aversion `neutral`. There is deliberately no 0-100 score: a pair of signs has no orb and no bodies for the synastry model to weigh, so any number would be invented. For a score, send two birth charts to POST /public/synastry. Static data, `Cache-Control: public, max-age=604800`, `Vary: Accept-Language`. `localized` (follows `?lang=` / `Accept-Language`) holds lookup tables from the English identifiers in `pairs` to display names: signs, relations, tones, elements, modalities. The identifiers themselves never change.
          */
         get: {
             parameters: {
                 query?: {
+                    /** @description Language for this call, overriding `Accept-Language`. The canonical per-call form: a page that renders in one language passes it here rather than reconfiguring its client. Unknown or inactive codes fall back to `uk`. */
+                    lang?: string;
                     /**
                      * @description Comma-separated dotted paths, relative to `data`, to keep in the response. A path is applied to every element of an array, so `planets.name` means the name of each planet. Paths that match nothing come back in `_fields_unmatched`; a list where nothing matches at all is a 400, because an empty object would be a confident wrong answer.
                      * @example planets.name,planets.longitude
@@ -16128,7 +16389,10 @@ export interface paths {
                      */
                     precision?: components["parameters"]["ResponsePrecision"];
                 };
-                header?: never;
+                header?: {
+                    /** @description BCP-47 language (e.g. `uk`, `en`, `de`). Set it once on your HTTP client as its default; for a single call, `?lang=` overrides it. Unknown or inactive codes fall back to `uk`. */
+                    "Accept-Language"?: string;
+                };
                 path?: never;
                 cookie?: never;
             };
@@ -16178,7 +16442,47 @@ export interface paths {
                          *             "samePolarity": false
                          *           }
                          *         ],
-                         *         "count": 78
+                         *         "count": 78,
+                         *         "localized": {
+                         *           "signs": {
+                         *             "aries": "Widder",
+                         *             "taurus": "Stier",
+                         *             "gemini": "Zwillinge",
+                         *             "cancer": "Krebs",
+                         *             "leo": "Löwe",
+                         *             "virgo": "Jungfrau",
+                         *             "libra": "Waage",
+                         *             "scorpio": "Skorpion",
+                         *             "sagittarius": "Schütze",
+                         *             "capricorn": "Steinbock",
+                         *             "aquarius": "Wassermann",
+                         *             "pisces": "Fische"
+                         *           },
+                         *           "relations": {
+                         *             "same": "Gleiches Zeichen",
+                         *             "aversion": "Aversion",
+                         *             "sextile": "Sextil",
+                         *             "square": "Quadrat",
+                         *             "trine": "Trigon",
+                         *             "opposition": "Opposition"
+                         *           },
+                         *           "tones": {
+                         *             "harmonious": "Harmonisch",
+                         *             "neutral": "Neutral",
+                         *             "challenging": "Herausfordernd"
+                         *           },
+                         *           "elements": {
+                         *             "fire": "Feuer",
+                         *             "earth": "Erde",
+                         *             "air": "Luft",
+                         *             "water": "Wasser"
+                         *           },
+                         *           "modalities": {
+                         *             "cardinal": "Kardinal",
+                         *             "fixed": "Fix",
+                         *             "mutable": "Veränderlich"
+                         *           }
+                         *         }
                          *       },
                          *       "_footer": "Powered by astroway.api - get your own key at https://api.astroway.info"
                          *     }
@@ -16198,6 +16502,46 @@ export interface paths {
                                     samePolarity?: boolean | null;
                                 } | null)[] | null;
                                 count?: number | null;
+                                localized?: {
+                                    signs?: {
+                                        aries?: string | null;
+                                        taurus?: string | null;
+                                        gemini?: string | null;
+                                        cancer?: string | null;
+                                        leo?: string | null;
+                                        virgo?: string | null;
+                                        libra?: string | null;
+                                        scorpio?: string | null;
+                                        sagittarius?: string | null;
+                                        capricorn?: string | null;
+                                        aquarius?: string | null;
+                                        pisces?: string | null;
+                                    } | null;
+                                    relations?: {
+                                        same?: string | null;
+                                        aversion?: string | null;
+                                        sextile?: string | null;
+                                        square?: string | null;
+                                        trine?: string | null;
+                                        opposition?: string | null;
+                                    } | null;
+                                    tones?: {
+                                        harmonious?: string | null;
+                                        neutral?: string | null;
+                                        challenging?: string | null;
+                                    } | null;
+                                    elements?: {
+                                        fire?: string | null;
+                                        earth?: string | null;
+                                        air?: string | null;
+                                        water?: string | null;
+                                    } | null;
+                                    modalities?: {
+                                        cardinal?: string | null;
+                                        fixed?: string | null;
+                                        mutable?: string | null;
+                                    } | null;
+                                } | null;
                             };
                             /**
                              * @description Free-tier watermark, present on every public response. Keys on a paid plan do not receive it.
@@ -16244,7 +16588,7 @@ export interface paths {
         };
         /**
          * Daily Horoscope (public, no key)
-         * @description Sun-sign daily horoscope. No authentication, IP-rate-limited (30/hr). Cached per (sign, date, language); every response carries the `_footer` watermark. The `horoscope` field is paragraphs separated by a blank line and may contain `**bold**` and hyphen bullets; it never contains a heading, because the caller renders its own.
+         * @description Sun-sign daily horoscope. No authentication, IP-rate-limited (30/hr). Cached per (sign, date, language); every response carries the `_footer` watermark. The text comes in `sections` (overview, love, career, health, finance, advice; null in the rare answer that missed one) and as `horoscope`, the same sections as plain paragraphs, without headings or markup. Computed beside it, from the sky at noon UTC of `date`: `transits` (each planet with its sign and solar house counted from the requested sign, the sign itself being the 1st), `aspects`, `events` in the period (ingresses, stations, lunar phases, UTC), `energy` (a 1-10 score with every factor listed; a stated heuristic, not a classical technique), `lucky` (the sign's traditional ruler, its weekday and Cheiro number) and `compatibleSigns` (same element and the complementary one).
          */
         get: {
             parameters: {
@@ -16353,7 +16697,7 @@ export interface paths {
         };
         /**
          * Weekly Horoscope (public, no key)
-         * @description Sun-sign weekly horoscope. The cache key anchors to the week's Monday, so any day in the week returns the same reading (and a finite number of generations per week). `_footer` watermark. The `horoscope` field is paragraphs separated by a blank line and may contain `**bold**` and hyphen bullets; it never contains a heading, because the caller renders its own.
+         * @description Sun-sign weekly horoscope. The cache key anchors to the week's Monday, so any day in the week returns the same reading (and a finite number of generations per week). `_footer` watermark. The text comes in `sections` (overview, love, career, health, finance, advice; null in the rare answer that missed one) and as `horoscope`, the same sections as plain paragraphs, without headings or markup. Computed beside it, from the sky at noon UTC of `date`: `transits` (each planet with its sign and solar house counted from the requested sign, the sign itself being the 1st), `aspects`, `events` in the period (ingresses, stations, lunar phases, UTC), `energy` (a 1-10 score with every factor listed; a stated heuristic, not a classical technique), `lucky` (the sign's traditional ruler, its weekday and Cheiro number) and `compatibleSigns` (same element and the complementary one).
          */
         get: {
             parameters: {
@@ -16462,7 +16806,7 @@ export interface paths {
         };
         /**
          * Monthly Horoscope (public, no key)
-         * @description Sun-sign monthly horoscope. The cache key anchors to the 1st of the month. `_footer` watermark. The `horoscope` field is paragraphs separated by a blank line and may contain `**bold**` and hyphen bullets; it never contains a heading, because the caller renders its own.
+         * @description Sun-sign monthly horoscope. The cache key anchors to the 1st of the month. `_footer` watermark. The text comes in `sections` (overview, love, career, health, finance, advice; null in the rare answer that missed one) and as `horoscope`, the same sections as plain paragraphs, without headings or markup. Computed beside it, from the sky at noon UTC of `date`: `transits` (each planet with its sign and solar house counted from the requested sign, the sign itself being the 1st), `aspects`, `events` in the period (ingresses, stations, lunar phases, UTC), `energy` (a 1-10 score with every factor listed; a stated heuristic, not a classical technique), `lucky` (the sign's traditional ruler, its weekday and Cheiro number) and `compatibleSigns` (same element and the complementary one).
          */
         get: {
             parameters: {
@@ -16648,11 +16992,27 @@ export interface paths {
                          *               "numerology": 15,
                          *               "yes": "no",
                          *               "slug": "the-devil",
-                         *               "category": "major"
+                         *               "category": "major",
+                         *               "image": {
+                         *                 "url": "https://cdn.astroway.info/tarot/rws-1909/the-devil.webp",
+                         *                 "url2x": "https://cdn.astroway.info/tarot/rws-1909/the-devil@2x.webp",
+                         *                 "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/the-devil-300.webp",
+                         *                 "width": 600,
+                         *                 "height": 1039,
+                         *                 "art": "rws-1909"
+                         *               }
                          *             },
                          *             "reversed": true
                          *           }
                          *         ],
+                         *         "back": {
+                         *           "url": "https://cdn.astroway.info/tarot/rws-1909/back.webp",
+                         *           "url2x": "https://cdn.astroway.info/tarot/rws-1909/back@2x.webp",
+                         *           "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/back-300.webp",
+                         *           "width": 600,
+                         *           "height": 1039,
+                         *           "art": "rws-1909"
+                         *         },
                          *         "localized": {
                          *           "cards": {
                          *             "the-devil": {
@@ -16728,9 +17088,25 @@ export interface paths {
                                         yes?: string | null;
                                         slug?: string | null;
                                         category?: string | null;
+                                        image?: {
+                                            url?: string | null;
+                                            url2x?: string | null;
+                                            urlSmall?: string | null;
+                                            width?: number | null;
+                                            height?: number | null;
+                                            art?: string | null;
+                                        } | null;
                                     } | null;
                                     reversed?: boolean | null;
                                 } | null)[] | null;
+                                back?: {
+                                    url?: string | null;
+                                    url2x?: string | null;
+                                    urlSmall?: string | null;
+                                    width?: number | null;
+                                    height?: number | null;
+                                    art?: string | null;
+                                } | null;
                                 localized?: {
                                     cards?: {
                                         "the-devil"?: {
@@ -16811,6 +17187,8 @@ export interface paths {
                 query?: {
                     /** @description Integer 0-4294967295. The same seed always draws the same cards; without it every call is a new random draw. */
                     seed?: number;
+                    /** @description Card art set: rws-1909 (default), rws-restored or rws-vector. GET /public/tarot/decks lists them. */
+                    art?: "rws-1909" | "rws-restored" | "rws-vector";
                     /** @description Language for this call, overriding `Accept-Language`. The canonical per-call form: a page that renders in one language passes it here rather than reconfiguring its client. Unknown or inactive codes fall back to `uk`. */
                     lang?: string;
                     /**
@@ -16879,9 +17257,17 @@ export interface paths {
                          *                 ],
                          *                 "meaning": "Smothering or imbalanced nurture."
                          *               },
-                         *               "astrology": "earth of water",
+                         *               "astrology": "water of earth",
                          *               "numerology": 4,
-                         *               "yes": "yes"
+                         *               "yes": "yes",
+                         *               "image": {
+                         *                 "url": "https://cdn.astroway.info/tarot/rws-1909/queen-of-pentacles.webp",
+                         *                 "url2x": "https://cdn.astroway.info/tarot/rws-1909/queen-of-pentacles@2x.webp",
+                         *                 "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/queen-of-pentacles-300.webp",
+                         *                 "width": 600,
+                         *                 "height": 1039,
+                         *                 "art": "rws-1909"
+                         *               }
                          *             },
                          *             "reversed": false
                          *           },
@@ -16894,7 +17280,7 @@ export interface paths {
                          *             "card": {
                          *               "slug": "9-of-wands",
                          *               "number": 9,
-                         *               "name": "9 of Wands",
+                         *               "name": "Nine of Wands",
                          *               "category": "minor",
                          *               "suit": "wands",
                          *               "rank": "9",
@@ -16916,7 +17302,15 @@ export interface paths {
                          *               },
                          *               "astrology": "Moon in Sagittarius",
                          *               "numerology": 9,
-                         *               "yes": "maybe"
+                         *               "yes": "maybe",
+                         *               "image": {
+                         *                 "url": "https://cdn.astroway.info/tarot/rws-1909/9-of-wands.webp",
+                         *                 "url2x": "https://cdn.astroway.info/tarot/rws-1909/9-of-wands@2x.webp",
+                         *                 "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/9-of-wands-300.webp",
+                         *                 "width": 600,
+                         *                 "height": 1039,
+                         *                 "art": "rws-1909"
+                         *               }
                          *             },
                          *             "reversed": true
                          *           },
@@ -16949,11 +17343,27 @@ export interface paths {
                          *               "numerology": 13,
                          *               "yes": "no",
                          *               "slug": "death",
-                         *               "category": "major"
+                         *               "category": "major",
+                         *               "image": {
+                         *                 "url": "https://cdn.astroway.info/tarot/rws-1909/death.webp",
+                         *                 "url2x": "https://cdn.astroway.info/tarot/rws-1909/death@2x.webp",
+                         *                 "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/death-300.webp",
+                         *                 "width": 600,
+                         *                 "height": 1039,
+                         *                 "art": "rws-1909"
+                         *               }
                          *             },
                          *             "reversed": false
                          *           }
                          *         ],
+                         *         "back": {
+                         *           "url": "https://cdn.astroway.info/tarot/rws-1909/back.webp",
+                         *           "url2x": "https://cdn.astroway.info/tarot/rws-1909/back@2x.webp",
+                         *           "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/back-300.webp",
+                         *           "width": 600,
+                         *           "height": 1039,
+                         *           "art": "rws-1909"
+                         *         },
                          *         "localized": {
                          *           "cards": {
                          *             "queen-of-pentacles": {
@@ -17082,9 +17492,25 @@ export interface paths {
                                         astrology?: string | null;
                                         numerology?: number | null;
                                         yes?: string | null;
+                                        image?: {
+                                            url?: string | null;
+                                            url2x?: string | null;
+                                            urlSmall?: string | null;
+                                            width?: number | null;
+                                            height?: number | null;
+                                            art?: string | null;
+                                        } | null;
                                     } | null;
                                     reversed?: boolean | null;
                                 } | null)[] | null;
+                                back?: {
+                                    url?: string | null;
+                                    url2x?: string | null;
+                                    urlSmall?: string | null;
+                                    width?: number | null;
+                                    height?: number | null;
+                                    art?: string | null;
+                                } | null;
                                 localized?: {
                                     cards?: {
                                         "queen-of-pentacles"?: {
@@ -17193,6 +17619,8 @@ export interface paths {
                 query?: {
                     /** @description Integer 0-4294967295. The same seed always draws the same cards; without it every call is a new random draw. */
                     seed?: number;
+                    /** @description Card art set: rws-1909 (default), rws-restored or rws-vector. GET /public/tarot/decks lists them. */
+                    art?: "rws-1909" | "rws-restored" | "rws-vector";
                     /** @description Language for this call, overriding `Accept-Language`. The canonical per-call form: a page that renders in one language passes it here rather than reconfiguring its client. Unknown or inactive codes fall back to `uk`. */
                     lang?: string;
                     /**
@@ -17261,9 +17689,17 @@ export interface paths {
                          *                 ],
                          *                 "meaning": "Smothering or imbalanced nurture."
                          *               },
-                         *               "astrology": "earth of water",
+                         *               "astrology": "water of earth",
                          *               "numerology": 4,
-                         *               "yes": "yes"
+                         *               "yes": "yes",
+                         *               "image": {
+                         *                 "url": "https://cdn.astroway.info/tarot/rws-1909/queen-of-pentacles.webp",
+                         *                 "url2x": "https://cdn.astroway.info/tarot/rws-1909/queen-of-pentacles@2x.webp",
+                         *                 "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/queen-of-pentacles-300.webp",
+                         *                 "width": 600,
+                         *                 "height": 1039,
+                         *                 "art": "rws-1909"
+                         *               }
                          *             },
                          *             "reversed": false
                          *           },
@@ -17276,7 +17712,7 @@ export interface paths {
                          *             "card": {
                          *               "slug": "9-of-wands",
                          *               "number": 9,
-                         *               "name": "9 of Wands",
+                         *               "name": "Nine of Wands",
                          *               "category": "minor",
                          *               "suit": "wands",
                          *               "rank": "9",
@@ -17298,7 +17734,15 @@ export interface paths {
                          *               },
                          *               "astrology": "Moon in Sagittarius",
                          *               "numerology": 9,
-                         *               "yes": "maybe"
+                         *               "yes": "maybe",
+                         *               "image": {
+                         *                 "url": "https://cdn.astroway.info/tarot/rws-1909/9-of-wands.webp",
+                         *                 "url2x": "https://cdn.astroway.info/tarot/rws-1909/9-of-wands@2x.webp",
+                         *                 "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/9-of-wands-300.webp",
+                         *                 "width": 600,
+                         *                 "height": 1039,
+                         *                 "art": "rws-1909"
+                         *               }
                          *             },
                          *             "reversed": true
                          *           },
@@ -17331,7 +17775,15 @@ export interface paths {
                          *               "numerology": 13,
                          *               "yes": "no",
                          *               "slug": "death",
-                         *               "category": "major"
+                         *               "category": "major",
+                         *               "image": {
+                         *                 "url": "https://cdn.astroway.info/tarot/rws-1909/death.webp",
+                         *                 "url2x": "https://cdn.astroway.info/tarot/rws-1909/death@2x.webp",
+                         *                 "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/death-300.webp",
+                         *                 "width": 600,
+                         *                 "height": 1039,
+                         *                 "art": "rws-1909"
+                         *               }
                          *             },
                          *             "reversed": false
                          *           },
@@ -17364,9 +17816,17 @@ export interface paths {
                          *                 ],
                          *                 "meaning": "Cold or tyrannical use of mind."
                          *               },
-                         *               "astrology": "air of fire",
+                         *               "astrology": "fire of air",
                          *               "numerology": 5,
-                         *               "yes": "yes"
+                         *               "yes": "yes",
+                         *               "image": {
+                         *                 "url": "https://cdn.astroway.info/tarot/rws-1909/king-of-swords.webp",
+                         *                 "url2x": "https://cdn.astroway.info/tarot/rws-1909/king-of-swords@2x.webp",
+                         *                 "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/king-of-swords-300.webp",
+                         *                 "width": 600,
+                         *                 "height": 1039,
+                         *                 "art": "rws-1909"
+                         *               }
                          *             },
                          *             "reversed": true
                          *           },
@@ -17400,7 +17860,15 @@ export interface paths {
                          *               "numerology": 4,
                          *               "yes": "yes",
                          *               "slug": "the-emperor",
-                         *               "category": "major"
+                         *               "category": "major",
+                         *               "image": {
+                         *                 "url": "https://cdn.astroway.info/tarot/rws-1909/the-emperor.webp",
+                         *                 "url2x": "https://cdn.astroway.info/tarot/rws-1909/the-emperor@2x.webp",
+                         *                 "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/the-emperor-300.webp",
+                         *                 "width": 600,
+                         *                 "height": 1039,
+                         *                 "art": "rws-1909"
+                         *               }
                          *             },
                          *             "reversed": false
                          *           },
@@ -17413,7 +17881,7 @@ export interface paths {
                          *             "card": {
                          *               "slug": "3-of-swords",
                          *               "number": 3,
-                         *               "name": "3 of Swords",
+                         *               "name": "Three of Swords",
                          *               "category": "minor",
                          *               "suit": "swords",
                          *               "rank": "3",
@@ -17435,7 +17903,15 @@ export interface paths {
                          *               },
                          *               "astrology": "Saturn in Libra",
                          *               "numerology": 3,
-                         *               "yes": "no"
+                         *               "yes": "no",
+                         *               "image": {
+                         *                 "url": "https://cdn.astroway.info/tarot/rws-1909/3-of-swords.webp",
+                         *                 "url2x": "https://cdn.astroway.info/tarot/rws-1909/3-of-swords@2x.webp",
+                         *                 "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/3-of-swords-300.webp",
+                         *                 "width": 600,
+                         *                 "height": 1039,
+                         *                 "art": "rws-1909"
+                         *               }
                          *             },
                          *             "reversed": true
                          *           },
@@ -17448,7 +17924,7 @@ export interface paths {
                          *             "card": {
                          *               "slug": "3-of-wands",
                          *               "number": 3,
-                         *               "name": "3 of Wands",
+                         *               "name": "Three of Wands",
                          *               "category": "minor",
                          *               "suit": "wands",
                          *               "rank": "3",
@@ -17471,7 +17947,15 @@ export interface paths {
                          *               },
                          *               "astrology": "Sun in Aries",
                          *               "numerology": 3,
-                         *               "yes": "yes"
+                         *               "yes": "yes",
+                         *               "image": {
+                         *                 "url": "https://cdn.astroway.info/tarot/rws-1909/3-of-wands.webp",
+                         *                 "url2x": "https://cdn.astroway.info/tarot/rws-1909/3-of-wands@2x.webp",
+                         *                 "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/3-of-wands-300.webp",
+                         *                 "width": 600,
+                         *                 "height": 1039,
+                         *                 "art": "rws-1909"
+                         *               }
                          *             },
                          *             "reversed": false
                          *           },
@@ -17505,7 +17989,15 @@ export interface paths {
                          *               "numerology": 15,
                          *               "yes": "no",
                          *               "slug": "the-devil",
-                         *               "category": "major"
+                         *               "category": "major",
+                         *               "image": {
+                         *                 "url": "https://cdn.astroway.info/tarot/rws-1909/the-devil.webp",
+                         *                 "url2x": "https://cdn.astroway.info/tarot/rws-1909/the-devil@2x.webp",
+                         *                 "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/the-devil-300.webp",
+                         *                 "width": 600,
+                         *                 "height": 1039,
+                         *                 "art": "rws-1909"
+                         *               }
                          *             },
                          *             "reversed": true
                          *           },
@@ -17539,7 +18031,15 @@ export interface paths {
                          *               },
                          *               "astrology": "air of air",
                          *               "numerology": 3,
-                         *               "yes": "yes"
+                         *               "yes": "yes",
+                         *               "image": {
+                         *                 "url": "https://cdn.astroway.info/tarot/rws-1909/knight-of-swords.webp",
+                         *                 "url2x": "https://cdn.astroway.info/tarot/rws-1909/knight-of-swords@2x.webp",
+                         *                 "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/knight-of-swords-300.webp",
+                         *                 "width": 600,
+                         *                 "height": 1039,
+                         *                 "art": "rws-1909"
+                         *               }
                          *             },
                          *             "reversed": true
                          *           },
@@ -17573,11 +18073,27 @@ export interface paths {
                          *               "numerology": 21,
                          *               "yes": "yes",
                          *               "slug": "the-world",
-                         *               "category": "major"
+                         *               "category": "major",
+                         *               "image": {
+                         *                 "url": "https://cdn.astroway.info/tarot/rws-1909/the-world.webp",
+                         *                 "url2x": "https://cdn.astroway.info/tarot/rws-1909/the-world@2x.webp",
+                         *                 "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/the-world-300.webp",
+                         *                 "width": 600,
+                         *                 "height": 1039,
+                         *                 "art": "rws-1909"
+                         *               }
                          *             },
                          *             "reversed": false
                          *           }
                          *         ],
+                         *         "back": {
+                         *           "url": "https://cdn.astroway.info/tarot/rws-1909/back.webp",
+                         *           "url2x": "https://cdn.astroway.info/tarot/rws-1909/back@2x.webp",
+                         *           "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/back-300.webp",
+                         *           "width": 600,
+                         *           "height": 1039,
+                         *           "art": "rws-1909"
+                         *         },
                          *         "localized": {
                          *           "cards": {
                          *             "queen-of-pentacles": {
@@ -17894,9 +18410,25 @@ export interface paths {
                                         astrology?: string | null;
                                         numerology?: number | null;
                                         yes?: string | null;
+                                        image?: {
+                                            url?: string | null;
+                                            url2x?: string | null;
+                                            urlSmall?: string | null;
+                                            width?: number | null;
+                                            height?: number | null;
+                                            art?: string | null;
+                                        } | null;
                                     } | null;
                                     reversed?: boolean | null;
                                 } | null)[] | null;
+                                back?: {
+                                    url?: string | null;
+                                    url2x?: string | null;
+                                    urlSmall?: string | null;
+                                    width?: number | null;
+                                    height?: number | null;
+                                    art?: string | null;
+                                } | null;
                                 localized?: {
                                     cards?: {
                                         "queen-of-pentacles"?: {
@@ -18081,6 +18613,861 @@ export interface paths {
         };
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/public/tarot/decks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Tarot decks and card art (public, no key)
+         * @description Every deck with its spreads and the public-domain card art sets: id, artist, year, licence, source, a preview image, the card back, and any card a set has no picture for. The same answer as GET /tarot/decks. Cached for a day.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /**
+                     * @description Comma-separated dotted paths, relative to `data`, to keep in the response. A path is applied to every element of an array, so `planets.name` means the name of each planet. Paths that match nothing come back in `_fields_unmatched`; a list where nothing matches at all is a 400, because an empty object would be a confident wrong answer.
+                     * @example planets.name,planets.longitude
+                     */
+                    fields?: components["parameters"]["ResponseFields"];
+                    /**
+                     * @description Round every non-integer number in the response to this many decimal places. Integers are left alone, because an id is not a measurement. Ecliptic longitudes ship with fourteen decimals by default; 2 is about a tenth of an arcminute.
+                     * @example 4
+                     */
+                    precision?: components["parameters"]["ResponsePrecision"];
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": true,
+                         *       "data": {
+                         *         "items": [
+                         *           {
+                         *             "deck": "rider-waite",
+                         *             "name": "Rider-Waite-Smith",
+                         *             "cards": 78,
+                         *             "spreads": [
+                         *               {
+                         *                 "slug": "single-card",
+                         *                 "name": "Single Card",
+                         *                 "cardCount": 1
+                         *               },
+                         *               {
+                         *                 "slug": "three-card",
+                         *                 "name": "Past / Present / Future",
+                         *                 "cardCount": 3
+                         *               },
+                         *               {
+                         *                 "slug": "celtic-cross",
+                         *                 "name": "Celtic Cross",
+                         *                 "cardCount": 10
+                         *               },
+                         *               {
+                         *                 "slug": "horseshoe",
+                         *                 "name": "Horseshoe",
+                         *                 "cardCount": 7
+                         *               },
+                         *               {
+                         *                 "slug": "relationship",
+                         *                 "name": "Relationship",
+                         *                 "cardCount": 7
+                         *               },
+                         *               {
+                         *                 "slug": "year-ahead",
+                         *                 "name": "Year Ahead",
+                         *                 "cardCount": 13
+                         *               },
+                         *               {
+                         *                 "slug": "decision",
+                         *                 "name": "Yes / No Decision",
+                         *                 "cardCount": 1
+                         *               },
+                         *               {
+                         *                 "slug": "chakra",
+                         *                 "name": "Chakra Spread",
+                         *                 "cardCount": 7
+                         *               },
+                         *               {
+                         *                 "slug": "career",
+                         *                 "name": "Career",
+                         *                 "cardCount": 5
+                         *               },
+                         *               {
+                         *                 "slug": "love-triangle",
+                         *                 "name": "Love Triangle",
+                         *                 "cardCount": 6
+                         *               },
+                         *               {
+                         *                 "slug": "spiritual-path",
+                         *                 "name": "Spiritual Path",
+                         *                 "cardCount": 5
+                         *               },
+                         *               {
+                         *                 "slug": "shadow-work",
+                         *                 "name": "Shadow Work",
+                         *                 "cardCount": 6
+                         *               }
+                         *             ],
+                         *             "art": [
+                         *               {
+                         *                 "id": "rws-1909",
+                         *                 "name": "Rider-Waite-Smith 1909",
+                         *                 "artist": "Pamela Colman Smith",
+                         *                 "year": "1909",
+                         *                 "licence": "Public domain",
+                         *                 "source": "https://commons.wikimedia.org/wiki/Category:Rider-Waite_tarot_deck_(Roses_%26_Lilies)",
+                         *                 "note": "The first printing, with the original colouring.",
+                         *                 "preview": {
+                         *                   "url": "https://cdn.astroway.info/tarot/rws-1909/the-fool.webp",
+                         *                   "url2x": "https://cdn.astroway.info/tarot/rws-1909/the-fool@2x.webp",
+                         *                   "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/the-fool-300.webp",
+                         *                   "width": 600,
+                         *                   "height": 1039,
+                         *                   "art": "rws-1909"
+                         *                 },
+                         *                 "back": {
+                         *                   "url": "https://cdn.astroway.info/tarot/rws-1909/back.webp",
+                         *                   "url2x": "https://cdn.astroway.info/tarot/rws-1909/back@2x.webp",
+                         *                   "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/back-300.webp",
+                         *                   "width": 600,
+                         *                   "height": 1039,
+                         *                   "art": "rws-1909"
+                         *                 },
+                         *                 "missing": []
+                         *               },
+                         *               {
+                         *                 "id": "rws-restored",
+                         *                 "name": "Rider-Waite-Smith, restored",
+                         *                 "artist": "Pamela Colman Smith",
+                         *                 "year": "1909",
+                         *                 "licence": "Public domain",
+                         *                 "source": "https://commons.wikimedia.org/wiki/Category:Rider-Waite-Smith_tarot_deck_(Geldard)",
+                         *                 "note": "A clean restoration of the 1909 art with even colour.",
+                         *                 "preview": {
+                         *                   "url": "https://cdn.astroway.info/tarot/rws-restored/the-fool.webp",
+                         *                   "url2x": "https://cdn.astroway.info/tarot/rws-restored/the-fool@2x.webp",
+                         *                   "urlSmall": "https://cdn.astroway.info/tarot/rws-restored/the-fool-300.webp",
+                         *                   "width": 600,
+                         *                   "height": 1028,
+                         *                   "art": "rws-restored"
+                         *                 },
+                         *                 "back": {
+                         *                   "url": "https://cdn.astroway.info/tarot/rws-1909/back.webp",
+                         *                   "url2x": "https://cdn.astroway.info/tarot/rws-1909/back@2x.webp",
+                         *                   "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/back-300.webp",
+                         *                   "width": 600,
+                         *                   "height": 1039,
+                         *                   "art": "rws-1909"
+                         *                 },
+                         *                 "missing": []
+                         *               },
+                         *               {
+                         *                 "id": "rws-vector",
+                         *                 "name": "Rider-Waite-Smith, vector",
+                         *                 "artist": "Pamela Colman Smith, vectorised by Immanuelle",
+                         *                 "year": "1909",
+                         *                 "licence": "Public domain",
+                         *                 "source": "https://commons.wikimedia.org/wiki/Category:Vectorized_Tarot_by_Immanuelle",
+                         *                 "note": "Flat redrawn lines and colour, crisp at any size.",
+                         *                 "preview": {
+                         *                   "url": "https://cdn.astroway.info/tarot/rws-vector/the-fool.webp",
+                         *                   "url2x": "https://cdn.astroway.info/tarot/rws-vector/the-fool@2x.webp",
+                         *                   "urlSmall": "https://cdn.astroway.info/tarot/rws-vector/the-fool-300.webp",
+                         *                   "width": 600,
+                         *                   "height": 1000,
+                         *                   "art": "rws-vector"
+                         *                 },
+                         *                 "back": {
+                         *                   "url": "https://cdn.astroway.info/tarot/rws-vector/back.webp",
+                         *                   "url2x": "https://cdn.astroway.info/tarot/rws-vector/back@2x.webp",
+                         *                   "urlSmall": "https://cdn.astroway.info/tarot/rws-vector/back-300.webp",
+                         *                   "width": 600,
+                         *                   "height": 1000,
+                         *                   "art": "rws-vector"
+                         *                 },
+                         *                 "missing": []
+                         *               }
+                         *             ]
+                         *           },
+                         *           {
+                         *             "deck": "marseille",
+                         *             "name": "Tarot de Marseille",
+                         *             "cards": 78,
+                         *             "spreads": [
+                         *               {
+                         *                 "slug": "single-card",
+                         *                 "name": "Single Card",
+                         *                 "cardCount": 1
+                         *               },
+                         *               {
+                         *                 "slug": "three-card",
+                         *                 "name": "Three-Card",
+                         *                 "cardCount": 3
+                         *               },
+                         *               {
+                         *                 "slug": "jodorowsky-cross",
+                         *                 "name": "Tirage Réduit (Jodorowsky Reduced Cross)",
+                         *                 "cardCount": 5
+                         *               },
+                         *               {
+                         *                 "slug": "jodorowsky-hero",
+                         *                 "name": "Tirage du Héros (Jodorowsky Hero's Journey)",
+                         *                 "cardCount": 6
+                         *               },
+                         *               {
+                         *                 "slug": "seven-card",
+                         *                 "name": "Seven-Card Pyramid",
+                         *                 "cardCount": 7
+                         *               },
+                         *               {
+                         *                 "slug": "celtic-cross",
+                         *                 "name": "Celtic Cross (Marseille)",
+                         *                 "cardCount": 10
+                         *               },
+                         *               {
+                         *                 "slug": "decision",
+                         *                 "name": "Decision",
+                         *                 "cardCount": 1
+                         *               },
+                         *               {
+                         *                 "slug": "love",
+                         *                 "name": "Love Spread",
+                         *                 "cardCount": 5
+                         *               },
+                         *               {
+                         *                 "slug": "career",
+                         *                 "name": "Career",
+                         *                 "cardCount": 4
+                         *               },
+                         *               {
+                         *                 "slug": "spiritual",
+                         *                 "name": "Spiritual Path",
+                         *                 "cardCount": 4
+                         *               }
+                         *             ],
+                         *             "art": [
+                         *               {
+                         *                 "id": "arnoult-1748",
+                         *                 "name": "Tarot de Marseille, Arnoult",
+                         *                 "artist": "Arnoult",
+                         *                 "year": "1748",
+                         *                 "licence": "Public domain",
+                         *                 "source": "https://gallica.bnf.fr/ark:/12148/btv1b10510965g",
+                         *                 "note": null,
+                         *                 "preview": {
+                         *                   "url": "https://cdn.astroway.info/tarot/arnoult-1748/le-mat-the-fool-marseille.webp",
+                         *                   "url2x": "https://cdn.astroway.info/tarot/arnoult-1748/le-mat-the-fool-marseille@2x.webp",
+                         *                   "urlSmall": "https://cdn.astroway.info/tarot/arnoult-1748/le-mat-the-fool-marseille-300.webp",
+                         *                   "width": 600,
+                         *                   "height": 1096,
+                         *                   "art": "arnoult-1748"
+                         *                 },
+                         *                 "back": null,
+                         *                 "missing": []
+                         *               }
+                         *             ]
+                         *           },
+                         *           {
+                         *             "deck": "lenormand",
+                         *             "name": "Lenormand",
+                         *             "cards": 36,
+                         *             "spreads": [
+                         *               {
+                         *                 "slug": "three-card",
+                         *                 "name": "Three-Card Line",
+                         *                 "cardCount": 3
+                         *               },
+                         *               {
+                         *                 "slug": "grand-tableau",
+                         *                 "name": "Grand Tableau",
+                         *                 "cardCount": 36
+                         *               },
+                         *               {
+                         *                 "slug": "nine-card-square",
+                         *                 "name": "9-Card Square (3×3)",
+                         *                 "cardCount": 9
+                         *               },
+                         *               {
+                         *                 "slug": "line-of-five",
+                         *                 "name": "Line of Five",
+                         *                 "cardCount": 5
+                         *               },
+                         *               {
+                         *                 "slug": "celtic-cross-lenormand",
+                         *                 "name": "Detailed 10-Card Cross (modern hybrid)",
+                         *                 "cardCount": 10
+                         *               },
+                         *               {
+                         *                 "slug": "relationship",
+                         *                 "name": "Relationship",
+                         *                 "cardCount": 7
+                         *               }
+                         *             ],
+                         *             "art": [
+                         *               {
+                         *                 "id": "dondorf",
+                         *                 "name": "Lenormand, Dondorf",
+                         *                 "artist": "B. Dondorf, Frankfurt",
+                         *                 "year": "19th century",
+                         *                 "licence": "Public domain",
+                         *                 "source": "https://gallica.bnf.fr/ark:/12148/btv1b105431980",
+                         *                 "note": "The scan lacks card 32, the Moon, which has no image in this set.",
+                         *                 "preview": {
+                         *                   "url": "https://cdn.astroway.info/tarot/dondorf/rider.webp",
+                         *                   "url2x": "https://cdn.astroway.info/tarot/dondorf/rider@2x.webp",
+                         *                   "urlSmall": "https://cdn.astroway.info/tarot/dondorf/rider-300.webp",
+                         *                   "width": 600,
+                         *                   "height": 958,
+                         *                   "art": "dondorf"
+                         *                 },
+                         *                 "back": {
+                         *                   "url": "https://cdn.astroway.info/tarot/dondorf/back.webp",
+                         *                   "url2x": "https://cdn.astroway.info/tarot/dondorf/back@2x.webp",
+                         *                   "urlSmall": "https://cdn.astroway.info/tarot/dondorf/back-300.webp",
+                         *                   "width": 600,
+                         *                   "height": 958,
+                         *                   "art": "dondorf"
+                         *                 },
+                         *                 "missing": [
+                         *                   "moon"
+                         *                 ]
+                         *               }
+                         *             ]
+                         *           }
+                         *         ]
+                         *       },
+                         *       "_footer": "Powered by astroway.api - get your own key at https://api.astroway.info"
+                         *     }
+                         */
+                        "application/json": {
+                            /** @example true */
+                            ok?: boolean;
+                            data?: {
+                                items?: ({
+                                    deck?: string | null;
+                                    name?: string | null;
+                                    cards?: number | null;
+                                    spreads?: ({
+                                        slug?: string | null;
+                                        name?: string | null;
+                                        cardCount?: number | null;
+                                    } | null)[] | null;
+                                    art?: ({
+                                        id?: string | null;
+                                        name?: string | null;
+                                        artist?: string | null;
+                                        year?: string | null;
+                                        licence?: string | null;
+                                        source?: string | null;
+                                        note?: string | null;
+                                        preview?: {
+                                            url?: string | null;
+                                            url2x?: string | null;
+                                            urlSmall?: string | null;
+                                            width?: number | null;
+                                            height?: number | null;
+                                            art?: string | null;
+                                        } | null;
+                                        back?: {
+                                            url?: string | null;
+                                            url2x?: string | null;
+                                            urlSmall?: string | null;
+                                            width?: number | null;
+                                            height?: number | null;
+                                            art?: string | null;
+                                        } | null;
+                                        missing?: unknown[] | null;
+                                    } | null)[] | null;
+                                } | null)[] | null;
+                            };
+                            /**
+                             * @description Free-tier watermark, present on every public response. Keys on a paid plan do not receive it.
+                             * @example Powered by astroway.api - get your own key at https://api.astroway.info
+                             */
+                            _footer?: string;
+                        };
+                    };
+                };
+                /** @description Invalid sign or date */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": false,
+                         *       "error": {
+                         *         "code": "INVALID_SIGN",
+                         *         "message": "sign must be one of the 12 zodiac signs"
+                         *       }
+                         *     }
+                         */
+                        "application/json": unknown;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/public/chinese/zodiac/daily": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Chinese sign of the day (public, no key)
+         * @description One animal against one day: the day pillar and the year pillar (from Li Chun), how their branches stand to the animal (`same`, `secretFriend` 六合, `trine` 三合, `clash` 六冲, `harm` 六害 or `neutral`), `benMingNian` when the year is the animal's own, and `energy`, 1-10 from 5 with every step in `factors`: a stated heuristic (day: friend or trine +2, same +1, harm -2, clash -3; year: friend or trine +1, same or harm -1, clash -2), not a classical score. Computed, no model. Animal and element names follow `?lang=`. Costs 1 unit of the public bucket.
+         */
+        get: {
+            parameters: {
+                query: {
+                    /** @description One of the twelve, English, any case. */
+                    animal: "rat" | "ox" | "tiger" | "rabbit" | "dragon" | "snake" | "horse" | "goat" | "monkey" | "rooster" | "dog" | "pig";
+                    /** @description Calendar date `YYYY-MM-DD` (UTC). Defaults to today. */
+                    date?: string;
+                    /** @description Language for this call, overriding `Accept-Language`. The canonical per-call form: a page that renders in one language passes it here rather than reconfiguring its client. Unknown or inactive codes fall back to `uk`. */
+                    lang?: string;
+                    /**
+                     * @description Comma-separated dotted paths, relative to `data`, to keep in the response. A path is applied to every element of an array, so `planets.name` means the name of each planet. Paths that match nothing come back in `_fields_unmatched`; a list where nothing matches at all is a 400, because an empty object would be a confident wrong answer.
+                     * @example planets.name,planets.longitude
+                     */
+                    fields?: components["parameters"]["ResponseFields"];
+                    /**
+                     * @description Round every non-integer number in the response to this many decimal places. Integers are left alone, because an id is not a measurement. Ecliptic longitudes ship with fourteen decimals by default; 2 is about a tenth of an arcminute.
+                     * @example 4
+                     */
+                    precision?: components["parameters"]["ResponsePrecision"];
+                };
+                header?: {
+                    /** @description BCP-47 language (e.g. `uk`, `en`, `de`). Set it once on your HTTP client as its default; for a single call, `?lang=` overrides it. Unknown or inactive codes fall back to `uk`. */
+                    "Accept-Language"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": true,
+                         *       "data": {
+                         *         "animal": "Horse",
+                         *         "animalName": "Horse",
+                         *         "date": "2026-10-07",
+                         *         "dayPillar": {
+                         *           "stem": "Jia",
+                         *           "branch": "Yin",
+                         *           "animal": "Tiger",
+                         *           "animalName": "Tiger",
+                         *           "stemHanzi": "甲",
+                         *           "branchHanzi": "寅",
+                         *           "element": "Wood",
+                         *           "elementName": "Wood",
+                         *           "yin": false
+                         *         },
+                         *         "yearPillar": {
+                         *           "stem": "Bing",
+                         *           "branch": "Wu",
+                         *           "animal": "Horse",
+                         *           "animalName": "Horse",
+                         *           "stemHanzi": "丙",
+                         *           "branchHanzi": "午",
+                         *           "element": "Fire",
+                         *           "elementName": "Fire",
+                         *           "yin": false,
+                         *           "solarYear": 2026
+                         *         },
+                         *         "day": {
+                         *           "relation": "trine",
+                         *           "chinese": "三合"
+                         *         },
+                         *         "year": {
+                         *           "relation": "same",
+                         *           "chinese": null
+                         *         },
+                         *         "benMingNian": true,
+                         *         "energy": {
+                         *           "score": 6,
+                         *           "factors": [
+                         *             {
+                         *               "source": "day",
+                         *               "relation": "trine",
+                         *               "chinese": "三合",
+                         *               "effect": 2
+                         *             },
+                         *             {
+                         *               "source": "year",
+                         *               "relation": "same",
+                         *               "chinese": null,
+                         *               "effect": -1
+                         *             }
+                         *           ]
+                         *         }
+                         *       },
+                         *       "_footer": "Powered by astroway.api - get your own key at https://api.astroway.info"
+                         *     }
+                         */
+                        "application/json": {
+                            /** @example true */
+                            ok?: boolean;
+                            data?: {
+                                animal?: string | null;
+                                animalName?: string | null;
+                                date?: string | null;
+                                dayPillar?: {
+                                    stem?: string | null;
+                                    branch?: string | null;
+                                    animal?: string | null;
+                                    animalName?: string | null;
+                                    stemHanzi?: string | null;
+                                    branchHanzi?: string | null;
+                                    element?: string | null;
+                                    elementName?: string | null;
+                                    yin?: boolean | null;
+                                } | null;
+                                yearPillar?: {
+                                    stem?: string | null;
+                                    branch?: string | null;
+                                    animal?: string | null;
+                                    animalName?: string | null;
+                                    stemHanzi?: string | null;
+                                    branchHanzi?: string | null;
+                                    element?: string | null;
+                                    elementName?: string | null;
+                                    yin?: boolean | null;
+                                    solarYear?: number | null;
+                                } | null;
+                                day?: {
+                                    relation?: string | null;
+                                    chinese?: string | null;
+                                } | null;
+                                year?: {
+                                    relation?: string | null;
+                                    chinese?: unknown;
+                                } | null;
+                                benMingNian?: boolean | null;
+                                energy?: {
+                                    score?: number | null;
+                                    factors?: ({
+                                        source?: string | null;
+                                        relation?: string | null;
+                                        chinese?: string | null;
+                                        effect?: number | null;
+                                    } | null)[] | null;
+                                } | null;
+                            };
+                            /**
+                             * @description Free-tier watermark, present on every public response. Keys on a paid plan do not receive it.
+                             * @example Powered by astroway.api - get your own key at https://api.astroway.info
+                             */
+                            _footer?: string;
+                        };
+                    };
+                };
+                /** @description Invalid sign or date */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": false,
+                         *       "error": {
+                         *         "code": "INVALID_SIGN",
+                         *         "message": "sign must be one of the 12 zodiac signs"
+                         *       }
+                         *     }
+                         */
+                        "application/json": unknown;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/public/chinese/zodiac/animal": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Chinese zodiac animal for a birth date (public, no key)
+         * @description The same answer as POST /chinese/zodiac/animal, served anonymously: animal, stem, branch and element of the solar year the date falls in. The year turns at Li Chun (around 4 February), not on 1 January, so send `time` and `timezoneOffset` for a birth near that boundary. `animalName`, `fixedName` and `cyclingName` follow `?lang=`; the English identifiers stay as they are. Costs 1 unit of the public bucket. Characters (simplified, traditional beside the animal) and Hanyu Pinyin with tone marks for the animal, stem and branch; `hours` is the double hour of the branch in local clock time (Rat 23:00-01:00); `trine` (三合), `secretFriend` (六合), `clash` (六冲) and `harm` (六害) are the fixed branch relations, the same arithmetic the BaZi interactions use. Pair it with GET /public/chinese/zodiac/texts for the reading.
+         */
+        post: {
+            parameters: {
+                query?: {
+                    /** @description Language for this call, overriding `Accept-Language`. The canonical per-call form: a page that renders in one language passes it here rather than reconfiguring its client. Unknown or inactive codes fall back to `uk`. */
+                    lang?: string;
+                    /**
+                     * @description Comma-separated dotted paths, relative to `data`, to keep in the response. A path is applied to every element of an array, so `planets.name` means the name of each planet. Paths that match nothing come back in `_fields_unmatched`; a list where nothing matches at all is a 400, because an empty object would be a confident wrong answer.
+                     * @example planets.name,planets.longitude
+                     */
+                    fields?: components["parameters"]["ResponseFields"];
+                    /**
+                     * @description Round every non-integer number in the response to this many decimal places. Integers are left alone, because an id is not a measurement. Ecliptic longitudes ship with fourteen decimals by default; 2 is about a tenth of an arcminute.
+                     * @example 4
+                     */
+                    precision?: components["parameters"]["ResponsePrecision"];
+                };
+                header?: {
+                    /** @description BCP-47 language (e.g. `uk`, `en`, `de`). Set it once on your HTTP client as its default; for a single call, `?lang=` overrides it. Unknown or inactive codes fall back to `uk`. */
+                    "Accept-Language"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody: {
+                content: {
+                    /**
+                     * @example {
+                     *       "date": "1990-05-15"
+                     *     }
+                     */
+                    "application/json": components["schemas"]["ChineseDateTimeInput"];
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": true,
+                         *       "data": {
+                         *         "solarYear": 1990,
+                         *         "animal": "Horse",
+                         *         "animalName": "Horse",
+                         *         "glyph": "🐎",
+                         *         "animalHanzi": "马",
+                         *         "animalHanziTraditional": "馬",
+                         *         "animalPinyin": "mǎ",
+                         *         "stemHanzi": "庚",
+                         *         "stemPinyin": "gēng",
+                         *         "branchHanzi": "午",
+                         *         "branchPinyin": "wǔ",
+                         *         "hours": {
+                         *           "start": "11:00",
+                         *           "end": "13:00"
+                         *         },
+                         *         "trine": {
+                         *           "element": "Fire",
+                         *           "elementName": "Fire",
+                         *           "chinese": "三合",
+                         *           "animals": [
+                         *             {
+                         *               "animal": "Tiger",
+                         *               "animalName": "Tiger"
+                         *             },
+                         *             {
+                         *               "animal": "Horse",
+                         *               "animalName": "Horse"
+                         *             },
+                         *             {
+                         *               "animal": "Dog",
+                         *               "animalName": "Dog"
+                         *             }
+                         *           ]
+                         *         },
+                         *         "secretFriend": {
+                         *           "animal": "Goat",
+                         *           "animalName": "Goat",
+                         *           "branch": "Wei",
+                         *           "chinese": "六合"
+                         *         },
+                         *         "clash": {
+                         *           "animal": "Rat",
+                         *           "animalName": "Rat",
+                         *           "branch": "Zi",
+                         *           "chinese": "六冲"
+                         *         },
+                         *         "harm": {
+                         *           "animal": "Ox",
+                         *           "animalName": "Ox",
+                         *           "branch": "Chou",
+                         *           "chinese": "六害"
+                         *         },
+                         *         "branch": "Wu",
+                         *         "stem": "Geng",
+                         *         "element": {
+                         *           "fixed": "Fire",
+                         *           "fixedName": "Fire",
+                         *           "cycling": "Metal",
+                         *           "cyclingName": "Metal",
+                         *           "yin": false
+                         *         },
+                         *         "pillar": "Geng-Wu",
+                         *         "yearStart": {
+                         *           "utc": "1990-02-04T02:14:00Z",
+                         *           "beijing": "1990-02-04T10:14:00+08:00"
+                         *         },
+                         *         "yearEnd": {
+                         *           "utc": "1991-02-04T08:08:24Z",
+                         *           "beijing": "1991-02-04T16:08:24+08:00"
+                         *         }
+                         *       },
+                         *       "_footer": "Powered by astroway.api - get your own key at https://api.astroway.info"
+                         *     }
+                         */
+                        "application/json": {
+                            /** @example true */
+                            ok?: boolean;
+                            data?: {
+                                solarYear?: number | null;
+                                animal?: string | null;
+                                animalName?: string | null;
+                                glyph?: string | null;
+                                animalHanzi?: string | null;
+                                animalHanziTraditional?: string | null;
+                                animalPinyin?: string | null;
+                                stemHanzi?: string | null;
+                                stemPinyin?: string | null;
+                                branchHanzi?: string | null;
+                                branchPinyin?: string | null;
+                                hours?: {
+                                    start?: string | null;
+                                    end?: string | null;
+                                } | null;
+                                trine?: {
+                                    element?: string | null;
+                                    elementName?: string | null;
+                                    chinese?: string | null;
+                                    animals?: ({
+                                        animal?: string | null;
+                                        animalName?: string | null;
+                                    } | null)[] | null;
+                                } | null;
+                                secretFriend?: {
+                                    animal?: string | null;
+                                    animalName?: string | null;
+                                    branch?: string | null;
+                                    chinese?: string | null;
+                                } | null;
+                                clash?: {
+                                    animal?: string | null;
+                                    animalName?: string | null;
+                                    branch?: string | null;
+                                    chinese?: string | null;
+                                } | null;
+                                harm?: {
+                                    animal?: string | null;
+                                    animalName?: string | null;
+                                    branch?: string | null;
+                                    chinese?: string | null;
+                                } | null;
+                                branch?: string | null;
+                                stem?: string | null;
+                                element?: {
+                                    fixed?: string | null;
+                                    fixedName?: string | null;
+                                    cycling?: string | null;
+                                    cyclingName?: string | null;
+                                    yin?: boolean | null;
+                                } | null;
+                                pillar?: string | null;
+                                yearStart?: {
+                                    utc?: string | null;
+                                    beijing?: string | null;
+                                } | null;
+                                yearEnd?: {
+                                    utc?: string | null;
+                                    beijing?: string | null;
+                                } | null;
+                            };
+                            /**
+                             * @description Free-tier watermark, present on every public response. Keys on a paid plan do not receive it.
+                             * @example Powered by astroway.api - get your own key at https://api.astroway.info
+                             */
+                            _footer?: string;
+                        };
+                    };
+                };
+                /** @description Invalid input */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": false,
+                         *       "error": {
+                         *         "code": "INVALID_FIELD",
+                         *         "message": "Unsupported fields: \"tz\", \"lat\", \"lng\". Rename them to \"timezoneOffset\", \"latitude\", \"longitude\". See details for what each one expects.",
+                         *         "details": [
+                         *           {
+                         *             "path": "tz",
+                         *             "expected": "timezoneOffset",
+                         *             "message": "numeric hours from UTC, e.g. 5.75; a zone name goes in timezone"
+                         *           },
+                         *           {
+                         *             "path": "lat",
+                         *             "expected": "latitude",
+                         *             "message": "decimal degrees, north positive"
+                         *           },
+                         *           {
+                         *             "path": "lng",
+                         *             "expected": "longitude",
+                         *             "message": "decimal degrees, east positive"
+                         *           }
+                         *         ],
+                         *         "docs": "https://api.astroway.info/en/errors/#invalid_field"
+                         *       }
+                         *     }
+                         */
+                        "application/json": unknown;
+                    };
+                };
+            };
+        };
         delete?: never;
         options?: never;
         head?: never;
@@ -18374,7 +19761,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/public/moon-phase": {
+    "/public/tarot/daily-reading": {
         parameters: {
             query?: never;
             header?: never;
@@ -18382,8 +19769,8 @@ export interface paths {
             cookie?: never;
         };
         /**
-         * Moon Phase (public, no key)
-         * @description Geocentric moon phase for a date (computed at noon UTC): deterministic, no AI, no birth data. `_footer` watermark. The English `phaseName`, `moonSign` and `sunSign` are the stable identifiers to match on and never change; `localized` carries the same three in the requested language.
+         * Tarot reading of the day (public, no key)
+         * @description The Rider-Waite-Smith three-card spread of the day (the same cards for every caller on a date) read as a whole, in the requested language: each position in context, `synthesis` and `advice`. The same answer shape as POST /interpret/tarot, plus `back` (the card back). In a language other than English each position carries `positionMeaningLocalized` and each card `suitLocalized` and `meaningLocalized` (keywords and meaning of the side drawn); the long card texts are GET /public/tarot/texts by slug. Generated once per date and language and cached for a day, `Cache-Control: public, max-age=3600`.
          */
         get: {
             parameters: {
@@ -18422,20 +19809,4543 @@ export interface paths {
                          * @example {
                          *       "ok": true,
                          *       "data": {
-                         *         "date": "2026-08-21",
-                         *         "phase": 0.631254,
-                         *         "phaseName": "Waxing Gibbous",
+                         *         "date": "2026-10-07",
+                         *         "deck": "rider-waite",
+                         *         "spread": {
+                         *           "slug": "three-card",
+                         *           "name": "Past / Present / Future"
+                         *         },
+                         *         "question": null,
+                         *         "positions": [
+                         *           {
+                         *             "index": 0,
+                         *             "position": "Past",
+                         *             "positionMeaning": "Forces from the past shaping the situation.",
+                         *             "card": {
+                         *               "slug": "the-star",
+                         *               "name": "The Star"
+                         *             },
+                         *             "reversed": false,
+                         *             "reading": "A period of renewed hope is behind this day..."
+                         *           }
+                         *         ],
+                         *         "synthesis": "Taken together, the cards...",
+                         *         "advice": "Give the plan one quiet hour today.",
+                         *         "disclaimer": "This is generated by AI for entertainment and self-reflection purposes only.",
+                         *         "model": "groq/llama-3.3-70b",
+                         *         "language": "en"
+                         *       },
+                         *       "_footer": "Powered by astroway.api - get your own key at https://api.astroway.info"
+                         *     }
+                         */
+                        "application/json": {
+                            /** @example true */
+                            ok?: boolean;
+                            data?: {
+                                date?: string | null;
+                                deck?: string | null;
+                                spread?: {
+                                    slug?: string | null;
+                                    name?: string | null;
+                                } | null;
+                                question?: unknown;
+                                positions?: ({
+                                    index?: number | null;
+                                    position?: string | null;
+                                    positionMeaning?: string | null;
+                                    card?: {
+                                        slug?: string | null;
+                                        name?: string | null;
+                                    } | null;
+                                    reversed?: boolean | null;
+                                    reading?: string | null;
+                                } | null)[] | null;
+                                synthesis?: string | null;
+                                advice?: string | null;
+                                disclaimer?: string | null;
+                                model?: string | null;
+                                language?: string | null;
+                            };
+                            /**
+                             * @description Free-tier watermark, present on every public response. Keys on a paid plan do not receive it.
+                             * @example Powered by astroway.api - get your own key at https://api.astroway.info
+                             */
+                            _footer?: string;
+                        };
+                    };
+                };
+                /** @description Invalid sign or date */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": false,
+                         *       "error": {
+                         *         "code": "INVALID_SIGN",
+                         *         "message": "sign must be one of the 12 zodiac signs"
+                         *       }
+                         *     }
+                         */
+                        "application/json": unknown;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/public/tarot/texts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Tarot card texts (public, no key)
+         * @description Long-form readings for the 78 Rider-Waite-Smith cards: a three-paragraph `description` (the imagery, the upright meaning, the reversed meaning), and for `upright` and `reversed` one text each on `love`, `career`, `finance`, `health` and `spirit`, plus `name` and up to five `keywords` per side. `cards` is a comma-separated list of slugs (as in GET /public/tarot/decks); omit it for all 78; an unknown slug is a 400 `INVALID_CARD`. Our own prose. A language without its table yet answers English text with `textLocalized: false`; names and keywords are localised either way. Static data, `Cache-Control: public, max-age=604800`.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @example the-fool,9-of-swords */
+                    cards?: string;
+                    /** @description Language for this call, overriding `Accept-Language`. The canonical per-call form: a page that renders in one language passes it here rather than reconfiguring its client. Unknown or inactive codes fall back to `uk`. */
+                    lang?: string;
+                    /**
+                     * @description Comma-separated dotted paths, relative to `data`, to keep in the response. A path is applied to every element of an array, so `planets.name` means the name of each planet. Paths that match nothing come back in `_fields_unmatched`; a list where nothing matches at all is a 400, because an empty object would be a confident wrong answer.
+                     * @example planets.name,planets.longitude
+                     */
+                    fields?: components["parameters"]["ResponseFields"];
+                    /**
+                     * @description Round every non-integer number in the response to this many decimal places. Integers are left alone, because an id is not a measurement. Ecliptic longitudes ship with fourteen decimals by default; 2 is about a tenth of an arcminute.
+                     * @example 4
+                     */
+                    precision?: components["parameters"]["ResponsePrecision"];
+                };
+                header?: {
+                    /** @description BCP-47 language (e.g. `uk`, `en`, `de`). Set it once on your HTTP client as its default; for a single call, `?lang=` overrides it. Unknown or inactive codes fall back to `uk`. */
+                    "Accept-Language"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": true,
+                         *       "data": {
+                         *         "lang": "en",
+                         *         "textLocalized": true,
+                         *         "cards": {
+                         *           "9-of-swords": {
+                         *             "name": "Nine of Swords",
+                         *             "keywords": {
+                         *               "upright": [
+                         *                 "anxiety",
+                         *                 "nightmare",
+                         *                 "mental anguish"
+                         *               ],
+                         *               "reversed": [
+                         *                 "hopelessness",
+                         *                 "mental health crisis"
+                         *               ]
+                         *             },
+                         *             "description": "A woman sits up in bed in the dark, her face buried in her hands. Nine swords hang in horizontal rows on the black wall behind her. Her quilt is patterned with roses and astrological signs, and the bed is carved with a scene of combat. The danger is not in the room; it is in her thoughts.\n\nUpright, this is the card of worry and sleepless nights, when anxious thoughts run ahead of the facts. Linked to Mars in Gemini, it shows the mind turning on itself. Ask what is actually happening, as opposed to what you fear might happen.\n\nReversed, the weight of worry can feel heavier and more isolating. This is the moment to reach out rather than carry it alone: talk to a friend, a family member or a qualified professional. Support makes the night shorter.",
+                         *             "upright": {
+                         *               "love": "Worry about the relationship may be bigger than the problem itself. Share your fears calmly with your partner rather than replaying them alone at night.",
+                         *               "career": "Anxiety about work keeps you awake or distracted. Write down the specific concern, separate facts from fears, and choose one action you can take tomorrow.",
+                         *               "finance": "Money worries can loop endlessly. Look at the actual figures in daylight, make one small plan, and talk to someone with practical experience if you need guidance.",
+                         *               "health": "Stress may be disturbing your sleep. Build a calm evening routine, limit late-night screens, and talk with someone you trust about what is weighing on you.",
+                         *               "spirit": "The mind's darkest stories are not the whole truth. Gentle practices such as slow breathing or prayer can steady you while the night passes."
+                         *             },
+                         *             "reversed": {
+                         *               "love": "Do not carry relationship worries in silence. Reach out to a friend or a counsellor, and let the people close to you know you need support.",
+                         *               "career": "Pressure at work may feel overwhelming. Tell a manager or colleague what is happening, ask for help, and remember that your wellbeing comes before any deadline.",
+                         *               "finance": "Financial stress feels heavy. Contact a trusted adviser or support service, and share the load with someone instead of facing the numbers alone.",
+                         *               "health": "When worry feels too heavy, reach for support from people you trust or a qualified professional. You do not have to manage this by yourself.",
+                         *               "spirit": "Even the longest night ends. Let others hold a light for you now; accepting help is a strength, not a failure."
+                         *             }
+                         *           }
+                         *         }
+                         *       },
+                         *       "_footer": "Powered by astroway.api - get your own key at https://api.astroway.info"
+                         *     }
+                         */
+                        "application/json": {
+                            /** @example true */
+                            ok?: boolean;
+                            data?: {
+                                lang?: string | null;
+                                textLocalized?: boolean | null;
+                                cards?: {
+                                    "9-of-swords"?: {
+                                        name?: string | null;
+                                        keywords?: {
+                                            upright?: (string | null)[] | null;
+                                            reversed?: (string | null)[] | null;
+                                        } | null;
+                                        description?: string | null;
+                                        upright?: {
+                                            love?: string | null;
+                                            career?: string | null;
+                                            finance?: string | null;
+                                            health?: string | null;
+                                            spirit?: string | null;
+                                        } | null;
+                                        reversed?: {
+                                            love?: string | null;
+                                            career?: string | null;
+                                            finance?: string | null;
+                                            health?: string | null;
+                                            spirit?: string | null;
+                                        } | null;
+                                    } | null;
+                                } | null;
+                            };
+                            /**
+                             * @description Free-tier watermark, present on every public response. Keys on a paid plan do not receive it.
+                             * @example Powered by astroway.api - get your own key at https://api.astroway.info
+                             */
+                            _footer?: string;
+                        };
+                    };
+                };
+                /** @description Invalid sign or date */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": false,
+                         *       "error": {
+                         *         "code": "INVALID_SIGN",
+                         *         "message": "sign must be one of the 12 zodiac signs"
+                         *       }
+                         *     }
+                         */
+                        "application/json": unknown;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/public/human-design/texts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Human Design texts (public, no key)
+         * @description Reference prose for every closed set POST /human-design returns, in 21 languages: the five types (summary, strategy, signature, not-self theme), eight authorities, five definition kinds, twelve profiles, six lines, nine centres (theme, defined, open), 36 channels and 64 gates. Keys are the English identifiers the chart answer carries: `types[type]`, `authorities[authority]`, `definition[definition]`, `profiles[profile.profile]`, `centers[name]` with `defined` or `open`, `channels["lower-higher"]`, `gates[gate]`. Names are the same forms the localised chart uses. `gateLines[gate][line]` holds the 384 gate lines (English until a language's table arrives, flagged by `gateLinesLocalized`). `crosses[cross.name]` holds the 112 incarnation cross themes keyed by the full English name (e.g. `Right Angle Cross of The Sphinx`), each with `angle` (`RAC`, `JC`, `LAC`), `gates` (the Personality Sun gates that give it), a localised `name` and `text`; `crossesLocalized` is false where English stands in. `lang` is the language served; unknown codes resolve to `uk` like everywhere. Static data, `Cache-Control: public, max-age=604800`: fetch once per language.
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Language for this call, overriding `Accept-Language`. The canonical per-call form: a page that renders in one language passes it here rather than reconfiguring its client. Unknown or inactive codes fall back to `uk`. */
+                    lang?: string;
+                    /**
+                     * @description Comma-separated dotted paths, relative to `data`, to keep in the response. A path is applied to every element of an array, so `planets.name` means the name of each planet. Paths that match nothing come back in `_fields_unmatched`; a list where nothing matches at all is a 400, because an empty object would be a confident wrong answer.
+                     * @example planets.name,planets.longitude
+                     */
+                    fields?: components["parameters"]["ResponseFields"];
+                    /**
+                     * @description Round every non-integer number in the response to this many decimal places. Integers are left alone, because an id is not a measurement. Ecliptic longitudes ship with fourteen decimals by default; 2 is about a tenth of an arcminute.
+                     * @example 4
+                     */
+                    precision?: components["parameters"]["ResponsePrecision"];
+                };
+                header?: {
+                    /** @description BCP-47 language (e.g. `uk`, `en`, `de`). Set it once on your HTTP client as its default; for a single call, `?lang=` overrides it. Unknown or inactive codes fall back to `uk`. */
+                    "Accept-Language"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": true,
+                         *       "data": {
+                         *         "lang": "en",
+                         *         "textLocalized": true,
+                         *         "types": {
+                         *           "Manifestor": {
+                         *             "name": "Manifestor",
+                         *             "strategyName": "Inform before Acting",
+                         *             "summary": "A Manifestor can start things on their own. Their energy moves outward in bursts, and others feel its impact even before anything is said. They are here to begin, not to wait for life to ask them.",
+                         *             "strategy": "Inform the people your action will touch before you act. It is not asking for permission: it clears the resistance that otherwise meets a sudden move.",
+                         *             "signature": "Peace",
+                         *             "notSelf": "Anger"
+                         *           },
+                         *           "Generator": {
+                         *             "name": "Generator",
+                         *             "strategyName": "Wait for the Sacral Response",
+                         *             "summary": "A Generator carries a steady, renewable life force and is built to do work they love. Energy is there when something truly engages them, and it drains fast when it does not. Satisfaction comes from mastering what they respond to.",
+                         *             "strategy": "Wait for something to respond to rather than starting from the mind. The gut answers with an immediate yes or no; follow that sound, not the reasons.",
+                         *             "signature": "Satisfaction",
+                         *             "notSelf": "Frustration"
+                         *           },
+                         *           "Manifesting Generator": {
+                         *             "name": "Manifesting Generator",
+                         *             "strategyName": "Wait for the Sacral Response and Inform",
+                         *             "summary": "A Manifesting Generator has the Generator's sustainable energy with a faster, multi-track pace. They often skip steps, try several things at once and go back to fix what they missed. Efficiency, not linear order, is their natural way.",
+                         *             "strategy": "Wait for the gut response, then tell the people affected before you act. Responding keeps the energy correct; informing keeps the speed from colliding with others.",
+                         *             "signature": "Satisfaction and peace",
+                         *             "notSelf": "Frustration and anger"
+                         *           },
+                         *           "Projector": {
+                         *             "name": "Projector",
+                         *             "strategyName": "Wait for the Invitation",
+                         *             "summary": "A Projector is here to see others clearly and to guide how energy is used. They do not have consistent working energy of their own, so their value lies in insight, not in endurance. Recognition opens the door for what they offer.",
+                         *             "strategy": "Wait to be invited into the big things: work, relationships, where to live. An invitation means your insight is wanted, and only then does it land.",
+                         *             "signature": "Success",
+                         *             "notSelf": "Bitterness"
+                         *           },
+                         *           "Reflector": {
+                         *             "name": "Reflector",
+                         *             "strategyName": "Wait 28 Days (Lunar Cycle)",
+                         *             "summary": "A Reflector has no centre consistently defined, so they mirror the health of the people and places around them. They sample life in all its variety and are deeply affected by their environment. The right place and the right people matter more for them than for anyone.",
+                         *             "strategy": "Give big decisions a full lunar cycle of about 28 days. Talk them through with trusted people as the Moon moves through every gate, and clarity arrives by the end.",
+                         *             "signature": "Surprise",
+                         *             "notSelf": "Disappointment"
+                         *           }
+                         *         },
+                         *         "authorities": {
+                         *           "Emotional (Solar Plexus)": {
+                         *             "name": "Emotional (Solar Plexus)",
+                         *             "text": "Clarity comes over time, never in the moment. Feelings rise and fall in a wave, so the truth of a decision shows once you have felt it from the high, the low and the calm between. Sleep on anything important."
+                         *           },
+                         *           "Sacral": {
+                         *             "name": "Sacral",
+                         *             "text": "The decision is a gut response in the present moment, often a sound rather than words. It knows before the mind does whether there is energy for something. Trust the first response and do not argue it away."
+                         *           },
+                         *           "Splenic": {
+                         *             "name": "Splenic",
+                         *             "text": "A quiet, instant knowing that speaks once and does not repeat itself. It is concerned with what is healthy and safe right now. Listen to the first faint hit, because the mind will talk over it a moment later."
+                         *           },
+                         *           "Ego Manifested": {
+                         *             "name": "Ego Manifested",
+                         *             "text": "Decisions come from the will and what you truly want, voiced directly. If you hear yourself say \"I want\" or \"I will\", that is the authority. Commit only to what your heart is in."
+                         *           },
+                         *           "Ego Projected": {
+                         *             "name": "Ego Projected",
+                         *             "text": "The will speaks through what you say when you are invited to talk. Listening to your own words in the right company reveals what you want and whether you will commit to it."
+                         *           },
+                         *           "Self-Projected": {
+                         *             "name": "Self-Projected",
+                         *             "text": "Clarity comes from hearing yourself talk. Speak your decision out loud to people you trust, without asking for their advice, and notice what sounds true to your own identity and direction."
+                         *           },
+                         *           "Mental/Environmental": {
+                         *             "name": "Mental (Environmental)",
+                         *             "text": "There is no inner authority, so clarity comes from the right environment and the right sounding boards. Talk the decision through in places and with people that feel correct, then let it settle before acting."
+                         *           },
+                         *           "Lunar (None)": {
+                         *             "name": "Lunar (Reflector)",
+                         *             "text": "Wait through a full lunar cycle of about 28 days before a major decision. Each day the Moon brings a different perspective, and the pattern over the month shows what is right."
+                         *           }
+                         *         },
+                         *         "definition": {
+                         *           "Single": "Every defined centre is connected in one continuous circuit. You process life in your own way and at your own pace, with little need for others to complete you.",
+                         *           "Split": "The defined centres form two separate areas. You are drawn to people who bridge the gap, and that bridging can feel like completion. Give decisions time so both parts have their say.",
+                         *           "Triple Split": "Three separate areas of definition. You benefit from moving among different people and places, as varied contact links your parts in different ways. Decisions take time to come together.",
+                         *           "Quadruple Split": "Four separate areas of definition, a rare configuration. You take in life slowly and thoroughly, and need time and many points of contact before you are clear.",
+                         *           "None": "No centre is defined. This is the Reflector design: open to everything, consistent in nothing, and a mirror for the environment."
+                         *         },
+                         *         "profiles": {
+                         *           "1/3": "Investigator and experimenter. You need a solid foundation before you feel secure, and you learn by testing what holds and what breaks. Mistakes are research, not failure.",
+                         *           "1/4": "Investigator with a network. You build deep knowledge, then share it through the people you already know. Security comes from foundations and friendship.",
+                         *           "2/4": "A natural talent who needs time alone, called out by your network. Others see your gifts before you do, and the right opportunity comes through friends.",
+                         *           "2/5": "A natural talent others project their hopes onto. You are called out to solve problems, and your reputation depends on delivering practical answers, then retreating.",
+                         *           "3/5": "The experimenter whose discoveries help others. You learn through trial and error, and people look to you for solutions that come from what you have survived.",
+                         *           "3/6": "Trial and error in the first part of life, then a gradual move towards the role of an example. Experience becomes wisdom, and later you lead by having lived it.",
+                         *           "4/6": "A networker who becomes a role model over time. Relationships carry your opportunities, and life matures into a calmer, more objective vantage point.",
+                         *           "4/1": "A fixed, steady path built on strong foundations and shared through close relationships. You are rarely moved off your own course and do best when you stay on it.",
+                         *           "5/1": "Others project on you as the one who can fix things. When you deliver with solid knowledge behind you, your influence is wide; without it, the projection turns.",
+                         *           "5/2": "Projected on as a problem solver, while needing time alone. You are called out to help and do best by choosing carefully when to answer.",
+                         *           "6/2": "Three stages of life: experimenting, withdrawing to observe, then living as an example. Your natural gifts ripen into trusted perspective.",
+                         *           "6/3": "A role model shaped by ongoing experience. Life keeps testing you, and what you learn from it becomes guidance others can trust."
+                         *         },
+                         *         "lines": {
+                         *           "1": "Foundation. Security through study and investigation of what lies underneath.",
+                         *           "2": "Natural talent. Gifts that others notice, and a need for time alone to let them be.",
+                         *           "3": "Experiment. Learning by trying, bumping into what does not work and adjusting.",
+                         *           "4": "Network. Opportunities travel through the people you know and the bonds you keep.",
+                         *           "5": "Projection. Others see you as the one with the solution, and expect you to deliver.",
+                         *           "6": "Role model. Experience matures into an objective, trusted perspective over time."
+                         *         },
+                         *         "centers": {
+                         *           "Head": {
+                         *             "name": "Head",
+                         *             "theme": "Inspiration and mental pressure",
+                         *             "defined": "A consistent way of being inspired and of asking questions. You put mental pressure on others to think about what interests you.",
+                         *             "open": "You take in the questions and inspirations of others and can feel pressured to answer them. Not every question needs to be yours to solve."
+                         *           },
+                         *           "Ajna": {
+                         *             "name": "Ajna",
+                         *             "theme": "Conceptualising and processing",
+                         *             "defined": "A fixed way of thinking and processing information that others can rely on. Your mind is a good researcher, not the decider.",
+                         *             "open": "A flexible mind that can see many points of view. You do not need to be certain; pretending to be costs you."
+                         *           },
+                         *           "Throat": {
+                         *             "name": "Throat",
+                         *             "theme": "Communication and manifestation",
+                         *             "defined": "A consistent voice and way of expressing yourself. Words and action come through in a recognisable way.",
+                         *             "open": "Your voice varies with the people around you. Waiting for the right moment to speak gives your words their weight."
+                         *           },
+                         *           "G": {
+                         *             "name": "G Centre",
+                         *             "theme": "Identity, love and direction",
+                         *             "defined": "A consistent sense of who you are and where you are going. Others may orient themselves by you.",
+                         *             "open": "Your sense of self and direction shifts with your surroundings. The right places and people bring you to the right path."
+                         *           },
+                         *           "Heart": {
+                         *             "name": "Heart (Ego)",
+                         *             "theme": "Willpower and worth",
+                         *             "defined": "Reliable willpower and a capacity to keep promises when your heart is in it. Rest is part of keeping that will strong.",
+                         *             "open": "Willpower is not consistent, so there is nothing to prove. Make only the promises you truly want to keep."
+                         *           },
+                         *           "SolarPlexus": {
+                         *             "name": "Solar Plexus",
+                         *             "theme": "Emotions and feelings",
+                         *             "defined": "You live on an emotional wave that rises and falls on its own. Clarity comes only with time.",
+                         *             "open": "You take in and amplify the emotions of others. Recognising which feelings are not yours brings calm and empathy without overwhelm."
+                         *           },
+                         *           "Sacral": {
+                         *             "name": "Sacral",
+                         *             "theme": "Life force and sustainable energy",
+                         *             "defined": "Sustainable, renewable energy for work you respond to. Used correctly, it lasts all day and lets you sleep well.",
+                         *             "open": "No consistent working energy of your own; you borrow it from others and can overdo it. Know when enough is enough."
+                         *           },
+                         *           "Spleen": {
+                         *             "name": "Spleen",
+                         *             "theme": "Instinct, health and timing",
+                         *             "defined": "A steady sense of well-being and spontaneous instinct for what is safe. You tend to feel fine and recover quickly.",
+                         *             "open": "Sensitive to health and well-being, and inclined to hold on to what feels familiar. Let go of what is not good for you."
+                         *           },
+                         *           "Root": {
+                         *             "name": "Root",
+                         *             "theme": "Pressure and adrenaline",
+                         *             "defined": "A consistent way of handling pressure. Stress fuels you at a fixed rhythm rather than pushing you around.",
+                         *             "open": "You feel pressure from outside and may rush to get rid of it. Not everything has to be done right now."
+                         *           }
+                         *         },
+                         *         "channels": {
+                         *           "1-8": {
+                         *             "gates": [
+                         *               1,
+                         *               8
+                         *             ],
+                         *             "centers": [
+                         *               "G",
+                         *               "Throat"
+                         *             ],
+                         *             "text": "Creative self-expression made visible. You contribute by being an example of something original."
+                         *           },
+                         *           "2-14": {
+                         *             "gates": [
+                         *               2,
+                         *               14
+                         *             ],
+                         *             "centers": [
+                         *               "G",
+                         *               "Sacral"
+                         *             ],
+                         *             "text": "Direction backed by resources. You keep the energy and means that carry others towards something new."
+                         *           },
+                         *           "3-60": {
+                         *             "gates": [
+                         *               3,
+                         *               60
+                         *             ],
+                         *             "centers": [
+                         *               "Sacral",
+                         *               "Root"
+                         *             ],
+                         *             "text": "Mutation in pulses. Change arrives when its time comes, not when it is pushed."
+                         *           },
+                         *           "4-63": {
+                         *             "gates": [
+                         *               4,
+                         *               63
+                         *             ],
+                         *             "centers": [
+                         *               "Ajna",
+                         *               "Head"
+                         *             ],
+                         *             "text": "Logical questioning that seeks answers. Doubts are tested until a pattern holds."
+                         *           },
+                         *           "5-15": {
+                         *             "gates": [
+                         *               5,
+                         *               15
+                         *             ],
+                         *             "centers": [
+                         *               "Sacral",
+                         *               "G"
+                         *             ],
+                         *             "text": "Living in natural rhythm. Your flow sets a pace that others can fall into."
+                         *           },
+                         *           "6-59": {
+                         *             "gates": [
+                         *               6,
+                         *               59
+                         *             ],
+                         *             "centers": [
+                         *               "SolarPlexus",
+                         *               "Sacral"
+                         *             ],
+                         *             "text": "Intimacy and bonding. Energy for close connection and for breaking through barriers between people."
+                         *           },
+                         *           "7-31": {
+                         *             "gates": [
+                         *               7,
+                         *               31
+                         *             ],
+                         *             "centers": [
+                         *               "G",
+                         *               "Throat"
+                         *             ],
+                         *             "text": "Leadership through influence. You are recognised to lead when the group invites it."
+                         *           },
+                         *           "9-52": {
+                         *             "gates": [
+                         *               9,
+                         *               52
+                         *             ],
+                         *             "centers": [
+                         *               "Sacral",
+                         *               "Root"
+                         *             ],
+                         *             "text": "Concentration and focus. The ability to sit with a task and go into the details."
+                         *           },
+                         *           "10-20": {
+                         *             "gates": [
+                         *               10,
+                         *               20
+                         *             ],
+                         *             "centers": [
+                         *               "G",
+                         *               "Throat"
+                         *             ],
+                         *             "text": "Awareness of how to behave in the present moment. Being yourself, right now, out loud."
+                         *           },
+                         *           "10-34": {
+                         *             "gates": [
+                         *               10,
+                         *               34
+                         *             ],
+                         *             "centers": [
+                         *               "G",
+                         *               "Sacral"
+                         *             ],
+                         *             "text": "Following your own convictions. Power expressed through behaving as yourself."
+                         *           },
+                         *           "10-57": {
+                         *             "gates": [
+                         *               10,
+                         *               57
+                         *             ],
+                         *             "centers": [
+                         *               "G",
+                         *               "Spleen"
+                         *             ],
+                         *             "text": "Instinct for right behaviour. An intuitive sense of how to live well and safely."
+                         *           },
+                         *           "11-56": {
+                         *             "gates": [
+                         *               11,
+                         *               56
+                         *             ],
+                         *             "centers": [
+                         *               "Ajna",
+                         *               "Throat"
+                         *             ],
+                         *             "text": "Ideas told as stories. Curiosity that turns experience into something others can learn from."
+                         *           },
+                         *           "12-22": {
+                         *             "gates": [
+                         *               12,
+                         *               22
+                         *             ],
+                         *             "centers": [
+                         *               "Throat",
+                         *               "SolarPlexus"
+                         *             ],
+                         *             "text": "Social openness tuned to mood. Speaking from feeling when the moment is right."
+                         *           },
+                         *           "13-33": {
+                         *             "gates": [
+                         *               13,
+                         *               33
+                         *             ],
+                         *             "centers": [
+                         *               "G",
+                         *               "Throat"
+                         *             ],
+                         *             "text": "The witness who remembers. Listening, keeping experiences, and later telling what they meant."
+                         *           },
+                         *           "16-48": {
+                         *             "gates": [
+                         *               16,
+                         *               48
+                         *             ],
+                         *             "centers": [
+                         *               "Throat",
+                         *               "Spleen"
+                         *             ],
+                         *             "text": "Talent built through depth and practice. Skill that grows into mastery with repetition."
+                         *           },
+                         *           "17-62": {
+                         *             "gates": [
+                         *               17,
+                         *               62
+                         *             ],
+                         *             "centers": [
+                         *               "Ajna",
+                         *               "Throat"
+                         *             ],
+                         *             "text": "Organising opinions into detail. Making a view understandable and well-structured."
+                         *           },
+                         *           "18-58": {
+                         *             "gates": [
+                         *               18,
+                         *               58
+                         *             ],
+                         *             "centers": [
+                         *               "Spleen",
+                         *               "Root"
+                         *             ],
+                         *             "text": "Joy in correcting what does not work. Vitality that seeks to improve patterns."
+                         *           },
+                         *           "19-49": {
+                         *             "gates": [
+                         *               19,
+                         *               49
+                         *             ],
+                         *             "centers": [
+                         *               "Root",
+                         *               "SolarPlexus"
+                         *             ],
+                         *             "text": "Sensitivity to needs and principles. Bonds formed around what people need and agree on."
+                         *           },
+                         *           "20-34": {
+                         *             "gates": [
+                         *               20,
+                         *               34
+                         *             ],
+                         *             "centers": [
+                         *               "Throat",
+                         *               "Sacral"
+                         *             ],
+                         *             "text": "Busy, visible power in the now. Energy that wants to be doing, immediately."
+                         *           },
+                         *           "20-57": {
+                         *             "gates": [
+                         *               20,
+                         *               57
+                         *             ],
+                         *             "centers": [
+                         *               "Throat",
+                         *               "Spleen"
+                         *             ],
+                         *             "text": "Intuitive awareness spoken in the moment. Sharp insight that knows what is safe now."
+                         *           },
+                         *           "21-45": {
+                         *             "gates": [
+                         *               21,
+                         *               45
+                         *             ],
+                         *             "centers": [
+                         *               "Heart",
+                         *               "Throat"
+                         *             ],
+                         *             "text": "Managing material resources. A drive to control and distribute what the group has."
+                         *           },
+                         *           "23-43": {
+                         *             "gates": [
+                         *               23,
+                         *               43
+                         *             ],
+                         *             "centers": [
+                         *               "Throat",
+                         *               "Ajna"
+                         *             ],
+                         *             "text": "Individual insight put into words. Knowing that sounds strange until its time comes."
+                         *           },
+                         *           "24-61": {
+                         *             "gates": [
+                         *               24,
+                         *               61
+                         *             ],
+                         *             "centers": [
+                         *               "Ajna",
+                         *               "Head"
+                         *             ],
+                         *             "text": "Inspired thinking about mysteries. A mind that returns to a question until it knows."
+                         *           },
+                         *           "25-51": {
+                         *             "gates": [
+                         *               25,
+                         *               51
+                         *             ],
+                         *             "centers": [
+                         *               "G",
+                         *               "Heart"
+                         *             ],
+                         *             "text": "Initiation through shock. The courage to leap and the innocence to keep the heart open."
+                         *           },
+                         *           "26-44": {
+                         *             "gates": [
+                         *               26,
+                         *               44
+                         *             ],
+                         *             "centers": [
+                         *               "Heart",
+                         *               "Spleen"
+                         *             ],
+                         *             "text": "Transmitting what experience taught. Instinct for patterns used to persuade and protect."
+                         *           },
+                         *           "27-50": {
+                         *             "gates": [
+                         *               27,
+                         *               50
+                         *             ],
+                         *             "centers": [
+                         *               "Sacral",
+                         *               "Spleen"
+                         *             ],
+                         *             "text": "Preserving and caring. Responsibility for the values and well-being of others."
+                         *           },
+                         *           "28-38": {
+                         *             "gates": [
+                         *               28,
+                         *               38
+                         *             ],
+                         *             "centers": [
+                         *               "Spleen",
+                         *               "Root"
+                         *             ],
+                         *             "text": "Finding purpose through struggle. Stubbornness in the fight for what makes life meaningful."
+                         *           },
+                         *           "29-46": {
+                         *             "gates": [
+                         *               29,
+                         *               46
+                         *             ],
+                         *             "centers": [
+                         *               "Sacral",
+                         *               "G"
+                         *             ],
+                         *             "text": "Success through commitment. Saying yes and staying the course leads to discovery."
+                         *           },
+                         *           "30-41": {
+                         *             "gates": [
+                         *               30,
+                         *               41
+                         *             ],
+                         *             "centers": [
+                         *               "SolarPlexus",
+                         *               "Root"
+                         *             ],
+                         *             "text": "Desire for new experience. Feelings and fantasy that open a cycle of experience."
+                         *           },
+                         *           "32-54": {
+                         *             "gates": [
+                         *               32,
+                         *               54
+                         *             ],
+                         *             "centers": [
+                         *               "Spleen",
+                         *               "Root"
+                         *             ],
+                         *             "text": "Transformation through ambition. Drive to rise, tempered by instinct for what endures."
+                         *           },
+                         *           "34-57": {
+                         *             "gates": [
+                         *               34,
+                         *               57
+                         *             ],
+                         *             "centers": [
+                         *               "Sacral",
+                         *               "Spleen"
+                         *             ],
+                         *             "text": "Instinctive power. Fast, intuitive response that keeps you safe."
+                         *           },
+                         *           "35-36": {
+                         *             "gates": [
+                         *               35,
+                         *               36
+                         *             ],
+                         *             "centers": [
+                         *               "Throat",
+                         *               "SolarPlexus"
+                         *             ],
+                         *             "text": "Hunger for experience and change. Learning through living things fully."
+                         *           },
+                         *           "37-40": {
+                         *             "gates": [
+                         *               37,
+                         *               40
+                         *             ],
+                         *             "centers": [
+                         *               "SolarPlexus",
+                         *               "Heart"
+                         *             ],
+                         *             "text": "Community and the bargain. Support given and received in fair exchange."
+                         *           },
+                         *           "39-55": {
+                         *             "gates": [
+                         *               39,
+                         *               55
+                         *             ],
+                         *             "centers": [
+                         *               "Root",
+                         *               "SolarPlexus"
+                         *             ],
+                         *             "text": "Emotional moodiness that stirs spirit. Provocation that brings feelings to the surface."
+                         *           },
+                         *           "42-53": {
+                         *             "gates": [
+                         *               42,
+                         *               53
+                         *             ],
+                         *             "centers": [
+                         *               "Sacral",
+                         *               "Root"
+                         *             ],
+                         *             "text": "Maturation through cycles. Starting things and seeing them through to completion."
+                         *           },
+                         *           "47-64": {
+                         *             "gates": [
+                         *               47,
+                         *               64
+                         *             ],
+                         *             "centers": [
+                         *               "Ajna",
+                         *               "Head"
+                         *             ],
+                         *             "text": "Making sense of the past. A mind that sorts images and memories into meaning."
+                         *           }
+                         *         },
+                         *         "gates": {
+                         *           "1": {
+                         *             "center": "G",
+                         *             "text": "Creative self-expression. A drive to be original and to show it."
+                         *           },
+                         *           "2": {
+                         *             "center": "G",
+                         *             "text": "Inner direction. A quiet knowing of where life should go."
+                         *           },
+                         *           "3": {
+                         *             "center": "Sacral",
+                         *             "text": "Ordering the new. Making something workable out of initial chaos."
+                         *           },
+                         *           "4": {
+                         *             "center": "Ajna",
+                         *             "text": "Formulating answers. Logical explanations offered to doubts."
+                         *           },
+                         *           "5": {
+                         *             "center": "Sacral",
+                         *             "text": "Natural rhythms. Consistency, habits and patient waiting."
+                         *           },
+                         *           "6": {
+                         *             "center": "SolarPlexus",
+                         *             "text": "Friction and intimacy. The emotional boundary that decides who comes close."
+                         *           },
+                         *           "7": {
+                         *             "center": "G",
+                         *             "text": "The role of the self. Leadership in service of the collective direction."
+                         *           },
+                         *           "8": {
+                         *             "center": "Throat",
+                         *             "text": "Contribution. Making your individuality available to others."
+                         *           },
+                         *           "9": {
+                         *             "center": "Sacral",
+                         *             "text": "Focus on detail. Energy to concentrate on what matters."
+                         *           },
+                         *           "10": {
+                         *             "center": "G",
+                         *             "text": "Behaviour of the self. Loving yourself as you are."
+                         *           },
+                         *           "11": {
+                         *             "center": "Ajna",
+                         *             "text": "Ideas. A stream of concepts waiting to be shared."
+                         *           },
+                         *           "12": {
+                         *             "center": "Throat",
+                         *             "text": "Caution in expression. Speaking only when the mood is right."
+                         *           },
+                         *           "13": {
+                         *             "center": "G",
+                         *             "text": "The listener. Hearing and holding the stories of others."
+                         *           },
+                         *           "14": {
+                         *             "center": "Sacral",
+                         *             "text": "Power skills. Resources and energy that empower direction."
+                         *           },
+                         *           "15": {
+                         *             "center": "G",
+                         *             "text": "Extremes. Accepting the full range of human rhythms."
+                         *           },
+                         *           "16": {
+                         *             "center": "Throat",
+                         *             "text": "Skills and enthusiasm. Repetition that turns talent into mastery."
+                         *           },
+                         *           "17": {
+                         *             "center": "Ajna",
+                         *             "text": "Opinions. A logical point of view about the future."
+                         *           },
+                         *           "18": {
+                         *             "center": "Spleen",
+                         *             "text": "Correction. The urge to fix what has gone wrong."
+                         *           },
+                         *           "19": {
+                         *             "center": "Root",
+                         *             "text": "Wanting. Sensitivity to the needs of others and of oneself."
+                         *           },
+                         *           "20": {
+                         *             "center": "Throat",
+                         *             "text": "The now. Awareness expressed in the present moment."
+                         *           },
+                         *           "21": {
+                         *             "center": "Heart",
+                         *             "text": "Control. Managing resources and one's own territory."
+                         *           },
+                         *           "22": {
+                         *             "center": "SolarPlexus",
+                         *             "text": "Openness. Grace and social sensitivity tied to mood."
+                         *           },
+                         *           "23": {
+                         *             "center": "Throat",
+                         *             "text": "Assimilation. Turning insight into words others can understand."
+                         *           },
+                         *           "24": {
+                         *             "center": "Ajna",
+                         *             "text": "Rationalisation. A mind that returns to an idea until it makes sense."
+                         *           },
+                         *           "25": {
+                         *             "center": "G",
+                         *             "text": "Spirit of the self. Unconditional love and innocence."
+                         *           },
+                         *           "26": {
+                         *             "center": "Heart",
+                         *             "text": "The persuader. Using memory and skill to sell an idea."
+                         *           },
+                         *           "27": {
+                         *             "center": "Sacral",
+                         *             "text": "Caring. Nourishing and protecting others."
+                         *           },
+                         *           "28": {
+                         *             "center": "Spleen",
+                         *             "text": "The game player. Looking for what makes the struggle worthwhile."
+                         *           },
+                         *           "29": {
+                         *             "center": "Sacral",
+                         *             "text": "Commitment. Saying yes and seeing it through."
+                         *           },
+                         *           "30": {
+                         *             "center": "SolarPlexus",
+                         *             "text": "Desire. Longing for experience and the feelings it brings."
+                         *           },
+                         *           "31": {
+                         *             "center": "Throat",
+                         *             "text": "Influence. A voice that leads when it is recognised."
+                         *           },
+                         *           "32": {
+                         *             "center": "Spleen",
+                         *             "text": "Continuity. Instinct for what will last."
+                         *           },
+                         *           "33": {
+                         *             "center": "Throat",
+                         *             "text": "Retreat. Withdrawing to reflect and remember."
+                         *           },
+                         *           "34": {
+                         *             "center": "Sacral",
+                         *             "text": "Power. Pure, independent life force."
+                         *           },
+                         *           "35": {
+                         *             "center": "Throat",
+                         *             "text": "Change. Hunger to experience something new."
+                         *           },
+                         *           "36": {
+                         *             "center": "SolarPlexus",
+                         *             "text": "Crisis. Emotional growth through inexperience."
+                         *           },
+                         *           "37": {
+                         *             "center": "SolarPlexus",
+                         *             "text": "Friendship. Warmth, loyalty and the bonds of the family."
+                         *           },
+                         *           "38": {
+                         *             "center": "Root",
+                         *             "text": "Opposition. Fighting for what is worth it."
+                         *           },
+                         *           "39": {
+                         *             "center": "Root",
+                         *             "text": "Provocation. Stirring others to find their spirit."
+                         *           },
+                         *           "40": {
+                         *             "center": "Heart",
+                         *             "text": "Aloneness. The need to rest after giving."
+                         *           },
+                         *           "41": {
+                         *             "center": "Root",
+                         *             "text": "Contraction. The fantasy that starts a new cycle of experience."
+                         *           },
+                         *           "42": {
+                         *             "center": "Sacral",
+                         *             "text": "Growth. Completing a cycle so it can bear fruit."
+                         *           },
+                         *           "43": {
+                         *             "center": "Ajna",
+                         *             "text": "Insight. A sudden breakthrough of inner knowing."
+                         *           },
+                         *           "44": {
+                         *             "center": "Spleen",
+                         *             "text": "Alertness. Recognising patterns from the past."
+                         *           },
+                         *           "45": {
+                         *             "center": "Throat",
+                         *             "text": "The gatherer. Bringing people and resources together."
+                         *           },
+                         *           "46": {
+                         *             "center": "G",
+                         *             "text": "Determination of the self. Love of the body and being in the right place."
+                         *           },
+                         *           "47": {
+                         *             "center": "Ajna",
+                         *             "text": "Realisation. Sorting the past until it makes sense."
+                         *           },
+                         *           "48": {
+                         *             "center": "Spleen",
+                         *             "text": "Depth. A well of knowledge that needs trust to be used."
+                         *           },
+                         *           "49": {
+                         *             "center": "SolarPlexus",
+                         *             "text": "Principles. Revolution or rejection when values are broken."
+                         *           },
+                         *           "50": {
+                         *             "center": "Spleen",
+                         *             "text": "Values. Guarding the rules that keep a group healthy."
+                         *           },
+                         *           "51": {
+                         *             "center": "Heart",
+                         *             "text": "Shock. The courage to be first and to wake others up."
+                         *           },
+                         *           "52": {
+                         *             "center": "Root",
+                         *             "text": "Stillness. Concentration that comes from holding still."
+                         *           },
+                         *           "53": {
+                         *             "center": "Root",
+                         *             "text": "Beginnings. Pressure to start something new."
+                         *           },
+                         *           "54": {
+                         *             "center": "Root",
+                         *             "text": "Ambition. Drive to rise and transform one's circumstances."
+                         *           },
+                         *           "55": {
+                         *             "center": "SolarPlexus",
+                         *             "text": "Spirit. Abundance felt through the full range of moods."
+                         *           },
+                         *           "56": {
+                         *             "center": "Throat",
+                         *             "text": "Stimulation. Telling stories that move people."
+                         *           },
+                         *           "57": {
+                         *             "center": "Spleen",
+                         *             "text": "Intuitive clarity. Hearing what is right in the moment."
+                         *           },
+                         *           "58": {
+                         *             "center": "Root",
+                         *             "text": "Vitality. Joy in making life better."
+                         *           },
+                         *           "59": {
+                         *             "center": "Sacral",
+                         *             "text": "Intimacy. Breaking through barriers to closeness."
+                         *           },
+                         *           "60": {
+                         *             "center": "Root",
+                         *             "text": "Acceptance. Working creatively within limits."
+                         *           },
+                         *           "61": {
+                         *             "center": "Head",
+                         *             "text": "Inner truth. The pressure to know the unknowable."
+                         *           },
+                         *           "62": {
+                         *             "center": "Throat",
+                         *             "text": "Detail. Naming facts precisely."
+                         *           },
+                         *           "63": {
+                         *             "center": "Head",
+                         *             "text": "Doubt. Questioning that leads to logical proof."
+                         *           },
+                         *           "64": {
+                         *             "center": "Head",
+                         *             "text": "Confusion. Images of the past waiting to make sense."
+                         *           }
+                         *         },
+                         *         "gateLines": {
+                         *           "1": {
+                         *             "1": "Your originality rests on what you study quietly before anyone sees it. Like the dragon lying hidden in the deep water, build your depth first and show it later.",
+                         *             "2": "Others notice a creative signature in you that you barely think about. It shows most clearly when you are left alone to make things without an audience waiting.",
+                         *             "3": "You find your own style by producing work, discarding what feels borrowed and trying again. Each failed attempt narrows the gap between what you imagine and what you make.",
+                         *             "4": "Your creative work travels best through people who already know and trust you. A friend who passes your piece along does more for it than any broad announcement.",
+                         *             "5": "People expect you to be the inventive one who will rescue a stale project. Deliver something real when that expectation lands, or the reputation quickly turns against you.",
+                         *             "6": "Over time your sense of what is truly original becomes calm and reliable. You can judge new work, your own included, without needing to win attention for it."
+                         *           },
+                         *           "2": {
+                         *             "1": "When you tread on hoarfrost, solid ice is not far behind. Your inner direction starts from small early signs, so learn to read them before the path is obvious.",
+                         *             "2": "You know where to go without being able to explain how. That knowing is clearest when nobody asks you to defend it, so keep some unclaimed time for it.",
+                         *             "3": "You discover your direction by moving and noticing when a road feels wrong. Changing course after a misstep is how your quiet compass calibrates itself.",
+                         *             "4": "The right direction often arrives through someone close to you: an introduction, a passing remark, a door held open. Keep those ties warm and the path tends to find you.",
+                         *             "5": "Others assume you already know the way and will lead them there. Accept that trust only where your inner sense is actually clear, and say so plainly when it is not.",
+                         *             "6": "With the years, your sense of direction stops being private and becomes guidance others rely on. You can point the way without needing to walk every road yourself."
+                         *           },
+                         *           "3": {
+                         *             "1": "New things begin in disorder, like a sprout forcing its way through hard ground. Before you organise anything, study the conditions it grows from and what it truly needs.",
+                         *             "2": "You have a knack for staying steady while things are still unformed. Others feel calmer near you in chaos, though you need quiet time to digest each upheaval.",
+                         *             "3": "You make order by trial: arrange things, watch them fail, arrange them again. A hunter without a guide only gets lost in the forest, so pause when the signs disappear.",
+                         *             "4": "The help you need to sort out a messy start usually comes through people you already know. Ask them directly instead of wrestling with the confusion alone.",
+                         *             "5": "People bring you their messes and expect you to make them workable. Be careful what you promise, because small steady fixes serve better than one grand rescue.",
+                         *             "6": "Having lived through many rough beginnings, you can tell which confusion will settle and which will not. Your patience becomes a model for others facing fresh chaos."
+                         *           },
+                         *           "4": {
+                         *             "1": "A good answer stands on a solid premise. Check the foundations of your reasoning before offering explanations, because a clever formula on a weak base misleads everyone.",
+                         *             "2": "Explanations come to you easily, often before others have finished asking. Let them form in your own time rather than rushing to fill every silence with a theory.",
+                         *             "3": "You test your answers against reality and drop the ones that fail. Being wrong out loud is how your logic sharpens; folly only lasts when you refuse the test.",
+                         *             "4": "Your answers carry furthest among people who already respect your thinking. A friend's honest question is the best invitation to explain what you have worked out.",
+                         *             "5": "Others treat you as the one who has the explanation. Offer it with its limits stated, since an answer taken as certain becomes a burden when it falls short.",
+                         *             "6": "Experience teaches you which answers hold and which only sound good. You become a fair judge of reasoning, correcting folly without punishing the person behind it."
+                         *           },
+                         *           "5": {
+                         *             "1": "Waiting in the open meadow, far from danger, you can build a routine that holds. Your rhythm needs a stable base of simple habits before it can carry anything larger.",
+                         *             "2": "Your natural timing is something others sense and quietly lean on. Keep it intact by protecting parts of the day when no one pulls you out of your own pace.",
+                         *             "3": "You find your rhythm by trying routines and noticing which ones break. Waiting in the mud only invites trouble, so change a habit when it leaves you stuck.",
+                         *             "4": "Your sense of timing settles best alongside a few trusted people. Shared routines with them, a regular meal or an evening walk, keep your rhythm steady through busy seasons.",
+                         *             "5": "Others expect you to be the patient, reliable one who never falters. Rest when you need to, because a rhythm imposed from outside soon feels like a cage.",
+                         *             "6": "After many seasons you understand that every pattern has its lulls and surges. Your steadiness through change shows others that waiting can be active and wise."
+                         *           },
+                         *           "6": {
+                         *             "1": "Closeness starts with knowing exactly where your boundaries are. Settle small disputes early and plainly, before a minor friction hardens into a lasting quarrel.",
+                         *             "2": "You have an instinctive feel for who belongs near you and who does not. Trust that sense, and give yourself time apart to recover after emotional encounters.",
+                         *             "3": "You learn about intimacy by letting people in and seeing what happens. Some contact will sting, and each time you adjust where the door to your inner life stands.",
+                         *             "4": "Your emotional life runs through a close circle. When conflict arises there, choose the relationship over being right, and the bond usually comes out stronger.",
+                         *             "5": "People expect you to settle their disputes or ease tension in a group. Mediate only where you are truly neutral, or the friction will turn toward you instead.",
+                         *             "6": "Experience shows you that winning every argument costs more than it gains. You become someone whose calm handling of conflict others watch, learn from and trust."
+                         *           },
+                         *           "7": {
+                         *             "1": "An army must set out in proper order or not at all. Leadership grows from clear structure, so learn the rules and habits of a group before trying to steer it.",
+                         *             "2": "You can guide others without trying, simply by standing in the middle of things and staying level. Let leadership come to you instead of chasing a title.",
+                         *             "3": "You find your style of leading by trying it, sometimes carrying a load that is not yours. Notice when you steer for ego rather than for the group, and correct course.",
+                         *             "4": "Your influence works through a network of allies. Retreat when the ground is wrong; a sensible withdrawal keeps both your people and your standing intact.",
+                         *             "5": "Others look to you to lead in a crisis and expect results. Appoint capable people and listen to them, since blame falls first on the most visible leader.",
+                         *             "6": "With time you see that the best leaders serve the direction rather than themselves. Your example teaches how authority can be held lightly and later handed on."
+                         *           },
+                         *           "8": {
+                         *             "1": "Contribution begins with sincerity, like a full earthen bowl offered without pretence. Know what you genuinely have to give before you offer it to anyone.",
+                         *             "2": "Your individuality has a quality that draws people toward you. Share it from the inside out, and keep time apart so it does not dissolve into the crowd.",
+                         *             "3": "You learn what to contribute by joining groups and finding where you do not fit. Holding together with the wrong people teaches you whom to choose next time.",
+                         *             "4": "Your contribution spreads through personal connections. Offer your work openly to those near you, and they will carry it further than you could alone.",
+                         *             "5": "People see you as an example of someone true to themselves and expect you to inspire them. Show the way by living it, without trying to herd anyone.",
+                         *             "6": "Over time you learn when to join and when to stand apart. Your mature example shows others how to belong to something without losing themselves in it."
+                         *           },
+                         *           "9": {
+                         *             "1": "Focus starts with returning to the right road. Ground your attention in the basic details of a task before chasing finer ones, and the rest follows more easily.",
+                         *             "2": "You can concentrate deeply with surprising ease. Guard that gift by working in long uninterrupted stretches, away from people and screens that scatter your attention.",
+                         *             "3": "You learn where to focus by getting lost in the wrong details. When the spokes fall from the wagon wheel, stop, reassess what matters, and narrow down again.",
+                         *             "4": "Your focus works well alongside a few trusted collaborators. Sincere cooperation lets small, steady efforts add up to something real and lasting.",
+                         *             "5": "Others count on you to catch the details they miss. Accept that role, but share the load so your careful attention does not turn into a burden.",
+                         *             "6": "With experience you know when enough detail has been gathered. Like rain that has fallen and settled, you can rest and trust the work already done."
+                         *           },
+                         *           "10": {
+                         *             "1": "Loving yourself begins with simple conduct, walking your own way in plain shoes. Study how you actually behave before deciding who you think you ought to become.",
+                         *             "2": "Others notice an ease in how you carry yourself, a calm that asks for nothing. Protect it by spending time where you do not need to perform for anyone.",
+                         *             "3": "You learn self-acceptance by treading on the tiger's tail and getting bitten. A one-eyed man believes he sees clearly; honest humility grows out of those stumbles.",
+                         *             "4": "Your sense of worth is reinforced by people who know you well. Move carefully and respectfully among them, and their regard helps steady you when you doubt yourself.",
+                         *             "5": "People expect you to model confident behaviour. Resolute conduct earns respect, but watch that it does not harden into a mask that others then project onto you.",
+                         *             "6": "Looking back over how you have walked, you can see what worked and what did not. Your self-respect becomes a quiet example of living honestly without apology."
+                         *           },
+                         *           "11": {
+                         *             "1": "When you pull up ribbon grass, the roots come up with it. Your ideas need a base of research, so trace each one to its source before you share it.",
+                         *             "2": "Ideas arrive in you naturally and often. Give yourself room alone to let them form, rather than spilling each one out the moment it appears.",
+                         *             "3": "You test ideas by voicing them and watching which ones collapse. No plain is without a slope, so expect some concepts to fail and keep moving forward.",
+                         *             "4": "Your ideas find their audience through friends and colleagues. Share them in ordinary conversation, where people can take what fits and pass it on to others.",
+                         *             "5": "Others expect you to have the bright idea that solves everything. Offer concepts as possibilities rather than promises, so the expectation stays reasonable for everyone.",
+                         *             "6": "Over time you learn that most ideas are seeds rather than finished plans. You become a trusted voice who can tell a passing notion from one worth pursuing."
+                         *           },
+                         *           "12": {
+                         *             "1": "Caution begins with knowing what you truly feel before you speak. Hold back while the times are closed, and make sure your words are rooted in something real.",
+                         *             "2": "You have a natural instinct for timing your words. Silence is part of the gift, and you need time alone to sense when the mood is finally ripe.",
+                         *             "3": "You learn when to speak by speaking at the wrong moment and feeling the result. Each misjudged word teaches you more about the shape of the right moment.",
+                         *             "4": "Your words carry weight among a small circle who understand your moods. Share with them first, and they will open doors for your voice further out.",
+                         *             "5": "People expect you to say the moving, decisive thing at exactly the right time. Hold back when the mood is wrong, even if that disappoints them.",
+                         *             "6": "With experience you see that a standstill never lasts forever. Your restraint becomes an example of how speaking less, at the right moment, can mean much more."
+                         *           },
+                         *           "13": {
+                         *             "1": "Listening starts at the open gate, ready for anyone who comes. Learn to hear stories without rushing to judge them, and the ground for trust is laid.",
+                         *             "2": "People tell you things they have told no one else. The gift is real, but you need solitude afterwards to process everything you hold for others.",
+                         *             "3": "You learn to listen by noticing when you hide behind suspicion or opinion, like soldiers crouched in the thicket. When you stop hearing, drop the defence and try again.",
+                         *             "4": "The stories that reach you travel along your relationships. Through friends and their friends, you gather a wide picture of how people live and what they need.",
+                         *             "5": "People expect you to understand them completely and keep every secret. Be honest about what you can carry, so their trust is not broken later.",
+                         *             "6": "Over time the stories you have heard combine into perspective. You can offer others a wider view of their own lives without ever breaking a confidence."
+                         *           },
+                         *           "14": {
+                         *             "1": "Power begins with knowing your resources and their risks. Keep clear of harm while your means are still young, and learn exactly what sustains them.",
+                         *             "2": "A big wagon can carry a heavy load. You manage energy and resources capably, though you need time alone to recharge after directing so much.",
+                         *             "3": "You learn to use your power by trying ventures and sometimes misusing it. Notice when resources serve only you, and redirect them toward something wider.",
+                         *             "4": "Your resources grow through people you trust. Keep clear lines between what is yours and what is shared, and the network stays healthy for everyone.",
+                         *             "5": "Others look to you as a source of support and expect you to fund or fuel their plans. Give with dignity, and do not let generosity harden into obligation.",
+                         *             "6": "With time you learn that power fulfils its purpose when it serves a direction. Your example shows how resources can be held with grace rather than a tight grip."
+                         *           },
+                         *           "15": {
+                         *             "1": "Accepting extremes begins with modesty about your own patterns. Watch how your moods and energy swing over weeks before you try to smooth them out.",
+                         *             "2": "Your acceptance of all kinds of people draws others close to you. Make room for your own odd rhythms too, especially in the hours you spend alone.",
+                         *             "3": "You learn about extremes by swinging to them yourself. A modest, steady effort after a bold excess brings you back to a rhythm that actually works.",
+                         *             "4": "Your humane outlook reaches others through your circle. Friends from very different walks of life show you how wide the human range really is.",
+                         *             "5": "People expect you to be endlessly tolerant and inclusive. Hold firm boundaries when someone's extremes harm others; modesty does not mean doing nothing.",
+                         *             "6": "With experience you see the worth of both lulls and surges. You become a calm example of how to live well without forcing a single rhythm on anyone."
+                         *           },
+                         *           "16": {
+                         *             "1": "Mastery rests on repeating the fundamentals. Do not boast of your enthusiasm before the work is done; practise the basics until they become second nature.",
+                         *             "2": "You have a natural flair for a skill others enjoy watching. Practise in private as well, since mastery ripens best when no audience is present.",
+                         *             "3": "You discover your skills by trying many and dropping those that do not hold. Looking upward and hesitating costs momentum, so commit to practice once you find the right one.",
+                         *             "4": "Your enthusiasm spreads to the people you work with. Teaching a skill to friends or colleagues deepens your own mastery while theirs grows.",
+                         *             "5": "Others expect you to be the expert who can perform on demand. Stay honest about what you have truly practised and what is still raw.",
+                         *             "6": "Over the years enthusiasm matures into steady, reliable skill. You become an example of how disciplined repetition turns raw talent into something others can trust."
+                         *           },
+                         *           "17": {
+                         *             "1": "A sound opinion starts with sound facts. Before you forecast the future, examine the evidence, and be ready to change position as the evidence shifts.",
+                         *             "2": "You form views quickly, and they often prove useful. Share them sparingly, and keep time alone to refine them before they harden into fixed beliefs.",
+                         *             "3": "You test opinions by voicing them and seeing which hold. Following one view means letting go of another, so choose consciously rather than by habit.",
+                         *             "4": "Your views travel through people who trust your judgement. Listen to their opinions too, since they sharpen yours and keep your forecasts grounded.",
+                         *             "5": "Others expect you to know where things are heading. Give your best forecast with honesty about uncertainty, so their trust survives a wrong call.",
+                         *             "6": "With experience your opinions become more measured and less urgent. You become someone whose view of what lies ahead others actively seek out."
+                         *           },
+                         *           "18": {
+                         *             "1": "Correction begins with the inheritance, the things passed down and left to spoil. Understand the root of a problem before you start fixing its surface.",
+                         *             "2": "You see flaws others overlook, and they notice your sharp eye. Use it gently, and step away to rest when the weight of criticism builds up.",
+                         *             "3": "You learn to correct by trying to fix things, sometimes too harshly. A little regret is a fair price; adjust your approach and continue the repair.",
+                         *             "4": "Your corrections work best where trust already exists. Tolerating a fault too long within your circle only lets it spread, so raise it kindly and early.",
+                         *             "5": "People expect you to repair what is broken in a group or system. Do it with skill and share the credit, since praise and blame both land on you.",
+                         *             "6": "Over time you learn which things are worth correcting and which can be left. You can stand back, offer perspective, and let others do the repair themselves."
+                         *           },
+                         *           "19": {
+                         *             "1": "Wanting begins with sensing what people actually need. Approach together with others, honestly, and learn what keeps the whole group fed and steady.",
+                         *             "2": "You naturally pick up on the needs around you, often before they are spoken. Spend time apart so your own wants do not get lost under everyone else's.",
+                         *             "3": "You learn your needs by reaching for things and discovering they do not satisfy. When a comfort turns empty, admit it, grieve it a little, and adjust.",
+                         *             "4": "Your needs are met through close bonds. Approaching others directly about what you want strengthens the connection in both directions.",
+                         *             "5": "People expect you to know and meet their needs. Use wisdom here, choosing support that strengthens them instead of support that creates dependence.",
+                         *             "6": "With experience you understand the balance between your needs and those of others. Your generosity becomes an example that does not neglect yourself."
+                         *           },
+                         *           "20": {
+                         *             "1": "Present awareness starts with plain observation. Look the way a child looks, without bias, and see what is actually here now before you judge it.",
+                         *             "2": "You naturally sense the present moment, and others feel it in your company. Keep space for quiet watching, since awareness thins out in constant noise.",
+                         *             "3": "You learn about the now by acting on impulse and seeing what follows. Each mismatch between your words and the moment refines your sense of timing.",
+                         *             "4": "Your awareness reaches others through those close to you. Viewing the light of the land, you come to know whom to speak with and when.",
+                         *             "5": "People expect you to see clearly and say what matters right now. Speak from present truth, not from what they hope to hear from you.",
+                         *             "6": "Over time your awareness widens beyond yourself. Having contemplated your own life and those of others, you can speak for the present with calm authority."
+                         *           },
+                         *           "21": {
+                         *             "1": "Control rests on clear rules set early. Feet fastened in the stocks stop a small wrong before it grows, so define your boundaries from the very start.",
+                         *             "2": "You know how to manage resources, and others can feel that competence. Defend your territory without overreaching, and take time alone to loosen your grip.",
+                         *             "3": "You learn control by biting into problems and finding some meat tougher than expected. A little poison along the way is a lesson, not a failure.",
+                         *             "4": "Your control works best through alliances. Biting through dried gristle takes persistence, and trusted helpers make that hard work considerably lighter.",
+                         *             "5": "Others expect you to take charge and resolve disputes. Act fairly and openly, since control that looks selfish quickly loses the support it depends on.",
+                         *             "6": "With experience you know when to release control. Your example shows how firmness and restraint together keep people and resources working well."
+                         *           },
+                         *           "22": {
+                         *             "1": "Grace begins with simple steps. Lend grace to your toes, leave the carriage and walk; start with modest beauty rather than display meant to impress.",
+                         *             "2": "Your charm is natural, and others notice it at once. It flows best when your mood is open, so rest in solitude when it is not.",
+                         *             "3": "You learn grace by over-adorning and finding it hollow. Polish and elegance help, but steady character is what keeps your charm honest over time.",
+                         *             "4": "Your openness spreads through your friendships. A white horse arrives as a plain offering; simple gestures win the deepest trust among close ones.",
+                         *             "5": "Others expect you to be gracious and welcoming at all times. Honour your moods instead, since forced openness wears thin faster than honest reserve.",
+                         *             "6": "Over time your sense of grace becomes simple and unadorned. You become an example of how sincerity is the finest ornament a person can wear."
+                         *           },
+                         *           "23": {
+                         *             "1": "Clear explanation needs a firm base. When the legs of the couch are split, comfort falls away, so test the foundation of each insight before you share it.",
+                         *             "2": "You can turn complex thoughts into simple words. Do it in your own time, because an explanation forced out too early tends to be brittle.",
+                         *             "3": "You learn to explain by trying and being misunderstood. Each misunderstanding shows you which words to cut and which ones carry the meaning.",
+                         *             "4": "Your insights reach others through your network. Friends who understand your style can translate your ideas for those who do not yet follow you.",
+                         *             "5": "People expect you to make the obscure clear on demand. Choose your words carefully, because a misunderstood insight tends to rebound on the one who said it.",
+                         *             "6": "With experience you know which insights can be shared now and which must wait. Your voice becomes trusted precisely because it is selective."
+                         *           },
+                         *           "24": {
+                         *             "1": "Rationalisation begins with returning to the starting point. Go back a short distance to the first principle before building any explanation on top of it.",
+                         *             "2": "Your mind returns to ideas naturally and slowly finds their sense. Give it quiet, unhurried time, since this kind of rumination works best undisturbed.",
+                         *             "3": "You learn by returning to the same idea again and again, sometimes too often. Notice the loop, and step out of it when nothing new is appearing.",
+                         *             "4": "Your thinking is refined through talk with trusted friends. Even walking among many companions, you still come back alone to your own conclusions.",
+                         *             "5": "Others expect you to have reasoned everything through. Share your conclusions honestly, including the places where your reasoning is still incomplete.",
+                         *             "6": "With experience you know which ideas deserve another return and which to drop. Your patient thinking becomes an example of steady, unhurried reason."
+                         *           },
+                         *           "25": {
+                         *             "1": "Innocence begins with acting without hidden motives. Go forward without calculation, and your conduct earns trust from the very start.",
+                         *             "2": "You have a natural openness that people find disarming. Protect it with time alone, away from the cynicism that slowly wears it down.",
+                         *             "3": "You learn innocence by meeting misfortune you did not cause. A tethered cow taken by a passing traveller teaches that openness always carries some risk.",
+                         *             "4": "Your unconditional care spreads through those close to you. Stay steady in what you value, and your circle tends to reflect that steadiness back.",
+                         *             "5": "People see you as the one who loves without conditions, and they expect it always. Accept that you sometimes need care and patience in return.",
+                         *             "6": "Over time you understand when innocence helps and when it harms. Your example shows how to stay open-hearted without becoming naive."
+                         *           },
+                         *           "26": {
+                         *             "1": "Persuasion rests on knowing your material thoroughly. Halt before danger, and study the facts that make your case worth anyone's attention.",
+                         *             "2": "You have a natural skill for presenting ideas so that people listen. Use it with care, and rest in silence when you are not selling anything.",
+                         *             "3": "You learn persuasion by pitching ideas and seeing which land. Like a good horse running with others, practise daily until your delivery runs smoothly.",
+                         *             "4": "Your influence works through relationships. A board fixed to the horns of a young bull prevents harm; keep your claims honest and your network keeps trusting you.",
+                         *             "5": "Others expect you to convince people and close the deal. Use memory and skill honestly, since a hollow pitch damages your name very quickly.",
+                         *             "6": "With experience you know when persuasion serves people and when it manipulates them. Your honest voice becomes a model of responsible influence."
+                         *           },
+                         *           "27": {
+                         *             "1": "Caring begins with tending your own needs. Do not let your own magic tortoise go while you stare at another's meal; nourish yourself first.",
+                         *             "2": "You care for others naturally, and people feel fed and protected by you. Take time alone to refill, or the care turns slowly into depletion.",
+                         *             "3": "You learn to care by giving the wrong kind of help and seeing the result. Nourishment that only feeds dependence needs to be changed.",
+                         *             "4": "Your care spreads through your network of family and friends. Ask for help as well as offering it, since mutual nourishment lasts much longer.",
+                         *             "5": "People expect you to always be there and take care of everything. Set limits, so your care stays a gift rather than an obligation you resent.",
+                         *             "6": "Over time you learn the difference between helping and controlling. Your care becomes a model others can follow without depending on you."
+                         *           },
+                         *           "28": {
+                         *             "1": "Finding meaning starts with careful groundwork. Spread white rushes beneath what you set down; caution at the base makes later risks worth taking.",
+                         *             "2": "You have a natural sense of which struggles matter. A withered poplar putting out fresh shoots shows that renewal is possible, so trust that instinct.",
+                         *             "3": "You learn by fighting battles and discovering some were not worth it. A ridgepole that sags warns you when your effort has been misplaced.",
+                         *             "4": "Your sense of purpose is strengthened by allies who share it. Together you can hold up a beam that would buckle if you carried it alone.",
+                         *             "5": "Others expect you to fight for them and find meaning in hard times. Choose the battles worth fighting, not every one handed to you.",
+                         *             "6": "Over time you see that struggle itself can carry meaning. Your example shows others how to face real risk without losing sight of what matters."
+                         *           },
+                         *           "29": {
+                         *             "1": "Commitment needs firm footing. Saying yes without knowing what you agree to is like stepping into a pit within the abyss, so learn the terms first.",
+                         *             "2": "You naturally persist where others give up. Protect that capacity with rest, because constant commitment drains you before you notice.",
+                         *             "3": "You learn commitment by agreeing to things and then finding you should not have. Each overcommitment teaches you what to accept next time.",
+                         *             "4": "Your commitments are kept within trusted relationships. A jug of wine and a bowl of rice offered simply show that a sincere promise needs no ceremony.",
+                         *             "5": "Others expect you to say yes and deliver. The water fills the pit only to the rim, so take on what you can finish and no more.",
+                         *             "6": "With experience your commitments become wise and few. Your example shows the value of a deliberate yes and an honest, timely no."
+                         *           },
+                         *           "30": {
+                         *             "1": "Desire begins with seeing clearly. When footprints run crisscross, pause and examine what you truly want before you chase after it.",
+                         *             "2": "Your passion is natural, and others feel its warmth like yellow light at midday. It needs time alone to settle, or it starts to consume you.",
+                         *             "3": "You learn about desire by chasing experiences that burn out fast. The light of the setting sun shows how feelings fade along their natural course.",
+                         *             "4": "Your desires are shaped by those close to you. Experiences shared with friends give your longing both grounding and a steady warmth.",
+                         *             "5": "People expect you to bring passion and excitement wherever you go. Accept that your feelings have tides, and refuse to perform them on demand.",
+                         *             "6": "With experience you know which desires are worth following. Your measured passion becomes a model for living fully without burning out."
+                         *           },
+                         *           "31": {
+                         *             "1": "Influence starts small, like a twitch in the big toe. Learn the ground you stand on and the people around you before you try to lead them.",
+                         *             "2": "Your voice carries naturally when people are ready to hear it. Stay quiet when they are not, and rest from leading during your time alone.",
+                         *             "3": "You learn influence by pushing too soon and being ignored. Influence felt in the thighs leads only to restless action, so wait until you are recognised.",
+                         *             "4": "Your influence spreads through your network. A steady intention, rather than restless agitation, draws people toward your lead over time.",
+                         *             "5": "Others expect you to speak for them and to lead. Lead with clarity, since recognition is easily withdrawn when you overreach.",
+                         *             "6": "Over time you understand that influence is earned, not seized. Your example shows how to lead by being trusted rather than by being loud."
+                         *           },
+                         *           "32": {
+                         *             "1": "Continuity rests on not forcing permanence too soon. Seeking duration too hastily brings trouble, so learn what truly endures before you try to secure it.",
+                         *             "2": "You have an instinct for what will last. Trust it in quiet moments, since the urgency of others can easily drown out that sense.",
+                         *             "3": "You learn continuity by holding on too long or letting go too quickly. Each mistake teaches you when change is needed and when it is not.",
+                         *             "4": "Your sense of what lasts is shaped by long relationships. Hunting in a field with no game teaches you where your time is worth investing.",
+                         *             "5": "People expect you to protect what is stable. Accept that continuity sometimes means adapting, and avoid clinging to forms that have outlived their use.",
+                         *             "6": "With experience you know what truly lasts and what only seems to. Your patience becomes an example of steady, unforced endurance for others."
+                         *           },
+                         *           "33": {
+                         *             "1": "Before you step back, find out what you are stepping back from. A retreat that rests on a clear grasp of the facts keeps you safe instead of merely hidden.",
+                         *             "2": "You know instinctively when to leave a room or a conversation. Others notice how well you keep a secret, yet you need solitude to digest what you have witnessed.",
+                         *             "3": "You learn the art of withdrawal by getting it wrong, leaving too late or too early. Each tangled exit teaches you how to step away cleanly next time.",
+                         *             "4": "Your retreats affect the people around you. Step back in a way that keeps the bond intact, and those you trust will still be there when you return with your story.",
+                         *             "5": "People expect you to know the right moment to pull out of a failing situation. Make your withdrawal timely and well explained, or the projection turns into blame.",
+                         *             "6": "Over time you learn to retreat without fear or regret. Your quiet distance becomes a vantage point, and the memories you gather turn into calm counsel for others."
+                         *           },
+                         *           "34": {
+                         *             "1": "Your strength needs solid footing before it moves. Learn what your energy is actually for, otherwise force spent too early leads only to stumbling forward.",
+                         *             "2": "Raw vitality comes naturally to you and others feel it at once. Give it periods of quiet so the power stays steady instead of pushing at everything nearby.",
+                         *             "3": "You discover the limits of your force by testing them. Like a ram butting a hedge, you sometimes get your horns caught, and that teaches you where pushing fails.",
+                         *             "4": "Your power moves best through steady relationships. When the people you know open a path, your energy rolls forward like a strong axle under a loaded cart.",
+                         *             "5": "Others assume you will carry the heavy load and solve it by sheer effort. Use your strength wisely, because when force misses the target your reputation suffers quickly.",
+                         *             "6": "With age you learn when not to push. Your example shows that real power knows how to wait, and that stubborn forcing often leaves you stuck in the hedge."
+                         *           },
+                         *           "35": {
+                         *             "1": "Progress rests on knowing the ground before you move. If your first steps are rebuffed, stay patient and keep learning; the experience you seek arrives once you understand it.",
+                         *             "2": "You have a gift for finding new experiences, and people notice your appetite for them. Pause between adventures so you can feel what each one actually gave you.",
+                         *             "3": "You try something new, see what holds and discard the rest. Mistakes are fuel here, because each failed venture sharpens your sense of what deserves your hunger next.",
+                         *             "4": "New experiences come to you through friends and contacts. Do not hoard opportunities like a greedy marmot; shared progress keeps the network warm and the doors open.",
+                         *             "5": "Others see you as the one who knows how to make things move. Let go of worrying about gain or loss, and lead with what you have truly lived.",
+                         *             "6": "Having tasted many changes, you can tell which ones are worth chasing. Your example shows others how to grow through experience without being consumed by restlessness."
+                         *           },
+                         *           "36": {
+                         *             "1": "Before entering emotional turmoil, study it from a distance. Knowing how crises usually unfold lets you lower your wings and keep moving when the light dims.",
+                         *             "2": "You have a natural capacity to stay humane in hard times. Others notice your resilience, yet you need withdrawal to recover after carrying them through the dark.",
+                         *             "3": "You learn about feelings by walking straight into situations you have never met before. Some leave you bruised, and every bruise teaches what you can actually handle.",
+                         *             "4": "Crises tend to reach you through the people close to you. Choose your allies with care, because the network that brings trouble can also show you the way out.",
+                         *             "5": "Others expect you to stay calm when everything darkens. Like someone who hides their light to survive a harsh ruler, you may need to keep your feelings private for a time.",
+                         *             "6": "Having passed through several storms, you know darkness does not last. Your perspective helps others see that the hardest episode is often the turning point."
+                         *           },
+                         *           "37": {
+                         *             "1": "A family or team holds together when everyone knows the agreements from the start. Clear house rules give your warmth a stable base instead of leaving it vague.",
+                         *             "2": "You care for others through small, steady acts like cooking and sharing a meal. People feel at home with you, yet you need quiet time to refill that warmth.",
+                         *             "3": "You learn about loyalty by testing the balance between strictness and indulgence. Too much of either strains a household, and trial shows you where the middle lies.",
+                         *             "4": "Your bonds widen into a network of mutual support. The kindness you give comes back through friends of friends, enriching the whole circle and not only yourself.",
+                         *             "5": "People expect you to lead the household and keep the peace. Lead through sincere affection rather than demands, and others will follow willingly instead of resentfully.",
+                         *             "6": "Over time your loyalty earns quiet authority. You become the person whose sincerity and fairness show others what a healthy family or friendship looks like."
+                         *           },
+                         *           "38": {
+                         *             "1": "Opposition starts with knowing what you stand for. Not every conflict needs chasing; like a lost horse that returns on its own, some differences resolve once you feel secure.",
+                         *             "2": "You have a knack for meeting resistance in unlikely places, even a narrow lane. Others admire your fighting spirit, but rest keeps it from turning into constant battle.",
+                         *             "3": "You learn what is worth defending through trial and setback. Sometimes the cart is dragged back and the oxen stall, and those moments show which fights really matter.",
+                         *             "4": "Struggle feels lonely until you find allies who share your cause. A single trusted companion turns isolated resistance into a stand that others can join.",
+                         *             "5": "People see you as the one who will fight on their behalf. Make sure the battle is truly worth it, or their expectations will drag you into conflicts that are not yours.",
+                         *             "6": "Experience teaches you that many enemies are only misunderstandings. You learn to lower the drawn bow, and your example shows others when to resist and when to reconcile."
+                         *           },
+                         *           "39": {
+                         *             "1": "Before you provoke anyone, understand the obstacle in front of you. Sometimes pausing and coming back later earns more respect than pushing into difficulty without a plan.",
+                         *             "2": "You stir people without trying, poking at their mood until their spirit wakes up. Others notice this gift, and you need time alone so it does not exhaust you.",
+                         *             "3": "You learn whom to provoke by doing it and watching what happens. Some responses inspire and others backfire, and each one sharpens your aim for the next attempt.",
+                         *             "4": "Your provocations land best among people who know and trust you. In hard times friends gather around you, and your challenge becomes shared motivation instead of offence.",
+                         *             "5": "Others expect you to shake things loose when everything is stuck. Provoke with care and purpose, because when the obstruction is great, people will hold you responsible for the outcome.",
+                         *             "6": "With maturity you know which buttons to press and why. Your provocations become a kind of teaching, waking others to their own spirit rather than just disturbing them."
+                         *           },
+                         *           "40": {
+                         *             "1": "After giving your effort, get clear about what you owe and what you do not. Knowing the terms of the bargain makes your rest free of guilt.",
+                         *             "2": "You naturally sense when you have given enough. Others value your contribution, yet you need long stretches alone to restore yourself before the next round of work.",
+                         *             "3": "You learn your limits by overcommitting and paying for it. Carrying a heavy load while riding in the carriage invites robbers, and every bout of exhaustion teaches clearer terms.",
+                         *             "4": "Rest comes easier when you release the people who drain you. Let hangers-on go, and your true allies will respect your need to withdraw and recover.",
+                         *             "5": "Others assume you will always deliver for them. Free yourself from obligations that no longer serve anyone, and show clearly when your work is finished for now.",
+                         *             "6": "Over time you learn to remove the one obstacle that keeps everything stuck, like shooting a hawk from a high wall. Your example shows that rest belongs to good work."
+                         *           },
+                         *           "41": {
+                         *             "1": "Every new experience starts as a fantasy that needs grounding. Study what is realistic before acting, and decide how much you can spend without draining your resources.",
+                         *             "2": "Your imagination keeps producing pictures of what could come next. Others notice your dreams, yet you need solitude to let them ripen before you speak of them.",
+                         *             "3": "You learn which fantasies hold up by testing them. When three travel together one often drops away, and fewer moving parts make the next experiment cleaner.",
+                         *             "4": "Your dreams take shape through other people who share them. Cutting away what you do not need leaves room for friends to bring what the plan truly lacks.",
+                         *             "5": "People cast you as the visionary who knows what is coming. Ground your fantasies in practical steps, because others may build their own plans on them.",
+                         *             "6": "Having followed many dreams, you know which ones nourish and which ones drain. Your perspective helps others begin new cycles with restraint and a clear purpose."
+                         *           },
+                         *           "42": {
+                         *             "1": "Finishing a cycle well depends on knowing what it was for. Build on solid groundwork and large deeds become possible, but only when the foundation can carry them.",
+                         *             "2": "You have a natural ability to bring things to completion. Others count on your steady finish, yet you need quiet time to let growth settle before starting more.",
+                         *             "3": "You learn to finish things by meeting setbacks along the way. Even misfortune can increase you when you treat it as a lesson in how to complete what you began.",
+                         *             "4": "Growth flows through the people you are connected to. Walk the middle path and keep your relationships honest, and others will trust you to carry their projects forward.",
+                         *             "5": "Others expect you to bring every venture to fruit. A sincere heart serves you better than constant gain, because people sense when your motive is genuine kindness.",
+                         *             "6": "With experience you recognise when a cycle should end. Your example shows that growth needs pruning, and that grasping for more without giving back leaves you unsupported."
+                         *           },
+                         *           "43": {
+                         *             "1": "Insights arrive suddenly, but trust rests on knowledge. Study enough so that when the breakthrough comes you can explain it, instead of stepping forward on a bare hunch.",
+                         *             "2": "You hear inner answers before others have even asked the question. People notice your unusual clarity, yet you need solitude for those insights to come through undisturbed.",
+                         *             "3": "You learn how to share breakthroughs by trying and sometimes failing. Speaking too early alarms people, and each misfired explanation teaches you better timing.",
+                         *             "4": "Your insights land when you share them with people who know you. A trusted network gives your strange ideas a fair hearing, while strangers may dismiss them as nonsense.",
+                         *             "5": "Others expect you to produce the brilliant answer on demand. Be resolute about what you know, but stay humble when your insight is still incomplete.",
+                         *             "6": "Over time your sudden knowing becomes reliable. Your example shows that breakthroughs work best when they are calmly explained and patiently timed rather than announced too soon."
+                         *           },
+                         *           "44": {
+                         *             "1": "Your instinct for patterns needs grounding in facts. Hold back an impulse until you understand it, the way a brake checks a cart before it rolls downhill.",
+                         *             "2": "You sense what will happen because you remember what happened before. Others notice how alert you are, and you need time alone to sort through what you sense.",
+                         *             "3": "You learn to read patterns by misreading some of them. Every mistaken hunch sharpens your memory for what the next situation is really telling you.",
+                         *             "4": "Your alertness serves the people around you. When you keep your bonds close, the network relies on your instinct to spot problems early and bring the right people together.",
+                         *             "5": "People expect you to know who can be trusted. Use what the past has taught you, while staying open to the chance that someone has changed.",
+                         *             "6": "Experience turns your instinct into quiet wisdom. You learn to keep a polite distance from patterns that repeat badly, and others value your calm perspective on people."
+                         *           },
+                         *           "45": {
+                         *             "1": "Bringing people together starts with understanding what they need. Know the available resources before you call a gathering, so the group has a real reason to stay.",
+                         *             "2": "You naturally draw people and resources into one place. Others notice your gift for assembling a team, and you still need moments alone to rest from managing everyone.",
+                         *             "3": "You learn how to gather people by trying and sometimes failing. A gathering that breaks up with sighs teaches what holds a group together better than any theory.",
+                         *             "4": "Your gatherings grow through your network. Friends introduce friends and the community expands through trust, so keep those bonds alive with generosity rather than control.",
+                         *             "5": "Others see you as the natural head of the group. Lead from shared purpose rather than position alone, because people follow sincerity longer than they follow rank.",
+                         *             "6": "Over time you understand the cost of holding people together. Your example shows how to care for a group, even through sighs and tears when someone leaves."
+                         *           },
+                         *           "46": {
+                         *             "1": "Being in the right place starts with knowing your body and what it needs. Trust grows when you treat your physical self with care and steady attention.",
+                         *             "2": "You have a natural gift for turning up where you belong. Others see luck in that, and you need quiet moments to stay connected to your body.",
+                         *             "3": "You learn where you fit by trying different places. Some doors open as easily as an empty city, others close, and both teach you to follow your feet.",
+                         *             "4": "The right places come to you through the people you know. A friend's invitation can lead you exactly where you should be, so stay open to it.",
+                         *             "5": "Others expect you to be lucky and effortless. Show them the work behind it, climbing step by step, so they see the determination that underlies your good fortune.",
+                         *             "6": "With experience you learn to keep climbing even when the way ahead is dark. Your example shows others how to trust the body and stay committed through uncertain stretches."
+                         *           },
+                         *           "47": {
+                         *             "1": "Making sense of the past starts with studying it carefully. Sitting under a bare tree with no answers is part of the process before the pattern comes clear.",
+                         *             "2": "You find order in confusing memories without much effort. Others admire how you make sense of things, and you need time alone, since realisation tends to come in quiet moments.",
+                         *             "3": "You learn to sort the past by trying different explanations. Some lead into rocks and thorns, and those dead ends show which interpretations simply do not hold.",
+                         *             "4": "Realisations often come through conversation. A friend's question can bring a memory back, so share what puzzles you rather than carrying it in silence.",
+                         *             "5": "Others expect you to explain what happened and why. Give them clarity only when it truly arrives, because forced meaning feels hollow and leaves people unconvinced.",
+                         *             "6": "Over time you learn that confusion passes. Your example shows others that being tangled in vines is temporary, and that the right realisation arrives once you stop struggling."
+                         *           },
+                         *           "48": {
+                         *             "1": "Your knowledge needs a clean foundation. Like a well choked with mud, unexamined facts nourish nobody, so learn the basics before you call yourself an expert.",
+                         *             "2": "You hold more knowledge than you realise. Others notice your depth, and you need time alone to let it settle, otherwise your skills leak away unused.",
+                         *             "3": "You learn to share what you know by offering it and seeing what happens. A clean well that nobody draws from teaches you how to invite others to use it.",
+                         *             "4": "Your knowledge reaches others through people who trust you. Keeping the well lined and maintained makes your network confident enough to draw from it.",
+                         *             "5": "Others see you as the one with the answer. Make sure what you offer is fresh and clear, like cold spring water, since people will rely on it.",
+                         *             "6": "Over time your depth becomes a resource for many. Like a well left uncovered, you let others draw freely, and your example shows knowledge serving a whole community."
+                         *           },
+                         *           "49": {
+                         *             "1": "Before rejecting anything, understand the principles at stake. Hold steady until change is truly necessary, like something bound in tough ox hide until the right day comes.",
+                         *             "2": "You have a natural sense for when an old arrangement has outlived its use. Others notice your principled stance, and you need time to reflect before acting on it.",
+                         *             "3": "You learn which principles deserve a fight by testing them. Talking a change over three times before acting saves you from rebellions you may later regret.",
+                         *             "4": "Change happens through alliances. When your values are shared by people you trust, a reform gains support instead of being rejected as a personal grievance.",
+                         *             "5": "Others see you as the reformer who will fix what is broken. Change with clarity, like a tiger whose stripes stand out, so people understand why the transformation matters.",
+                         *             "6": "With experience you learn that lasting reforms come gradually. Your example shows that principles can be upheld through small, visible changes rather than constant upheaval."
+                         *           },
+                         *           "50": {
+                         *             "1": "Group values start from a clean base. Like a cauldron turned over to empty out old residue, check the foundations before pouring in new rules.",
+                         *             "2": "You naturally sense what keeps a group healthy. Others feel your care, yet you need distance at times, since guarding values for everyone can become heavy.",
+                         *             "3": "You learn which rules matter by watching some of them fail. When the handles of the cauldron are altered it becomes hard to carry, and experience shows which values to keep.",
+                         *             "4": "Your values spread through the people you know. If one leg of the cauldron breaks everyone loses the meal, so keep the network strong enough to carry shared values.",
+                         *             "5": "Others expect you to protect the rules. Lead with fairness, because people sense whether you guard values for the group or merely for your own position.",
+                         *             "6": "Over time your sense of values becomes trusted. Like jade rings on a cauldron, your example shows that durable principles can be both firm and gentle."
+                         *           },
+                         *           "51": {
+                         *             "1": "Shocks hurt less when you have studied them in advance. After the first fright you may even laugh, because you understand what the thunder means.",
+                         *             "2": "You have a natural courage that others admire. When shock strikes you may lose things, but you recover them, so give yourself time alone afterwards to absorb what happened.",
+                         *             "3": "You learn to handle surprises by being caught off guard. Each jolt shows you a weak point and builds the courage you need to be first next time.",
+                         *             "4": "Shocks travel through your network. If you get stuck in the mud after a jolt, the people around you can pull you free, so keep those connections alive.",
+                         *             "5": "Others expect you to lead the way when trouble comes. Stay centred through repeated shocks, so people can rely on your steadiness while everything keeps shifting.",
+                         *             "6": "Over time you see that not every shock needs a response. Your example shows others how to stay calm when thunder rolls around them and their neighbours."
+                         *           },
+                         *           "52": {
+                         *             "1": "Stillness starts at the feet. Pause before acting until you understand what you are about to do, so that movement comes from clarity rather than restlessness.",
+                         *             "2": "You naturally hold still while others rush around you. Your concentration is a gift that people notice, so protect it with quiet time and it will stay strong.",
+                         *             "3": "You learn your limits by trying to force stillness. Holding back too rigidly strains you like a stiff back, and experience shows you when to relax.",
+                         *             "4": "Your focus benefits the people around you. When you calmly settle your body, your network senses it and can organise its efforts around your steady presence.",
+                         *             "5": "Others expect you to choose your words carefully. Keep your jaw still until you know what to say, and your speech will carry real weight.",
+                         *             "6": "With experience stillness turns into generosity. Your calm becomes noble rather than stubborn, and others learn from you how to concentrate without forcing it."
+                         *           },
+                         *           "53": {
+                         *             "1": "Every new project starts small, like a wild goose stepping onto the shore. Study the ground carefully before you push, because good beginnings need solid information.",
+                         *             "2": "You have a natural instinct for starting things. Others notice your ability to launch projects, so take quiet moments and begin each one with fresh energy.",
+                         *             "3": "You learn to start well by sometimes starting badly. Some beginnings fail, and every failure shows you what kind of start a project actually needs.",
+                         *             "4": "New beginnings arise through your network. Like a goose finding a flat branch to rest on, you can count on support from people who know you.",
+                         *             "5": "Others see you as the one who will get things off the ground. Be patient with them and with yourself, since some projects take years to show results.",
+                         *             "6": "Over time you understand the cycle of beginnings and endings. Your example shows that development happens step by step, like geese crossing the sky in formation."
+                         *           },
+                         *           "54": {
+                         *             "1": "Rising in the world starts with knowing your place in it. Accepting a modest role while you learn the rules can be the foundation of lasting success.",
+                         *             "2": "You have a natural drive that others recognise. Like someone with one good eye who still sees the way, you make progress, and quiet time keeps that ambition healthy.",
+                         *             "3": "You learn the price of ambition by trying shortcuts. Some of them fail, and each failure shows you how to climb without compromising your integrity.",
+                         *             "4": "Your ambitions rise through the people you know. Patience with your connections pays off, and waiting for the right alliance often brings more than rushing.",
+                         *             "5": "Others expect you to climb high. Lead with modesty rather than display, since people trust ambition more when it does not dress itself in showy finery.",
+                         *             "6": "With experience you know when ambition is empty. Your example shows others that rising without substance is like carrying a basket that holds no fruit."
+                         *           },
+                         *           "55": {
+                         *             "1": "Abundance rests on understanding your moods. Study how your feelings rise and fall, so that both high and low seasons can be felt fully and accepted.",
+                         *             "2": "You feel the full range of emotions. Others notice your spirit even when the sky seems dark at noon, and you need solitude to let the moods pass.",
+                         *             "3": "You learn what feeds your spirit by experimenting. Some attempts leave you feeling broken, and those dark moments teach you how to find the light again.",
+                         *             "4": "Your spirit grows through meeting equals. People who share your outlook help you see abundance where others see only scarcity or gloom.",
+                         *             "5": "Others see you as a source of light and hope. Accept that role with grace, but remember that your moods change, and so does the light you give.",
+                         *             "6": "With experience you learn that abundance is not about filling the house. Your example shows others that spirit thrives through connection, while a full but closed house stays empty."
+                         *           },
+                         *           "56": {
+                         *             "1": "Good stories rest on solid material. Avoid trivial anecdotes and gather real experiences first, so that what you share has substance and holds attention.",
+                         *             "2": "You have a natural gift for telling stories, and others love to listen. Take time alone to collect new experiences, since stories run thin without fresh material.",
+                         *             "3": "You learn which stories work by telling them. Some fall flat or offend, like a careless traveller who sets the inn on fire, and each one shows what moves people.",
+                         *             "4": "Your stories spread through the people you meet. Every place you stay offers new listeners, and your network becomes an audience that passes your tales along.",
+                         *             "5": "Others expect you to entertain and inspire. Choose stories that carry meaning, like an arrow that finds its mark, so people remember you for more than diversion.",
+                         *             "6": "Over time you learn when a story is worth telling. Your example shows others how to stimulate without destroying, avoiding the careless word that burns a nest."
+                         *           },
+                         *           "57": {
+                         *             "1": "Your intuition needs a base of knowledge. When you waver between advancing and retreating, steady yourself with facts, and the inner voice becomes easier to trust.",
+                         *             "2": "You hear what is right in the moment. Others notice your sensitivity, so take quiet time, since intuition speaks most clearly when the room is calm.",
+                         *             "3": "You learn to trust intuition by doubting it and seeing the result. Repeated second guessing can hurt, but it teaches you to recognise the true signal.",
+                         *             "4": "Your intuition guides the people around you. When you hunt for answers alongside friends, your inner clarity can bring a good catch to the whole circle.",
+                         *             "5": "Others expect you to sense what is coming. Trust what you hear, then review it a few days later, because intuition works best when followed by reflection.",
+                         *             "6": "With experience you learn that too much searching dulls intuition. Your example shows others how to listen quietly without crawling under the bed and losing their axe."
+                         *           },
+                         *           "58": {
+                         *             "1": "Lasting joy rests on understanding what really improves life. Study what works before you try to fix things, so your enthusiasm stays grounded and your efforts make a difference.",
+                         *             "2": "You bring cheer to those around you without trying. Others notice your vitality, so take time alone to recharge before sharing more of your energy.",
+                         *             "3": "You learn what makes life better by testing ideas. Some pleasures prove hollow, and every disappointment shows you which improvements are worth the effort.",
+                         *             "4": "Your joy spreads through the people you know. Weigh carefully which pleasures to share, and your network becomes a source of steady encouragement and real improvement.",
+                         *             "5": "Others see you as the one who will lift their spirits. Be careful with anyone who drains your joy, since your vitality is not unlimited.",
+                         *             "6": "Over time you learn the difference between passing pleasure and lasting joy. Your example shows others how to improve life without getting lost in distraction."
+                         *           },
+                         *           "59": {
+                         *             "1": "Closeness begins with understanding the barriers. Know what keeps people apart, and you can move in at the right moment, like a strong horse coming to the rescue.",
+                         *             "2": "You naturally break down walls between people. Others feel the warmth you offer, yet you need time alone so you do not lose yourself in closeness.",
+                         *             "3": "You learn intimacy by trying different ways of getting close. Some attempts fail, but even setting your pride aside for a moment teaches you something.",
+                         *             "4": "Your bonds reach beyond one person. When you dissolve the barriers inside a group, others find connections through your example that they could not reach alone.",
+                         *             "5": "Others expect you to make the first move toward closeness. Speak openly, because a clear word can dissolve tension that silence would only deepen.",
+                         *             "6": "With experience you learn when to keep your distance and when to draw near. Your example shows others how to protect themselves while still remaining open to intimacy."
+                         *           },
+                         *           "60": {
+                         *             "1": "Working within limits starts with knowing them. Stay inside the courtyard while you learn the rules, and your creativity will have a solid frame to push against.",
+                         *             "2": "You sense when limits can be bent. Others admire your adaptability, and stepping back at times shows you which boundaries help and which simply hold you back.",
+                         *             "3": "You learn by pushing against limits. When you ignore them you may end up lamenting, and each lesson teaches you which rules deserve respect.",
+                         *             "4": "Your network helps you work with limits. Accepting what you cannot change frees energy, and the people around you offer ideas that fit within real constraints.",
+                         *             "5": "Others expect you to find the creative solution. Make limits feel sweet rather than bitter, since people follow a framework more willingly when it feels fair.",
+                         *             "6": "Over time you learn that some limits are painful but necessary. Your example shows others how to accept bitter constraints without losing creativity or spirit."
+                         *           },
+                         *           "61": {
+                         *             "1": "The pressure to know is easier to bear when you build on solid knowledge. Prepare carefully, and inner truths will come as steady insights rather than restless questions.",
+                         *             "2": "You sense truths others cannot reach. Like a crane calling from the shade, your voice finds those who answer it, and you also need solitude to hear yourself.",
+                         *             "3": "You learn which truths are real by testing them with others. Some responses leave you weeping and some laughing, and each one teaches you to trust your inner sense.",
+                         *             "4": "Your insights reach others through people who trust you. Sincerity binds you to them, so be honest about what you know and what you do not.",
+                         *             "5": "Others expect you to reveal hidden truths. Speak only when you are certain, since people may treat your words as final.",
+                         *             "6": "Over time you learn that some mysteries stay unsolved. Your example shows others how to live with open questions without crowing too loudly about answers."
+                         *           },
+                         *           "62": {
+                         *             "1": "Precision starts with checking facts carefully. Like a young bird that tries to fly too high too soon, details stated without groundwork can lead to costly mistakes.",
+                         *             "2": "You notice small facts that others overlook. People rely on your precision, so take time alone to sort the details before you present them.",
+                         *             "3": "You learn the value of detail through mistakes. Missing one small fact can cause real trouble, and each slip teaches you to double check before speaking.",
+                         *             "4": "Your detailed knowledge serves your network. When you name facts clearly, the people around you make better decisions and trust the information you share.",
+                         *             "5": "Others expect you to have the precise answer. Be modest about what you know, since dense clouds that bring no rain show that preparation does not always produce results.",
+                         *             "6": "Over time you learn when detail matters and when it does not. Your example shows others how to be thorough without getting lost in endless facts."
+                         *           },
+                         *           "63": {
+                         *             "1": "Doubt works best when it rests on solid facts. Slow down and question carefully, like a driver braking before a ford, so your logic stands on firm ground.",
+                         *             "2": "You notice what does not add up. Others value your questions, so take time alone to work through your doubts before sharing them, and they will lead somewhere.",
+                         *             "3": "You learn to doubt productively by testing ideas against evidence. Some lines of questioning take a long time, but each one teaches you how to reach a proof.",
+                         *             "4": "Your doubts are best tested with others. Sharing questions with trusted people shows whether suspicion is warranted, or whether the fine robe has truly worn to rags.",
+                         *             "5": "Others expect you to find the flaw in their reasoning. Keep your questions simple and sincere, since a modest offering often counts for more than an elaborate one.",
+                         *             "6": "Over time you learn when to stop questioning. Your example shows that endless doubt can soak you to the head, and that proof sometimes means accepting what is already clear."
+                         *           },
+                         *           "64": {
+                         *             "1": "Clarity about the past starts with patience. Like a young fox that wets its tail by crossing the stream too early, rushing to conclusions only adds to the confusion.",
+                         *             "2": "You hold vivid images of the past in your mind. Others notice your rich imagination, so give yourself time alone and let those images arrange themselves.",
+                         *             "3": "You learn by trying to make sense of things too soon. Early conclusions often fail, but each one teaches you to wait until the pieces fit.",
+                         *             "4": "Your confusion clears through conversations with others. Sharing memories with trusted friends helps the images settle into a story that finally makes sense.",
+                         *             "5": "Others see you as the one who can explain what happened. Let your understanding shine clearly, but admit what is still uncertain.",
+                         *             "6": "Over time you learn to rest with confusion instead of fighting it. Your example shows others that the celebration can wait until the meaning is complete."
+                         *           }
+                         *         },
+                         *         "gateLinesLocalized": true,
+                         *         "crossesLocalized": true,
+                         *         "crosses": {
+                         *           "Right Angle Cross of The Sphinx": {
+                         *             "angle": "RAC",
+                         *             "gates": [
+                         *               1,
+                         *               2,
+                         *               7,
+                         *               13
+                         *             ],
+                         *             "name": "Right Angle Cross of The Sphinx",
+                         *             "text": "The Sphinx is a cross of direction. Through gates 13, 2, 7 and 1 it joins listening, a quiet inner knowing of where life should go, the role of guiding others and the drive to be original. On the Right Angle this direction is found by living your own process: you discover the way by walking it, and others later orient by the path you made."
+                         *           },
+                         *           "Juxtaposition Cross of Self-Expression": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               1
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Self-Expression",
+                         *             "text": "Creative originality is the constant in this design. Gate 1 drives you to be original and to show it. On the Juxtaposition this keeps its shape through every season of life: your expression is distinct and recognisable, and it flourishes when you follow your own creative timing rather than the expectations of others."
+                         *           },
+                         *           "Left Angle Cross of Defiance": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               1,
+                         *               2
+                         *             ],
+                         *             "name": "Left Angle Cross of Defiance",
+                         *             "text": "Asserting originality against the grain is the theme of this cross. Gate 1 brings creative self-expression and gate 2 a quiet knowing of where life should go. On the Left Angle it unfolds through encounters: you challenge expectations and conventions in the groups you belong to, and your independent sense of direction encourages others to bring out their own originality."
+                         *           },
+                         *           "Juxtaposition Cross of The Driver": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               2
+                         *             ],
+                         *             "name": "Juxtaposition Cross of The Driver",
+                         *             "text": "Direction is the constant here. Gate 2 carries a quiet knowing of where life should go, and in this cross that knowing is fixed rather than fleeting. The Juxtaposition holds it steady: you may not be the one who pushes, but your sense of direction steers, and resources and people tend to follow when you let that inner compass work without having to justify it."
+                         *           },
+                         *           "Right Angle Cross of Laws": {
+                         *             "angle": "RAC",
+                         *             "gates": [
+                         *               3,
+                         *               50,
+                         *               56,
+                         *               60
+                         *             ],
+                         *             "name": "Right Angle Cross of Laws",
+                         *             "text": "The rules that let life grow in an orderly way are the subject of this cross. Gates 3 and 50 bring the ordering of something new and guardianship of the values that keep a group healthy, while 56 and 60 add storytelling and creative work within limits. As a Right Angle theme it is lived personally: you find out through your own experience which principles truly hold, and that lived knowledge gives your word weight."
+                         *           },
+                         *           "Juxtaposition Cross of Mutation": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               3
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Mutation",
+                         *             "text": "Change from within is a constant in this design. Gate 3 orders the new, making something workable out of initial chaos. On the Juxtaposition this keeps its shape throughout life: you keep meeting beginnings that look confused at first, and patience lets the new form settle in its own time instead of being forced before it is ready."
+                         *           },
+                         *           "Left Angle Cross of Wishes": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               3,
+                         *               50
+                         *             ],
+                         *             "name": "Left Angle Cross of Wishes",
+                         *             "text": "Hopes for a better shared life drive this cross. Gate 3 brings the work of ordering something new, and gate 50 care for the values that keep a group healthy. On the Left Angle it unfolds through others: wishes become real when they are shared, and your role is to help a community give shape and structure to what it wants for its future."
+                         *           },
+                         *           "Right Angle Cross of Explanation": {
+                         *             "angle": "RAC",
+                         *             "gates": [
+                         *               4,
+                         *               23,
+                         *               43,
+                         *               49
+                         *             ],
+                         *             "name": "Right Angle Cross of Explanation",
+                         *             "text": "This cross carries the need to make sense of change and to put it into words. Gates 49 and 4 bring principles and answers to doubt, while 23 and 43 turn a sudden insight into language others can follow. As a Right Angle theme it unfolds through your own process: what you come to understand for yourself becomes the explanation that helps others accept something new."
+                         *           },
+                         *           "Juxtaposition Cross of Formulization": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               4
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Formulization",
+                         *             "text": "Turning questions into answers is a steady capacity in this life. Gate 4 formulates logical explanations for doubts. As a Juxtaposition it holds its line through changing interests: you find answers that make sense, and they serve best when you offer them as working formulas to be tested rather than as final truths."
+                         *           },
+                         *           "Left Angle Cross of Revolution": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               4,
+                         *               49
+                         *             ],
+                         *             "name": "Left Angle Cross of Revolution",
+                         *             "text": "Change in the shared order of things is the territory here. With gates 49 and 4 the theme links principled rejection of what no longer works with the ability to formulate a better answer. On the Left Angle it unfolds through other people: revolutions are never made alone, and your part often appears when a group is ready to rethink how it lives together."
+                         *           },
+                         *           "Right Angle Cross of Consciousness": {
+                         *             "angle": "RAC",
+                         *             "gates": [
+                         *               5,
+                         *               35,
+                         *               63,
+                         *               64
+                         *             ],
+                         *             "name": "Right Angle Cross of Consciousness",
+                         *             "text": "Awareness of how life works, and the wish to understand it, runs through this cross. Gates 63 and 64 bring doubt and the images of the past that wait for meaning, while 35 and 5 add the hunger for new experience and the patience of natural rhythms. As a Right Angle theme it grows through your own process: questions you live with long enough turn into clarity you can share."
+                         *           },
+                         *           "Juxtaposition Cross of Habits": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               5
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Habits",
+                         *             "text": "Rhythm and consistency are the steady theme of this life. Gate 5 brings natural rhythms, habits and patient waiting. As a Juxtaposition it holds its line: your routines keep you balanced, and respecting your own timing gives life a reliable flow even when events around you are unsettled."
+                         *           },
+                         *           "Left Angle Cross of Separation": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               5,
+                         *               35
+                         *             ],
+                         *             "name": "Left Angle Cross of Separation",
+                         *             "text": "The tension between new experience and steady rhythm shapes this cross. Gate 35 seeks change, gate 5 consistency and patient habits. On the Left Angle it unfolds through others: relationships may form and part as rhythms shift, and learning to separate gracefully when the time is right, without bitterness, is part of the wisdom this cross offers."
+                         *           },
+                         *           "Right Angle Cross of Eden": {
+                         *             "angle": "RAC",
+                         *             "gates": [
+                         *               6,
+                         *               11,
+                         *               12,
+                         *               36
+                         *             ],
+                         *             "name": "Right Angle Cross of Eden",
+                         *             "text": "Leaving innocence and learning through experience is the story of this cross. Gates 36 and 6 bring emotional growth through new situations and the friction that decides who comes close, while 12 and 11 add careful expression and a stream of ideas. As a Right Angle theme it is lived in your own process: each step out of the familiar teaches you something you could not have learned by staying safe."
+                         *           },
+                         *           "Juxtaposition Cross of Conflict": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               6
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Conflict",
+                         *             "text": "Friction in close relationships is a lasting theme here. Gate 6 sets the emotional boundary that decides who comes close. As a Juxtaposition it holds its line: conflict is not a sign of failure but a way of discovering where real intimacy is possible, and giving emotions time before reacting turns that friction into something productive."
+                         *           },
+                         *           "Left Angle Cross of The Plane": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               6,
+                         *               36
+                         *             ],
+                         *             "name": "Left Angle Cross of The Plane",
+                         *             "text": "This cross explores what happens when emotional experience is shared. Gate 36 brings growth through new situations and gate 6 the friction and intimacy that decide who comes close. On the Left Angle it unfolds through relationships: your experiences touch other lives, and together you find out what a more mature emotional life can look like, one honest exchange at a time."
+                         *           },
+                         *           "Juxtaposition Cross of Interaction": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               7
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Interaction",
+                         *             "text": "Guiding how people move together is a constant role here. Gate 7 leads in the service of a collective direction, and in this cross the role stays with you whatever the setting. On the Juxtaposition it holds steady: you shape how people work together, and your leadership is welcomed when it reflects what the group truly wants."
+                         *           },
+                         *           "Left Angle Cross of Masks": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               7,
+                         *               13
+                         *             ],
+                         *             "name": "Left Angle Cross of Masks",
+                         *             "text": "Behind every role people play there is a story, and this cross is drawn to it. Gate 13 listens to what others carry, and gate 7 understands how roles shape the direction of a group. As a Left Angle theme it comes alive through encounters: in relationships and community you help bring out what is real, and in turn others show you which masks you wear yourself."
+                         *           },
+                         *           "Right Angle Cross of Contagion": {
+                         *             "angle": "RAC",
+                         *             "gates": [
+                         *               8,
+                         *               14,
+                         *               29,
+                         *               30
+                         *             ],
+                         *             "name": "Right Angle Cross of Contagion",
+                         *             "text": "Desire and example spread from person to person, and this cross carries both. Gates 30 and 29 bring a longing for experience and the commitment to see it through, while 8 and 14 add a personal contribution backed by real resources. As a Right Angle theme it moves through your own process: by fully living what you want, you show others what is possible, and it catches on."
+                         *           },
+                         *           "Juxtaposition Cross of Contribution": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               8
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Contribution",
+                         *             "text": "Offering your individuality to the world is the fixed theme of this cross. Gate 8 makes your own way of doing things available to others as an example. On the Juxtaposition it holds steady: your contribution is your style, and it is most valuable when you stay true to it rather than adapting to fit in with whatever is expected at the moment."
+                         *           },
+                         *           "Left Angle Cross of Uncertainty": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               8,
+                         *               14
+                         *             ],
+                         *             "name": "Left Angle Cross of Uncertainty",
+                         *             "text": "Living with an open future is the theme of this cross. Gate 8 brings the contribution of individuality and gate 14 the resources that empower a direction. On the Left Angle it unfolds through others: uncertainty becomes creative when it is shared, and your willingness to try something without guarantees can encourage the people around you to do the same."
+                         *           },
+                         *           "Right Angle Cross of Planning": {
+                         *             "angle": "RAC",
+                         *             "gates": [
+                         *               9,
+                         *               16,
+                         *               37,
+                         *               40
+                         *             ],
+                         *             "name": "Right Angle Cross of Planning",
+                         *             "text": "Building something that supports a community over time is what this cross is about. Gates 37 and 40 bring warmth, loyalty and the clear terms of a fair exchange, while 16 and 9 add practised skill and focus on detail. On the Right Angle the plan grows out of your own process: you learn what works by doing it, and the structures you create give others a dependable place to stand."
+                         *           },
+                         *           "Juxtaposition Cross of Focus": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               9
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Focus",
+                         *             "text": "Concentrated attention is the stable resource of this cross. Gate 9 focuses energy on what matters and stays with the details. On the Juxtaposition this holds firm: you can remain with a task long after others drift away, and choosing the right focus is what turns that persistence into real progress."
+                         *           },
+                         *           "Left Angle Cross of Identification": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               9,
+                         *               16
+                         *             ],
+                         *             "name": "Left Angle Cross of Identification",
+                         *             "text": "Recognising what deserves attention is the gift of this cross. Gate 16 brings skill and enthusiasm, gate 9 the focus on detail. On the Left Angle it unfolds through others: you help people identify their talents and where to put their energy, and their progress becomes part of your own sense of purpose and of what you are here to do."
+                         *           },
+                         *           "Right Angle Cross of The Vessel of Love": {
+                         *             "angle": "RAC",
+                         *             "gates": [
+                         *               10,
+                         *               15,
+                         *               25,
+                         *               46
+                         *             ],
+                         *             "name": "Right Angle Cross of The Vessel of Love",
+                         *             "text": "Love in its many forms is the substance of this cross. Gates 25 and 10 bring unconditional love and acceptance of yourself as you are, while 15 and 46 add love of humanity in all its extremes and love of the body. As a Right Angle theme it is lived personally: the more fully you accept yourself and your own life, the more naturally that love reaches others."
+                         *           },
+                         *           "Juxtaposition Cross of Behaviour": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               10
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Behaviour",
+                         *             "text": "Being yourself is the steady theme of this cross. Gate 10 brings the behaviour of loving yourself as you are. On the Juxtaposition it holds its line: your authenticity stays consistent from one setting to the next, and it quietly shows others that accepting oneself is possible without having to argue for it."
+                         *           },
+                         *           "Left Angle Cross of Prevention": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               10,
+                         *               15
+                         *             ],
+                         *             "name": "Left Angle Cross of Prevention",
+                         *             "text": "Guarding a healthy way of living together is the thread of this cross. Gate 15 brings acceptance of different rhythms, gate 10 the behaviour of loving yourself as you are. On the Left Angle it unfolds through others: you sense when a group is drifting in an unhealthy direction and can help steer it back before real damage is done."
+                         *           },
+                         *           "Juxtaposition Cross of Ideas": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               11
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Ideas",
+                         *             "text": "A stream of concepts is a constant in this cross. Gate 11 carries ideas waiting to be shared. As a Juxtaposition it keeps its shape: your mind keeps generating possibilities, and their value grows when you offer them as inspiration for others rather than treating each one as a plan you must carry out yourself."
+                         *           },
+                         *           "Left Angle Cross of Education": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               11,
+                         *               12
+                         *             ],
+                         *             "name": "Left Angle Cross of Education",
+                         *             "text": "Passing on ideas is the core of this cross. Gate 12 brings careful expression and gate 11 a stream of ideas waiting to be shared. On the Left Angle it unfolds through others: you teach, inspire or inform, and what you share matters most when it reaches people who are truly ready to receive it, at a time when the mood allows it."
+                         *           },
+                         *           "Juxtaposition Cross of Articulation": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               12
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Articulation",
+                         *             "text": "Careful, well-timed expression is the steady theme of this cross. Gate 12 speaks only when the mood is right. On the Juxtaposition this does not change from year to year: your words have real impact when they come at the right moment, and silence at the wrong one is not a failure but part of the same skill."
+                         *           },
+                         *           "Juxtaposition Cross of Listening": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               13
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Listening",
+                         *             "text": "Gate 13 is the listener, and here it becomes a fixed way of being in the world. People bring you their stories, and you hold them without needing to act on each one. As a Juxtaposition theme it bends little with circumstance: your steady attention is itself the gift, and it works best when you keep confidences and choose carefully what to pass on."
+                         *           },
+                         *           "Juxtaposition Cross of Empowering": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               14
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Empowering",
+                         *             "text": "Using resources to support a direction is a steady trait of this cross. Gate 14 brings power skills and the energy that empowers. On the Juxtaposition this holds its line: you naturally fuel what you believe in, and your resources flow best into work that genuinely engages you rather than into obligations you have outgrown."
+                         *           },
+                         *           "Juxtaposition Cross of Extremes": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               15
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Extremes",
+                         *             "text": "Living the full range of rhythms is the fixed theme of this cross. Gate 15 accepts the extremes of human behaviour, from long pauses to intense bursts. As a Juxtaposition it holds steady: your own rhythm may swing widely, and accepting that variation in yourself makes you tolerant and generous towards the differences you meet in others."
+                         *           },
+                         *           "Juxtaposition Cross of Experimentation": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               16
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Experimentation",
+                         *             "text": "Trying, repeating and refining is the steady practice of this life. Gate 16 brings enthusiasm and the repetition that turns talent into mastery. On the Juxtaposition that practice holds its line: you learn by experimenting, your skills deepen with each attempt whether it succeeds or not, and steady practice matters more than a single brilliant result."
+                         *           },
+                         *           "Right Angle Cross of Service": {
+                         *             "angle": "RAC",
+                         *             "gates": [
+                         *               17,
+                         *               18,
+                         *               52,
+                         *               58
+                         *             ],
+                         *             "name": "Right Angle Cross of Service",
+                         *             "text": "Improving life for others through clear thinking is the core here. Gates 17 and 18 bring a logical view of the future and the urge to correct what has gone wrong, while 52 and 58 add focused stillness and joy in making things better. As a Right Angle cross it grows through your own process: you refine your own patterns first, and service follows from what you have learned."
+                         *           },
+                         *           "Juxtaposition Cross of Opinions": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               17
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Opinions",
+                         *             "text": "Having a view and stating it clearly is a constant in this life. Gate 17 forms logical opinions about where things are heading. On the Juxtaposition that trait holds steady from one situation to the next: your opinions are recognisable and consistent, and they land best when someone has asked for them and you stay open to evidence that refines them."
+                         *           },
+                         *           "Left Angle Cross of Upheaval": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               17,
+                         *               18
+                         *             ],
+                         *             "name": "Left Angle Cross of Upheaval",
+                         *             "text": "Questioning established patterns, in a way that shakes things up, defines this cross. Gate 17 brings opinions about the future and gate 18 the drive to correct what is not working. On the Left Angle it unfolds through others: your challenges to the usual order matter most within relationships and groups, where the disturbance you create can open space for something healthier."
+                         *           },
+                         *           "Juxtaposition Cross of Correction": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               18
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Correction",
+                         *             "text": "Spotting what needs fixing is a constant in this design. Gate 18 feels the urge to correct what has gone wrong. As a Juxtaposition it holds steady: you notice flaws others overlook, and your corrections are welcome when they are invited and offered with care for the people involved rather than only for the result."
+                         *           },
+                         *           "Right Angle Cross of The Four Ways": {
+                         *             "angle": "RAC",
+                         *             "gates": [
+                         *               19,
+                         *               24,
+                         *               33,
+                         *               44
+                         *             ],
+                         *             "name": "Right Angle Cross of The Four Ways",
+                         *             "text": "This cross looks for ways forward by reflecting on the past and on the needs of the present. Gates 24 and 44 bring a mind that returns to ideas until they make sense and alertness to patterns from the past, while 19 and 33 add sensitivity to need and the withdrawal needed to remember. As a Right Angle theme it is lived personally: your own reflection shows which paths are worth taking."
+                         *           },
+                         *           "Juxtaposition Cross of Need": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               19
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Need",
+                         *             "text": "Sensitivity to needs is a constant in this cross. Gate 19 feels what others require and what you require yourself. On the Juxtaposition this holds steady: you notice what is missing and want to provide it, and including your own needs in that picture is what keeps the sensitivity balanced rather than exhausting."
+                         *           },
+                         *           "Left Angle Cross of Refinement": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               19,
+                         *               33
+                         *             ],
+                         *             "name": "Left Angle Cross of Refinement",
+                         *             "text": "Improving how people meet each other's needs is the core of this cross. Gate 33 reflects on the past, gate 19 senses what others need. On the Left Angle it unfolds through others: you help refine relationships and communities, drawing on what experience has shown about what truly nourishes people and what only looks like care."
+                         *           },
+                         *           "Right Angle Cross of The Sleeping Phoenix": {
+                         *             "angle": "RAC",
+                         *             "gates": [
+                         *               20,
+                         *               34,
+                         *               55,
+                         *               59
+                         *             ],
+                         *             "name": "Right Angle Cross of The Sleeping Phoenix",
+                         *             "text": "Renewal is the thread through this cross, the sense that something in life keeps waking up in a new form. Gates 55 and 59 bring abundance through moods and the drive to break through to closeness, while 20 and 34 add presence and raw life force. On the Right Angle the awakening is personal: it happens as you live through your own emotional cycles and let each one teach you something."
+                         *           },
+                         *           "Juxtaposition Cross of The Now": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               20
+                         *             ],
+                         *             "name": "Juxtaposition Cross of The Now",
+                         *             "text": "Presence in the moment is the fixed focus of this cross. Gate 20 expresses awareness here and now, without detours into the past or the future. As a Juxtaposition theme it stays firm: you respond to what is actually happening, and your clarity comes from being fully present rather than from plans made far ahead."
+                         *           },
+                         *           "Left Angle Cross of Duality": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               20,
+                         *               34
+                         *             ],
+                         *             "name": "Left Angle Cross of Duality",
+                         *             "text": "Two forces, awareness and raw power, meet in this cross. Gate 20 brings presence and gate 34 independent life force. On the Left Angle it unfolds through others: your energy and alertness come alive in partnership, where the right person complements what you bring and the two of you achieve together what neither would manage alone."
+                         *           },
+                         *           "Right Angle Cross of Tension": {
+                         *             "angle": "RAC",
+                         *             "gates": [
+                         *               21,
+                         *               38,
+                         *               39,
+                         *               48
+                         *             ],
+                         *             "name": "Right Angle Cross of Tension",
+                         *             "text": "Productive pressure is the engine of this cross. Gates 21 and 48 bring control of resources and a deep well of knowledge, while 39 and 38 add provocation and the readiness to fight for what is worth it. As a Right Angle theme it is lived through your own process: struggle sharpens you, and over time you learn which tensions are worth holding and which to let go."
+                         *           },
+                         *           "Juxtaposition Cross of Control": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               21
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Control",
+                         *             "text": "Managing your own territory is a fixed feature of this cross. Gate 21 seeks control over resources and over the shape of one's life. As a Juxtaposition theme it stays firm: you work best with clear responsibility for your own area, and the need for control becomes a strength when it is applied to what is truly yours rather than to other people."
+                         *           },
+                         *           "Left Angle Cross of Endeavour": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               21,
+                         *               48
+                         *             ],
+                         *             "name": "Left Angle Cross of Endeavour",
+                         *             "text": "Effort put into shared undertakings is the core of this cross. Gate 21 brings control of resources and gate 48 a depth of knowledge that needs trust to be used. On the Left Angle it unfolds with others: your best work happens when people give you room to apply what you know, and when you take on real responsibility within a common project."
+                         *           },
+                         *           "Right Angle Cross of Rulership": {
+                         *             "angle": "RAC",
+                         *             "gates": [
+                         *               22,
+                         *               26,
+                         *               45,
+                         *               47
+                         *             ],
+                         *             "name": "Right Angle Cross of Rulership",
+                         *             "text": "Leadership that looks after people and resources is the core of this cross. Gates 45 and 26 bring the gatherer and the persuader, while 22 and 47 add social grace and the ability to make sense of what has happened. On the Right Angle it is lived through your own process: authority comes once you have learned to hold resources well yourself, and others recognise it rather than being told."
+                         *           },
+                         *           "Juxtaposition Cross of Graciousness": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               22
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Graciousness",
+                         *             "text": "Grace in social life is a fixed trait in this design. Gate 22 brings openness and sensitivity to others, tied to mood, and this cross keeps that quality steady over the years. On the Juxtaposition it holds its line: when your mood is right you put people at ease and listen well, and knowing when to step back and be alone is part of the same grace."
+                         *           },
+                         *           "Left Angle Cross of Informing": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               22,
+                         *               47
+                         *             ],
+                         *             "name": "Left Angle Cross of Informing",
+                         *             "text": "Sharing what you have understood with the people around you is the thread of this cross. Gate 22 brings openness and grace, and gate 47 the effort to sort the past until it makes sense. On the Left Angle it unfolds through encounters: when you pass on what you have realised at the right moment and in the right mood, others gain a clearer view of their own situation."
+                         *           },
+                         *           "Juxtaposition Cross of Assimilation": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               23
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Assimilation",
+                         *             "text": "Translating insight into understandable words is a steady skill in this design. Gate 23 turns what one person has grasped into language others can follow. On the Juxtaposition that skill keeps its shape over time: you simplify the complex and make the strange familiar, and your explanations land best when the listener is ready to hear them."
+                         *           },
+                         *           "Left Angle Cross of Dedication": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               23,
+                         *               43
+                         *             ],
+                         *             "name": "Left Angle Cross of Dedication",
+                         *             "text": "Devotion to an insight and to getting it across marks this cross. Gate 43 brings sudden breakthroughs of knowing and gate 23 the work of putting them into words. On the Left Angle it unfolds with others: you dedicate yourself to communicating what you see to people who can use it, and patience with how they receive it is part of the task."
+                         *           },
+                         *           "Juxtaposition Cross of Rationalization": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               24
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Rationalization",
+                         *             "text": "Returning to a thought until it makes sense is the steady habit of this mind. Gate 24 circles an idea, turning it over again and again until a clear understanding forms. As a Juxtaposition the habit stays consistent: it can feel repetitive, yet it is also how you reach answers others trust, especially when you give the process time rather than forcing a conclusion."
+                         *           },
+                         *           "Left Angle Cross of Incarnation": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               24,
+                         *               44
+                         *             ],
+                         *             "name": "Left Angle Cross of Incarnation",
+                         *             "text": "Seeing life in its longer arc is the gift of this cross. Gate 24 rationalises experience until it makes sense, and gate 44 recognises patterns carried over from the past. On the Left Angle it unfolds through encounters: in conversation and in shared life you help others see the larger pattern behind events, and their questions in turn sharpen your own understanding."
+                         *           },
+                         *           "Juxtaposition Cross of Innocence": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               25
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Innocence",
+                         *             "text": "An open, unguarded heart is the fixed quality of this cross. Gate 25 brings the spirit of the self, unconditional love and innocence. As a Juxtaposition theme it stays constant through changing circumstances: you meet life without needing it to earn your trust first, and that steadiness can be quietly reassuring for people who have learned to be guarded."
+                         *           },
+                         *           "Left Angle Cross of Healing": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               25,
+                         *               46
+                         *             ],
+                         *             "name": "Left Angle Cross of Healing",
+                         *             "text": "Restoring a sense of wholeness, in yourself and in others, is the direction here, in the human sense of support and acceptance rather than treatment. Gate 25 brings unconditional love and gate 46 love of the body and of being in the right place. On the Left Angle it unfolds through encounters: something mends between people, often when you are simply present in the right place."
+                         *           },
+                         *           "Juxtaposition Cross of The Trickster": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               26
+                         *             ],
+                         *             "name": "Juxtaposition Cross of The Trickster",
+                         *             "text": "Persuasion and charm are lasting tools in this design. Gate 26 uses memory and skill to sell an idea. On the Juxtaposition this stays steady: you know how to present things in their best light, and the talent works for everyone involved when what you promote is genuinely worth it and the people you persuade come out ahead."
+                         *           },
+                         *           "Left Angle Cross of Confrontation": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               26,
+                         *               45
+                         *             ],
+                         *             "name": "Left Angle Cross of Confrontation",
+                         *             "text": "Facing others directly about resources and values is the theme here. Gate 45 brings the gatherer, gate 26 the persuader with memory and skill. On the Left Angle it unfolds through encounters: you challenge people and groups about how things are run, and when done with respect, that confrontation clears the air and improves the common situation."
+                         *           },
+                         *           "Right Angle Cross of The Unexpected": {
+                         *             "angle": "RAC",
+                         *             "gates": [
+                         *               27,
+                         *               28,
+                         *               31,
+                         *               41
+                         *             ],
+                         *             "name": "Right Angle Cross of The Unexpected",
+                         *             "text": "Surprising turns of fortune shape this cross. Gates 27 and 28 bring care for others and the search for what makes life's struggle worthwhile, while 31 and 41 add a voice that leads and the fantasy that starts a new cycle. As a Right Angle theme it is lived through your own process: unplanned events redirect your path, and meeting them with openness rather than resistance is where meaning appears."
+                         *           },
+                         *           "Juxtaposition Cross of Caring": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               27
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Caring",
+                         *             "text": "Looking after others is a reliable part of who you are. Gate 27 nourishes and protects, and in this cross that impulse does not come and go with circumstance. The Juxtaposition keeps it steady: your care is recognisable and dependable, and it stays healthy when you count yourself among those you look after and let others care for you in return."
+                         *           },
+                         *           "Left Angle Cross of Alignment": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               27,
+                         *               28
+                         *             ],
+                         *             "name": "Left Angle Cross of Alignment",
+                         *             "text": "Finding the right allies and a shared purpose is the theme of this cross. Gate 27 brings care and protection, gate 28 the search for what makes a struggle worthwhile. On the Left Angle it unfolds through others: you thrive when aligned with people whose values match yours, and the commitments you make together are what give the effort its meaning."
+                         *           },
+                         *           "Juxtaposition Cross of Risks": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               28
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Risks",
+                         *             "text": "Taking chances for what matters is the fixed theme of this cross. Gate 28 looks for what makes a struggle worthwhile. As a Juxtaposition it keeps its line: you are willing to take a risk when the purpose feels real, and that willingness gives your life its intensity, provided you weigh what is truly at stake before you leap."
+                         *           },
+                         *           "Juxtaposition Cross of Commitment": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               29
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Commitment",
+                         *             "text": "Saying yes and following through is the fixed theme of this cross. Gate 29 commits and persists until the end. On the Juxtaposition it does not soften with time: your commitments run deep, so choosing what to say yes to matters a great deal, and the right ones carry you into rich and meaningful experience."
+                         *           },
+                         *           "Left Angle Cross of Industry": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               29,
+                         *               30
+                         *             ],
+                         *             "name": "Left Angle Cross of Industry",
+                         *             "text": "Sustained work driven by real wanting is the signature of this cross. Gate 30 brings the hunger for experience and gate 29 the yes that carries it to the end. On the Left Angle it plays out with others: commitments made in partnership or in a team are where the energy builds, and shared effort turns desire into something that lasts."
+                         *           },
+                         *           "Juxtaposition Cross of Fates": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               30
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Fates",
+                         *             "text": "Some people feel their desires as a current that shapes the course of a life, and this cross makes that feeling a constant. Gate 30 longs for experience and for the feelings it brings, without knowing in advance where they lead. As a Juxtaposition the theme holds steady: you keep feeling your way towards what you want, and over time those choices form a recognisable path rather than a fixed fate."
+                         *           },
+                         *           "Juxtaposition Cross of Influence": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               31
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Influence",
+                         *             "text": "Leading by being recognised is the stable theme of this cross. Gate 31 is a voice that leads once others acknowledge it. On the Juxtaposition this holds firm: your influence works when people invite it rather than when you claim it, and you serve best by speaking for what the group needs instead of for your own agenda."
+                         *           },
+                         *           "Left Angle Cross of The Alpha": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               31,
+                         *               41
+                         *             ],
+                         *             "name": "Left Angle Cross of The Alpha",
+                         *             "text": "Leadership that opens new chapters of experience is the thread of this cross. Gate 31 brings recognised influence, gate 41 the fantasy that starts a new cycle. On the Left Angle it unfolds with others: you lead by inspiring a vision people want to follow, and the group shapes that vision as much as you do, which is what keeps it alive."
+                         *           },
+                         *           "Right Angle Cross of The Maya": {
+                         *             "angle": "RAC",
+                         *             "gates": [
+                         *               32,
+                         *               42,
+                         *               61,
+                         *               62
+                         *             ],
+                         *             "name": "Right Angle Cross of The Maya",
+                         *             "text": "The world of form, made of facts and patterns that build everyday reality, is the field of this cross. Gates 42 and 32 bring the completion of cycles and an instinct for what will last, while 61 and 62 add the pressure to grasp inner truth and the precise naming of facts. As a Right Angle theme it is lived through your own process: by learning how the structures of life work for you, you become able to explain them to others."
+                         *           },
+                         *           "Juxtaposition Cross of Conservation": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               32
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Conservation",
+                         *             "text": "Keeping what works and letting it grow is the fixed concern of this cross. Gate 32 senses what will last, and gate 42 completes cycles so they can bear fruit. As a Juxtaposition theme it holds its course over the years: you are the one who protects what has proven itself, and that steadiness lets change happen without losing what was worth keeping."
+                         *           },
+                         *           "Left Angle Cross of Limitation": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               32,
+                         *               42
+                         *             ],
+                         *             "name": "Left Angle Cross of Limitation",
+                         *             "text": "Growth that respects what will endure is the theme of this cross. Gate 42 brings the completion of cycles and gate 32 an instinct for continuity. On the Left Angle it unfolds with others: you help groups recognise which of their projects can last and which have run their course, so that shared effort goes where it can truly bear fruit."
+                         *           },
+                         *           "Juxtaposition Cross of Retreat": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               33
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Retreat",
+                         *             "text": "Stepping back to reflect is a steady need in this design. Gate 33 withdraws in order to remember and make sense of what happened. As a Juxtaposition it keeps its line: your retreats are not avoidance but preparation, and what you bring back from them gives your stories and advice their depth and their honesty."
+                         *           },
+                         *           "Juxtaposition Cross of Power": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               34
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Power",
+                         *             "text": "Pure, independent life force is the constant here. Gate 34 carries strength that works best on its own terms. As a Juxtaposition it keeps steady: your power is visible and consistent, and it achieves most when you respond to what truly engages you instead of trying to push everything forward at once."
+                         *           },
+                         *           "Juxtaposition Cross of Experience": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               35
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Experience",
+                         *             "text": "Hunger for the new is a constant in this life. Gate 35 seeks change and fresh experience, and here that appetite does not fade with age or setting. As a Juxtaposition it stays steady: you are drawn to try things, and wisdom comes from reflecting on what each experience taught you rather than from collecting experiences for their own sake."
+                         *           },
+                         *           "Juxtaposition Cross of Crisis": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               36
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Crisis",
+                         *             "text": "Emotional intensity, and the growth it brings, is a lasting feature of this cross. Gate 36 grows through inexperience, by entering situations it does not yet know. On the Juxtaposition the pattern stays put: hard moments come and pass, and each one leaves you more capable, especially when you give feelings time before acting on them."
+                         *           },
+                         *           "Juxtaposition Cross of Bargains": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               37
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Bargains",
+                         *             "text": "Fair exchange is the fixed ground of this cross. Gate 37 brings friendship, warmth and the bonds that hold a family or group together, and those bonds rest on agreements both sides honour. As a Juxtaposition the theme does not waver: you keep your side of a deal and expect the same in return, and that reliability is what makes people trust you."
+                         *           },
+                         *           "Left Angle Cross of Migration": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               37,
+                         *               40
+                         *             ],
+                         *             "name": "Left Angle Cross of Migration",
+                         *             "text": "Movement between communities shapes this cross, the urge to find or build a place where people belong. Gates 37 and 40 bring warmth and loyalty on one side and the need to rest after giving on the other. On the Left Angle the theme unfolds with others: you may move between groups, and each move teaches what a healthy exchange between a person and a community looks like."
+                         *           },
+                         *           "Juxtaposition Cross of Opposition": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               38
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Opposition",
+                         *             "text": "Standing against what feels wrong is a steady trait of this cross. Gate 38 fights for what is worth it. On the Juxtaposition this keeps its line: resistance gives you strength and clarity, and it is most meaningful when you choose battles that truly reflect your values rather than fighting out of habit."
+                         *           },
+                         *           "Left Angle Cross of Individualism": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               38,
+                         *               39
+                         *             ],
+                         *             "name": "Left Angle Cross of Individualism",
+                         *             "text": "Standing as an individual among others is the core here. Gate 39 provokes and gate 38 fights for what is worth it. On the Left Angle it unfolds through encounters: you hold your own position within groups, and your stubborn independence can give others the strength to find and defend their own position too."
+                         *           },
+                         *           "Juxtaposition Cross of Provocation": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               39
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Provocation",
+                         *             "text": "Stirring things up is a steady trait of this cross. Gate 39 provokes others into finding their own spirit. On the Juxtaposition it keeps its line: you naturally test people's moods and resolve, and the provocation is useful when it aims at waking something alive in them rather than starting a conflict for its own sake."
+                         *           },
+                         *           "Juxtaposition Cross of Denial": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               40
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Denial",
+                         *             "text": "Knowing when to say no is a lasting strength in this design. Gate 40 needs rest and solitude after giving. On the Juxtaposition this holds firm: you protect your energy and your time alone, and refusing what does not serve you keeps your contribution sustainable instead of draining you to the point of resentment."
+                         *           },
+                         *           "Juxtaposition Cross of Fantasy": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               41
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Fantasy",
+                         *             "text": "Imagination as a starting point is a recurring feature of this design. Gate 41 brings the fantasy that begins a new cycle of experience. As a Juxtaposition it keeps its line: you dream up possibilities easily, and letting those dreams lead into real experience rather than replace it is what keeps them alive and useful."
+                         *           },
+                         *           "Juxtaposition Cross of Completion": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               42
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Completion",
+                         *             "text": "Finishing what has been started is the stable theme here. Gate 42 brings growth by completing a cycle so that it can bear fruit. As a Juxtaposition this stays consistent across the years: you are at your best seeing things through to their natural end, which makes the choice of what to begin in the first place matter more than for most people."
+                         *           },
+                         *           "Juxtaposition Cross of Insight": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               43
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Insight",
+                         *             "text": "Sudden knowing is a recurring feature of this life. Gate 43 brings breakthroughs of inner understanding that arrive without warning. As a Juxtaposition it stays firm: insights keep coming in their own way, and they serve best when you wait for the right moment and the right listener before sharing them."
+                         *           },
+                         *           "Juxtaposition Cross of Alertness": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               44
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Alertness",
+                         *             "text": "Recognising patterns is a lasting skill in this design. Gate 44 notices what has worked and what has failed before. On the Juxtaposition this stays steady: you sense people's potential and the risks around them early, and this alertness is most valuable when it is used to bring the right people together for the right task."
+                         *           },
+                         *           "Juxtaposition Cross of Possession": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               45
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Possession",
+                         *             "text": "Gathering resources and people is a stable trait of this cross. Gate 45 is the gatherer who brings people and means together. On the Juxtaposition this holds firm across situations: you naturally take responsibility for what you hold, and it works well when what you gather is shared and put to use for the good of the whole group."
+                         *           },
+                         *           "Juxtaposition Cross of Serendipity": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               46
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Serendipity",
+                         *             "text": "Being in the right place at the right time is the recurring pattern of this cross. Gate 46 brings love of the body and of being where you belong. On the Juxtaposition this stays firm: good fortune often arrives through simple presence, and trusting your body's sense of place lets these fortunate meetings happen without being chased."
+                         *           },
+                         *           "Juxtaposition Cross of Oppression": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               47
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Oppression",
+                         *             "text": "Mental pressure to understand is a steady feature of this cross. Gate 47 sorts through the past until it makes sense. On the Juxtaposition this keeps its shape: you may feel weighed down by experiences that have not yet resolved, and the realisation tends to arrive once you stop pushing and let it come in its own time."
+                         *           },
+                         *           "Juxtaposition Cross of Depth": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               48
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Depth",
+                         *             "text": "Deep knowledge is the stable resource of this cross. Gate 48 is a well of knowledge that needs trust to be used. On the Juxtaposition it keeps its line: you carry more than you think you do, and that depth shows itself when you trust it enough to act rather than waiting until you feel completely prepared."
+                         *           },
+                         *           "Juxtaposition Cross of Principles": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               49
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Principles",
+                         *             "text": "Values sit at the centre of this life, and they do not easily move. Gate 49 holds the principles that decide what to accept and what to reject when an agreement no longer serves. On the Juxtaposition this is a steady line: you are recognisable by what you will and will not stand for, and that consistency gives others something reliable to measure against."
+                         *           },
+                         *           "Juxtaposition Cross of Values": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               50
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Values",
+                         *             "text": "Upholding the rules that keep people safe is a constant in this life. Gate 50 guards the values that keep a group healthy. On the Juxtaposition this holds firm: you keep to your standards over time and across settings, and that steadiness gives the people around you a reliable sense of what is fair and right."
+                         *           },
+                         *           "Right Angle Cross of Penetration": {
+                         *             "angle": "RAC",
+                         *             "gates": [
+                         *               51,
+                         *               53,
+                         *               54,
+                         *               57
+                         *             ],
+                         *             "name": "Right Angle Cross of Penetration",
+                         *             "text": "Breaking through to something new runs through this cross. Gates 51 and 57 bring the courage to be first and intuitive clarity in the moment, while 53 and 54 add the pressure to begin and the drive to rise. As a Right Angle theme it is lived personally: you meet shocks and openings in your own life, and each breakthrough becomes proof to others that it can be done."
+                         *           },
+                         *           "Juxtaposition Cross of Shock": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               51
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Shock",
+                         *             "text": "Surprise is a steady presence in this life, both given and received. Gate 51 brings the courage to be first and to wake others up. On the Juxtaposition the theme holds its ground: unexpected events seem to find you, and your capacity to stay upright through them, recover and keep going is what others notice and learn from over time."
+                         *           },
+                         *           "Left Angle Cross of The Clarion": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               51,
+                         *               57
+                         *             ],
+                         *             "name": "Left Angle Cross of The Clarion",
+                         *             "text": "A wake-up call is what this cross carries into the lives of others. Gate 51 brings the courage to be first and to jolt people out of routine, and gate 57 intuitive clarity about what is right in the moment. On the Left Angle it unfolds through encounters: your timing and your voice can rouse a group to act, and the call works best when it is heard rather than imposed."
+                         *           },
+                         *           "Juxtaposition Cross of Stillness": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               52
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Stillness",
+                         *             "text": "Holding still is the strength at the centre of this cross. Gate 52 brings the concentration that comes from staying calm and unmoved. As a Juxtaposition it stays firm: you can wait and focus where others feel driven to act, and from that stillness the right moment to move becomes clear without needing to be forced."
+                         *           },
+                         *           "Left Angle Cross of Demands": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               52,
+                         *               58
+                         *             ],
+                         *             "name": "Left Angle Cross of Demands",
+                         *             "text": "Expecting more from life, and helping others to expect more, is the theme here. Gate 52 brings focused stillness, gate 58 joy in making life better. On the Left Angle it unfolds with others: your standards push groups towards improvement, and they are heard best when they come with enthusiasm for what could be rather than criticism of what is."
+                         *           },
+                         *           "Juxtaposition Cross of Beginnings": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               53
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Beginnings",
+                         *             "text": "Starting new things is the constant in this design. Gate 53 brings the pressure to begin, and here that pressure is a lifelong companion rather than a passing phase. On the Juxtaposition it holds steady: new projects keep calling you, and it pays to choose carefully which ones to start and to start them with people who can help carry them further."
+                         *           },
+                         *           "Left Angle Cross of Cycles": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               53,
+                         *               54
+                         *             ],
+                         *             "name": "Left Angle Cross of Cycles",
+                         *             "text": "Life moving in phases is the theme of this cross. Gate 53 brings the pressure to begin, gate 54 the drive to rise. On the Left Angle it unfolds through others: you go through cycles of start, growth and closure alongside people, and each shared cycle teaches you how to begin the next one with more maturity and less haste."
+                         *           },
+                         *           "Juxtaposition Cross of Ambition": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               54
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Ambition",
+                         *             "text": "The drive to rise is a constant in this life. Gate 54 seeks to transform circumstances and move upward. As a Juxtaposition it holds steady: your ambition is persistent, and it achieves most when it is seen and supported by people who can help it grow, rather than when it is pursued in isolation."
+                         *           },
+                         *           "Juxtaposition Cross of Moods": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               55
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Moods",
+                         *             "text": "Here the emotional weather itself is the steady theme. Gate 55 feels abundance through the full range of moods, high and low, and this cross lives that range consistently. As a Juxtaposition it keeps its shape: the task is not to fix the mood but to let it pass, and to notice that the spirit behind it remains intact whatever the day brings."
+                         *           },
+                         *           "Left Angle Cross of Spirit": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               55,
+                         *               59
+                         *             ],
+                         *             "name": "Left Angle Cross of Spirit",
+                         *             "text": "Feeling shared with others is the life theme here. Gate 55 brings moods that carry a sense of spirit, and gate 59 the drive to break through barriers to intimacy. As a Left Angle cross it unfolds in encounters: closeness with others is where your emotional depth becomes meaningful, and the right relationships can lift a whole circle out of its usual tone."
+                         *           },
+                         *           "Juxtaposition Cross of Stimulation": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               56
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Stimulation",
+                         *             "text": "Telling stories that move people is a steady talent here. Gate 56 stimulates through narrative, turning experience into something others want to hear. On the Juxtaposition this keeps its shape: your way of describing the world awakens interest and feeling in others, and it is at its best when the story stays faithful to a real experience."
+                         *           },
+                         *           "Left Angle Cross of Distraction": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               56,
+                         *               60
+                         *             ],
+                         *             "name": "Left Angle Cross of Distraction",
+                         *             "text": "Drawing attention and redirecting it is the core of this cross. Gate 56 tells stirring stories and gate 60 works creatively within limits. On the Left Angle it unfolds through encounters: you can pull people away from routine thinking towards something larger, and the stories you tell show them that limits they take for granted can be worked with in new ways."
+                         *           },
+                         *           "Juxtaposition Cross of Intuition": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               57
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Intuition",
+                         *             "text": "Listening to inner clarity in the moment is the steady theme of this life. Gate 57 hears what is right in the moment it matters. As a Juxtaposition it holds firm: your intuition speaks quietly and often only once, and trusting that first impression consistently is what makes it a reliable guide over the years."
+                         *           },
+                         *           "Juxtaposition Cross of Vitality": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               58
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Vitality",
+                         *             "text": "Joy in improving life is a lasting quality of this design. Gate 58 brings vitality and the wish to make things better. As a Juxtaposition it stays firm: your enthusiasm lifts the people around you, and it stays fresh when it is directed at real improvement rather than at a constant search for what is wrong."
+                         *           },
+                         *           "Juxtaposition Cross of Strategy": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               59
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Strategy",
+                         *             "text": "Finding a way through to closeness is a constant in this cross. Gate 59 breaks through the barriers that keep people apart. As a Juxtaposition it stays steady: you know how to approach people and build connection, and that approach works best when it grows from genuine interest in the other person rather than from calculation."
+                         *           },
+                         *           "Juxtaposition Cross of Limitation": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               60
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Limitation",
+                         *             "text": "Working within limits is the steady theme of this cross. Gate 60 accepts boundaries and works creatively inside them. On the Juxtaposition this stays firm: constraints do not stop you, and they often become the very frame within which your most original and lasting work takes shape."
+                         *           },
+                         *           "Juxtaposition Cross of Thinking": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               61
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Thinking",
+                         *             "text": "Pondering what cannot easily be known is the steady theme of this cross. Gate 61 feels the pressure to grasp inner truth. As a Juxtaposition it holds firm: your mind keeps returning to large questions, and the insight that eventually comes is often worth the time you give it, as long as the pressure is not mistaken for a demand to answer now."
+                         *           },
+                         *           "Left Angle Cross of Obscuration": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               61,
+                         *               62
+                         *             ],
+                         *             "name": "Left Angle Cross of Obscuration",
+                         *             "text": "This cross works with what is hidden in detail and in what cannot yet be known. Gate 62 brings the precise naming of facts, gate 61 the pressure to grasp inner truth. On the Left Angle it unfolds through others: you can clarify what others find confusing, or name a question they have avoided, and the way you share it decides whether it frees people or holds them back."
+                         *           },
+                         *           "Juxtaposition Cross of Detail": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               62
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Detail",
+                         *             "text": "Precision is the steady quality of this cross. Gate 62 names facts precisely and notices what is easy to overlook. As a Juxtaposition it stays firm: you see and articulate details others miss, and this attention becomes truly valuable when it serves a clear purpose rather than getting lost in the small things for their own sake."
+                         *           },
+                         *           "Juxtaposition Cross of Doubts": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               63
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Doubts",
+                         *             "text": "Questioning is a constant companion in this life. Gate 63 doubts in order to reach logical proof, and on the Juxtaposition that habit stays firm whatever the setting. Your steady scepticism can test ideas, plans and patterns until only what is sound remains, as long as the doubt is aimed outward at what can be checked rather than turned against yourself."
+                         *           },
+                         *           "Left Angle Cross of Dominion": {
+                         *             "angle": "LAC",
+                         *             "gates": [
+                         *               63,
+                         *               64
+                         *             ],
+                         *             "name": "Left Angle Cross of Dominion",
+                         *             "text": "Influence over how others think is the theme of this cross. Gates 63 and 64 bring the pressure of doubt and the mental pictures of the past that ask to be put in order. As a Left Angle theme it unfolds through others: when your questions and conclusions meet a receptive audience, they can shape the way a whole group frames a problem, and that power asks for care."
+                         *           },
+                         *           "Juxtaposition Cross of Confusion": {
+                         *             "angle": "JC",
+                         *             "gates": [
+                         *               64
+                         *             ],
+                         *             "name": "Juxtaposition Cross of Confusion",
+                         *             "text": "Living with unresolved images is a recurring state in this life. Gate 64 holds pictures of the past that wait to make sense. As a Juxtaposition the pattern stays put: confusion is a regular phase of your thinking, not a flaw, and it clears on its own when you let impressions settle rather than forcing a conclusion too early."
+                         *           }
+                         *         }
+                         *       },
+                         *       "_footer": "Powered by astroway.api - get your own key at https://api.astroway.info"
+                         *     }
+                         */
+                        "application/json": {
+                            /** @example true */
+                            ok?: boolean;
+                            data?: {
+                                lang?: string | null;
+                                textLocalized?: boolean | null;
+                                types?: {
+                                    Manifestor?: {
+                                        name?: string | null;
+                                        strategyName?: string | null;
+                                        summary?: string | null;
+                                        strategy?: string | null;
+                                        signature?: string | null;
+                                        notSelf?: string | null;
+                                    } | null;
+                                    Generator?: {
+                                        name?: string | null;
+                                        strategyName?: string | null;
+                                        summary?: string | null;
+                                        strategy?: string | null;
+                                        signature?: string | null;
+                                        notSelf?: string | null;
+                                    } | null;
+                                    "Manifesting Generator"?: {
+                                        name?: string | null;
+                                        strategyName?: string | null;
+                                        summary?: string | null;
+                                        strategy?: string | null;
+                                        signature?: string | null;
+                                        notSelf?: string | null;
+                                    } | null;
+                                    Projector?: {
+                                        name?: string | null;
+                                        strategyName?: string | null;
+                                        summary?: string | null;
+                                        strategy?: string | null;
+                                        signature?: string | null;
+                                        notSelf?: string | null;
+                                    } | null;
+                                    Reflector?: {
+                                        name?: string | null;
+                                        strategyName?: string | null;
+                                        summary?: string | null;
+                                        strategy?: string | null;
+                                        signature?: string | null;
+                                        notSelf?: string | null;
+                                    } | null;
+                                } | null;
+                                authorities?: {
+                                    "Emotional (Solar Plexus)"?: {
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    Sacral?: {
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    Splenic?: {
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Ego Manifested"?: {
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Ego Projected"?: {
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Self-Projected"?: {
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Mental/Environmental"?: {
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Lunar (None)"?: {
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                } | null;
+                                definition?: {
+                                    Single?: string | null;
+                                    Split?: string | null;
+                                    "Triple Split"?: string | null;
+                                    "Quadruple Split"?: string | null;
+                                    None?: string | null;
+                                } | null;
+                                profiles?: {
+                                    "1/3"?: string | null;
+                                    "1/4"?: string | null;
+                                    "2/4"?: string | null;
+                                    "2/5"?: string | null;
+                                    "3/5"?: string | null;
+                                    "3/6"?: string | null;
+                                    "4/6"?: string | null;
+                                    "4/1"?: string | null;
+                                    "5/1"?: string | null;
+                                    "5/2"?: string | null;
+                                    "6/2"?: string | null;
+                                    "6/3"?: string | null;
+                                } | null;
+                                lines?: {
+                                    1?: string | null;
+                                    2?: string | null;
+                                    3?: string | null;
+                                    4?: string | null;
+                                    5?: string | null;
+                                    6?: string | null;
+                                } | null;
+                                centers?: {
+                                    Head?: {
+                                        name?: string | null;
+                                        theme?: string | null;
+                                        defined?: string | null;
+                                        open?: string | null;
+                                    } | null;
+                                    Ajna?: {
+                                        name?: string | null;
+                                        theme?: string | null;
+                                        defined?: string | null;
+                                        open?: string | null;
+                                    } | null;
+                                    Throat?: {
+                                        name?: string | null;
+                                        theme?: string | null;
+                                        defined?: string | null;
+                                        open?: string | null;
+                                    } | null;
+                                    G?: {
+                                        name?: string | null;
+                                        theme?: string | null;
+                                        defined?: string | null;
+                                        open?: string | null;
+                                    } | null;
+                                    Heart?: {
+                                        name?: string | null;
+                                        theme?: string | null;
+                                        defined?: string | null;
+                                        open?: string | null;
+                                    } | null;
+                                    SolarPlexus?: {
+                                        name?: string | null;
+                                        theme?: string | null;
+                                        defined?: string | null;
+                                        open?: string | null;
+                                    } | null;
+                                    Sacral?: {
+                                        name?: string | null;
+                                        theme?: string | null;
+                                        defined?: string | null;
+                                        open?: string | null;
+                                    } | null;
+                                    Spleen?: {
+                                        name?: string | null;
+                                        theme?: string | null;
+                                        defined?: string | null;
+                                        open?: string | null;
+                                    } | null;
+                                    Root?: {
+                                        name?: string | null;
+                                        theme?: string | null;
+                                        defined?: string | null;
+                                        open?: string | null;
+                                    } | null;
+                                } | null;
+                                channels?: {
+                                    "1-8"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "2-14"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "3-60"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "4-63"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "5-15"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "6-59"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "7-31"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "9-52"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "10-20"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "10-34"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "10-57"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "11-56"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "12-22"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "13-33"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "16-48"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "17-62"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "18-58"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "19-49"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "20-34"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "20-57"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "21-45"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "23-43"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "24-61"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "25-51"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "26-44"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "27-50"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "28-38"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "29-46"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "30-41"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "32-54"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "34-57"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "35-36"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "37-40"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "39-55"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "42-53"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "47-64"?: {
+                                        gates?: (number | null)[] | null;
+                                        centers?: (string | null)[] | null;
+                                        text?: string | null;
+                                    } | null;
+                                } | null;
+                                gates?: {
+                                    1?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    2?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    3?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    4?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    5?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    6?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    7?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    8?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    9?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    10?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    11?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    12?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    13?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    14?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    15?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    16?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    17?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    18?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    19?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    20?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    21?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    22?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    23?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    24?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    25?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    26?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    27?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    28?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    29?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    30?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    31?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    32?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    33?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    34?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    35?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    36?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    37?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    38?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    39?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    40?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    41?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    42?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    43?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    44?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    45?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    46?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    47?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    48?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    49?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    50?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    51?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    52?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    53?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    54?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    55?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    56?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    57?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    58?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    59?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    60?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    61?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    62?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    63?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    64?: {
+                                        center?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                } | null;
+                                gateLines?: {
+                                    1?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    2?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    3?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    4?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    5?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    6?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    7?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    8?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    9?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    10?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    11?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    12?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    13?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    14?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    15?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    16?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    17?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    18?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    19?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    20?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    21?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    22?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    23?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    24?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    25?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    26?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    27?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    28?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    29?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    30?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    31?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    32?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    33?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    34?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    35?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    36?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    37?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    38?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    39?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    40?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    41?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    42?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    43?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    44?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    45?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    46?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    47?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    48?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    49?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    50?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    51?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    52?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    53?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    54?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    55?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    56?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    57?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    58?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    59?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    60?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    61?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    62?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    63?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                    64?: {
+                                        1?: string | null;
+                                        2?: string | null;
+                                        3?: string | null;
+                                        4?: string | null;
+                                        5?: string | null;
+                                        6?: string | null;
+                                    } | null;
+                                } | null;
+                                gateLinesLocalized?: boolean | null;
+                                crossesLocalized?: boolean | null;
+                                crosses?: {
+                                    "Right Angle Cross of The Sphinx"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Self-Expression"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Defiance"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of The Driver"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Right Angle Cross of Laws"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Mutation"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Wishes"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Right Angle Cross of Explanation"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Formulization"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Revolution"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Right Angle Cross of Consciousness"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Habits"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Separation"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Right Angle Cross of Eden"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Conflict"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of The Plane"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Interaction"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Masks"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Right Angle Cross of Contagion"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Contribution"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Uncertainty"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Right Angle Cross of Planning"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Focus"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Identification"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Right Angle Cross of The Vessel of Love"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Behaviour"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Prevention"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Ideas"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Education"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Articulation"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Listening"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Empowering"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Extremes"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Experimentation"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Right Angle Cross of Service"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Opinions"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Upheaval"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Correction"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Right Angle Cross of The Four Ways"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Need"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Refinement"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Right Angle Cross of The Sleeping Phoenix"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of The Now"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Duality"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Right Angle Cross of Tension"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Control"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Endeavour"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Right Angle Cross of Rulership"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Graciousness"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Informing"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Assimilation"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Dedication"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Rationalization"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Incarnation"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Innocence"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Healing"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of The Trickster"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Confrontation"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Right Angle Cross of The Unexpected"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Caring"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Alignment"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Risks"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Commitment"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Industry"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Fates"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Influence"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of The Alpha"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Right Angle Cross of The Maya"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Conservation"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Limitation"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Retreat"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Power"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Experience"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Crisis"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Bargains"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Migration"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Opposition"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Individualism"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Provocation"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Denial"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Fantasy"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Completion"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Insight"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Alertness"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Possession"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Serendipity"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Oppression"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Depth"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Principles"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Values"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Right Angle Cross of Penetration"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Shock"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of The Clarion"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Stillness"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Demands"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Beginnings"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Cycles"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Ambition"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Moods"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Spirit"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Stimulation"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Distraction"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Intuition"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Vitality"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Strategy"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Limitation"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Thinking"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Obscuration"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Detail"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Doubts"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Left Angle Cross of Dominion"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                    "Juxtaposition Cross of Confusion"?: {
+                                        angle?: string | null;
+                                        gates?: (number | null)[] | null;
+                                        name?: string | null;
+                                        text?: string | null;
+                                    } | null;
+                                } | null;
+                            };
+                            /**
+                             * @description Free-tier watermark, present on every public response. Keys on a paid plan do not receive it.
+                             * @example Powered by astroway.api - get your own key at https://api.astroway.info
+                             */
+                            _footer?: string;
+                        };
+                    };
+                };
+                /** @description Invalid sign or date */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": false,
+                         *       "error": {
+                         *         "code": "INVALID_SIGN",
+                         *         "message": "sign must be one of the 12 zodiac signs"
+                         *       }
+                         *     }
+                         */
+                        "application/json": unknown;
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/public/moon-phase": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Moon Phase (public, no key)
+         * @description Geocentric moon phase for a date (computed at noon UTC): deterministic, no AI, no birth data. `_footer` watermark. The English `phaseName`, `moonSign` and `sunSign` are the stable identifiers to match on and never change; `phaseKey` is the eight-phase key (new, crescent, firstQuarter, gibbous, full, disseminating, lastQuarter, balsamic). `moonDegree` is the degree inside `moonSign`, `distanceKm` the Earth-Moon distance, and `next` the UTC moments of the next four principal phases after noon UTC of `date`. `tithi` is the Vedic lunar day (1-30, 12 degrees of elongation each, geocentric), `voidOfCourse` the void-of-course spans that touch the UTC day (start, end, the sign the Moon enters). The moonrise-counted lunar day depends on the place and is not given. `meaning` and `keywords` are English; `localized` carries them with the phase and sign names in the requested language (a language whose translation has not arrived yet gets the English text).
+         */
+        get: {
+            parameters: {
+                query?: {
+                    /** @description Calendar date `YYYY-MM-DD` (UTC). Defaults to today. */
+                    date?: string;
+                    /** @description Language for this call, overriding `Accept-Language`. The canonical per-call form: a page that renders in one language passes it here rather than reconfiguring its client. Unknown or inactive codes fall back to `uk`. */
+                    lang?: string;
+                    /**
+                     * @description Comma-separated dotted paths, relative to `data`, to keep in the response. A path is applied to every element of an array, so `planets.name` means the name of each planet. Paths that match nothing come back in `_fields_unmatched`; a list where nothing matches at all is a 400, because an empty object would be a confident wrong answer.
+                     * @example planets.name,planets.longitude
+                     */
+                    fields?: components["parameters"]["ResponseFields"];
+                    /**
+                     * @description Round every non-integer number in the response to this many decimal places. Integers are left alone, because an id is not a measurement. Ecliptic longitudes ship with fourteen decimals by default; 2 is about a tenth of an arcminute.
+                     * @example 4
+                     */
+                    precision?: components["parameters"]["ResponsePrecision"];
+                };
+                header?: {
+                    /** @description BCP-47 language (e.g. `uk`, `en`, `de`). Set it once on your HTTP client as its default; for a single call, `?lang=` overrides it. Unknown or inactive codes fall back to `uk`. */
+                    "Accept-Language"?: string;
+                };
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        /**
+                         * @example {
+                         *       "ok": true,
+                         *       "data": {
+                         *         "date": "2026-10-06",
+                         *         "phase": 0.19061,
+                         *         "phaseName": "Waning Crescent",
+                         *         "phaseKey": "balsamic",
                          *         "majorPhase": "between",
-                         *         "illuminationPercent": 63.13,
-                         *         "elongationDeg": 105.2189,
-                         *         "ageDays": 8.631,
-                         *         "waxing": true,
-                         *         "moonSign": "Sagittarius",
-                         *         "sunSign": "Leo",
+                         *         "illuminationPercent": 19.06,
+                         *         "elongationDeg": 308.2271,
+                         *         "ageDays": 25.284,
+                         *         "waxing": false,
+                         *         "moonSign": "Leo",
+                         *         "sunSign": "Libra",
+                         *         "moonLongitude": 141.4802,
+                         *         "moonDegree": 21.4802,
+                         *         "distanceKm": 374721,
+                         *         "tithi": {
+                         *           "number": 26,
+                         *           "name": "Ekadashi",
+                         *           "paksha": "krishna",
+                         *           "indexInPaksha": 11,
+                         *           "elongation": 308.227,
+                         *           "percentComplete": 0.686
+                         *         },
+                         *         "voidOfCourse": [],
+                         *         "next": {
+                         *           "newMoon": "2026-10-10T15:50:05Z",
+                         *           "firstQuarter": "2026-10-18T16:12:41Z",
+                         *           "fullMoon": "2026-10-26T04:11:49Z",
+                         *           "lastQuarter": "2026-11-01T20:28:27Z"
+                         *         },
+                         *         "meaning": "The close of the cycle: rest, cleansing and preparing for the new.",
+                         *         "keywords": [
+                         *           "rest",
+                         *           "cleansing",
+                         *           "intuition",
+                         *           "completion"
+                         *         ],
                          *         "localized": {
-                         *           "phaseName": "Зростаюча опукла",
-                         *           "moonSign": "Стрілець",
-                         *           "sunSign": "Лев"
+                         *           "phaseName": "Спадний серп",
+                         *           "moonSign": "Лев",
+                         *           "sunSign": "Терези",
+                         *           "meaning": "Завершення циклу: відпочинок, очищення й підготовка до нового.",
+                         *           "keywords": [
+                         *             "відпочинок",
+                         *             "очищення",
+                         *             "інтуїція",
+                         *             "завершення"
+                         *           ]
                          *         }
                          *       },
                          *       "_footer": "Powered by astroway.api - get your own key at https://api.astroway.info"
@@ -18448,6 +24358,7 @@ export interface paths {
                                 date?: string | null;
                                 phase?: number | null;
                                 phaseName?: string | null;
+                                phaseKey?: string | null;
                                 majorPhase?: string | null;
                                 illuminationPercent?: number | null;
                                 elongationDeg?: number | null;
@@ -18455,10 +24366,32 @@ export interface paths {
                                 waxing?: boolean | null;
                                 moonSign?: string | null;
                                 sunSign?: string | null;
+                                moonLongitude?: number | null;
+                                moonDegree?: number | null;
+                                distanceKm?: number | null;
+                                tithi?: {
+                                    number?: number | null;
+                                    name?: string | null;
+                                    paksha?: string | null;
+                                    indexInPaksha?: number | null;
+                                    elongation?: number | null;
+                                    percentComplete?: number | null;
+                                } | null;
+                                voidOfCourse?: unknown[] | null;
+                                next?: {
+                                    newMoon?: string | null;
+                                    firstQuarter?: string | null;
+                                    fullMoon?: string | null;
+                                    lastQuarter?: string | null;
+                                } | null;
+                                meaning?: string | null;
+                                keywords?: (string | null)[] | null;
                                 localized?: {
                                     phaseName?: string | null;
                                     moonSign?: string | null;
                                     sunSign?: string | null;
+                                    meaning?: string | null;
+                                    keywords?: (string | null)[] | null;
                                 } | null;
                             };
                             /**
@@ -19257,25 +25190,36 @@ export interface components {
         NumerologyPersonalYear: {
             name: string;
             date: string;
-            year: number;
+            /** @description Calendar year to read. Defaults to the current year (UTC). */
+            year?: number;
         };
         TarotDaily: {
+            /** @description Card art set, e.g. rws-1909, rws-restored, rws-vector. GET /v1/tarot/decks lists the sets per deck. */
+            art?: string;
             date?: string;
         };
         TarotDate: {
+            /** @description Card art set, e.g. rws-1909, rws-restored, rws-vector. GET /v1/tarot/decks lists the sets per deck. */
+            art?: string;
             date: string;
         };
         TarotDraw: {
+            /** @description Card art set, e.g. rws-1909, rws-restored, rws-vector. GET /v1/tarot/decks lists the sets per deck. */
+            art?: string;
             seed?: number;
             question?: string;
             /** @default true */
             allowReversed?: boolean;
         };
         TarotInterpret: {
+            /** @description Card art set, e.g. rws-1909, rws-restored, rws-vector. GET /v1/tarot/decks lists the sets per deck. */
+            art?: string;
             cards: string[];
             question?: string;
         };
         TarotYear: {
+            /** @description Card art set, e.g. rws-1909, rws-restored, rws-vector. GET /v1/tarot/decks lists the sets per deck. */
+            art?: string;
             date: string;
             year: number;
         };
@@ -19314,6 +25258,48 @@ export interface components {
             ayanamsa?: "fagan-bradley" | "lahiri" | "de-luce" | "raman" | "krishnamurti" | "kp" | "yukteshwar" | "jn-bhasin" | "true-citra" | "djwhal-khul";
             cosmogram?: boolean;
             timeUnknown?: boolean;
+        } & {
+            [key: string]: unknown;
+        };
+        /** @description ChartInput plus `at`. With at "sunrise" the angas are read at local sunrise and time is optional; otherwise time is required. */
+        PanchangInput: {
+            date: string;
+            time?: string;
+            /**
+             * @description Hours from UTC at the given moment, not minutes. Fractional zones are hours too: 5.5 for India, 5.75 for Nepal, -3.5 for Newfoundland. Defaults to 0, meaning UTC. Ignored when timezone is sent.
+             * @default 0
+             */
+            timezoneOffset?: number | null;
+            /**
+             * @description IANA zone name such as Europe/Kyiv, or auto to look the zone up from latitude and longitude. The server takes the offset that zone kept at this local date and time, summer time included, and uses it in place of timezoneOffset. A clock time that happened twice takes the first occurrence; one skipped when clocks went forward takes the offset from before the change. Abbreviations such as EST are refused. Before 1970 the tz database is not reliable for every place, so send timezoneOffset when the local clock is known.
+             * @example Europe/Kyiv
+             */
+            timezone?: string;
+            latitude: number;
+            longitude: number;
+            /**
+             * @default P
+             * @enum {string}
+             */
+            houseSystem?: "P" | "K" | "R" | "C" | "E" | "W" | "B" | "M" | "O" | "A" | "T" | "V" | "D" | "F" | "G" | "H" | "I" | "i" | "L" | "N" | "Q" | "S" | "U" | "X" | "Y";
+            /** @default  */
+            name?: string;
+            /** @default  */
+            city?: string;
+            /** @enum {string} */
+            zodiacType?: "tropical" | "sidereal";
+            ayanamsaId?: number | null;
+            /**
+             * @description Sidereal school by name. Lahiri when omitted. Equivalent to ayanamsaId; send either.
+             * @enum {string}
+             */
+            ayanamsa?: "fagan-bradley" | "lahiri" | "de-luce" | "raman" | "krishnamurti" | "kp" | "yukteshwar" | "jn-bhasin" | "true-citra" | "djwhal-khul";
+            cosmogram?: boolean;
+            /**
+             * @description moment (default): tithi, nakshatra, yoga and karana at date + time. sunrise: at local sunrise of that date, as a printed panchang gives them; time may be omitted.
+             * @enum {string}
+             */
+            at?: "moment" | "sunrise";
         } & {
             [key: string]: unknown;
         };
@@ -19632,8 +25618,11 @@ export interface components {
             outer: components["schemas"]["ChartInput"];
             options?: {
                 size?: number;
-                /** @enum {string} */
-                theme?: "light" | "dark" | "console";
+                /**
+                 * @description css paints every colour as var(--aw-<role>, <light colour>), so the page that inlines the SVG can recolour it with CSS custom properties (--aw-chart-bg, --aw-fg, --aw-muted, --aw-ring, --aw-houses-fill, --aw-benefic, --aw-malefic, --aw-aspect-harmonious, --aw-aspect-tense, --aw-aspect-neutral, --aw-aspect-minor, --aw-aspect-quintile, --aw-moon-shadow, --aw-moon-light, --aw-cycle-physical, --aw-cycle-emotional, --aw-cycle-intellectual). With none set it looks exactly like light. Inside an <img> the variables cannot be set, so it stays light. The Western wheels and the aspect grid then also carry stable aw-* classes, and each planet is a <g> with data-planet and data-label, each aspect line has data-a and data-b; see the @astroway/render changelog for the list.
+                 * @enum {string}
+                 */
+                theme?: "light" | "dark" | "console" | "css";
                 showAspects?: boolean;
                 showRetrograde?: boolean;
                 title?: string;
@@ -19643,8 +25632,37 @@ export interface components {
                  */
                 format?: "svg" | "json";
                 bodies?: ("Sun" | "Moon" | "Mercury" | "Venus" | "Mars" | "Jupiter" | "Saturn" | "Uranus" | "Neptune" | "Pluto" | "North Node" | "South Node" | "Chiron" | "Lilith")[];
+                /** @description Your own words in place of the English the image would otherwise carry: the ASC/DSC/MC/IC axis labels, the SVG <title> and <desc> read by screen readers, and the planet and sign names plus the word for retrograde in each planet's data-label (theme css). bodies is keyed by the English name, signs lists twelve names from Aries. Nothing is translated for you; absent keys keep the English. */
+                labels?: {
+                    asc?: string;
+                    dsc?: string;
+                    mc?: string;
+                    ic?: string;
+                    title?: string;
+                    desc?: string;
+                    bodies?: {
+                        Sun?: string;
+                        Moon?: string;
+                        Mercury?: string;
+                        Venus?: string;
+                        Mars?: string;
+                        Jupiter?: string;
+                        Saturn?: string;
+                        Uranus?: string;
+                        Neptune?: string;
+                        Pluto?: string;
+                        "North Node"?: string;
+                        "South Node"?: string;
+                        Chiron?: string;
+                        Lilith?: string;
+                    };
+                    signs?: string[];
+                    retrograde?: string;
+                };
                 /** @default TR */
                 outerLabel?: string;
+                /** @description Draws the aspects between the two charts as dashed chords (the same set POST /synastry returns as crossAspects), skipping pairs with a body that is not drawn. In theme css each chord has class aw-cross-aspect, data-a (inner planet) and data-b (outer planet, b- prefix). */
+                crossAspects?: boolean;
             };
         };
         BiorhythmRender: {
@@ -19653,8 +25671,11 @@ export interface components {
             rangeEnd: string;
             options?: {
                 size?: number;
-                /** @enum {string} */
-                theme?: "light" | "dark" | "console";
+                /**
+                 * @description css paints every colour as var(--aw-<role>, <light colour>), so the page that inlines the SVG can recolour it with CSS custom properties (--aw-chart-bg, --aw-fg, --aw-muted, --aw-ring, --aw-houses-fill, --aw-benefic, --aw-malefic, --aw-aspect-harmonious, --aw-aspect-tense, --aw-aspect-neutral, --aw-aspect-minor, --aw-aspect-quintile, --aw-moon-shadow, --aw-moon-light, --aw-cycle-physical, --aw-cycle-emotional, --aw-cycle-intellectual). With none set it looks exactly like light. Inside an <img> the variables cannot be set, so it stays light. The Western wheels and the aspect grid then also carry stable aw-* classes, and each planet is a <g> with data-planet and data-label, each aspect line has data-a and data-b; see the @astroway/render changelog for the list.
+                 * @enum {string}
+                 */
+                theme?: "light" | "dark" | "console" | "css";
                 showAspects?: boolean;
                 showRetrograde?: boolean;
                 title?: string;
@@ -19785,8 +25806,11 @@ export interface components {
         CompositeRender: components["schemas"]["TwoChart"] & {
             options?: {
                 size?: number;
-                /** @enum {string} */
-                theme?: "light" | "dark" | "console";
+                /**
+                 * @description css paints every colour as var(--aw-<role>, <light colour>), so the page that inlines the SVG can recolour it with CSS custom properties (--aw-chart-bg, --aw-fg, --aw-muted, --aw-ring, --aw-houses-fill, --aw-benefic, --aw-malefic, --aw-aspect-harmonious, --aw-aspect-tense, --aw-aspect-neutral, --aw-aspect-minor, --aw-aspect-quintile, --aw-moon-shadow, --aw-moon-light, --aw-cycle-physical, --aw-cycle-emotional, --aw-cycle-intellectual). With none set it looks exactly like light. Inside an <img> the variables cannot be set, so it stays light. The Western wheels and the aspect grid then also carry stable aw-* classes, and each planet is a <g> with data-planet and data-label, each aspect line has data-a and data-b; see the @astroway/render changelog for the list.
+                 * @enum {string}
+                 */
+                theme?: "light" | "dark" | "console" | "css";
                 showAspects?: boolean;
                 showRetrograde?: boolean;
                 title?: string;
@@ -19796,12 +25820,40 @@ export interface components {
                  */
                 format?: "svg" | "json";
                 bodies?: ("Sun" | "Moon" | "Mercury" | "Venus" | "Mars" | "Jupiter" | "Saturn" | "Uranus" | "Neptune" | "Pluto" | "North Node" | "South Node" | "Chiron" | "Lilith")[];
+                /** @description Your own words in place of the English the image would otherwise carry: the ASC/DSC/MC/IC axis labels, the SVG <title> and <desc> read by screen readers, and the planet and sign names plus the word for retrograde in each planet's data-label (theme css). bodies is keyed by the English name, signs lists twelve names from Aries. Nothing is translated for you; absent keys keep the English. */
+                labels?: {
+                    asc?: string;
+                    dsc?: string;
+                    mc?: string;
+                    ic?: string;
+                    title?: string;
+                    desc?: string;
+                    bodies?: {
+                        Sun?: string;
+                        Moon?: string;
+                        Mercury?: string;
+                        Venus?: string;
+                        Mars?: string;
+                        Jupiter?: string;
+                        Saturn?: string;
+                        Uranus?: string;
+                        Neptune?: string;
+                        Pluto?: string;
+                        "North Node"?: string;
+                        "South Node"?: string;
+                        Chiron?: string;
+                        Lilith?: string;
+                    };
+                    signs?: string[];
+                    retrograde?: string;
+                };
             };
         };
         CreateKey: {
             name: string;
             /** @enum {string} */
             mode?: "live" | "test";
+            /** @description server-only (default): a backend key that refuses any request carrying Origin or Referer. public: a publishable pk_ key for page source; needs allowed_origins, credits_cap_cycle and allowed_endpoints, and refuses a request with no verifiable origin. */
             origin_restriction?: {
                 /**
                  * @default server-only
@@ -19810,7 +25862,10 @@ export interface components {
                 type?: "server-only" | "public";
                 allowed_origins?: string[];
             };
+            /** @description Paths under /v1 this key may call, exact (chart) or a namespace (embed/*). Omitted means no limit; required for a publishable key. */
             allowed_endpoints?: string[];
+            /** @description Credits this key may spend per billing cycle; 0 parks it. Omitted means no per-key cap; required for a publishable key. */
+            credits_cap_cycle?: number;
         };
         SiteKeyIssue: {
             /**
@@ -19870,6 +25925,14 @@ export interface components {
         } & {
             [key: string]: unknown;
         });
+        /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
+        KundliInput: components["schemas"]["ChartInput"] & ({
+            targetDate?: string;
+            targetTime?: string;
+            targetTzOffset?: number | null;
+        } & {
+            [key: string]: unknown;
+        });
         Debate: {
             topic: string;
             agentA: string;
@@ -19917,8 +25980,11 @@ export interface components {
             title?: string;
             options?: {
                 size?: number;
-                /** @enum {string} */
-                theme?: "light" | "dark" | "console";
+                /**
+                 * @description css paints every colour as var(--aw-<role>, <light colour>), so the page that inlines the SVG can recolour it with CSS custom properties (--aw-chart-bg, --aw-fg, --aw-muted, --aw-ring, --aw-houses-fill, --aw-benefic, --aw-malefic, --aw-aspect-harmonious, --aw-aspect-tense, --aw-aspect-neutral, --aw-aspect-minor, --aw-aspect-quintile, --aw-moon-shadow, --aw-moon-light, --aw-cycle-physical, --aw-cycle-emotional, --aw-cycle-intellectual). With none set it looks exactly like light. Inside an <img> the variables cannot be set, so it stays light. The Western wheels and the aspect grid then also carry stable aw-* classes, and each planet is a <g> with data-planet and data-label, each aspect line has data-a and data-b; see the @astroway/render changelog for the list.
+                 * @enum {string}
+                 */
+                theme?: "light" | "dark" | "console" | "css";
                 showAspects?: boolean;
                 showRetrograde?: boolean;
                 title?: string;
@@ -20097,6 +26163,32 @@ export interface components {
             /** @default false */
             disclaimer_inline?: boolean;
         };
+        InterpretTarot: {
+            /**
+             * @default rider-waite
+             * @enum {string}
+             */
+            deck?: "rider-waite" | "marseille" | "lenormand";
+            spread?: string;
+            cards: (string | {
+                slug: string;
+                reversed?: boolean;
+            } | ({
+                card: {
+                    slug: string;
+                } & {
+                    [key: string]: unknown;
+                };
+                reversed?: boolean;
+            } & {
+                [key: string]: unknown;
+            }))[];
+            question?: string;
+            /** @enum {string} */
+            language?: "uk" | "en" | "de" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id" | "ru";
+            /** @description Card art set for the images in the answer. GET /v1/tarot/decks lists them. */
+            art?: string;
+        };
         /** @description Birth data for a single natal chart. Required: date (YYYY-MM-DD), time (HH:mm:ss), latitude and longitude in decimal degrees. The short forms lat, lon, lng and tz are rejected with 400 INVALID_FIELD; pass the full names. timezoneOffset is hours from UTC and defaults to 0, meaning UTC; send timezone instead (an IANA name such as Europe/Kyiv, or auto) and the offset for that date is worked out, summer time included. city is a display label only: nothing here geocodes it, so it never stands in for coordinates. houseSystem is a single Swiss Ephemeris letter, P by default; a name such as "Placidus" is refused, and the case matters because I and i are two different Sunshine systems. */
         InterpretTransits: components["schemas"]["ChartInput"] & ({
             transitDate: string;
@@ -20165,8 +26257,11 @@ export interface components {
         MoonPhase: components["schemas"]["ChartInput"] & ({
             options?: {
                 size?: number;
-                /** @enum {string} */
-                theme?: "light" | "dark" | "console";
+                /**
+                 * @description css paints every colour as var(--aw-<role>, <light colour>), so the page that inlines the SVG can recolour it with CSS custom properties (--aw-chart-bg, --aw-fg, --aw-muted, --aw-ring, --aw-houses-fill, --aw-benefic, --aw-malefic, --aw-aspect-harmonious, --aw-aspect-tense, --aw-aspect-neutral, --aw-aspect-minor, --aw-aspect-quintile, --aw-moon-shadow, --aw-moon-light, --aw-cycle-physical, --aw-cycle-emotional, --aw-cycle-intellectual). With none set it looks exactly like light. Inside an <img> the variables cannot be set, so it stays light. The Western wheels and the aspect grid then also carry stable aw-* classes, and each planet is a <g> with data-planet and data-label, each aspect line has data-a and data-b; see the @astroway/render changelog for the list.
+                 * @enum {string}
+                 */
+                theme?: "light" | "dark" | "console" | "css";
                 showAspects?: boolean;
                 showRetrograde?: boolean;
                 title?: string;
@@ -20721,8 +26816,11 @@ export interface components {
             title?: string;
             options?: {
                 size?: number;
-                /** @enum {string} */
-                theme?: "light" | "dark" | "console";
+                /**
+                 * @description css paints every colour as var(--aw-<role>, <light colour>), so the page that inlines the SVG can recolour it with CSS custom properties (--aw-chart-bg, --aw-fg, --aw-muted, --aw-ring, --aw-houses-fill, --aw-benefic, --aw-malefic, --aw-aspect-harmonious, --aw-aspect-tense, --aw-aspect-neutral, --aw-aspect-minor, --aw-aspect-quintile, --aw-moon-shadow, --aw-moon-light, --aw-cycle-physical, --aw-cycle-emotional, --aw-cycle-intellectual). With none set it looks exactly like light. Inside an <img> the variables cannot be set, so it stays light. The Western wheels and the aspect grid then also carry stable aw-* classes, and each planet is a <g> with data-planet and data-label, each aspect line has data-a and data-b; see the @astroway/render changelog for the list.
+                 * @enum {string}
+                 */
+                theme?: "light" | "dark" | "console" | "css";
                 showAspects?: boolean;
                 showRetrograde?: boolean;
                 title?: string;
@@ -20985,8 +27083,11 @@ export interface components {
             }[];
             options?: {
                 size?: number;
-                /** @enum {string} */
-                theme?: "light" | "dark" | "console";
+                /**
+                 * @description css paints every colour as var(--aw-<role>, <light colour>), so the page that inlines the SVG can recolour it with CSS custom properties (--aw-chart-bg, --aw-fg, --aw-muted, --aw-ring, --aw-houses-fill, --aw-benefic, --aw-malefic, --aw-aspect-harmonious, --aw-aspect-tense, --aw-aspect-neutral, --aw-aspect-minor, --aw-aspect-quintile, --aw-moon-shadow, --aw-moon-light, --aw-cycle-physical, --aw-cycle-emotional, --aw-cycle-intellectual). With none set it looks exactly like light. Inside an <img> the variables cannot be set, so it stays light. The Western wheels and the aspect grid then also carry stable aw-* classes, and each planet is a <g> with data-planet and data-label, each aspect line has data-a and data-b; see the @astroway/render changelog for the list.
+                 * @enum {string}
+                 */
+                theme?: "light" | "dark" | "console" | "css";
                 showAspects?: boolean;
                 showRetrograde?: boolean;
                 title?: string;
@@ -21115,8 +27216,11 @@ export interface components {
             outer: components["schemas"]["ChartInput"];
             options?: {
                 size?: number;
-                /** @enum {string} */
-                theme?: "light" | "dark" | "console";
+                /**
+                 * @description css paints every colour as var(--aw-<role>, <light colour>), so the page that inlines the SVG can recolour it with CSS custom properties (--aw-chart-bg, --aw-fg, --aw-muted, --aw-ring, --aw-houses-fill, --aw-benefic, --aw-malefic, --aw-aspect-harmonious, --aw-aspect-tense, --aw-aspect-neutral, --aw-aspect-minor, --aw-aspect-quintile, --aw-moon-shadow, --aw-moon-light, --aw-cycle-physical, --aw-cycle-emotional, --aw-cycle-intellectual). With none set it looks exactly like light. Inside an <img> the variables cannot be set, so it stays light. The Western wheels and the aspect grid then also carry stable aw-* classes, and each planet is a <g> with data-planet and data-label, each aspect line has data-a and data-b; see the @astroway/render changelog for the list.
+                 * @enum {string}
+                 */
+                theme?: "light" | "dark" | "console" | "css";
                 showAspects?: boolean;
                 showRetrograde?: boolean;
                 title?: string;
@@ -21126,6 +27230,33 @@ export interface components {
                  */
                 format?: "svg" | "json";
                 bodies?: ("Sun" | "Moon" | "Mercury" | "Venus" | "Mars" | "Jupiter" | "Saturn" | "Uranus" | "Neptune" | "Pluto" | "North Node" | "South Node" | "Chiron" | "Lilith")[];
+                /** @description Your own words in place of the English the image would otherwise carry: the ASC/DSC/MC/IC axis labels, the SVG <title> and <desc> read by screen readers, and the planet and sign names plus the word for retrograde in each planet's data-label (theme css). bodies is keyed by the English name, signs lists twelve names from Aries. Nothing is translated for you; absent keys keep the English. */
+                labels?: {
+                    asc?: string;
+                    dsc?: string;
+                    mc?: string;
+                    ic?: string;
+                    title?: string;
+                    desc?: string;
+                    bodies?: {
+                        Sun?: string;
+                        Moon?: string;
+                        Mercury?: string;
+                        Venus?: string;
+                        Mars?: string;
+                        Jupiter?: string;
+                        Saturn?: string;
+                        Uranus?: string;
+                        Neptune?: string;
+                        Pluto?: string;
+                        "North Node"?: string;
+                        "South Node"?: string;
+                        Chiron?: string;
+                        Lilith?: string;
+                    };
+                    signs?: string[];
+                    retrograde?: string;
+                };
                 /** @default PR */
                 middleLabel?: string;
                 /** @default TR */
@@ -21188,8 +27319,11 @@ export interface components {
         WheelWestern: components["schemas"]["ChartInput"] & ({
             options?: {
                 size?: number;
-                /** @enum {string} */
-                theme?: "light" | "dark" | "console";
+                /**
+                 * @description css paints every colour as var(--aw-<role>, <light colour>), so the page that inlines the SVG can recolour it with CSS custom properties (--aw-chart-bg, --aw-fg, --aw-muted, --aw-ring, --aw-houses-fill, --aw-benefic, --aw-malefic, --aw-aspect-harmonious, --aw-aspect-tense, --aw-aspect-neutral, --aw-aspect-minor, --aw-aspect-quintile, --aw-moon-shadow, --aw-moon-light, --aw-cycle-physical, --aw-cycle-emotional, --aw-cycle-intellectual). With none set it looks exactly like light. Inside an <img> the variables cannot be set, so it stays light. The Western wheels and the aspect grid then also carry stable aw-* classes, and each planet is a <g> with data-planet and data-label, each aspect line has data-a and data-b; see the @astroway/render changelog for the list.
+                 * @enum {string}
+                 */
+                theme?: "light" | "dark" | "console" | "css";
                 showAspects?: boolean;
                 showRetrograde?: boolean;
                 title?: string;
@@ -21199,10 +27333,275 @@ export interface components {
                  */
                 format?: "svg" | "json";
                 bodies?: ("Sun" | "Moon" | "Mercury" | "Venus" | "Mars" | "Jupiter" | "Saturn" | "Uranus" | "Neptune" | "Pluto" | "North Node" | "South Node" | "Chiron" | "Lilith")[];
+                /** @description Your own words in place of the English the image would otherwise carry: the ASC/DSC/MC/IC axis labels, the SVG <title> and <desc> read by screen readers, and the planet and sign names plus the word for retrograde in each planet's data-label (theme css). bodies is keyed by the English name, signs lists twelve names from Aries. Nothing is translated for you; absent keys keep the English. */
+                labels?: {
+                    asc?: string;
+                    dsc?: string;
+                    mc?: string;
+                    ic?: string;
+                    title?: string;
+                    desc?: string;
+                    bodies?: {
+                        Sun?: string;
+                        Moon?: string;
+                        Mercury?: string;
+                        Venus?: string;
+                        Mars?: string;
+                        Jupiter?: string;
+                        Saturn?: string;
+                        Uranus?: string;
+                        Neptune?: string;
+                        Pluto?: string;
+                        "North Node"?: string;
+                        "South Node"?: string;
+                        Chiron?: string;
+                        Lilith?: string;
+                    };
+                    signs?: string[];
+                    retrograde?: string;
+                };
             };
         } & {
             [key: string]: unknown;
         });
+        WheelWesternRequest: (components["schemas"]["ChartInput"] & ({
+            options?: {
+                size?: number;
+                /**
+                 * @description css paints every colour as var(--aw-<role>, <light colour>), so the page that inlines the SVG can recolour it with CSS custom properties (--aw-chart-bg, --aw-fg, --aw-muted, --aw-ring, --aw-houses-fill, --aw-benefic, --aw-malefic, --aw-aspect-harmonious, --aw-aspect-tense, --aw-aspect-neutral, --aw-aspect-minor, --aw-aspect-quintile, --aw-moon-shadow, --aw-moon-light, --aw-cycle-physical, --aw-cycle-emotional, --aw-cycle-intellectual). With none set it looks exactly like light. Inside an <img> the variables cannot be set, so it stays light. The Western wheels and the aspect grid then also carry stable aw-* classes, and each planet is a <g> with data-planet and data-label, each aspect line has data-a and data-b; see the @astroway/render changelog for the list.
+                 * @enum {string}
+                 */
+                theme?: "light" | "dark" | "console" | "css";
+                showAspects?: boolean;
+                showRetrograde?: boolean;
+                title?: string;
+                /**
+                 * @default json
+                 * @enum {string}
+                 */
+                format?: "svg" | "json";
+                bodies?: ("Sun" | "Moon" | "Mercury" | "Venus" | "Mars" | "Jupiter" | "Saturn" | "Uranus" | "Neptune" | "Pluto" | "North Node" | "South Node" | "Chiron" | "Lilith")[];
+                /** @description Your own words in place of the English the image would otherwise carry: the ASC/DSC/MC/IC axis labels, the SVG <title> and <desc> read by screen readers, and the planet and sign names plus the word for retrograde in each planet's data-label (theme css). bodies is keyed by the English name, signs lists twelve names from Aries. Nothing is translated for you; absent keys keep the English. */
+                labels?: {
+                    asc?: string;
+                    dsc?: string;
+                    mc?: string;
+                    ic?: string;
+                    title?: string;
+                    desc?: string;
+                    bodies?: {
+                        Sun?: string;
+                        Moon?: string;
+                        Mercury?: string;
+                        Venus?: string;
+                        Mars?: string;
+                        Jupiter?: string;
+                        Saturn?: string;
+                        Uranus?: string;
+                        Neptune?: string;
+                        Pluto?: string;
+                        "North Node"?: string;
+                        "South Node"?: string;
+                        Chiron?: string;
+                        Lilith?: string;
+                    };
+                    signs?: string[];
+                    retrograde?: string;
+                };
+            };
+        } & {
+            [key: string]: unknown;
+        })) | components["schemas"]["WheelFromChart"];
+        /** @description A chart you already hold, drawn as is: no birth data, 1 credit. */
+        WheelFromChart: {
+            chart: components["schemas"]["ChartData"];
+            options?: {
+                size?: number;
+                /**
+                 * @description css paints every colour as var(--aw-<role>, <light colour>), so the page that inlines the SVG can recolour it with CSS custom properties (--aw-chart-bg, --aw-fg, --aw-muted, --aw-ring, --aw-houses-fill, --aw-benefic, --aw-malefic, --aw-aspect-harmonious, --aw-aspect-tense, --aw-aspect-neutral, --aw-aspect-minor, --aw-aspect-quintile, --aw-moon-shadow, --aw-moon-light, --aw-cycle-physical, --aw-cycle-emotional, --aw-cycle-intellectual). With none set it looks exactly like light. Inside an <img> the variables cannot be set, so it stays light. The Western wheels and the aspect grid then also carry stable aw-* classes, and each planet is a <g> with data-planet and data-label, each aspect line has data-a and data-b; see the @astroway/render changelog for the list.
+                 * @enum {string}
+                 */
+                theme?: "light" | "dark" | "console" | "css";
+                showAspects?: boolean;
+                showRetrograde?: boolean;
+                title?: string;
+                /**
+                 * @default json
+                 * @enum {string}
+                 */
+                format?: "svg" | "json";
+                bodies?: ("Sun" | "Moon" | "Mercury" | "Venus" | "Mars" | "Jupiter" | "Saturn" | "Uranus" | "Neptune" | "Pluto" | "North Node" | "South Node" | "Chiron" | "Lilith")[];
+                /** @description Your own words in place of the English the image would otherwise carry: the ASC/DSC/MC/IC axis labels, the SVG <title> and <desc> read by screen readers, and the planet and sign names plus the word for retrograde in each planet's data-label (theme css). bodies is keyed by the English name, signs lists twelve names from Aries. Nothing is translated for you; absent keys keep the English. */
+                labels?: {
+                    asc?: string;
+                    dsc?: string;
+                    mc?: string;
+                    ic?: string;
+                    title?: string;
+                    desc?: string;
+                    bodies?: {
+                        Sun?: string;
+                        Moon?: string;
+                        Mercury?: string;
+                        Venus?: string;
+                        Mars?: string;
+                        Jupiter?: string;
+                        Saturn?: string;
+                        Uranus?: string;
+                        Neptune?: string;
+                        Pluto?: string;
+                        "North Node"?: string;
+                        "South Node"?: string;
+                        Chiron?: string;
+                        Lilith?: string;
+                    };
+                    signs?: string[];
+                    retrograde?: string;
+                };
+            };
+        };
+        /** @description The data object of a POST /v1/chart response, sent back to be drawn without computing the chart again (1 credit instead of 10). Extra fields are ignored; planets (1 to 30, longitude 0 to 360), houses (exactly 12 cusps, ascendant, mc) and aspects are read. */
+        ChartData: {
+            planets: ({
+                id: number;
+                name: string;
+                longitude: number;
+                isRetrograde?: boolean;
+                speedLong?: number;
+            } & {
+                [key: string]: unknown;
+            })[];
+            houses: {
+                cusps: number[];
+                ascendant: number;
+                mc: number;
+            } & {
+                [key: string]: unknown;
+            };
+            aspects?: ({
+                planet1: string;
+                planet2: string;
+                type: string | ({
+                    name: string;
+                } & {
+                    [key: string]: unknown;
+                });
+                orb?: number;
+            } & {
+                [key: string]: unknown;
+            })[];
+        } & {
+            [key: string]: unknown;
+        };
+        BiWheelRequest: {
+            natal: components["schemas"]["ChartInput"];
+            outer: components["schemas"]["ChartInput"];
+            options?: {
+                size?: number;
+                /**
+                 * @description css paints every colour as var(--aw-<role>, <light colour>), so the page that inlines the SVG can recolour it with CSS custom properties (--aw-chart-bg, --aw-fg, --aw-muted, --aw-ring, --aw-houses-fill, --aw-benefic, --aw-malefic, --aw-aspect-harmonious, --aw-aspect-tense, --aw-aspect-neutral, --aw-aspect-minor, --aw-aspect-quintile, --aw-moon-shadow, --aw-moon-light, --aw-cycle-physical, --aw-cycle-emotional, --aw-cycle-intellectual). With none set it looks exactly like light. Inside an <img> the variables cannot be set, so it stays light. The Western wheels and the aspect grid then also carry stable aw-* classes, and each planet is a <g> with data-planet and data-label, each aspect line has data-a and data-b; see the @astroway/render changelog for the list.
+                 * @enum {string}
+                 */
+                theme?: "light" | "dark" | "console" | "css";
+                showAspects?: boolean;
+                showRetrograde?: boolean;
+                title?: string;
+                /**
+                 * @default json
+                 * @enum {string}
+                 */
+                format?: "svg" | "json";
+                bodies?: ("Sun" | "Moon" | "Mercury" | "Venus" | "Mars" | "Jupiter" | "Saturn" | "Uranus" | "Neptune" | "Pluto" | "North Node" | "South Node" | "Chiron" | "Lilith")[];
+                /** @description Your own words in place of the English the image would otherwise carry: the ASC/DSC/MC/IC axis labels, the SVG <title> and <desc> read by screen readers, and the planet and sign names plus the word for retrograde in each planet's data-label (theme css). bodies is keyed by the English name, signs lists twelve names from Aries. Nothing is translated for you; absent keys keep the English. */
+                labels?: {
+                    asc?: string;
+                    dsc?: string;
+                    mc?: string;
+                    ic?: string;
+                    title?: string;
+                    desc?: string;
+                    bodies?: {
+                        Sun?: string;
+                        Moon?: string;
+                        Mercury?: string;
+                        Venus?: string;
+                        Mars?: string;
+                        Jupiter?: string;
+                        Saturn?: string;
+                        Uranus?: string;
+                        Neptune?: string;
+                        Pluto?: string;
+                        "North Node"?: string;
+                        "South Node"?: string;
+                        Chiron?: string;
+                        Lilith?: string;
+                    };
+                    signs?: string[];
+                    retrograde?: string;
+                };
+                /** @default TR */
+                outerLabel?: string;
+                /** @description Draws the aspects between the two charts as dashed chords (the same set POST /synastry returns as crossAspects), skipping pairs with a body that is not drawn. In theme css each chord has class aw-cross-aspect, data-a (inner planet) and data-b (outer planet, b- prefix). */
+                crossAspects?: boolean;
+            };
+        } | components["schemas"]["BiWheelFromChart"];
+        /** @description Two charts you already hold, drawn as is: no birth data, 1 credit. Both must be charts. */
+        BiWheelFromChart: {
+            natal: {
+                chart: components["schemas"]["ChartData"];
+            };
+            outer: {
+                chart: components["schemas"]["ChartData"];
+            };
+            options?: {
+                size?: number;
+                /**
+                 * @description css paints every colour as var(--aw-<role>, <light colour>), so the page that inlines the SVG can recolour it with CSS custom properties (--aw-chart-bg, --aw-fg, --aw-muted, --aw-ring, --aw-houses-fill, --aw-benefic, --aw-malefic, --aw-aspect-harmonious, --aw-aspect-tense, --aw-aspect-neutral, --aw-aspect-minor, --aw-aspect-quintile, --aw-moon-shadow, --aw-moon-light, --aw-cycle-physical, --aw-cycle-emotional, --aw-cycle-intellectual). With none set it looks exactly like light. Inside an <img> the variables cannot be set, so it stays light. The Western wheels and the aspect grid then also carry stable aw-* classes, and each planet is a <g> with data-planet and data-label, each aspect line has data-a and data-b; see the @astroway/render changelog for the list.
+                 * @enum {string}
+                 */
+                theme?: "light" | "dark" | "console" | "css";
+                showAspects?: boolean;
+                showRetrograde?: boolean;
+                title?: string;
+                /**
+                 * @default json
+                 * @enum {string}
+                 */
+                format?: "svg" | "json";
+                bodies?: ("Sun" | "Moon" | "Mercury" | "Venus" | "Mars" | "Jupiter" | "Saturn" | "Uranus" | "Neptune" | "Pluto" | "North Node" | "South Node" | "Chiron" | "Lilith")[];
+                /** @description Your own words in place of the English the image would otherwise carry: the ASC/DSC/MC/IC axis labels, the SVG <title> and <desc> read by screen readers, and the planet and sign names plus the word for retrograde in each planet's data-label (theme css). bodies is keyed by the English name, signs lists twelve names from Aries. Nothing is translated for you; absent keys keep the English. */
+                labels?: {
+                    asc?: string;
+                    dsc?: string;
+                    mc?: string;
+                    ic?: string;
+                    title?: string;
+                    desc?: string;
+                    bodies?: {
+                        Sun?: string;
+                        Moon?: string;
+                        Mercury?: string;
+                        Venus?: string;
+                        Mars?: string;
+                        Jupiter?: string;
+                        Saturn?: string;
+                        Uranus?: string;
+                        Neptune?: string;
+                        Pluto?: string;
+                        "North Node"?: string;
+                        "South Node"?: string;
+                        Chiron?: string;
+                        Lilith?: string;
+                    };
+                    signs?: string[];
+                    retrograde?: string;
+                };
+                /** @default TR */
+                outerLabel?: string;
+                /** @description Draws the aspects between the two charts as dashed chords (the same set POST /synastry returns as crossAspects), skipping pairs with a body that is not drawn. In theme css each chord has class aw-cross-aspect, data-a (inner planet) and data-b (outer planet, b- prefix). */
+                crossAspects?: boolean;
+            };
+        };
         YearAhead: {
             chart: components["schemas"]["ChartInput"];
             year?: number;
@@ -21266,6 +27665,8 @@ export interface operations {
     chart: {
         parameters: {
             query?: {
+                /** @description Adds `localized`: planet, sign and aspect names in this language, keyed by the English identifiers the response already uses. Without it the response is unchanged; `Accept-Language` alone does not add it. */
+                lang?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
                 /**
                  * @description Comma-separated dotted paths, relative to `data`, to keep in the response. A path is applied to every element of an array, so `planets.name` means the name of each planet. Paths that match nothing come back in `_fields_unmatched`; a list where nothing matches at all is a 400, because an empty object would be a confident wrong answer.
                  * @example planets.name,planets.longitude
@@ -21412,6 +27813,19 @@ export interface operations {
                      *         "meta": {
                      *           "engineVersion": "2.10.03",
                      *           "calculatedAt": "2026-08-23T22:03:43.067Z"
+                     *         },
+                     *         "localized": {
+                     *           "planets": {
+                     *             "Sun": "Sonne",
+                     *             "Moon": "Mond"
+                     *           },
+                     *           "signs": {
+                     *             "aries": "Widder",
+                     *             "taurus": "Stier"
+                     *           },
+                     *           "aspects": {
+                     *             "Trine": "Trigon"
+                     *           }
                      *         }
                      *       }
                      *     }
@@ -21514,6 +27928,19 @@ export interface operations {
                             meta?: {
                                 engineVersion?: string | null;
                                 calculatedAt?: string | null;
+                            } | null;
+                            localized?: {
+                                planets?: {
+                                    Sun?: string | null;
+                                    Moon?: string | null;
+                                } | null;
+                                signs?: {
+                                    aries?: string | null;
+                                    taurus?: string | null;
+                                } | null;
+                                aspects?: {
+                                    Trine?: string | null;
+                                } | null;
                             } | null;
                         };
                     };
@@ -28408,7 +34835,7 @@ export interface operations {
                  *       }
                  *     }
                  */
-                "application/json": components["schemas"]["WheelWestern"];
+                "application/json": components["schemas"]["WheelWesternRequest"];
             };
         };
         responses: {
@@ -28424,7 +34851,7 @@ export interface operations {
                      *       "data": {
                      *         "svg": "<svg xmlns=\"http://www.w3.org/2000/svg\" ...>",
                      *         "format": "svg",
-                     *         "byteLength": 21500
+                     *         "byteLength": 16131
                      *       }
                      *     }
                      */
@@ -28512,7 +34939,7 @@ export interface operations {
                  *       "longitude": 30.52
                  *     }
                  */
-                "application/json": components["schemas"]["WheelWestern"];
+                "application/json": components["schemas"]["WheelWesternRequest"];
             };
         };
         responses: {
@@ -28528,7 +34955,7 @@ export interface operations {
                      *       "data": {
                      *         "svg": "<svg ...>",
                      *         "format": "svg",
-                     *         "byteLength": 14033
+                     *         "byteLength": 14048
                      *       }
                      *     }
                      */
@@ -28750,7 +35177,7 @@ export interface operations {
                      *       "data": {
                      *         "svg": "<svg ...>",
                      *         "format": "svg",
-                     *         "byteLength": 4000
+                     *         "byteLength": 3321
                      *       }
                      *     }
                      */
@@ -28851,7 +35278,7 @@ export interface operations {
                  *       }
                  *     }
                  */
-                "application/json": components["schemas"]["BiWheel"];
+                "application/json": components["schemas"]["BiWheelRequest"];
             };
         };
         responses: {
@@ -28867,7 +35294,7 @@ export interface operations {
                      *       "data": {
                      *         "svg": "<svg ...>",
                      *         "format": "svg",
-                     *         "byteLength": 24613
+                     *         "byteLength": 17850
                      *       }
                      *     }
                      */
@@ -28990,7 +35417,7 @@ export interface operations {
                      *       "data": {
                      *         "svg": "<svg ...>",
                      *         "format": "svg",
-                     *         "byteLength": 26856
+                     *         "byteLength": 19746
                      *       }
                      *     }
                      */
@@ -29103,7 +35530,7 @@ export interface operations {
                      *       "data": {
                      *         "svg": "<svg ...>",
                      *         "format": "svg",
-                     *         "byteLength": 22274
+                     *         "byteLength": 15863
                      *       }
                      *     }
                      */
@@ -29209,7 +35636,7 @@ export interface operations {
                      *       "data": {
                      *         "svg": "<svg ...>",
                      *         "format": "svg",
-                     *         "byteLength": 60000
+                     *         "byteLength": 61732
                      *       }
                      *     }
                      */
@@ -29313,7 +35740,7 @@ export interface operations {
                      *       "data": {
                      *         "svg": "<svg ...>",
                      *         "format": "svg",
-                     *         "byteLength": 5432
+                     *         "byteLength": 4959
                      *       }
                      *     }
                      */
@@ -29417,7 +35844,7 @@ export interface operations {
                      *       "data": {
                      *         "svg": "<svg ...>",
                      *         "format": "svg",
-                     *         "byteLength": 5836
+                     *         "byteLength": 5845
                      *       }
                      *     }
                      */
@@ -29521,7 +35948,7 @@ export interface operations {
                      *       "data": {
                      *         "svg": "<svg ...>",
                      *         "format": "svg",
-                     *         "byteLength": 5267
+                     *         "byteLength": 4977
                      *       }
                      *     }
                      */
@@ -29625,7 +36052,7 @@ export interface operations {
                      *       "data": {
                      *         "svg": "<svg ...>",
                      *         "format": "svg",
-                     *         "byteLength": 55810
+                     *         "byteLength": 37979
                      *       }
                      *     }
                      */
@@ -29736,7 +36163,7 @@ export interface operations {
                      *       "data": {
                      *         "svg": "<svg ...>",
                      *         "format": "svg",
-                     *         "byteLength": 4500
+                     *         "byteLength": 4671
                      *       }
                      *     }
                      */
@@ -29844,7 +36271,7 @@ export interface operations {
                      *       "data": {
                      *         "svg": "<svg ...>",
                      *         "format": "svg",
-                     *         "byteLength": 8000
+                     *         "byteLength": 3689
                      *       }
                      *     }
                      */
@@ -30321,7 +36748,15 @@ export interface operations {
                      *           "cycling": "Metal",
                      *           "yin": false
                      *         },
-                     *         "pillar": "Geng-Wu"
+                     *         "pillar": "Geng-Wu",
+                     *         "yearStart": {
+                     *           "utc": "1990-02-04T02:14:00Z",
+                     *           "beijing": "1990-02-04T10:14:00+08:00"
+                     *         },
+                     *         "yearEnd": {
+                     *           "utc": "1991-02-04T08:08:24Z",
+                     *           "beijing": "1991-02-04T16:08:24+08:00"
+                     *         }
                      *       }
                      *     }
                      */
@@ -30340,6 +36775,14 @@ export interface operations {
                                 yin?: boolean | null;
                             } | null;
                             pillar?: string | null;
+                            yearStart?: {
+                                utc?: string | null;
+                                beijing?: string | null;
+                            } | null;
+                            yearEnd?: {
+                                utc?: string | null;
+                                beijing?: string | null;
+                            } | null;
                         };
                     };
                 };
@@ -45234,7 +51677,9 @@ export interface operations {
             content: {
                 /**
                  * @example {
-                 *       "planetId": 2,
+                 *       "planetIds": [
+                 *         2
+                 *       ],
                  *       "startDate": "2024-01-01",
                  *       "endDate": "2024-12-31"
                  *     }
@@ -45260,7 +51705,9 @@ export interface operations {
                      *             "retroStart": "2024-04-01T22:14:30Z",
                      *             "retroEnd": "2024-04-25T12:54:07Z",
                      *             "stationRetroLong": 27.218618740069505,
-                     *             "stationDirectLong": 15.981207506060022
+                     *             "stationDirectLong": 15.981207506060022,
+                     *             "shadowStart": "2024-03-19T03:39:08Z",
+                     *             "shadowEnd": "2024-05-13T09:01:24Z"
                      *           }
                      *         ]
                      *       }
@@ -45277,6 +51724,8 @@ export interface operations {
                                 retroEnd?: string | null;
                                 stationRetroLong?: number | null;
                                 stationDirectLong?: number | null;
+                                shadowStart?: string | null;
+                                shadowEnd?: string | null;
                             } | null)[] | null;
                         };
                     };
@@ -56475,7 +62924,7 @@ export interface operations {
                  *       "longitude": 30.52
                  *     }
                  */
-                "application/json": components["schemas"]["ChartInput"];
+                "application/json": components["schemas"]["PanchangInput"];
             };
         };
         responses: {
@@ -64930,6 +71379,247 @@ export interface operations {
                                 sanskrit?: string | null;
                                 description?: string | null;
                             } | null)[] | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    vedic_kundli: {
+        parameters: {
+            query?: {
+                /**
+                 * @description Comma-separated dotted paths, relative to `data`, to keep in the response. A path is applied to every element of an array, so `planets.name` means the name of each planet. Paths that match nothing come back in `_fields_unmatched`; a list where nothing matches at all is a 400, because an empty object would be a confident wrong answer.
+                 * @example planets.name,planets.longitude
+                 */
+                fields?: components["parameters"]["ResponseFields"];
+                /**
+                 * @description Round every non-integer number in the response to this many decimal places. Integers are left alone, because an id is not a measurement. Ecliptic longitudes ship with fourteen decimals by default; 2 is about a tenth of an arcminute.
+                 * @example 4
+                 */
+                precision?: components["parameters"]["ResponsePrecision"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "date": "1990-05-15",
+                 *       "time": "15:30:00",
+                 *       "timezone": "Europe/Kyiv",
+                 *       "latitude": 50.45,
+                 *       "longitude": 30.52,
+                 *       "targetDate": "2026-10-06"
+                 *     }
+                 */
+                "application/json": components["schemas"]["KundliInput"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "ayanamsa": 23.7225,
+                     *         "lagna": {
+                     *           "longitude": 146.2454,
+                     *           "sign": 4,
+                     *           "degreeInSign": 26.2454,
+                     *           "signName": "Leo"
+                     *         },
+                     *         "grahas": [
+                     *           {
+                     *             "name": "Sun",
+                     *             "longitude": 30.6502,
+                     *             "sign": 1,
+                     *             "degreeInSign": 0.6502,
+                     *             "isRetrograde": false,
+                     *             "signName": "Taurus"
+                     *           },
+                     *           {
+                     *             "name": "Moon",
+                     *             "longitude": 273.1789,
+                     *             "sign": 9,
+                     *             "degreeInSign": 3.1789,
+                     *             "isRetrograde": false,
+                     *             "signName": "Capricorn"
+                     *           },
+                     *           {
+                     *             "name": "Ketu",
+                     *             "longitude": 106.5326,
+                     *             "sign": 3,
+                     *             "degreeInSign": 16.5326,
+                     *             "isRetrograde": true,
+                     *             "signName": "Cancer"
+                     *           }
+                     *         ],
+                     *         "nakshatra": {
+                     *           "number": 21,
+                     *           "name": "Uttara Ashadha",
+                     *           "nameRu": "Уттара Ашадха",
+                     *           "nameUk": "Уттара Ашадха",
+                     *           "ruler": "Sun",
+                     *           "startDeg": 266.6667,
+                     *           "endDeg": 280,
+                     *           "pada": 2
+                     *         },
+                     *         "dasha": {
+                     *           "system": "Vimshottari",
+                     *           "maha": {
+                     *             "planet": 11,
+                     *             "planetName": "Rahu",
+                     *             "startJd": 2455357.3655195693,
+                     *             "endJd": 2461931.8655195693,
+                     *             "startDate": "2010-06-10 00:46",
+                     *             "endDate": "2028-06-09 12:46",
+                     *             "durationYears": 18
+                     *           },
+                     *           "antar": {
+                     *             "planet": 1,
+                     *             "planetName": "Moon",
+                     *             "startJd": 2461000.4780195695,
+                     *             "endJd": 2461548.3530195695,
+                     *             "startDate": "2025-11-21 03:28",
+                     *             "endDate": "2027-05-23 00:28",
+                     *             "durationYears": 1.5
+                     *           }
+                     *         },
+                     *         "yogas": {
+                     *           "present": [],
+                     *           "dhana": {
+                     *             "present": false,
+                     *             "contributingPlanets": []
+                     *           }
+                     *         },
+                     *         "doshas": {
+                     *           "present": [
+                     *             "mangal",
+                     *             "shrapit",
+                     *             "grahan"
+                     *           ],
+                     *           "mangal": {
+                     *             "present": true,
+                     *             "severity": "strong"
+                     *           }
+                     *         }
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            ayanamsa?: number | null;
+                            lagna?: {
+                                longitude?: number | null;
+                                sign?: number | null;
+                                degreeInSign?: number | null;
+                                signName?: string | null;
+                            } | null;
+                            grahas?: ({
+                                name?: string | null;
+                                longitude?: number | null;
+                                sign?: number | null;
+                                degreeInSign?: number | null;
+                                isRetrograde?: boolean | null;
+                                signName?: string | null;
+                            } | null)[] | null;
+                            nakshatra?: {
+                                number?: number | null;
+                                name?: string | null;
+                                nameRu?: string | null;
+                                nameUk?: string | null;
+                                ruler?: string | null;
+                                startDeg?: number | null;
+                                endDeg?: number | null;
+                                pada?: number | null;
+                            } | null;
+                            dasha?: {
+                                system?: string | null;
+                                maha?: {
+                                    planet?: number | null;
+                                    planetName?: string | null;
+                                    startJd?: number | null;
+                                    endJd?: number | null;
+                                    startDate?: string | null;
+                                    endDate?: string | null;
+                                    durationYears?: number | null;
+                                } | null;
+                                antar?: {
+                                    planet?: number | null;
+                                    planetName?: string | null;
+                                    startJd?: number | null;
+                                    endJd?: number | null;
+                                    startDate?: string | null;
+                                    endDate?: string | null;
+                                    durationYears?: number | null;
+                                } | null;
+                            } | null;
+                            yogas?: {
+                                present?: unknown[] | null;
+                                dhana?: {
+                                    present?: boolean | null;
+                                    contributingPlanets?: unknown[] | null;
+                                } | null;
+                            } | null;
+                            doshas?: {
+                                present?: (string | null)[] | null;
+                                mangal?: {
+                                    present?: boolean | null;
+                                    severity?: string | null;
+                                } | null;
+                            } | null;
                         };
                     };
                 };
@@ -84694,10 +91384,187 @@ export interface operations {
             };
         };
     };
+    interpret_tarot: {
+        parameters: {
+            query?: {
+                /**
+                 * @description Alternative to Accept-Language for clients without header control.
+                 * @example hi
+                 */
+                lang?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+                /**
+                 * @description Comma-separated dotted paths, relative to `data`, to keep in the response. A path is applied to every element of an array, so `planets.name` means the name of each planet. Paths that match nothing come back in `_fields_unmatched`; a list where nothing matches at all is a 400, because an empty object would be a confident wrong answer.
+                 * @example planets.name,planets.longitude
+                 */
+                fields?: components["parameters"]["ResponseFields"];
+                /**
+                 * @description Round every non-integer number in the response to this many decimal places. Integers are left alone, because an id is not a measurement. Ecliptic longitudes ship with fourteen decimals by default; 2 is about a tenth of an arcminute.
+                 * @example 4
+                 */
+                precision?: components["parameters"]["ResponsePrecision"];
+            };
+            header?: {
+                /**
+                 * @description Target language for response text fields. RFC 7231 q-weighted. Falls back to ?lang= query param, then body.language, then source uk. Unknown codes silently fall through to uk.
+                 * @example de
+                 */
+                "Accept-Language"?: "uk" | "en" | "de" | "ru" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
+                /**
+                 * @description Bring your own model key: the LLM provider that should run this completion. Send together with X-Provider-Key or the request is refused: a key with no provider bills us for tokens you meant to pay for, and a provider with no key would look like it worked. The endpoint is fixed per provider on our side and is never taken from the request. There is no fallback to our own chain: if your key fails you get the provider's status and message.
+                 * @example anthropic
+                 */
+                "X-Provider"?: "openai" | "anthropic" | "google" | "groq" | "mistral" | "openrouter" | "deepseek" | "together";
+                /**
+                 * @description Your own credential for X-Provider. Never logged, stored or cached: it travels in a header because the request body is hashed into two cache keys, and a BYOK turn bypasses both caches in each direction. A provider error that quotes the key back is redacted before it reaches our logs or your response. Such a turn costs 5 credits instead of the endpoint price, and only when a completion actually ran on your key.
+                 * @example sk-ant-...
+                 */
+                "X-Provider-Key"?: string;
+                /**
+                 * @description Optional model id, overriding the default for that provider. Defaults: openai → gpt-4o-mini, anthropic → claude-sonnet-4-5, google → gemini-2.5-flash, groq → openai/gpt-oss-120b, mistral → mistral-large-latest, openrouter → meta-llama/llama-3.3-70b-instruct, deepseek → deepseek-chat, together → meta-llama/Llama-3.3-70B-Instruct-Turbo.
+                 * @example claude-sonnet-4-5
+                 */
+                "X-Provider-Model"?: string;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "deck": "rider-waite",
+                 *       "spread": "three-card",
+                 *       "question": "What should I focus on at work?",
+                 *       "cards": [
+                 *         "the-fool",
+                 *         {
+                 *           "slug": "4-of-cups",
+                 *           "reversed": true
+                 *         },
+                 *         "the-sun"
+                 *       ],
+                 *       "language": "en"
+                 *     }
+                 */
+                "application/json": components["schemas"]["InterpretTarot"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "deck": "rider-waite",
+                     *         "spread": {
+                     *           "slug": "three-card",
+                     *           "name": "Past / Present / Future"
+                     *         },
+                     *         "question": "What should I focus on at work?",
+                     *         "positions": [
+                     *           {
+                     *             "index": 0,
+                     *             "position": "Past",
+                     *             "positionMeaning": "Forces from the past shaping the situation.",
+                     *             "card": {
+                     *               "slug": "the-fool",
+                     *               "name": "The Fool"
+                     *             },
+                     *             "reversed": false,
+                     *             "reading": "The Fool in the past speaks of a leap you already took…"
+                     *           }
+                     *         ],
+                     *         "synthesis": "Read together, the cards…",
+                     *         "advice": "…",
+                     *         "disclaimer": "…",
+                     *         "model": "…",
+                     *         "language": "en"
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            deck?: string | null;
+                            spread?: {
+                                slug?: string | null;
+                                name?: string | null;
+                            } | null;
+                            question?: string | null;
+                            positions?: ({
+                                index?: number | null;
+                                position?: string | null;
+                                positionMeaning?: string | null;
+                                card?: {
+                                    slug?: string | null;
+                                    name?: string | null;
+                                } | null;
+                                reversed?: boolean | null;
+                                reading?: string | null;
+                            } | null)[] | null;
+                            synthesis?: string | null;
+                            advice?: string | null;
+                            disclaimer?: string | null;
+                            model?: string | null;
+                            language?: string | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
     "natal-texts_get": {
         parameters: {
             query: {
-                /** @description Comma list of up to 64 distinct keys: `<body>.<sign>` (planet in sign, also `chiron`, `ascendant`), `<body>.h<1-12>` (planet in house), `<body>_<body>.<aspect>` (conjunction, sextile, square, trine, opposition between two of Sun..Pluto). */
+                /** @description Comma list of up to 64 distinct keys: `<body>.<sign>` (planet in sign, also `chiron`, `ascendant`, `north_node`, `south_node`, `lilith`), `<body>.h<1-12>` (planet in house, also `chiron`, `lilith`), `<body>_<body>.<aspect>` (conjunction, sextile, square, trine, opposition between two of Sun..Pluto), `pattern.<name>` (t_square, grand_trine, grand_cross, stellium, yod, kite; kind `pattern`, a general text for the figure, the planets are yours to list). Nodes, Lilith in sign and patterns are written in every language listed for `lang`. */
                 keys: string;
                 /** @description Language of the texts. No fallback: a text missing in this language is listed in `missing`. */
                 lang: "uk" | "en" | "de" | "pl" | "es" | "pt" | "fr" | "it" | "nl" | "cs" | "ro" | "hu" | "el" | "tr" | "ar" | "hi" | "ja" | "ko" | "vi" | "id";
@@ -89434,6 +96301,248 @@ export interface operations {
             };
         };
     };
+    numerology_pythagorean_chart: {
+        parameters: {
+            query?: {
+                /**
+                 * @description Comma-separated dotted paths, relative to `data`, to keep in the response. A path is applied to every element of an array, so `planets.name` means the name of each planet. Paths that match nothing come back in `_fields_unmatched`; a list where nothing matches at all is a 400, because an empty object would be a confident wrong answer.
+                 * @example planets.name,planets.longitude
+                 */
+                fields?: components["parameters"]["ResponseFields"];
+                /**
+                 * @description Round every non-integer number in the response to this many decimal places. Integers are left alone, because an id is not a measurement. Ecliptic longitudes ship with fourteen decimals by default; 2 is about a tenth of an arcminute.
+                 * @example 4
+                 */
+                precision?: components["parameters"]["ResponsePrecision"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "name": "John Smith",
+                 *       "date": "1990-05-15",
+                 *       "year": 2026
+                 *     }
+                 */
+                "application/json": components["schemas"]["NumerologyPersonalYear"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "system": "pythagorean",
+                     *         "name": "John Smith",
+                     *         "date": "1990-05-15",
+                     *         "year": 2026,
+                     *         "lifePath": {
+                     *           "raw": 12,
+                     *           "reduced": 3,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             12,
+                     *             3
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 3,
+                     *             "archetype": "The Communicator"
+                     *           }
+                     *         },
+                     *         "expression": {
+                     *           "raw": 44,
+                     *           "reduced": 8,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             44,
+                     *             8
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 8,
+                     *             "archetype": "The Executive"
+                     *           }
+                     *         },
+                     *         "soulUrge": {
+                     *           "raw": 15,
+                     *           "reduced": 6,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             15,
+                     *             6
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 6,
+                     *             "archetype": "The Nurturer"
+                     *           }
+                     *         },
+                     *         "personality": {
+                     *           "raw": 29,
+                     *           "reduced": 11,
+                     *           "isMaster": true,
+                     *           "steps": [
+                     *             29,
+                     *             11
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 11,
+                     *             "archetype": "The Master Intuitive"
+                     *           }
+                     *         },
+                     *         "birthday": {
+                     *           "raw": 15,
+                     *           "reduced": 6,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             15,
+                     *             6
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 6,
+                     *             "archetype": "The Nurturer"
+                     *           }
+                     *         },
+                     *         "personalYear": {
+                     *           "raw": 12,
+                     *           "reduced": 3,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             12,
+                     *             3
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 3,
+                     *             "archetype": "The Communicator"
+                     *           }
+                     *         }
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
+                            year?: number | null;
+                            lifePath?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            expression?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            soulUrge?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            personality?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            birthday?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            personalYear?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
     "numerology_chaldean_life-path": {
         parameters: {
             query?: {
@@ -90689,6 +97798,248 @@ export interface operations {
                                     archetype?: string | null;
                                     strengths?: (string | null)[] | null;
                                     shortRead?: string | null;
+                                } | null;
+                            } | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    numerology_chaldean_chart: {
+        parameters: {
+            query?: {
+                /**
+                 * @description Comma-separated dotted paths, relative to `data`, to keep in the response. A path is applied to every element of an array, so `planets.name` means the name of each planet. Paths that match nothing come back in `_fields_unmatched`; a list where nothing matches at all is a 400, because an empty object would be a confident wrong answer.
+                 * @example planets.name,planets.longitude
+                 */
+                fields?: components["parameters"]["ResponseFields"];
+                /**
+                 * @description Round every non-integer number in the response to this many decimal places. Integers are left alone, because an id is not a measurement. Ecliptic longitudes ship with fourteen decimals by default; 2 is about a tenth of an arcminute.
+                 * @example 4
+                 */
+                precision?: components["parameters"]["ResponsePrecision"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "name": "John Smith",
+                 *       "date": "1990-05-15",
+                 *       "year": 2026
+                 *     }
+                 */
+                "application/json": components["schemas"]["NumerologyPersonalYear"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "system": "chaldean",
+                     *         "name": "John Smith",
+                     *         "date": "1990-05-15",
+                     *         "year": 2026,
+                     *         "lifePath": {
+                     *           "raw": 12,
+                     *           "reduced": 3,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             12,
+                     *             3
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 3,
+                     *             "archetype": "The Communicator"
+                     *           }
+                     *         },
+                     *         "expression": {
+                     *           "raw": 44,
+                     *           "reduced": 8,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             44,
+                     *             8
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 8,
+                     *             "archetype": "The Executive"
+                     *           }
+                     *         },
+                     *         "soulUrge": {
+                     *           "raw": 15,
+                     *           "reduced": 6,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             15,
+                     *             6
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 6,
+                     *             "archetype": "The Nurturer"
+                     *           }
+                     *         },
+                     *         "personality": {
+                     *           "raw": 29,
+                     *           "reduced": 11,
+                     *           "isMaster": true,
+                     *           "steps": [
+                     *             29,
+                     *             11
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 11,
+                     *             "archetype": "The Master Intuitive"
+                     *           }
+                     *         },
+                     *         "birthday": {
+                     *           "raw": 15,
+                     *           "reduced": 6,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             15,
+                     *             6
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 6,
+                     *             "archetype": "The Nurturer"
+                     *           }
+                     *         },
+                     *         "personalYear": {
+                     *           "raw": 12,
+                     *           "reduced": 3,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             12,
+                     *             3
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 3,
+                     *             "archetype": "The Communicator"
+                     *           }
+                     *         }
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
+                            year?: number | null;
+                            lifePath?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            expression?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            soulUrge?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            personality?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            birthday?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            personalYear?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
                                 } | null;
                             } | null;
                         };
@@ -92044,6 +99395,248 @@ export interface operations {
             };
         };
     };
+    numerology_kabbalistic_chart: {
+        parameters: {
+            query?: {
+                /**
+                 * @description Comma-separated dotted paths, relative to `data`, to keep in the response. A path is applied to every element of an array, so `planets.name` means the name of each planet. Paths that match nothing come back in `_fields_unmatched`; a list where nothing matches at all is a 400, because an empty object would be a confident wrong answer.
+                 * @example planets.name,planets.longitude
+                 */
+                fields?: components["parameters"]["ResponseFields"];
+                /**
+                 * @description Round every non-integer number in the response to this many decimal places. Integers are left alone, because an id is not a measurement. Ecliptic longitudes ship with fourteen decimals by default; 2 is about a tenth of an arcminute.
+                 * @example 4
+                 */
+                precision?: components["parameters"]["ResponsePrecision"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "name": "John Smith",
+                 *       "date": "1990-05-15",
+                 *       "year": 2026
+                 *     }
+                 */
+                "application/json": components["schemas"]["NumerologyPersonalYear"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "system": "kabbalistic",
+                     *         "name": "John Smith",
+                     *         "date": "1990-05-15",
+                     *         "year": 2026,
+                     *         "lifePath": {
+                     *           "raw": 12,
+                     *           "reduced": 3,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             12,
+                     *             3
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 3,
+                     *             "archetype": "The Communicator"
+                     *           }
+                     *         },
+                     *         "expression": {
+                     *           "raw": 44,
+                     *           "reduced": 8,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             44,
+                     *             8
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 8,
+                     *             "archetype": "The Executive"
+                     *           }
+                     *         },
+                     *         "soulUrge": {
+                     *           "raw": 15,
+                     *           "reduced": 6,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             15,
+                     *             6
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 6,
+                     *             "archetype": "The Nurturer"
+                     *           }
+                     *         },
+                     *         "personality": {
+                     *           "raw": 29,
+                     *           "reduced": 11,
+                     *           "isMaster": true,
+                     *           "steps": [
+                     *             29,
+                     *             11
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 11,
+                     *             "archetype": "The Master Intuitive"
+                     *           }
+                     *         },
+                     *         "birthday": {
+                     *           "raw": 15,
+                     *           "reduced": 6,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             15,
+                     *             6
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 6,
+                     *             "archetype": "The Nurturer"
+                     *           }
+                     *         },
+                     *         "personalYear": {
+                     *           "raw": 12,
+                     *           "reduced": 3,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             12,
+                     *             3
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 3,
+                     *             "archetype": "The Communicator"
+                     *           }
+                     *         }
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
+                            year?: number | null;
+                            lifePath?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            expression?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            soulUrge?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            personality?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            birthday?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            personalYear?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
     "numerology_kabbalistic-strict_life-path": {
         parameters: {
             query?: {
@@ -93299,6 +100892,248 @@ export interface operations {
                                     archetype?: string | null;
                                     strengths?: (string | null)[] | null;
                                     shortRead?: string | null;
+                                } | null;
+                            } | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    "numerology_kabbalistic-strict_chart": {
+        parameters: {
+            query?: {
+                /**
+                 * @description Comma-separated dotted paths, relative to `data`, to keep in the response. A path is applied to every element of an array, so `planets.name` means the name of each planet. Paths that match nothing come back in `_fields_unmatched`; a list where nothing matches at all is a 400, because an empty object would be a confident wrong answer.
+                 * @example planets.name,planets.longitude
+                 */
+                fields?: components["parameters"]["ResponseFields"];
+                /**
+                 * @description Round every non-integer number in the response to this many decimal places. Integers are left alone, because an id is not a measurement. Ecliptic longitudes ship with fourteen decimals by default; 2 is about a tenth of an arcminute.
+                 * @example 4
+                 */
+                precision?: components["parameters"]["ResponsePrecision"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "name": "John Smith",
+                 *       "date": "1990-05-15",
+                 *       "year": 2026
+                 *     }
+                 */
+                "application/json": components["schemas"]["NumerologyPersonalYear"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "system": "kabbalistic-strict",
+                     *         "name": "John Smith",
+                     *         "date": "1990-05-15",
+                     *         "year": 2026,
+                     *         "lifePath": {
+                     *           "raw": 12,
+                     *           "reduced": 3,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             12,
+                     *             3
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 3,
+                     *             "archetype": "The Communicator"
+                     *           }
+                     *         },
+                     *         "expression": {
+                     *           "raw": 44,
+                     *           "reduced": 8,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             44,
+                     *             8
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 8,
+                     *             "archetype": "The Executive"
+                     *           }
+                     *         },
+                     *         "soulUrge": {
+                     *           "raw": 15,
+                     *           "reduced": 6,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             15,
+                     *             6
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 6,
+                     *             "archetype": "The Nurturer"
+                     *           }
+                     *         },
+                     *         "personality": {
+                     *           "raw": 29,
+                     *           "reduced": 11,
+                     *           "isMaster": true,
+                     *           "steps": [
+                     *             29,
+                     *             11
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 11,
+                     *             "archetype": "The Master Intuitive"
+                     *           }
+                     *         },
+                     *         "birthday": {
+                     *           "raw": 15,
+                     *           "reduced": 6,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             15,
+                     *             6
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 6,
+                     *             "archetype": "The Nurturer"
+                     *           }
+                     *         },
+                     *         "personalYear": {
+                     *           "raw": 12,
+                     *           "reduced": 3,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             12,
+                     *             3
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 3,
+                     *             "archetype": "The Communicator"
+                     *           }
+                     *         }
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
+                            year?: number | null;
+                            lifePath?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            expression?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            soulUrge?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            personality?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            birthday?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            personalYear?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
                                 } | null;
                             } | null;
                         };
@@ -94654,6 +102489,411 @@ export interface operations {
             };
         };
     };
+    numerology_vedic_chart: {
+        parameters: {
+            query?: {
+                /**
+                 * @description Comma-separated dotted paths, relative to `data`, to keep in the response. A path is applied to every element of an array, so `planets.name` means the name of each planet. Paths that match nothing come back in `_fields_unmatched`; a list where nothing matches at all is a 400, because an empty object would be a confident wrong answer.
+                 * @example planets.name,planets.longitude
+                 */
+                fields?: components["parameters"]["ResponseFields"];
+                /**
+                 * @description Round every non-integer number in the response to this many decimal places. Integers are left alone, because an id is not a measurement. Ecliptic longitudes ship with fourteen decimals by default; 2 is about a tenth of an arcminute.
+                 * @example 4
+                 */
+                precision?: components["parameters"]["ResponsePrecision"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                /**
+                 * @example {
+                 *       "name": "John Smith",
+                 *       "date": "1990-05-15",
+                 *       "year": 2026
+                 *     }
+                 */
+                "application/json": components["schemas"]["NumerologyPersonalYear"];
+            };
+        };
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "system": "vedic",
+                     *         "name": "John Smith",
+                     *         "date": "1990-05-15",
+                     *         "year": 2026,
+                     *         "lifePath": {
+                     *           "raw": 12,
+                     *           "reduced": 3,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             12,
+                     *             3
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 3,
+                     *             "archetype": "The Communicator"
+                     *           }
+                     *         },
+                     *         "expression": {
+                     *           "raw": 44,
+                     *           "reduced": 8,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             44,
+                     *             8
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 8,
+                     *             "archetype": "The Executive"
+                     *           }
+                     *         },
+                     *         "soulUrge": {
+                     *           "raw": 15,
+                     *           "reduced": 6,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             15,
+                     *             6
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 6,
+                     *             "archetype": "The Nurturer"
+                     *           }
+                     *         },
+                     *         "personality": {
+                     *           "raw": 29,
+                     *           "reduced": 11,
+                     *           "isMaster": true,
+                     *           "steps": [
+                     *             29,
+                     *             11
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 11,
+                     *             "archetype": "The Master Intuitive"
+                     *           }
+                     *         },
+                     *         "birthday": {
+                     *           "raw": 15,
+                     *           "reduced": 6,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             15,
+                     *             6
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 6,
+                     *             "archetype": "The Nurturer"
+                     *           }
+                     *         },
+                     *         "personalYear": {
+                     *           "raw": 12,
+                     *           "reduced": 3,
+                     *           "isMaster": false,
+                     *           "steps": [
+                     *             12,
+                     *             3
+                     *           ],
+                     *           "meaning": {
+                     *             "number": 3,
+                     *             "archetype": "The Communicator"
+                     *           }
+                     *         }
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            system?: string | null;
+                            name?: string | null;
+                            date?: string | null;
+                            year?: number | null;
+                            lifePath?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            expression?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            soulUrge?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            personality?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            birthday?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                            personalYear?: {
+                                raw?: number | null;
+                                reduced?: number | null;
+                                isMaster?: boolean | null;
+                                steps?: (number | null)[] | null;
+                                meaning?: {
+                                    number?: number | null;
+                                    archetype?: string | null;
+                                } | null;
+                            } | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    tarot_decks_get: {
+        parameters: {
+            query?: {
+                /**
+                 * @description Comma-separated dotted paths, relative to `data`, to keep in the response. A path is applied to every element of an array, so `planets.name` means the name of each planet. Paths that match nothing come back in `_fields_unmatched`; a list where nothing matches at all is a 400, because an empty object would be a confident wrong answer.
+                 * @example planets.name,planets.longitude
+                 */
+                fields?: components["parameters"]["ResponseFields"];
+                /**
+                 * @description Round every non-integer number in the response to this many decimal places. Integers are left alone, because an id is not a measurement. Ecliptic longitudes ship with fourteen decimals by default; 2 is about a tenth of an arcminute.
+                 * @example 4
+                 */
+                precision?: components["parameters"]["ResponsePrecision"];
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful calculation */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": true,
+                     *       "data": {
+                     *         "items": [
+                     *           {
+                     *             "deck": "rider-waite",
+                     *             "name": "Rider-Waite-Smith",
+                     *             "cards": 78,
+                     *             "spreads": [
+                     *               {
+                     *                 "slug": "three-card",
+                     *                 "name": "Past / Present / Future",
+                     *                 "cardCount": 3
+                     *               }
+                     *             ],
+                     *             "art": [
+                     *               {
+                     *                 "id": "rws-1909",
+                     *                 "name": "Rider-Waite-Smith 1909",
+                     *                 "artist": "Pamela Colman Smith",
+                     *                 "year": "1909",
+                     *                 "licence": "Public domain",
+                     *                 "source": "https://commons.wikimedia.org/wiki/Category:Rider-Waite_tarot_deck_(Roses_%26_Lilies)",
+                     *                 "note": "The first printing, with the original colouring.",
+                     *                 "preview": {
+                     *                   "url": "https://cdn.astroway.info/tarot/rws-1909/the-fool.webp",
+                     *                   "url2x": "https://cdn.astroway.info/tarot/rws-1909/the-fool@2x.webp",
+                     *                   "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/the-fool-300.webp",
+                     *                   "width": 600,
+                     *                   "height": 1039,
+                     *                   "art": "rws-1909"
+                     *                 },
+                     *                 "back": {
+                     *                   "url": "https://cdn.astroway.info/tarot/rws-1909/back.webp",
+                     *                   "url2x": "https://cdn.astroway.info/tarot/rws-1909/back@2x.webp",
+                     *                   "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/back-300.webp",
+                     *                   "width": 600,
+                     *                   "height": 1039,
+                     *                   "art": "rws-1909"
+                     *                 },
+                     *                 "missing": []
+                     *               }
+                     *             ]
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": {
+                        /** @example true */
+                        ok?: boolean;
+                        data?: {
+                            items?: ({
+                                deck?: string | null;
+                                name?: string | null;
+                                cards?: number | null;
+                                spreads?: ({
+                                    slug?: string | null;
+                                    name?: string | null;
+                                    cardCount?: number | null;
+                                } | null)[] | null;
+                                art?: ({
+                                    id?: string | null;
+                                    name?: string | null;
+                                    artist?: string | null;
+                                    year?: string | null;
+                                    licence?: string | null;
+                                    source?: string | null;
+                                    note?: string | null;
+                                    preview?: {
+                                        url?: string | null;
+                                        url2x?: string | null;
+                                        urlSmall?: string | null;
+                                        width?: number | null;
+                                        height?: number | null;
+                                        art?: string | null;
+                                    } | null;
+                                    back?: {
+                                        url?: string | null;
+                                        url2x?: string | null;
+                                        urlSmall?: string | null;
+                                        width?: number | null;
+                                        height?: number | null;
+                                        art?: string | null;
+                                    } | null;
+                                    missing?: unknown[] | null;
+                                } | null)[] | null;
+                            } | null)[] | null;
+                        };
+                    };
+                };
+            };
+            /** @description Validation error */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_INPUT",
+                     *         "message": "Validation failed: date: Date must be YYYY-MM-DD",
+                     *         "details": [
+                     *           {
+                     *             "path": "date",
+                     *             "message": "Date must be YYYY-MM-DD"
+                     *           }
+                     *         ]
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+            /** @description Missing or invalid API key */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    /**
+                     * @example {
+                     *       "ok": false,
+                     *       "error": {
+                     *         "code": "INVALID_API_KEY",
+                     *         "message": "Invalid API key"
+                     *       }
+                     *     }
+                     */
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
     "tarot_rider-waite_cards_get": {
         parameters: {
             query?: {
@@ -95199,7 +103439,7 @@ export interface operations {
                      *               ],
                      *               "meaning": "Scattered or distracted."
                      *             },
-                     *             "astrology": "fire of earth",
+                     *             "astrology": "earth of fire",
                      *             "numerology": 2,
                      *             "yes": "maybe"
                      *           }
@@ -95463,7 +103703,7 @@ export interface operations {
                      *           {
                      *             "slug": "5-of-wands",
                      *             "number": 5,
-                     *             "name": "5 of Wands",
+                     *             "name": "Five of Wands",
                      *             "category": "minor",
                      *             "suit": "wands",
                      *             "rank": "5",
@@ -96120,7 +104360,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -96353,7 +104593,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -96372,7 +104612,15 @@ export interface operations {
                      *               },
                      *               "astrology": "Sun in Virgo",
                      *               "numerology": 8,
-                     *               "yes": "yes"
+                     *               "yes": "yes",
+                     *               "image": {
+                     *                 "url": "https://cdn.astroway.info/tarot/rws-1909/8-of-pentacles.webp",
+                     *                 "url2x": "https://cdn.astroway.info/tarot/rws-1909/8-of-pentacles@2x.webp",
+                     *                 "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/8-of-pentacles-300.webp",
+                     *                 "width": 600,
+                     *                 "height": 1039,
+                     *                 "art": "rws-1909"
+                     *               }
                      *             },
                      *             "reversed": false
                      *           }
@@ -96412,6 +104660,14 @@ export interface operations {
                      *             "name": "Минуле / Теперішнє / Майбутнє"
                      *           },
                      *           "textLocalized": true
+                     *         },
+                     *         "back": {
+                     *           "url": "https://cdn.astroway.info/tarot/rws-1909/back.webp",
+                     *           "url2x": "https://cdn.astroway.info/tarot/rws-1909/back@2x.webp",
+                     *           "urlSmall": "https://cdn.astroway.info/tarot/rws-1909/back-300.webp",
+                     *           "width": 600,
+                     *           "height": 1039,
+                     *           "art": "rws-1909"
                      *         }
                      *       }
                      *     }
@@ -96451,6 +104707,14 @@ export interface operations {
                                     astrology?: string | null;
                                     numerology?: number | null;
                                     yes?: string | null;
+                                    image?: {
+                                        url?: string | null;
+                                        url2x?: string | null;
+                                        urlSmall?: string | null;
+                                        width?: number | null;
+                                        height?: number | null;
+                                        art?: string | null;
+                                    } | null;
                                 } | null;
                                 reversed?: boolean | null;
                             } | null)[] | null;
@@ -96480,6 +104744,14 @@ export interface operations {
                                     name?: string | null;
                                 } | null;
                                 textLocalized?: boolean | null;
+                            } | null;
+                            back?: {
+                                url?: string | null;
+                                url2x?: string | null;
+                                urlSmall?: string | null;
+                                width?: number | null;
+                                height?: number | null;
+                                art?: string | null;
                             } | null;
                         };
                     };
@@ -96586,7 +104858,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -96819,7 +105091,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -96989,7 +105261,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -97159,7 +105431,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -97329,7 +105601,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -97503,7 +105775,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -97673,7 +105945,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -97843,7 +106115,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -98013,7 +106285,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -98183,7 +106455,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -98369,7 +106641,7 @@ export interface operations {
                      *                 ],
                      *                 "meaning": "Emotionally immature or blocked."
                      *               },
-                     *               "astrology": "water of earth",
+                     *               "astrology": "earth of water",
                      *               "numerology": 2,
                      *               "yes": "maybe"
                      *             },
@@ -99277,7 +107549,7 @@ export interface operations {
                      *             }
                      *           }
                      *         ],
-                     *         "narrativeStub": "2-card reading: The Fool → The Magician. (Use /interpret/* AI endpoints for full narrative.)"
+                     *         "narrativeStub": "2-card reading: The Fool → The Magician. (POST /v1/interpret/tarot reads the positions and the whole spread.)"
                      *       }
                      *     }
                      */
@@ -99401,7 +107673,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -99573,7 +107845,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -99745,7 +108017,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -99917,7 +108189,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -100089,7 +108361,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -100819,7 +109091,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles-marseille",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -100989,7 +109261,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles-marseille",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -101159,7 +109431,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles-marseille",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -101329,7 +109601,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles-marseille",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -101499,7 +109771,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles-marseille",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -101669,7 +109941,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles-marseille",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -101939,7 +110211,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles-marseille",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -102109,7 +110381,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles-marseille",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -102279,7 +110551,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles-marseille",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -102465,7 +110737,7 @@ export interface operations {
                      *                 ],
                      *                 "meaning": "Emotionally immature or blocked."
                      *               },
-                     *               "astrology": "water of earth",
+                     *               "astrology": "earth of water",
                      *               "numerology": 2,
                      *               "yes": "maybe"
                      *             },
@@ -102941,7 +111213,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles-marseille",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -103113,7 +111385,7 @@ export interface operations {
                      *             "card": {
                      *               "slug": "8-of-pentacles-marseille",
                      *               "number": 8,
-                     *               "name": "8 of Pentacles",
+                     *               "name": "Eight of Pentacles",
                      *               "category": "minor",
                      *               "suit": "pentacles",
                      *               "rank": "8",
@@ -104708,18 +112980,6 @@ export interface operations {
                      *         "method": "ladini",
                      *         "disclaimer": "Single-author method (Natalia Ladini, CIS market). Not historically attested.",
                      *         "date": "1990-05-15",
-                     *         "centre": {
-                     *           "number": 17,
-                     *           "arcanum": {
-                     *             "number": 17,
-                     *             "name": "The Star",
-                     *             "archetype": "visionary",
-                     *             "positiveSide": "hope, inspiration, vision, healing",
-                     *             "negativeSide": "despair, lost faith, disillusion",
-                     *             "taskOfSoul": "hold hope through dark times",
-                     *             "resourceOffered": "access to vision and healing"
-                     *           }
-                     *         },
                      *         "pointA": {
                      *           "number": 15,
                      *           "arcanum": {
@@ -104756,64 +113016,162 @@ export interface operations {
                      *             "resourceOffered": "access to vital joy"
                      *           }
                      *         },
-                     *         "skyAxis": {
-                     *           "number": 20,
+                     *         "pointD": {
+                     *           "number": 12,
                      *           "arcanum": {
+                     *             "number": 12,
+                     *             "name": "The Hanged Man",
+                     *             "archetype": "surrenderer",
+                     *             "positiveSide": "sacred sacrifice, new perspective, surrender",
+                     *             "negativeSide": "martyrdom, paralysis, victim",
+                     *             "taskOfSoul": "release for new sight",
+                     *             "resourceOffered": "capacity for conscious sacrifice"
+                     *           }
+                     *         },
+                     *         "pointE": {
+                     *           "number": 6,
+                     *           "arcanum": {
+                     *             "number": 6,
+                     *             "name": "The Lovers",
+                     *             "archetype": "partner",
+                     *             "positiveSide": "love, value alignment, conscious choice",
+                     *             "negativeSide": "codependence, indecision, loss of self in other",
+                     *             "taskOfSoul": "integrate self and other",
+                     *             "resourceOffered": "capacity for deep partnership"
+                     *           }
+                     *         },
+                     *         "centre": {
+                     *           "number": 6,
+                     *           "arcanum": {
+                     *             "number": 6,
+                     *             "name": "The Lovers",
+                     *             "archetype": "partner",
+                     *             "positiveSide": "love, value alignment, conscious choice",
+                     *             "negativeSide": "codependence, indecision, loss of self in other",
+                     *             "taskOfSoul": "integrate self and other",
+                     *             "resourceOffered": "capacity for deep partnership"
+                     *           }
+                     *         },
+                     *         "ancestral": {
+                     *           "topLeft": {
                      *             "number": 20,
-                     *             "name": "Judgement",
-                     *             "archetype": "awakener",
-                     *             "positiveSide": "rebirth, calling, awakening to mission",
-                     *             "negativeSide": "self-judgement, ignored calling",
-                     *             "taskOfSoul": "answer the inner call",
-                     *             "resourceOffered": "access to rebirth"
+                     *             "arcanum": {
+                     *               "number": 20,
+                     *               "name": "Judgement",
+                     *               "archetype": "awakener",
+                     *               "positiveSide": "rebirth, calling, awakening to mission",
+                     *               "negativeSide": "self-judgement, ignored calling",
+                     *               "taskOfSoul": "answer the inner call",
+                     *               "resourceOffered": "access to rebirth"
+                     *             }
+                     *           },
+                     *           "topRight": {
+                     *             "number": 6,
+                     *             "arcanum": {
+                     *               "number": 6,
+                     *               "name": "The Lovers",
+                     *               "archetype": "partner",
+                     *               "positiveSide": "love, value alignment, conscious choice",
+                     *               "negativeSide": "codependence, indecision, loss of self in other",
+                     *               "taskOfSoul": "integrate self and other",
+                     *               "resourceOffered": "capacity for deep partnership"
+                     *             }
+                     *           },
+                     *           "bottomRight": {
+                     *             "number": 4,
+                     *             "arcanum": {
+                     *               "number": 4,
+                     *               "name": "The Emperor",
+                     *               "archetype": "sovereign",
+                     *               "positiveSide": "order, structure, protective leadership",
+                     *               "negativeSide": "tyranny, rigidity, control",
+                     *               "taskOfSoul": "lead from balanced authority",
+                     *               "resourceOffered": "capacity to build lasting structures"
+                     *             }
+                     *           },
+                     *           "bottomLeft": {
+                     *             "number": 9,
+                     *             "arcanum": {
+                     *               "number": 9,
+                     *               "name": "The Hermit",
+                     *               "archetype": "seeker",
+                     *               "positiveSide": "inner light, solitude as resource, deep wisdom",
+                     *               "negativeSide": "isolation, depression, rejection of community",
+                     *               "taskOfSoul": "descend within and return with light",
+                     *               "resourceOffered": "access to inner truth"
+                     *             }
+                     *           }
+                     *         },
+                     *         "skyAxis": {
+                     *           "number": 17,
+                     *           "arcanum": {
+                     *             "number": 17,
+                     *             "name": "The Star",
+                     *             "archetype": "visionary",
+                     *             "positiveSide": "hope, inspiration, vision, healing",
+                     *             "negativeSide": "despair, lost faith, disillusion",
+                     *             "taskOfSoul": "hold hope through dark times",
+                     *             "resourceOffered": "access to vision and healing"
                      *           }
                      *         },
                      *         "earthAxis": {
-                     *           "number": 12,
+                     *           "number": 7,
                      *           "arcanum": {
-                     *             "number": 12,
-                     *             "name": "The Hanged Man",
-                     *             "archetype": "surrenderer",
-                     *             "positiveSide": "sacred sacrifice, new perspective, surrender",
-                     *             "negativeSide": "martyrdom, paralysis, victim",
-                     *             "taskOfSoul": "release for new sight",
-                     *             "resourceOffered": "capacity for conscious sacrifice"
+                     *             "number": 7,
+                     *             "name": "The Chariot",
+                     *             "archetype": "mover",
+                     *             "positiveSide": "willpower, focused movement, victory",
+                     *             "negativeSide": "aggression, force, stalled progress",
+                     *             "taskOfSoul": "master direction of life",
+                     *             "resourceOffered": "capacity for focused action"
+                     *           }
+                     *         },
+                     *         "personalPurpose": {
+                     *           "number": 6,
+                     *           "arcanum": {
+                     *             "number": 6,
+                     *             "name": "The Lovers",
+                     *             "archetype": "partner",
+                     *             "positiveSide": "love, value alignment, conscious choice",
+                     *             "negativeSide": "codependence, indecision, loss of self in other",
+                     *             "taskOfSoul": "integrate self and other",
+                     *             "resourceOffered": "capacity for deep partnership"
                      *           }
                      *         },
                      *         "moneyLineNode": {
-                     *           "number": 12,
+                     *           "number": 7,
                      *           "arcanum": {
-                     *             "number": 12,
-                     *             "name": "The Hanged Man",
-                     *             "archetype": "surrenderer",
-                     *             "positiveSide": "sacred sacrifice, new perspective, surrender",
-                     *             "negativeSide": "martyrdom, paralysis, victim",
-                     *             "taskOfSoul": "release for new sight",
-                     *             "resourceOffered": "capacity for conscious sacrifice"
+                     *             "number": 7,
+                     *             "name": "The Chariot",
+                     *             "archetype": "mover",
+                     *             "positiveSide": "willpower, focused movement, victory",
+                     *             "negativeSide": "aggression, force, stalled progress",
+                     *             "taskOfSoul": "master direction of life",
+                     *             "resourceOffered": "capacity for focused action"
                      *           }
                      *         },
                      *         "loveLineNode": {
-                     *           "number": 22,
+                     *           "number": 11,
                      *           "arcanum": {
-                     *             "number": 22,
-                     *             "name": "The Fool",
-                     *             "archetype": "innocent",
-                     *             "positiveSide": "beginner mind, leap of faith, freedom from past",
-                     *             "negativeSide": "naivety, foolishness, repeated lessons",
-                     *             "taskOfSoul": "walk path with beginner heart",
-                     *             "resourceOffered": "capacity for fresh beginnings"
+                     *             "number": 11,
+                     *             "name": "Strength",
+                     *             "archetype": "tamer",
+                     *             "positiveSide": "gentle power, integration of wild self, courage",
+                     *             "negativeSide": "weakness, brutality, suppressed wildness",
+                     *             "taskOfSoul": "integrate inner beast with love",
+                     *             "resourceOffered": "soft power"
                      *           }
                      *         },
                      *         "karmicTailSum": {
-                     *           "number": 12,
+                     *           "number": 6,
                      *           "arcanum": {
-                     *             "number": 12,
-                     *             "name": "The Hanged Man",
-                     *             "archetype": "surrenderer",
-                     *             "positiveSide": "sacred sacrifice, new perspective, surrender",
-                     *             "negativeSide": "martyrdom, paralysis, victim",
-                     *             "taskOfSoul": "release for new sight",
-                     *             "resourceOffered": "capacity for conscious sacrifice"
+                     *             "number": 6,
+                     *             "name": "The Lovers",
+                     *             "archetype": "partner",
+                     *             "positiveSide": "love, value alignment, conscious choice",
+                     *             "negativeSide": "codependence, indecision, loss of self in other",
+                     *             "taskOfSoul": "integrate self and other",
+                     *             "resourceOffered": "capacity for deep partnership"
                      *           }
                      *         }
                      *       }
@@ -104826,18 +113184,6 @@ export interface operations {
                             method?: string | null;
                             disclaimer?: string | null;
                             date?: string | null;
-                            centre?: {
-                                number?: number | null;
-                                arcanum?: {
-                                    number?: number | null;
-                                    name?: string | null;
-                                    archetype?: string | null;
-                                    positiveSide?: string | null;
-                                    negativeSide?: string | null;
-                                    taskOfSoul?: string | null;
-                                    resourceOffered?: string | null;
-                                } | null;
-                            } | null;
                             pointA?: {
                                 number?: number | null;
                                 arcanum?: {
@@ -104874,6 +113220,92 @@ export interface operations {
                                     resourceOffered?: string | null;
                                 } | null;
                             } | null;
+                            pointD?: {
+                                number?: number | null;
+                                arcanum?: {
+                                    number?: number | null;
+                                    name?: string | null;
+                                    archetype?: string | null;
+                                    positiveSide?: string | null;
+                                    negativeSide?: string | null;
+                                    taskOfSoul?: string | null;
+                                    resourceOffered?: string | null;
+                                } | null;
+                            } | null;
+                            pointE?: {
+                                number?: number | null;
+                                arcanum?: {
+                                    number?: number | null;
+                                    name?: string | null;
+                                    archetype?: string | null;
+                                    positiveSide?: string | null;
+                                    negativeSide?: string | null;
+                                    taskOfSoul?: string | null;
+                                    resourceOffered?: string | null;
+                                } | null;
+                            } | null;
+                            centre?: {
+                                number?: number | null;
+                                arcanum?: {
+                                    number?: number | null;
+                                    name?: string | null;
+                                    archetype?: string | null;
+                                    positiveSide?: string | null;
+                                    negativeSide?: string | null;
+                                    taskOfSoul?: string | null;
+                                    resourceOffered?: string | null;
+                                } | null;
+                            } | null;
+                            ancestral?: {
+                                topLeft?: {
+                                    number?: number | null;
+                                    arcanum?: {
+                                        number?: number | null;
+                                        name?: string | null;
+                                        archetype?: string | null;
+                                        positiveSide?: string | null;
+                                        negativeSide?: string | null;
+                                        taskOfSoul?: string | null;
+                                        resourceOffered?: string | null;
+                                    } | null;
+                                } | null;
+                                topRight?: {
+                                    number?: number | null;
+                                    arcanum?: {
+                                        number?: number | null;
+                                        name?: string | null;
+                                        archetype?: string | null;
+                                        positiveSide?: string | null;
+                                        negativeSide?: string | null;
+                                        taskOfSoul?: string | null;
+                                        resourceOffered?: string | null;
+                                    } | null;
+                                } | null;
+                                bottomRight?: {
+                                    number?: number | null;
+                                    arcanum?: {
+                                        number?: number | null;
+                                        name?: string | null;
+                                        archetype?: string | null;
+                                        positiveSide?: string | null;
+                                        negativeSide?: string | null;
+                                        taskOfSoul?: string | null;
+                                        resourceOffered?: string | null;
+                                    } | null;
+                                } | null;
+                                bottomLeft?: {
+                                    number?: number | null;
+                                    arcanum?: {
+                                        number?: number | null;
+                                        name?: string | null;
+                                        archetype?: string | null;
+                                        positiveSide?: string | null;
+                                        negativeSide?: string | null;
+                                        taskOfSoul?: string | null;
+                                        resourceOffered?: string | null;
+                                    } | null;
+                                } | null;
+                            } | null;
                             skyAxis?: {
                                 number?: number | null;
                                 arcanum?: {
@@ -104887,6 +113319,18 @@ export interface operations {
                                 } | null;
                             } | null;
                             earthAxis?: {
+                                number?: number | null;
+                                arcanum?: {
+                                    number?: number | null;
+                                    name?: string | null;
+                                    archetype?: string | null;
+                                    positiveSide?: string | null;
+                                    negativeSide?: string | null;
+                                    taskOfSoul?: string | null;
+                                    resourceOffered?: string | null;
+                                } | null;
+                            } | null;
+                            personalPurpose?: {
                                 number?: number | null;
                                 arcanum?: {
                                     number?: number | null;
@@ -105217,7 +113661,8 @@ export interface operations {
                  *       "allowed_endpoints": [
                  *         "chart",
                  *         "embed/*"
-                 *       ]
+                 *       ],
+                 *       "credits_cap_cycle": 20000
                  *     }
                  */
                 "application/json": components["schemas"]["CreateKey"];
@@ -105248,7 +113693,7 @@ export interface operations {
                      *         "origin_restriction": {
                      *           "type": "server-only"
                      *         },
-                     *         "credits_cap_cycle": null,
+                     *         "credits_cap_cycle": 20000,
                      *         "allowed_endpoints": [
                      *           "chart",
                      *           "embed/*"
@@ -105274,7 +113719,7 @@ export interface operations {
                             origin_restriction?: {
                                 type?: string | null;
                             } | null;
-                            credits_cap_cycle?: unknown;
+                            credits_cap_cycle?: number | null;
                             allowed_endpoints?: (string | null)[] | null;
                         };
                     };

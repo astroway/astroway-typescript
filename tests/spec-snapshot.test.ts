@@ -87,6 +87,28 @@ describe('spec snapshot', () => {
     expect(tz?.maximum).toBe(14);
   });
 
+  it('takes the render options of api 2.216.0 and a chart already computed', async () => {
+    /* theme "css", labels, crossAspects and the { chart } body (1 credit instead of 10) were
+       added on 2026-10-04/05; a stale snapshot refused all four with a type error. */
+    const sent: unknown[] = [];
+    const fetcher = (async (input: unknown, init?: RequestInit) => {
+      const req = input instanceof Request ? input : new Request(String(input), init);
+      sent.push(await req.json());
+      return new Response(JSON.stringify({ ok: true, data: { svg: '<svg/>', format: 'svg', byteLength: 6 } }), {
+        status: 200, headers: { 'content-type': 'application/json' },
+      });
+    }) as typeof globalThis.fetch;
+    const aw = new Astroway({ apiKey: 'aw_test_x', fetch: fetcher });
+    const chart = { planets: [{ id: 0, name: 'Sun', longitude: 54.37 }], houses: { cusps: Array.from({ length: 12 }, (_, i) => i * 30), ascendant: 0, mc: 270 } };
+    const fromChart: Body<'/render/wheel-western'> = { chart, options: { theme: 'css', labels: { asc: 'Асц', bodies: { Sun: 'Сонце' } } } };
+    const bi: Body<'/render/bi-wheel'> = { natal: { chart }, outer: { chart }, options: { crossAspects: true } };
+    await aw.render.wheelWestern(fromChart);
+    await aw.render.biWheel(bi);
+    expect(sent[0]).toEqual(fromChart);
+    expect(sent[1]).toEqual(bi);
+    expect(spec.components.schemas.ChartData).toBeDefined();
+  });
+
   it('sends the query parameters of a GET that declares them', async () => {
     /* `GET /agent/tools` takes format, select, q and limit. A generator that
        models GET as "no arguments" ships a method that can only ever fetch the

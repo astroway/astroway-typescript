@@ -116,6 +116,17 @@ console.log(texts['sun.aries'].title, texts['sun.aries'].body);
 console.log(missing); // keys with no text in that language, no fallback
 ```
 
+### Chart image (SVG)
+
+```ts
+const chart = await aw.chart.compute({ date: '1990-07-14', time: '14:30:00', timezoneOffset: 3, latitude: 50.45, longitude: 30.52 });
+const { svg } = await aw.drawChart(chart, { theme: 'css' });            // 1 credit: draws the chart you hold
+const grid = await aw.drawChart(chart, { kind: 'aspect-grid' });
+const bi = await aw.drawBiWheel(chart, partnerChart, { crossAspects: true });
+```
+
+`theme: 'css'` paints colours as CSS variables (`--aw-ring`, `--aw-fg`...) and adds stable `aw-*` classes, so an SVG inlined into your page takes its colours. From birth data instead, `aw.render.wheelWestern({ ...birth, options })` computes the chart too (10 credits). Docs: https://api.astroway.info/en/products/svg-charts/
+
 ### White-label PDF report
 
 `/reports/*` endpoints accept an inline `whitelabel` object (the `BrandingObject` schema) to brand the generated PDF with your own name, colours, and footer:

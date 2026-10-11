@@ -605,6 +605,8 @@ export interface AstrowayNamespaces {
     placement(body: PostBody<'/interpret/placement'>, options?: CallOptions): ResultPromise<PostData<'/interpret/placement'>>;
     /** Synastry Interpretation (POST /interpret/synastry) */
     synastry(body: PostBody<'/interpret/synastry'>, options?: CallOptions): ResultPromise<PostData<'/interpret/synastry'>>;
+    /** Tarot Spread Reading (POST /interpret/tarot) */
+    tarot(body: PostBody<'/interpret/tarot'>, options?: CallOptions): ResultPromise<PostData<'/interpret/tarot'>>;
     /** Transits Interpretation (POST /interpret/transits) */
     transits(body: PostBody<'/interpret/transits'>, options?: CallOptions): ResultPromise<PostData<'/interpret/transits'>>;
   };
@@ -741,6 +743,8 @@ export interface AstrowayNamespaces {
     chaldeanBirthday(body: PostBody<'/numerology/chaldean/birthday'>, options?: CallOptions): ResultPromise<PostData<'/numerology/chaldean/birthday'>>;
     /** Challenge Cycles (chaldean) (POST /numerology/chaldean/challenge) */
     chaldeanChallenge(body: PostBody<'/numerology/chaldean/challenge'>, options?: CallOptions): ResultPromise<PostData<'/numerology/chaldean/challenge'>>;
+    /** Core Numbers Chart (chaldean) (POST /numerology/chaldean/chart) */
+    chaldeanChart(body: PostBody<'/numerology/chaldean/chart'>, options?: CallOptions): ResultPromise<PostData<'/numerology/chaldean/chart'>>;
     /** Expression / Destiny (chaldean) (POST /numerology/chaldean/expression) */
     chaldeanExpression(body: PostBody<'/numerology/chaldean/expression'>, options?: CallOptions): ResultPromise<PostData<'/numerology/chaldean/expression'>>;
     /** Life Path Number (chaldean) (POST /numerology/chaldean/life-path) */
@@ -761,6 +765,8 @@ export interface AstrowayNamespaces {
     kabbalisticBirthday(body: PostBody<'/numerology/kabbalistic/birthday'>, options?: CallOptions): ResultPromise<PostData<'/numerology/kabbalistic/birthday'>>;
     /** Challenge Cycles (kabbalistic) (POST /numerology/kabbalistic/challenge) */
     kabbalisticChallenge(body: PostBody<'/numerology/kabbalistic/challenge'>, options?: CallOptions): ResultPromise<PostData<'/numerology/kabbalistic/challenge'>>;
+    /** Core Numbers Chart (kabbalistic) (POST /numerology/kabbalistic/chart) */
+    kabbalisticChart(body: PostBody<'/numerology/kabbalistic/chart'>, options?: CallOptions): ResultPromise<PostData<'/numerology/kabbalistic/chart'>>;
     /** Expression / Destiny (kabbalistic) (POST /numerology/kabbalistic/expression) */
     kabbalisticExpression(body: PostBody<'/numerology/kabbalistic/expression'>, options?: CallOptions): ResultPromise<PostData<'/numerology/kabbalistic/expression'>>;
     /** Life Path Number (kabbalistic) (POST /numerology/kabbalistic/life-path) */
@@ -781,6 +787,8 @@ export interface AstrowayNamespaces {
     kabbalisticStrictBirthday(body: PostBody<'/numerology/kabbalistic-strict/birthday'>, options?: CallOptions): ResultPromise<PostData<'/numerology/kabbalistic-strict/birthday'>>;
     /** Challenge Cycles (kabbalistic-strict) (POST /numerology/kabbalistic-strict/challenge) */
     kabbalisticStrictChallenge(body: PostBody<'/numerology/kabbalistic-strict/challenge'>, options?: CallOptions): ResultPromise<PostData<'/numerology/kabbalistic-strict/challenge'>>;
+    /** Core Numbers Chart (kabbalistic-strict) (POST /numerology/kabbalistic-strict/chart) */
+    kabbalisticStrictChart(body: PostBody<'/numerology/kabbalistic-strict/chart'>, options?: CallOptions): ResultPromise<PostData<'/numerology/kabbalistic-strict/chart'>>;
     /** Expression / Destiny (kabbalistic-strict) (POST /numerology/kabbalistic-strict/expression) */
     kabbalisticStrictExpression(body: PostBody<'/numerology/kabbalistic-strict/expression'>, options?: CallOptions): ResultPromise<PostData<'/numerology/kabbalistic-strict/expression'>>;
     /** Life Path Number (kabbalistic-strict) (POST /numerology/kabbalistic-strict/life-path) */
@@ -801,6 +809,8 @@ export interface AstrowayNamespaces {
     pythagoreanBirthday(body: PostBody<'/numerology/pythagorean/birthday'>, options?: CallOptions): ResultPromise<PostData<'/numerology/pythagorean/birthday'>>;
     /** Challenge Cycles (pythagorean) (POST /numerology/pythagorean/challenge) */
     pythagoreanChallenge(body: PostBody<'/numerology/pythagorean/challenge'>, options?: CallOptions): ResultPromise<PostData<'/numerology/pythagorean/challenge'>>;
+    /** Core Numbers Chart (pythagorean) (POST /numerology/pythagorean/chart) */
+    pythagoreanChart(body: PostBody<'/numerology/pythagorean/chart'>, options?: CallOptions): ResultPromise<PostData<'/numerology/pythagorean/chart'>>;
     /** Expression / Destiny (pythagorean) (POST /numerology/pythagorean/expression) */
     pythagoreanExpression(body: PostBody<'/numerology/pythagorean/expression'>, options?: CallOptions): ResultPromise<PostData<'/numerology/pythagorean/expression'>>;
     /** Life Path Number (pythagorean) (POST /numerology/pythagorean/life-path) */
@@ -821,6 +831,8 @@ export interface AstrowayNamespaces {
     vedicBirthday(body: PostBody<'/numerology/vedic/birthday'>, options?: CallOptions): ResultPromise<PostData<'/numerology/vedic/birthday'>>;
     /** Challenge Cycles (vedic) (POST /numerology/vedic/challenge) */
     vedicChallenge(body: PostBody<'/numerology/vedic/challenge'>, options?: CallOptions): ResultPromise<PostData<'/numerology/vedic/challenge'>>;
+    /** Core Numbers Chart (vedic) (POST /numerology/vedic/chart) */
+    vedicChart(body: PostBody<'/numerology/vedic/chart'>, options?: CallOptions): ResultPromise<PostData<'/numerology/vedic/chart'>>;
     /** Expression / Destiny (vedic) (POST /numerology/vedic/expression) */
     vedicExpression(body: PostBody<'/numerology/vedic/expression'>, options?: CallOptions): ResultPromise<PostData<'/numerology/vedic/expression'>>;
     /** Life Path Number (vedic) (POST /numerology/vedic/life-path) */
@@ -1117,6 +1129,8 @@ export interface AstrowayNamespaces {
     houseOverlay(body: PostBody<'/synastry/house-overlay'>, options?: CallOptions): ResultPromise<PostData<'/synastry/house-overlay'>>;
   };
   tarot: {
+    /** Tarot: Decks and Card Art (GET /tarot/decks) */
+    decksGet(options?: CallOptions): ResultPromise<GetData<'/tarot/decks'>>;
     /** Lenormand: All Cards (GET /tarot/lenormand/cards) */
     lenormandCardsGet(options?: CallOptions): ResultPromise<GetData<'/tarot/lenormand/cards'>>;
     /** Lenormand: Daily Cards (POST /tarot/lenormand/daily) */
@@ -1453,6 +1467,8 @@ export interface AstrowayNamespaces {
     kpSubSubLord(body: PostBody<'/vedic/kp/sub-sub-lord'>, options?: CallOptions): ResultPromise<PostData<'/vedic/kp/sub-sub-lord'>>;
     /** KP: Transit positions (POST /vedic/kp/transit-kp) */
     kpTransitKp(body: PostBody<'/vedic/kp/transit-kp'>, options?: CallOptions): ResultPromise<PostData<'/vedic/kp/transit-kp'>>;
+    /** Kundli (one call) (POST /vedic/kundli) */
+    kundli(body: PostBody<'/vedic/kundli'>, options?: CallOptions): ResultPromise<PostData<'/vedic/kundli'>>;
     /** Lal Kitab: Blind houses (Andha bhava) (POST /vedic/lal-kitab/blind-house) */
     lalKitabBlindHouse(body: PostBody<'/vedic/lal-kitab/blind-house'>, options?: CallOptions): ResultPromise<PostData<'/vedic/lal-kitab/blind-house'>>;
     /** Lal Kitab: Dasha (35-year cycle) (POST /vedic/lal-kitab/dasha) */
@@ -2087,6 +2103,7 @@ export function buildNamespaces(client: AstrowayClient, sse: SseCapable): Astrow
       natal: (body, options) => call<'/interpret/natal', PostData<'/interpret/natal'>>('/interpret/natal', body, options),
       placement: (body, options) => call<'/interpret/placement', PostData<'/interpret/placement'>>('/interpret/placement', body, options),
       synastry: (body, options) => call<'/interpret/synastry', PostData<'/interpret/synastry'>>('/interpret/synastry', body, options),
+      tarot: (body, options) => call<'/interpret/tarot', PostData<'/interpret/tarot'>>('/interpret/tarot', body, options),
       transits: (body, options) => call<'/interpret/transits', PostData<'/interpret/transits'>>('/interpret/transits', body, options),
     },
     kabbalah: {
@@ -2172,6 +2189,7 @@ export function buildNamespaces(client: AstrowayClient, sse: SseCapable): Astrow
       chaldeanBalance: (body, options) => call<'/numerology/chaldean/balance', PostData<'/numerology/chaldean/balance'>>('/numerology/chaldean/balance', body, options),
       chaldeanBirthday: (body, options) => call<'/numerology/chaldean/birthday', PostData<'/numerology/chaldean/birthday'>>('/numerology/chaldean/birthday', body, options),
       chaldeanChallenge: (body, options) => call<'/numerology/chaldean/challenge', PostData<'/numerology/chaldean/challenge'>>('/numerology/chaldean/challenge', body, options),
+      chaldeanChart: (body, options) => call<'/numerology/chaldean/chart', PostData<'/numerology/chaldean/chart'>>('/numerology/chaldean/chart', body, options),
       chaldeanExpression: (body, options) => call<'/numerology/chaldean/expression', PostData<'/numerology/chaldean/expression'>>('/numerology/chaldean/expression', body, options),
       chaldeanLifePath: (body, options) => call<'/numerology/chaldean/life-path', PostData<'/numerology/chaldean/life-path'>>('/numerology/chaldean/life-path', body, options),
       chaldeanMaturity: (body, options) => call<'/numerology/chaldean/maturity', PostData<'/numerology/chaldean/maturity'>>('/numerology/chaldean/maturity', body, options),
@@ -2182,6 +2200,7 @@ export function buildNamespaces(client: AstrowayClient, sse: SseCapable): Astrow
       kabbalisticBalance: (body, options) => call<'/numerology/kabbalistic/balance', PostData<'/numerology/kabbalistic/balance'>>('/numerology/kabbalistic/balance', body, options),
       kabbalisticBirthday: (body, options) => call<'/numerology/kabbalistic/birthday', PostData<'/numerology/kabbalistic/birthday'>>('/numerology/kabbalistic/birthday', body, options),
       kabbalisticChallenge: (body, options) => call<'/numerology/kabbalistic/challenge', PostData<'/numerology/kabbalistic/challenge'>>('/numerology/kabbalistic/challenge', body, options),
+      kabbalisticChart: (body, options) => call<'/numerology/kabbalistic/chart', PostData<'/numerology/kabbalistic/chart'>>('/numerology/kabbalistic/chart', body, options),
       kabbalisticExpression: (body, options) => call<'/numerology/kabbalistic/expression', PostData<'/numerology/kabbalistic/expression'>>('/numerology/kabbalistic/expression', body, options),
       kabbalisticLifePath: (body, options) => call<'/numerology/kabbalistic/life-path', PostData<'/numerology/kabbalistic/life-path'>>('/numerology/kabbalistic/life-path', body, options),
       kabbalisticMaturity: (body, options) => call<'/numerology/kabbalistic/maturity', PostData<'/numerology/kabbalistic/maturity'>>('/numerology/kabbalistic/maturity', body, options),
@@ -2192,6 +2211,7 @@ export function buildNamespaces(client: AstrowayClient, sse: SseCapable): Astrow
       kabbalisticStrictBalance: (body, options) => call<'/numerology/kabbalistic-strict/balance', PostData<'/numerology/kabbalistic-strict/balance'>>('/numerology/kabbalistic-strict/balance', body, options),
       kabbalisticStrictBirthday: (body, options) => call<'/numerology/kabbalistic-strict/birthday', PostData<'/numerology/kabbalistic-strict/birthday'>>('/numerology/kabbalistic-strict/birthday', body, options),
       kabbalisticStrictChallenge: (body, options) => call<'/numerology/kabbalistic-strict/challenge', PostData<'/numerology/kabbalistic-strict/challenge'>>('/numerology/kabbalistic-strict/challenge', body, options),
+      kabbalisticStrictChart: (body, options) => call<'/numerology/kabbalistic-strict/chart', PostData<'/numerology/kabbalistic-strict/chart'>>('/numerology/kabbalistic-strict/chart', body, options),
       kabbalisticStrictExpression: (body, options) => call<'/numerology/kabbalistic-strict/expression', PostData<'/numerology/kabbalistic-strict/expression'>>('/numerology/kabbalistic-strict/expression', body, options),
       kabbalisticStrictLifePath: (body, options) => call<'/numerology/kabbalistic-strict/life-path', PostData<'/numerology/kabbalistic-strict/life-path'>>('/numerology/kabbalistic-strict/life-path', body, options),
       kabbalisticStrictMaturity: (body, options) => call<'/numerology/kabbalistic-strict/maturity', PostData<'/numerology/kabbalistic-strict/maturity'>>('/numerology/kabbalistic-strict/maturity', body, options),
@@ -2202,6 +2222,7 @@ export function buildNamespaces(client: AstrowayClient, sse: SseCapable): Astrow
       pythagoreanBalance: (body, options) => call<'/numerology/pythagorean/balance', PostData<'/numerology/pythagorean/balance'>>('/numerology/pythagorean/balance', body, options),
       pythagoreanBirthday: (body, options) => call<'/numerology/pythagorean/birthday', PostData<'/numerology/pythagorean/birthday'>>('/numerology/pythagorean/birthday', body, options),
       pythagoreanChallenge: (body, options) => call<'/numerology/pythagorean/challenge', PostData<'/numerology/pythagorean/challenge'>>('/numerology/pythagorean/challenge', body, options),
+      pythagoreanChart: (body, options) => call<'/numerology/pythagorean/chart', PostData<'/numerology/pythagorean/chart'>>('/numerology/pythagorean/chart', body, options),
       pythagoreanExpression: (body, options) => call<'/numerology/pythagorean/expression', PostData<'/numerology/pythagorean/expression'>>('/numerology/pythagorean/expression', body, options),
       pythagoreanLifePath: (body, options) => call<'/numerology/pythagorean/life-path', PostData<'/numerology/pythagorean/life-path'>>('/numerology/pythagorean/life-path', body, options),
       pythagoreanMaturity: (body, options) => call<'/numerology/pythagorean/maturity', PostData<'/numerology/pythagorean/maturity'>>('/numerology/pythagorean/maturity', body, options),
@@ -2212,6 +2233,7 @@ export function buildNamespaces(client: AstrowayClient, sse: SseCapable): Astrow
       vedicBalance: (body, options) => call<'/numerology/vedic/balance', PostData<'/numerology/vedic/balance'>>('/numerology/vedic/balance', body, options),
       vedicBirthday: (body, options) => call<'/numerology/vedic/birthday', PostData<'/numerology/vedic/birthday'>>('/numerology/vedic/birthday', body, options),
       vedicChallenge: (body, options) => call<'/numerology/vedic/challenge', PostData<'/numerology/vedic/challenge'>>('/numerology/vedic/challenge', body, options),
+      vedicChart: (body, options) => call<'/numerology/vedic/chart', PostData<'/numerology/vedic/chart'>>('/numerology/vedic/chart', body, options),
       vedicExpression: (body, options) => call<'/numerology/vedic/expression', PostData<'/numerology/vedic/expression'>>('/numerology/vedic/expression', body, options),
       vedicLifePath: (body, options) => call<'/numerology/vedic/life-path', PostData<'/numerology/vedic/life-path'>>('/numerology/vedic/life-path', body, options),
       vedicMaturity: (body, options) => call<'/numerology/vedic/maturity', PostData<'/numerology/vedic/maturity'>>('/numerology/vedic/maturity', body, options),
@@ -2389,6 +2411,7 @@ export function buildNamespaces(client: AstrowayClient, sse: SseCapable): Astrow
       houseOverlay: (body, options) => call<'/synastry/house-overlay', PostData<'/synastry/house-overlay'>>('/synastry/house-overlay', body, options),
     },
     tarot: {
+      decksGet: (options) => callGet<'/tarot/decks', GetData<'/tarot/decks'>>('/tarot/decks', undefined, options),
       lenormandCardsGet: (options) => callGet<'/tarot/lenormand/cards', GetData<'/tarot/lenormand/cards'>>('/tarot/lenormand/cards', undefined, options),
       lenormandDaily: (body, options) => call<'/tarot/lenormand/daily', PostData<'/tarot/lenormand/daily'>>('/tarot/lenormand/daily', body, options),
       lenormandDraw9CardSquare: (body, options) => call<'/tarot/lenormand/draw/9-card-square', PostData<'/tarot/lenormand/draw/9-card-square'>>('/tarot/lenormand/draw/9-card-square', body, options),
@@ -2562,6 +2585,7 @@ export function buildNamespaces(client: AstrowayClient, sse: SseCapable): Astrow
       kpSubLords: (body, options) => call<'/vedic/kp/sub-lords', PostData<'/vedic/kp/sub-lords'>>('/vedic/kp/sub-lords', body, options),
       kpSubSubLord: (body, options) => call<'/vedic/kp/sub-sub-lord', PostData<'/vedic/kp/sub-sub-lord'>>('/vedic/kp/sub-sub-lord', body, options),
       kpTransitKp: (body, options) => call<'/vedic/kp/transit-kp', PostData<'/vedic/kp/transit-kp'>>('/vedic/kp/transit-kp', body, options),
+      kundli: (body, options) => call<'/vedic/kundli', PostData<'/vedic/kundli'>>('/vedic/kundli', body, options),
       lalKitabBlindHouse: (body, options) => call<'/vedic/lal-kitab/blind-house', PostData<'/vedic/lal-kitab/blind-house'>>('/vedic/lal-kitab/blind-house', body, options),
       lalKitabDasha: (body, options) => call<'/vedic/lal-kitab/dasha', PostData<'/vedic/lal-kitab/dasha'>>('/vedic/lal-kitab/dasha', body, options),
       lalKitabDebts: (body, options) => call<'/vedic/lal-kitab/debts', PostData<'/vedic/lal-kitab/debts'>>('/vedic/lal-kitab/debts', body, options),

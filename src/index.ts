@@ -13,7 +13,7 @@
  */
 
 import createClient, { type ClientOptions } from 'openapi-fetch';
-import type { paths } from './types.generated.js';
+import type { paths, components } from './types.generated.js';
 import {
   ApiError,
   APIConnectionError,
@@ -194,6 +194,10 @@ export interface NatalTextsResult {
  */
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type -- declaration merging adds namespace properties
 export interface Astroway extends AstrowayNamespaces {}
+
+/** Render options of a chart drawn from data, plus which picture: `wheel` (default) or `aspect-grid`. */
+export type DrawChartOptions = NonNullable<components['schemas']['WheelFromChart']['options']> & { kind?: 'wheel' | 'aspect-grid' };
+export type DrawBiWheelOptions = NonNullable<components['schemas']['BiWheelFromChart']['options']>;
 
 export class Astroway {
   /** The underlying typed openapi-fetch client. */
@@ -431,6 +435,27 @@ export class Astroway {
     )('/natal-texts', init);
     if (error) throw new ApiError(`SDK natalTexts() call failed: ${String(error)}`);
     return (data as { data: NatalTextsResult }).data;
+  }
+
+  /**
+   * Draw a chart you already hold, without computing it again: 1 credit instead of 10.
+   * `chart` is what `aw.chart.compute()` returned (or any object with its `planets`, `houses`
+   * and `aspects`); the image is byte for byte the one the birth data would give. `kind`
+   * picks the wheel (default) or the aspect grid; the other options are the render options.
+   *
+   *   const chart = await aw.chart.compute({ date: '1990-05-15', time: '14:30:00', timezoneOffset: 3, latitude: 50.45, longitude: 30.52 });
+   *   const { svg } = await aw.drawChart(chart, { theme: 'css' });
+   */
+  drawChart(chart: object, options: DrawChartOptions = {}, call?: CallOptions) {
+    const { kind, ...render } = options;
+    // The response type of chart.compute() is inferred as all-nullable, so it cannot satisfy ChartData directly.
+    const body = { chart, options: render } as never;
+    return kind === 'aspect-grid' ? this.render.aspectGrid(body, call) : this.render.wheelWestern(body, call);
+  }
+
+  /** Two charts you already hold on one bi-wheel, 1 credit: `natal` inside, `outer` outside. */
+  drawBiWheel(natal: object, outer: object, options: DrawBiWheelOptions = {}, call?: CallOptions) {
+    return this.render.biWheel({ natal: { chart: natal }, outer: { chart: outer }, options } as never, call);
   }
 
   /**
